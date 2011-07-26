@@ -1,0 +1,73 @@
+name,symbol,category,provider,aum,expenseRatio,inceptionDate,averageVol
+iShares FTSE China 25 Index Fund,FXI,China Region,iShares,7030000000,0.0072,2004-10-05,15407400
+iShares MSCI Taiwan Index,EWT,China Region,iShares,3450000000,0.0071,2000-06-20,11161600
+iShares Silver Trust,SLV,Commodities Precious Metals,iShares,12350000000,0.005,2006-04-21,71429800
+iShares S&P Global Telecommunications,IXP,Communications,iShares,413300000,0.0048,2001-11-12,39416
+iShares Dow Jones US Consumer Services,IYC,Consumer Discretionary,iShares,247920000,0.0047,2000-06-12,38952
+iShares Dow Jones US Consumer Goods,IYK,Consumer Staples,iShares,365810000,0.0047,2000-06-12,66413
+iShares MSCI BRIC Index,BKF,Diversified Emerging Mkts,iShares,1050000000,0.0069,2007-11-12,149822
+iShares MSCI Indonesia Invstble Mkt Idx,EIDO,Diversified Emerging Mkts,iShares,201520000,0.0061,2010-05-05,192348
+iShares MSCI Thailand Invest Mkt Index,THD,Diversified Emerging Mkts,iShares,583810000,0.0062,2008-03-26,254590
+iShares JPMorgan USD Emerg Markets Bond,EMB,Emerging Markets Bond,iShares,2930000000,0.006,2007-12-17,268949
+iShares Dow Jones US Oil Equipment Index,IEZ,Equity Energy,iShares,607050000,0.0047,2006-05-01,369762
+iShares S&P Global Energy,IXC,Equity Energy,iShares,1310000000,0.0048,2001-11-12,235322
+iShares MSCI Belgium Investable Mkt Idx,EWK,Europe Stock,iShares,51230000,0.0054,1996-03-12,231003
+iShares MSCI Germany Index,EWG,Europe Stock,iShares,3800000000,0.0053,1996-03-12,3774020
+iShares MSCI Netherlands Invstbl Mkt Idx,EWN,Europe Stock,iShares,156890000,0.0053,1996-03-12,119665
+iShares MSCI Spain Index,EWP,Europe Stock,iShares,220530000,0.0054,1996-03-12,521000
+iShares MSCI United Kingdom Index,EWU,Europe Stock,iShares,1330000000,0.0053,1996-03-12,2041360
+iShares Dow Jones US Financial Sector,IYF,Financial,iShares,487350000,0.0047,2000-05-22,368610
+iShares Dow Jones US Regional Banks,IAT,Financial,iShares,128810000,0.0047,2006-05-01,46905
+iShares MSCI Europe Financials Index,EUFN,Financial,iShares,7800000,0.0048,2010-01-20,9025
+iShares MSCI ACWI ex US Index,iShares MSCI ACWI ex US Index,Foreign Large Blend,iShares,983160000,0.0035,2008-03-26,143930
+iShares Dow Jones Intl Select Div Idx,IDV,Foreign Large Value,iShares,584020000,0.005,2007-06-11,166167
+iShares FTSE Dev Sm Cap ex-North Amer,IFSM,Foreign Small/Mid Growth,iShares,47310000,0.005,2007-11-12,7087
+iShares FTSE EPRA/NAREIT Dev EU Idx,IFEU,Global Real Estate,iShares,25480000,0.0048,2007-11-12,7406
+iShares Dow Jones US Healthcare,IYH,Health,iShares,693410000,0.0048,2000-06-12,72905
+iShares Dow Jones US Pharmaceuticals,IHE,Health,iShares,223750000,0.0047,2006-05-01,39587
+iShares S&P Global Healthcare,IXJ,Health,iShares,554130000,0.0048,2001-11-13,71059
+iShares Dow Jones US Aerospace & Defense,ITA,Industrials,iShares,144300000,0.0047,2006-05-01,36503
+iShares S&P Emerging Mkts Infrastructure,EMIF,Industrials,iShares,144830000,0.007,2009-06-16,17240
+iShares Barclays 0-5 Year TIPS Bond,STIP,Inflation-Protected Bond,iShares,173880000,,2010-12-01,26354
+iShares Barclays Agency Bond,AGZ,Intermediate Government,iShares,364550000,0.002,2008-11-05,18294
+iShares Barclays Intermediate Credit Bd,CIU,Intermediate-Term Bond,iShares,3450000000,0.002,2007-01-05,208357
+iShares MSCI Japan Small Cap Index,SCJ,Japan Stock,iShares,69870000,0.0053,2007-12-20,12027
+iShares KLD 400 Social Index,DSI,Large Blend,iShares,154210000,0.005,2006-11-14,5105
+iShares MSCI USA Index,EUSA,Large Blend,iShares,2820000,0.0015,2010-05-05,1694
+iShares Russell 3000 Index,IWV,Large Blend,iShares,3380000000,0.002,2000-05-22,220483
+iShares S&P 1500 Index,ISI,Large Blend,iShares,337680000,0.002,2004-01-20,11103
+iShares Russell 1000 Growth Index,IWF,Large Growth,iShares,13540000000,0.002,2000-05-22,2277880
+iShares S&P 500 Growth Index,IVW,Large Growth,iShares,6510000000,0.0018,2000-05-22,563697
+iShares NYSE 100 Index,NY,Large Value,iShares,59700000,0.002,2004-03-29,2525
+iShares Russell Top 200 Value Index,IWX,Large Value,iShares,205120000,0.002,2009-09-22,50625
+iShares MSCI Brazil Index,EWZ,Latin America Stock,iShares,12690000000,0.0061,2000-07-10,13780000
+iShares MSCI Mexico Investable Mkt Idx,EWW,Latin America Stock,iShares,1600000000,0.0053,1996-03-12,2396110
+iShares Barclays 20+ Year Treas Bond,TLT,Long Government,iShares,2880000000,0.0015,2002-07-22,8138660
+iShares iBoxx $ Invest Grade Corp Bond,LQD,Long-Term Bond,iShares,13700000000,0.0015,2002-07-22,851490
+iShares S&P MidCap 400 Index,IJH,Mid-Cap Blend,iShares,11480000000,0.002,2000-05-22,877760
+iShares S&P MidCap 400 Growth Index,IJK,Mid-Cap Growth,iShares,3270000000,0.0025,2000-07-24,418124
+iShares S&P MidCap 400 Value Index,IJJ,Mid-Cap Value,iShares,2290000000,0.0025,2000-07-24,215575
+iShares S&P Moderate Allocation,AOM,Moderate Allocation,iShares,97900000,0.0011,2008-11-04,19889
+iShares Barclays Interm Govt/Credit Bond,GVI,Multisector Bond,iShares,588000000,0.002,2007-01-05,30822
+iShares 2016 S&P AMT-Free Municipal Ser,MUAE,Muni National Interm,iShares,20810000,0.003,2010-01-07,2163
+iShares S&P NY AMT-Free Municipal Bd,NYF,Muni New York Long,iShares,83390000,0.0025,2007-10-04,7844
+iShares 2014 S&P AMT-Free Municipal Ser,MUAC,Muni Short,iShares,28180000,0.003,2010-01-07,6016
+iShares MSCI ACWI ex US Materials Index,AXMT,Natural Resources,iShares,6780000,0.0048,2010-07-13,3054
+iShares S&P Global Timber & Forestry Idx,WOOD,Natural Resources,iShares,230460000,0.0048,2008-06-24,54840
+iShares MSCI Australia Index,EWA,Pacific/Asia ex-Japan Stk,iShares,3240000000,0.0053,1996-03-12,4710680
+iShares MSCI Pacific ex-Japan,EPP,Pacific/Asia ex-Japan Stk,iShares,3970000000,0.005,2001-10-25,925973
+iShares MSCI South Korea Index,EWY,Pacific/Asia ex-Japan Stk,iShares,4920000000,0.0061,2000-05-09,3460370
+iShares Dow Jones US Real Estate,IYR,Real Estate,iShares,3720000000,0.0047,2000-06-12,8557080
+iShares FTSE NAREIT Real Estate 50,FTY,Real Estate,iShares,60570000,0.0048,2007-05-01,15694
+iShares Barclays 1-3 Year Treasury Bond,SHY,Short Government,iShares,8460000000,0.0015,2002-07-22,1164970
+iShares Morningstar Small Core Index,JKJ,Small Blend,iShares,196460000,0.0025,2004-06-28,11808
+iShares S&P SmallCap 600 Index,IJR,Small Blend,iShares,7280000000,0.002,2000-05-22,1555860
+iShares S&P SmallCap 600 Growth,IJT,Small Growth,iShares,1970000000,0.0025,2000-07-24,228002
+iShares S&P SmallCap 600 Value Index,IJS,Small Value,iShares,1830000000,0.0025,2000-07-24,114203
+iShares S&P Target Date 2020,TZG,Target Date 2016-2020,iShares,20300000,0.0011,2008-11-04,4787
+iShares S&P Target Date 2035,TZO,Target Date 2031-2035,iShares,6990000,0.0011,2008-11-04,984
+iShares MSCI ACWI ex US Info Tech Index,AXIT,Technology,iShares,5700000,0.0048,2010-07-13,1054
+iShares S&P North Amer Tech-Multimd Ntwk,IGN,Technology,iShares,234940000,0.0048,2001-07-10,62443
+iShares Dow Jones US Utilities,IDU,Utilities,iShares,541540000,0.0048,2000-06-12,36141
+iShares S&P Growth Allocation,AOR,World Allocation,iShares,110700000,0.0011,2008-11-04,25521
+iShares MSCI ACWI Index,ACWI,World Stock,iShares,1910000000,0.0035,2008-03-26,398917
