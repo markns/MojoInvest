@@ -41,9 +41,11 @@ public class DispatchServletModule extends ServletModule {
 
         bind(OpenIdServletFilter.class).in(Singleton.class);
 
+
+
         // TODO philippe.beaudoin@gmail.com
         // Uncomment when http://code.google.com/p/mns/issues/detail?id=27 is unblocked.
-//    filter("*").through( CrawlFilter.class );
+        // filter("*").through( CrawlFilter.class );
         filter("*").through(HttpSessionSecurityCookieFilter.class);
         serve("/" + ActionImpl.DEFAULT_SERVICE_NAME).with(DispatchServiceImpl.class);
 //        serve("/openid/login").with(OpenIdServlet.class);

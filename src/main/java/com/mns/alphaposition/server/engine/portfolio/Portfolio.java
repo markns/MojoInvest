@@ -1,6 +1,8 @@
 package com.mns.alphaposition.server.engine.portfolio;
 
 import com.mns.alphaposition.server.engine.transaction.Transaction;
+import com.mns.alphaposition.shared.params.PortfolioParams;
+import com.sun.xml.internal.ws.wsdl.writer.document.Port;
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.apache.commons.lang.builder.ToStringBuilder;
@@ -53,9 +55,9 @@ public class Portfolio {
         this.positions = new HashMap<String, Position>();
     }
 
-    public Portfolio(BigDecimal initialInvestment) {
+    public Portfolio(PortfolioParams params) {
         this.cash = initialInvestment;
-        this.initialInvestment = initialInvestment;
+        this.initialInvestment = params.getInitialInvestment();
         this.positions = new HashMap<String, Position>();
     }
 

@@ -43,6 +43,10 @@ public class QuoteDao extends DAOBase {
         return ofy().put(quote);
     }
 
+    public Map<Key<Quote>, Quote> put(Iterable<Quote> quotes) {
+        return ofy().put(quotes);
+    }
+
     public List<Quote> list() {
         Query<Quote> q = ofy().query(Quote.class);
         return q.list();
@@ -54,6 +58,10 @@ public class QuoteDao extends DAOBase {
             q.filter(entry.getKey(), entry.getValue());
         }
         return q.list();
+    }
+
+    public List<Quote> query(Fund fund) {
+        return query(fund.getSymbol());
     }
 
     public List<Quote> query(String symbol) {

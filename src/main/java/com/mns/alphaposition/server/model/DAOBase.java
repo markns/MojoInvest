@@ -24,7 +24,7 @@ import com.googlecode.objectify.ObjectifyFactory;
  * Inspired by {@link com.googlecode.objectify.helper.DAOBase}, but modified to
  * better support dependency injection.
  *
- * @author Mark Nuttall-Smith
+ * @author Phillipe Beaudoin
  * @author Jeff Schnitzer
  */
 @RequestScoped

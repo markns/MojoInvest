@@ -17,6 +17,8 @@
 package com.mns.alphaposition.server.guice;
 
 import com.gwtplatform.dispatch.server.guice.HandlerModule;
+import com.mns.alphaposition.server.handler.RunBackTestHandler;
+import com.mns.alphaposition.shared.action.RunBackTestAction;
 
 /**
  * Module which binds the handlers and configurations.
@@ -27,10 +29,6 @@ public class ServerModule extends HandlerModule {
 
     @Override
     protected void configureHandlers() {
-//        bindHandler(LogoutAction.class, LogoutActionHandler.class);
-//        bindHandler(GetCurrentUserAction.class, GetCurrentUserActionHandler.class);
-//        bindHandler(EditUserAction.class, EditUserActionHandler.class);
-//        bindHandler(GetPuzzleAction.class, GetPuzzleActionHandler.class);
-//        bindHandler(CreateNewPuzzleAction.class, CreateNewPuzzleActionHandler.class);
+        bindHandler(RunBackTestAction.class, RunBackTestHandler.class);
     }
 }

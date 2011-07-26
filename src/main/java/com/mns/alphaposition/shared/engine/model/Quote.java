@@ -23,10 +23,8 @@ public class Quote {
     @Id
     private String id;
 
-    @Unindexed
     private String symbol;
 
-    @Unindexed
     private LocalDate date;
 
     @Unindexed

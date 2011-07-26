@@ -54,13 +54,13 @@
         <dyuproject-openid.version>1.1.7</dyuproject-openid.version>
         <gae.version>1.5.1</gae.version>
         <gin.version>1.5.0</gin.version>
-        <guice.version>3.0-rc3</guice.version>
+        <guice.version>3.0</guice.version>
         <gwt.version>2.2.0</gwt.version>
         <gwtp.version>0.6</gwtp.version>
         <json.version>20090211</json.version>
         <jsr107cache.version>1.1</jsr107cache.version>
         <junit.version>4.8.1</junit.version>
-        <objectify.version>2.2.3</objectify.version>
+        <objectify.version>3.0</objectify.version>
         <persistence-api.version>1.0</persistence-api.version>
         <slf4f.version>1.6.1</slf4f.version>
         <joda-time.version>1.6.2</joda-time.version>
@@ -120,6 +120,13 @@
             <version>${junit.version}</version>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-core</artifactId>
+            <version>1.8.5</version>
+            <scope>test</scope>
+        </dependency>
+
 
         <!-- AppEngine dependencies -->
         <dependency>
@@ -256,6 +263,11 @@
             <version>${guice.version}</version>
         </dependency>
         <dependency>
+            <groupId>com.google.inject.extensions</groupId>
+            <artifactId>guice-multibindings</artifactId>
+            <version>${guice.version}</version>
+        </dependency>
+        <dependency>
             <groupId>aopalliance</groupId>
             <artifactId>aopalliance</artifactId>
             <version>${aopalliance.version}</version>
@@ -279,6 +291,13 @@
             <groupId>commons-lang</groupId>
             <artifactId>commons-lang</artifactId>
             <version>2.5</version>
+        </dependency>
+
+        <!--Open CSV dependencies-->
+        <dependency>
+            <groupId>net.sf.opencsv</groupId>
+            <artifactId>opencsv</artifactId>
+            <version>2.1</version>
         </dependency>
 
         <!-- SLF4J logging dependencies -->
@@ -350,28 +369,28 @@
 
             <!-- GWT configuration -->
             <!--<plugin>-->
-                <!--<groupId>org.codehaus.mojo</groupId>-->
-                <!--<artifactId>gwt-maven-plugin</artifactId>-->
-                <!--<version>${gwt-maven-plugin.version}</version>-->
-                <!--<configuration>-->
-                    <!--<appEngineVersion>${gae.version}</appEngineVersion>-->
-                    <!--<appEngineHome>${gae.home}</appEngineHome>-->
-                    <!--<logLevel>INFO</logLevel>-->
-                    <!--<style>${gwt.style}</style>-->
-                    <!--<hostedWebapp>${webapp.directory}</hostedWebapp>-->
-                    <!--<server>com.google.appengine.tools.development.gwt.AppEngineLauncher</server>-->
-                    <!--<copyWebapp>true</copyWebapp>-->
-                    <!--<runTarget>index.html</runTarget>-->
-                <!--</configuration>-->
-                <!--<executions>-->
-                    <!--<execution>-->
-                        <!--<id>gwtcompile</id>-->
-                        <!--<phase>prepare-package</phase>-->
-                        <!--<goals>-->
-                            <!--<goal>compile</goal>-->
-                        <!--</goals>-->
-                    <!--</execution>-->
-                <!--</executions>-->
+            <!--<groupId>org.codehaus.mojo</groupId>-->
+            <!--<artifactId>gwt-maven-plugin</artifactId>-->
+            <!--<version>${gwt-maven-plugin.version}</version>-->
+            <!--<configuration>-->
+            <!--<appEngineVersion>${gae.version}</appEngineVersion>-->
+            <!--<appEngineHome>${gae.home}</appEngineHome>-->
+            <!--<logLevel>INFO</logLevel>-->
+            <!--<style>${gwt.style}</style>-->
+            <!--<hostedWebapp>${webapp.directory}</hostedWebapp>-->
+            <!--<server>com.google.appengine.tools.development.gwt.AppEngineLauncher</server>-->
+            <!--<copyWebapp>true</copyWebapp>-->
+            <!--<runTarget>index.html</runTarget>-->
+            <!--</configuration>-->
+            <!--<executions>-->
+            <!--<execution>-->
+            <!--<id>gwtcompile</id>-->
+            <!--<phase>prepare-package</phase>-->
+            <!--<goals>-->
+            <!--<goal>compile</goal>-->
+            <!--</goals>-->
+            <!--</execution>-->
+            <!--</executions>-->
             <!--</plugin>-->
 
             <!-- AppEngine configuration -->
