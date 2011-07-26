@@ -1,10 +1,10 @@
 #!/bin/bash
 
-	echo dummy_pass | appcfg.py upload_data \
+	echo ambersun | appcfg.py upload_data \
 	--email=marknuttallsmith@gmail.com \
 	--passin \
 	--config_file=config.yml \
 	--filename="../data/etf-static-ishares-small.csv" \
-	--url=http://localhost:8080/remote_api \
-	--application=position-engine \
+	--url=http://alphaposition.appspot.com/remote_api \
+	--application=s~alphaposition \
 	--kind=Fund
