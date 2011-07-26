@@ -17,7 +17,7 @@
 
     <filter-mapping>
         <filter-name>guiceFilter</filter-name>
-        <url-pattern>*</url-pattern>
+        <url-pattern>/*</url-pattern>
     </filter-mapping>
 
     <!--
@@ -40,5 +40,17 @@
         <servlet-name>RemoteApi</servlet-name>
         <url-pattern>/remote_api</url-pattern>
     </servlet-mapping>
+
+    <security-constraint>
+        <web-resource-collection>
+            <web-resource-name>admin</web-resource-name>
+            <url-pattern>/admin/*</url-pattern>
+            <url-pattern>/remote_api</url-pattern>
+        </web-resource-collection>
+        <auth-constraint>
+            <role-name>admin</role-name>
+        </auth-constraint>
+    </security-constraint>
+
 
 </web-app>
