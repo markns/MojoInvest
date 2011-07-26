@@ -18,4 +18,6 @@ public class MomentumStrategyParams<T> implements StrategyParams<T> {
     public RankingStrategyParams getRankingStrategyParams() {
         return rankingStrategyParams;
     }
+
+
 }

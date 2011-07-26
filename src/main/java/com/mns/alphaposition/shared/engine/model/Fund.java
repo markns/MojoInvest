@@ -7,7 +7,7 @@ import javax.persistence.Id;
 import java.math.BigDecimal;
 
 @Cached
-public class Fund {
+public class Fund implements Comparable<Fund> {
 
     @Id
     private String symbol;
@@ -100,6 +100,11 @@ public class Fund {
 
     public void setAverageVol(BigDecimal averageVol) {
         this.averageVol = averageVol;
+    }
+
+    @Override
+    public int compareTo(Fund o) {
+        return symbol.compareTo(o.getSymbol());
     }
 
     @Override

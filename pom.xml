@@ -52,7 +52,7 @@
         <!-- Dependencies versions -->
         <aopalliance.version>1.0</aopalliance.version>
         <dyuproject-openid.version>1.1.7</dyuproject-openid.version>
-        <gae.version>1.5.1</gae.version>
+        <gae.version>1.5.2</gae.version>
         <gin.version>1.5.0</gin.version>
         <guice.version>3.0</guice.version>
         <gwt.version>2.2.0</gwt.version>
@@ -292,6 +292,14 @@
             <artifactId>commons-lang</artifactId>
             <version>2.5</version>
         </dependency>
+
+        <!--Guava dependencies-->
+        <dependency>
+            <groupId>com.google.guava</groupId>
+            <artifactId>guava</artifactId>
+            <version>r09</version>
+        </dependency>
+
 
         <!--Open CSV dependencies-->
         <dependency>

@@ -31,4 +31,14 @@
         <listener-class>com.mns.alphaposition.server.guice.MyGuiceServletContextListener</listener-class>
     </listener>
 
+    <servlet>
+        <servlet-name>RemoteApi</servlet-name>
+        <servlet-class>com.google.apphosting.utils.remoteapi.RemoteApiServlet</servlet-class>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>RemoteApi</servlet-name>
+        <url-pattern>/remote_api</url-pattern>
+    </servlet-mapping>
+
 </web-app>

@@ -9,8 +9,10 @@ import com.mns.alphaposition.shared.engine.model.Fund;
 import com.mns.alphaposition.shared.engine.model.Quote;
 import com.mns.alphaposition.shared.util.FundUtils;
 import com.mns.alphaposition.shared.util.QuoteUtils;
+import com.mns.alphaposition.shared.util.TradingDayUtils;
 import org.joda.time.LocalDate;
 
+import java.math.BigDecimal;
 import java.util.*;
 
 public class QuoteDao extends DAOBase {
@@ -90,6 +92,38 @@ public class QuoteDao extends DAOBase {
         return get(keys);
     }
 
+    public Collection<Quote> getAverage(Collection<Fund> funds, LocalDate date, int averagingRange) {
+        List<LocalDate> dates = TradingDayUtils.getDailySeries(date.minusDays(averagingRange), date, true);
+        Collection<Quote> averageQuotes = new ArrayList<Quote>();
+        Map<Fund, List<Quote>> byFund = getByFund(funds, dates);
+        for (Map.Entry<Fund, List<Quote>> entry : byFund.entrySet()) {
+            BigDecimal open = BigDecimal.ZERO;
+            BigDecimal high = BigDecimal.ZERO;
+            BigDecimal low = BigDecimal.ZERO;
+            BigDecimal close = BigDecimal.ZERO;
+            BigDecimal volume = BigDecimal.ZERO;
+            BigDecimal adjClose = BigDecimal.ZERO;
+            for (Quote quote : entry.getValue()) {
+//                open = open.add(quote.getOpen());
+//                high = high.add(quote.getHigh());
+//                low = low.add(quote.getLow());
+                close = close.add(quote.getClose());
+//                volume = volume.add(quote.getVolume());
+//                adjClose = adjClose.add(quote.getAdjClose());
+            }
+            BigDecimal size = new BigDecimal(entry.getValue().size());
+//            open = open.divide(size, BigDecimal.ROUND_HALF_EVEN);
+//            high = high.divide(size, BigDecimal.ROUND_HALF_EVEN);
+//            low = low.divide(size, BigDecimal.ROUND_HALF_EVEN);
+            close = close.divide(size, BigDecimal.ROUND_HALF_EVEN);
+//            volume = volume.divide(size, BigDecimal.ROUND_HALF_EVEN);
+//            adjClose = adjClose.divide(size, BigDecimal.ROUND_HALF_EVEN);
+            averageQuotes.add(new Quote(entry.getKey().getSymbol(), date, open, high, low, close, volume, adjClose, true));
+        }
+        return averageQuotes;
+    }
+
+
     public Map<Fund, List<Quote>> getByFund(Collection<Fund> funds, List<LocalDate> dates) {
         Collection<Quote> quotes = get(funds, dates);
         Map<String, Fund> symbolToFund = FundUtils.getSymbolToFundMap(funds);
@@ -97,17 +131,10 @@ public class QuoteDao extends DAOBase {
         for (Quote quote : quotes) {
             Fund fund = symbolToFund.get(quote.getSymbol());
             if (!byFund.containsKey(fund)) {
-                 byFund.put(fund, new ArrayList<Quote>());
+                byFund.put(fund, new ArrayList<Quote>());
             }
             byFund.get(fund).add(quote);
         }
-//        This should be handled by a backend updating the datastore
-//        for (Fund fund : byFund.keySet()) {
-//            List<Quote> quotesByFund = byFund.get(fund);
-//            List<Quote> missingQuotes = QuoteUtils.getMissingQuotes(fund.getInceptionDate(), new LocalDate(), quotesByFund);
-//            byFund.get(fund).addAll(missingQuotes);
-//        }
-
         return byFund;
     }
 
