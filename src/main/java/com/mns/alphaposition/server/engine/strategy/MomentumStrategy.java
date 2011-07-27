@@ -71,8 +71,7 @@ public class MomentumStrategy implements TradingStrategy<MomentumStrategyParams>
     }
 
     private List<LocalDate> getRebalanceDates(LocalDate fromDate, LocalDate toDate, MomentumStrategyParams params) {
-        //TODO: should handle rebalance frequency unit here
-        //strategyParams.getRebalanceFrequency()
+        //TODO: should handle rebalance frequency unit here - strategyParams.getRebalanceFrequency()
         return TradingDayUtils.getMonthlySeries(fromDate, toDate, true);
     }
 
