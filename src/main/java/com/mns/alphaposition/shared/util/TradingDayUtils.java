@@ -21,11 +21,15 @@ public class TradingDayUtils {
 //      the next business day. Many institutions have month-end accounting procedures that necessitate this.
 
 
-    public static List<LocalDate> getMonthlySeries(LocalDate fromDate, LocalDate toDate) {
+    public static List<LocalDate> getMonthlySeries(LocalDate fromDate, LocalDate toDate, boolean forwards) {
         List<LocalDate> dates = new ArrayList<LocalDate>();
         while (toDate.isAfter(fromDate)) {
             dates.add(rollIfRequired(toDate));
             toDate = toDate.minusMonths(1);
+        }
+        if (forwards) {
+            //Little bit back to front the logic here
+            Collections.reverse(dates);
         }
         return dates;
     }
