@@ -1,20 +1,14 @@
 package com.mns.alphaposition.server.engine.portfolio;
 
 import com.mns.alphaposition.server.engine.transaction.Transaction;
+import com.mns.alphaposition.shared.engine.model.Fund;
 import com.mns.alphaposition.shared.params.PortfolioParams;
-import com.sun.xml.internal.ws.wsdl.writer.document.Port;
-import org.apache.commons.lang.builder.EqualsBuilder;
-import org.apache.commons.lang.builder.HashCodeBuilder;
-import org.apache.commons.lang.builder.ToStringBuilder;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.math.BigDecimal;
-import java.math.MathContext;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * A portfolio is a collection of positions that the user holds in various securities, plus metadata.
@@ -41,182 +35,138 @@ import java.util.Map;
  */
 public class Portfolio {
 
-    private final Logger logger = LoggerFactory.getLogger(Portfolio.class);
-
     private BigDecimal cash;
 
     private BigDecimal initialInvestment;
 
-    private HashMap<String, Position> positions;
-
-    public Portfolio() {
-        this.cash = BigDecimal.ZERO;
-        this.initialInvestment = BigDecimal.ZERO;
-        this.positions = new HashMap<String, Position>();
-    }
+    private HashMap<Fund, Position> positions;
 
     public Portfolio(PortfolioParams params) {
-        this.cash = initialInvestment;
+        this.cash = params.getInitialInvestment();
         this.initialInvestment = params.getInitialInvestment();
-        this.positions = new HashMap<String, Position>();
+        this.positions = new HashMap<Fund, Position>();
     }
 
     public BigDecimal getCash() {
         return cash;
     }
 
-    public void depositCash(BigDecimal decimal) {
-        cash = cash.add(decimal);
+
+
+    public boolean contains(Fund fund) {
+        return getActivePositions().containsKey(fund);
+    }
+
+    public Position get(Fund fund) {
+        return positions.get(fund);
     }
 
     public void add(Transaction transaction) throws PositionException {
-        String symbol = transaction.getSymbol();
-        if (!positions.containsKey(symbol)) {
-            positions.put(symbol, new Position(symbol));
+        Fund fund = transaction.getFund();
+        if (!positions.containsKey(fund)) {
+            positions.put(fund, new Position(fund));
         }
-        positions.get(symbol).add(transaction);
-
-//        logger.debug("Adding {} to {}",
-//                transaction.getCashValue().setScale(2, RoundingMode.HALF_UP), this);
+        positions.get(fund).add(transaction);
         cash = cash.add(transaction.getCashValue());
     }
 
-    public Position get(String symbol) {
-        return positions.get(symbol);
-    }
-
-    public HashMap<String, Position> getPositions() {
-        return positions;
-    }
-
-    public HashMap<String, Position> getCurrentPositions() {
-        HashMap<String, Position> currentPositions = new HashMap<String, Position>();
+    public int numberOfActivePositions() {
+        int numberOfActivePostions = 0;
         for (Position position : positions.values()) {
             if (position.shares().compareTo(BigDecimal.ZERO) > 0) {
-                currentPositions.put(position.getSymbol(), position);
+                numberOfActivePostions++;
+            }
+        }
+        return numberOfActivePostions;
+    }
+
+    public HashMap<Fund, Position> getActivePositions() {
+        HashMap<Fund, Position> currentPositions = new HashMap<Fund, Position>();
+        for (Position position : positions.values()) {
+            if (position.shares().compareTo(BigDecimal.ZERO) > 0) {
+                currentPositions.put(position.getFund(), position);
             }
         }
         return currentPositions;
     }
 
-    public String getHoldings() {
-        StringBuilder sb = new StringBuilder();
+    public Set<Fund> getActiveHoldings() {
+        Set<Fund> activeHoldings = new HashSet<Fund>();
         for (Position position : positions.values()) {
-            sb.append(position.getSymbol())
-                    .append(" - ")
-                    .append(position.shares())
-                    .append(" / ");
+            if (position.shares().compareTo(BigDecimal.ZERO) > 0) {
+                activeHoldings.add(position.getFund());
+            }
         }
-        return sb.toString();
-    }
-
-    public void add(Position position) {
-        positions.put(position.getSymbol(), position);
-    }
-
-    public int size() {
-        return positions.size();
-    }
-
-    public BigDecimal costBasis() {
-        BigDecimal costBasis = BigDecimal.ZERO;
-        for (Position position : positions.values()) {
-            if (position.shares().compareTo(BigDecimal.ZERO) == 0)
-                continue;
-            costBasis = costBasis.add(position.costBasis());
-        }
-        return costBasis;
-    }
-
-    public BigDecimal marketValue(Map<String, BigDecimal> sharePrices) {
-        BigDecimal marketValue = BigDecimal.ZERO;
-        for (Position position : positions.values()) {
-            if (position.shares().compareTo(BigDecimal.ZERO) == 0)
-                continue;
-            BigDecimal sharePrice = sharePrices.get(position.getSymbol());
-            marketValue = marketValue.add(position.marketValue(sharePrice));
-        }
-        return marketValue;
-    }
-
-    public BigDecimal gain(Map<String, BigDecimal> sharePrices) {
-        BigDecimal gain = BigDecimal.ZERO;
-        for (Position position : positions.values()) {
-            if (position.shares().compareTo(BigDecimal.ZERO) == 0)
-                continue;
-            BigDecimal sharePrice = sharePrices.get(position.getSymbol());
-            gain = gain.add(position.gain(sharePrice));
-        }
-        return gain;
-    }
-
-    public BigDecimal gainPercentage(Map<String, BigDecimal> sharePrices) {
-        BigDecimal gainPercentage = BigDecimal.ZERO;
-        try {
-            gainPercentage = gain(sharePrices).divide(costBasis(), MathContext.DECIMAL32)
-                    //multiply by 100 for percentage
-                    .multiply(BigDecimal.TEN.multiply(BigDecimal.TEN));
-        } catch (ArithmeticException e) {
-            //TODO: Is this acceptable?
-            //pass;
-        }
-        return gainPercentage;
-    }
-
-    public BigDecimal returnsGain(Map<String, BigDecimal> sharePrices) {
-        BigDecimal returnsGain = BigDecimal.ZERO;
-        for (Position position : positions.values()) {
-            BigDecimal sharePrice = sharePrices.get(position.getSymbol());
-            returnsGain = returnsGain.add(position.returnsGain(sharePrice));
-        }
-        return returnsGain;
-    }
-
-    public BigDecimal cashOut() {
-        BigDecimal cashOut = BigDecimal.ZERO;
-        for (Position position : positions.values()) {
-            cashOut = cashOut.add(position.cashOut());
-        }
-        return cashOut;
-    }
-
-    public BigDecimal overallReturn(Map<String, BigDecimal> sharePrices) {
-        return returnsGain(sharePrices).divide(cashOut().negate(), MathContext.DECIMAL32)
-                //multiply by 100 for percentage
-                .multiply(BigDecimal.TEN.multiply(BigDecimal.TEN));
+        return activeHoldings;
     }
 
 
-    @Override
-    public boolean equals(Object obj) {
-        return EqualsBuilder.reflectionEquals(this, obj);
-    }
+    //    public BigDecimal costBasis() {
+//        BigDecimal costBasis = BigDecimal.ZERO;
+//        for (Position position : positions.values()) {
+//            if (position.shares().compareTo(BigDecimal.ZERO) == 0)
+//                continue;
+//            costBasis = costBasis.add(position.costBasis());
+//        }
+//        return costBasis;
+//    }
+//
+//    public BigDecimal gain(Map<Fund, BigDecimal> sharePrices) {
+//        BigDecimal gain = BigDecimal.ZERO;
+//        for (Position position : positions.values()) {
+//            if (position.shares().compareTo(BigDecimal.ZERO) == 0)
+//                continue;
+//            BigDecimal sharePrice = sharePrices.get(position.getSymbol());
+//            gain = gain.add(position.gain(sharePrice));
+//        }
+//        return gain;
+//    }
+//
+//    public BigDecimal gainPercentage(Map<String, BigDecimal> sharePrices) {
+//        BigDecimal gainPercentage = BigDecimal.ZERO;
+//        try {
+//            gainPercentage = gain(sharePrices).divide(costBasis(), MathContext.DECIMAL32)
+//                    //multiply by 100 for percentage
+//                    .multiply(BigDecimal.TEN.multiply(BigDecimal.TEN));
+//        } catch (ArithmeticException e) {
+//            //TODO: Is this acceptable?
+//            //pass;
+//        }
+//        return gainPercentage;
+//    }
+//
+//    public BigDecimal returnsGain(Map<String, BigDecimal> sharePrices) {
+//        BigDecimal returnsGain = BigDecimal.ZERO;
+//        for (Position position : positions.values()) {
+//            BigDecimal sharePrice = sharePrices.get(position.getSymbol());
+//            returnsGain = returnsGain.add(position.returnsGain(sharePrice));
+//        }
+//        return returnsGain;
+//    }
+//
+//    public BigDecimal cashOut() {
+//        BigDecimal cashOut = BigDecimal.ZERO;
+//        for (Position position : positions.values()) {
+//            cashOut = cashOut.add(position.cashOut());
+//        }
+//        return cashOut;
+//    }
+//
+//    public BigDecimal overallReturn(Map<String, BigDecimal> sharePrices) {
+//        return returnsGain(sharePrices).divide(cashOut().negate(), MathContext.DECIMAL32)
+//                //multiply by 100 for percentage
+//                .multiply(BigDecimal.TEN.multiply(BigDecimal.TEN));
 
-    @Override
-    public int hashCode() {
-        return HashCodeBuilder.reflectionHashCode(this);
-    }
+
+//    }
 
 
     @Override
     public String toString() {
-        return ToStringBuilder.reflectionToString(this);
-    }
-
-    public void removeEmptyPositions() {
-        List<String> positionsToRemove = new ArrayList<String>();
-        for (Position position : positions.values()) {
-            if (position.shares().equals(BigDecimal.ZERO)) {
-                positionsToRemove.add(position.getSymbol());
-            }
+        StringBuilder sb = new StringBuilder("Current Portfolio:").append("\n");
+        for (Map.Entry<Fund, Position> entry : positions.entrySet()) {
+            sb.append(entry.getKey()).append(" ").append(entry.getValue().shares()).append("\n");
         }
-        for (String symbol : positionsToRemove) {
-            positions.remove(symbol);
-        }
-
-    }
-
-    public BigDecimal getInitialInvestment() {
-        return initialInvestment;
+        return sb.toString();
     }
 }

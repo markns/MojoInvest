@@ -1,14 +1,15 @@
 package com.mns.alphaposition.server.engine.transaction;
 
-import org.joda.time.DateMidnight;
+import com.mns.alphaposition.shared.engine.model.Fund;
+import org.joda.time.LocalDate;
 
 import java.math.BigDecimal;
 
 public class BuyTransaction extends AbstractTransaction {
 
-    public BuyTransaction(String ref, String symbol, DateMidnight date, BigDecimal units,
+    public BuyTransaction(Fund fund, LocalDate date, BigDecimal units,
                           BigDecimal price, BigDecimal commission) {
-        super(ref, symbol, date, units, price, commission);
+        super(fund, date, units, price, commission);
     }
 
     public BigDecimal getInitialInvestment() {

@@ -33,7 +33,7 @@ public class MomentumStrategyTests {
     private final Executor executor = new Executor(portfolio, portfolioParams.getTransactionCost());
 
     private final RankingStrategyParams rankingStrategyParams = new SimpleRankingStrategyParams(10, 9);
-    private final MomentumStrategyParams strategyParams = new MomentumStrategyParams(1, rankingStrategyParams);
+    private final MomentumStrategyParams strategyParams = new MomentumStrategyParams(1, rankingStrategyParams, 3);
 
     private final LocalDate fromDate = new LocalDate(2009, 1, 1);
     private final LocalDate toDate = new LocalDate(2011, 1, 1);
@@ -50,23 +50,30 @@ public class MomentumStrategyTests {
     private final LocalDatastoreServiceTestConfig config = new LocalDatastoreServiceTestConfig();
     private final LocalServiceTestHelper helper = new LocalServiceTestHelper(config);
 
+    long time = 0L;
+
     @Before
     public void setUp() {
         helper.setUp();
         quoteDao.put(QuoteSet.getQuotes());
+        time = System.currentTimeMillis();
         for (Fund fund : funds) {
             List<Quote> quotes = quoteDao.query(fund);
             List<Quote> missingQuotes = QuoteUtils.getMissingQuotes(fund.getInceptionDate(),
                     new LocalDate("2011-06-24"), quotes);
             quoteDao.put(missingQuotes);
         }
+        System.out.println(System.currentTimeMillis() - time);
+        time = System.currentTimeMillis();
     }
 
     @Test
     public void testMomentumStrategy() {
         SimpleRankingStrategy rankingStrategy = new SimpleRankingStrategy(quoteDao);
-        MomentumStrategy tradingStrategy = new MomentumStrategy(rankingStrategy, executor);
+        MomentumStrategy tradingStrategy = new MomentumStrategy(rankingStrategy, executor, portfolio);
+        time = System.currentTimeMillis();
         tradingStrategy.execute(fromDate, toDate, funds, strategyParams);
+        System.out.println(System.currentTimeMillis() - time);
     }
 
     @After

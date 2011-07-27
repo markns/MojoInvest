@@ -3,15 +3,14 @@ package com.mns.alphaposition.server.engine.portfolio;
 import com.mns.alphaposition.server.engine.transaction.BuyTransaction;
 import com.mns.alphaposition.server.engine.transaction.SellTransaction;
 import com.mns.alphaposition.server.engine.transaction.Transaction;
-import org.apache.commons.lang.builder.EqualsBuilder;
-import org.apache.commons.lang.builder.HashCodeBuilder;
-import org.apache.commons.lang.builder.ToStringBuilder;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import com.mns.alphaposition.shared.engine.model.Fund;
 
 import java.math.BigDecimal;
 import java.math.MathContext;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 
 /**
@@ -35,22 +34,20 @@ import java.util.*;
  */
 public class Position {
 
-    private final Logger logger = LoggerFactory.getLogger(Position.class);
-
-    private String symbol;
+    private Fund fund;
 
     private Map<String, Transaction> transactions;
 
     private List<Lot> lots;
 
-    public Position(String symbol) {
-        this.symbol = symbol;
+    public Position(Fund fund) {
+        this.fund = fund;
         this.transactions = new HashMap<String, Transaction>();
         this.lots = new ArrayList<Lot>();
     }
 
-    public String getSymbol() {
-        return symbol;
+    public Fund getFund() {
+        return fund;
     }
 
     public Map<String, Transaction> getTransactions() {
@@ -62,16 +59,14 @@ public class Position {
     }
 
     public void add(Transaction transaction) throws PositionException {
-        if (!symbol.equals(transaction.getSymbol())) {
-            throw new PositionException("Attempt to add a " + transaction.getSymbol() +
-                    " transaction to a " + symbol + " position");
+        if (!fund.equals(transaction.getFund())) {
+            throw new PositionException("Attempt to add a " + transaction.getFund() +
+                    " transaction to a " + fund + " position");
         }
         if (transactions.containsKey(transaction.getRef())) {
             throw new PositionException("Attempt to add " + transaction + " which has " +
                     "already contributed to the position");
         }
-
-//        logger.debug("Adding {} to {}", transaction, this);
 
         if (transaction instanceof BuyTransaction) {
             lots.add(new Lot((BuyTransaction) transaction));
@@ -93,20 +88,23 @@ public class Position {
         return openPosition.compareTo(transaction.getUnits()) != -1;
     }
 
-    private boolean updateLots(Transaction transaction) {
+    private boolean updateLots(Transaction tx) {
 
         for (Lot lot : lots) {
             if (!lot.closed()) {
 
-                BigDecimal remainder = lot.getRemainingQuantity().subtract(transaction.getUnits());
+                BigDecimal remainder = lot.getRemainingQuantity().subtract(tx.getUnits());
 
                 if (remainder.compareTo(BigDecimal.ZERO) == -1) {
-                    //TODO: What do we do with the commission - should it be split?
-                    Transaction closingTransaction = new SellTransaction(transaction.getRef(), transaction.getSymbol(),
-                            transaction.getDate(), lot.getRemainingQuantity(), transaction.getPrice(), transaction.getCommission());
 
-                    Transaction overflowTransaction = new SellTransaction(transaction.getRef(), transaction.getSymbol(),
-                            transaction.getDate(), remainder.negate(), transaction.getPrice(), transaction.getCommission());
+                    //TODO: What do we do with the commission - should it be split?
+                    Transaction closingTransaction = new SellTransaction(tx.getFund(),
+                            tx.getDate(), lot.getRemainingQuantity(), tx.getPrice(),
+                            tx.getCommission());
+
+                    Transaction overflowTransaction = new SellTransaction(tx.getFund(),
+                            tx.getDate(), remainder.negate(), tx.getPrice(),
+                            tx.getCommission());
 
                     lot.addClosingTransaction(closingTransaction);
                     lot.setRemainingQuantity(BigDecimal.ZERO);
@@ -115,7 +113,7 @@ public class Position {
                         break;
 
                 } else {
-                    lot.addClosingTransaction(transaction);
+                    lot.addClosingTransaction(tx);
                     lot.setRemainingQuantity(remainder);
 
                     return true;
@@ -200,26 +198,5 @@ public class Position {
             cashOut = cashOut.add(lot.cashOut());
         }
         return cashOut;
-    }
-
-    private List<Transaction> getTransactionsByDate() {
-        List<Transaction> list = new ArrayList<Transaction>(transactions.values());
-        Collections.sort(list);
-        return list;
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        return EqualsBuilder.reflectionEquals(this, obj);
-    }
-
-    @Override
-    public int hashCode() {
-        return HashCodeBuilder.reflectionHashCode(this);
-    }
-
-    @Override
-    public String toString() {
-        return ToStringBuilder.reflectionToString(this);
     }
 }

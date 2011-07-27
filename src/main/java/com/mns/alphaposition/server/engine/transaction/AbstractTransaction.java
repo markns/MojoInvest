@@ -1,28 +1,23 @@
 package com.mns.alphaposition.server.engine.transaction;
 
-import org.joda.time.DateMidnight;
-import org.joda.time.format.DateTimeFormat;
-import org.joda.time.format.DateTimeFormatter;
+import com.mns.alphaposition.shared.engine.model.Fund;
+import org.joda.time.LocalDate;
 
 import java.math.BigDecimal;
-import java.math.RoundingMode;
 
 public abstract class AbstractTransaction implements Transaction {
 
     protected final String ref;
-    protected final String symbol;
-    protected final DateMidnight date;
+    protected final Fund fund;
+    protected final LocalDate date;
     protected final BigDecimal units;
     protected final BigDecimal price;
     protected final BigDecimal commission;
 
-    protected final static DateTimeFormatter fmt = DateTimeFormat.forPattern("E dd MMM yyyy");
-
-
-    public AbstractTransaction(String ref, String symbol, DateMidnight date, BigDecimal units,
+    public AbstractTransaction(Fund fund, LocalDate date, BigDecimal units,
                                BigDecimal price, BigDecimal commission) {
-        this.ref = ref;
-        this.symbol = symbol;
+        this.ref = fund.getSymbol() + "/" + date;
+        this.fund = fund;
         this.date = date;
         this.units = units;
         this.price = price;
@@ -33,11 +28,11 @@ public abstract class AbstractTransaction implements Transaction {
         return ref;
     }
 
-    public String getSymbol() {
-        return symbol;
+    public Fund getFund() {
+        return fund;
     }
 
-    public DateMidnight getDate() {
+    public LocalDate getDate() {
         return date;
     }
 
@@ -53,18 +48,4 @@ public abstract class AbstractTransaction implements Transaction {
         return commission;
     }
 
-    @Override
-    public String toString() {
-        return symbol + '\'' +
-                ", units=" + units +
-                ", price=" + price.setScale(2, RoundingMode.HALF_UP) +
-                ", commission=" + commission +
-                ", date=" + fmt.print(date);
-    }
-
-    public int compareTo(Object o) {
-        Transaction otherTransaction = (Transaction) o;
-        return date.compareTo(otherTransaction.getDate());
-    }
-    
 }

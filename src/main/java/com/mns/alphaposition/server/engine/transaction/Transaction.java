@@ -1,6 +1,7 @@
 package com.mns.alphaposition.server.engine.transaction;
 
-import org.joda.time.DateMidnight;
+import com.mns.alphaposition.shared.engine.model.Fund;
+import org.joda.time.LocalDate;
 
 import java.math.BigDecimal;
 
@@ -58,13 +59,13 @@ import java.math.BigDecimal;
  * Dividend: cash value = event-adjusted share count * dividend value
  *
  */
-public interface Transaction extends Comparable {
+public interface Transaction {
 
     String getRef();
 
-    String getSymbol();
+    Fund getFund();
 
-    DateMidnight getDate();
+    LocalDate getDate();
 
     BigDecimal getUnits();
 

@@ -2,10 +2,6 @@ package com.mns.alphaposition.server.engine.portfolio;
 
 import com.mns.alphaposition.server.engine.transaction.BuyTransaction;
 import com.mns.alphaposition.server.engine.transaction.Transaction;
-import org.apache.commons.lang.builder.EqualsBuilder;
-import org.apache.commons.lang.builder.HashCodeBuilder;
-import org.apache.commons.lang.builder.ToStringBuilder;
-import org.apache.log4j.Logger;
 
 import java.math.BigDecimal;
 import java.math.MathContext;
@@ -39,8 +35,6 @@ import java.util.List;
  */
 
 public class Lot {
-
-    private final Logger logger = Logger.getLogger(Lot.class);
 
     /**
      * Share count of the transaction that opened the lot
@@ -84,8 +78,7 @@ public class Lot {
 
     public BigDecimal costBasis() {
         return initialInvestment.add(openingTransaction.getCommission())
-                .multiply(remainingQuantity.divide(initialQuantity, MathContext.DECIMAL32
-));
+                .multiply(remainingQuantity.divide(initialQuantity, MathContext.DECIMAL32));
     }
 
     public BigDecimal marketValue(BigDecimal sharePrice) {
@@ -131,19 +124,4 @@ public class Lot {
         return remainingQuantity.compareTo(BigDecimal.ZERO) == 0;
     }
 
-    @Override
-    public boolean equals(Object obj) {
-        return EqualsBuilder.reflectionEquals(this, obj);
-    }
-
-    @Override
-    public int hashCode() {
-        return HashCodeBuilder.reflectionHashCode(this);
-    }
-
-
-    @Override
-    public String toString() {
-        return ToStringBuilder.reflectionToString(this);
-    }
 }

@@ -6,9 +6,13 @@ public class MomentumStrategyParams<T> implements StrategyParams<T> {
 
     private RankingStrategyParams rankingStrategyParams;
 
-    public MomentumStrategyParams(int rebalanceFrequency, RankingStrategyParams rankingStrategyParams) {
+    private int portfolioSize;
+
+    public MomentumStrategyParams(int rebalanceFrequency, RankingStrategyParams rankingStrategyParams,
+                                  int portfolioSize) {
         this.rebalanceFrequency = rebalanceFrequency;
         this.rankingStrategyParams = rankingStrategyParams;
+        this.portfolioSize = portfolioSize;
     }
 
     public int getRebalanceFrequency() {
@@ -20,4 +24,7 @@ public class MomentumStrategyParams<T> implements StrategyParams<T> {
     }
 
 
+    public int getPortfolioSize() {
+        return portfolioSize;
+    }
 }

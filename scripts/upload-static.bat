@@ -3,5 +3,5 @@ appcfg.py upload_data ^
 	--config_file=config.yml ^
 	--filename="../data/etf-static.csv" ^
 	--url=http://alphaposition.appspot.com/remote_api ^
-    --application=s~alphaposition ^
+    --application=alphaposition ^
 	--kind=Fund
