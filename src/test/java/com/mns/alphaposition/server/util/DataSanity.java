@@ -13,6 +13,9 @@ public class DataSanity {
 
     public static final String DATA_DIR = "C:\\workspace\\Alpha-Position\\src\\test\\resources\\quote\\";
 
+    // Run and pipe to missing.txt
+    //grep -f missing.txt -v etf-static.csv  > etf-static2.csv
+
     @Test
     public void findFundsWithNoData() throws IOException {
 
