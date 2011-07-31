@@ -6,35 +6,21 @@ import com.gwtplatform.dispatch.shared.ActionException;
 import com.mns.alphaposition.shared.action.RunBackTestAction;
 import com.mns.alphaposition.shared.action.RunBackTestResult;
 
-import com.google.inject.Inject;
-
 public class RunBackTestHandler implements ActionHandler<RunBackTestAction, RunBackTestResult> {
 
 
-
-
-    @Inject
-    //Map of strategies
-
     @Override
-    public RunBackTestResult execute(RunBackTestAction runBackTestAction, ExecutionContext executionContext)
-            throws ActionException {
-
-        //look up strategy in map
-        //strategy.execute
-
-        return null;
+    public RunBackTestResult execute(RunBackTestAction runBackTestAction, ExecutionContext executionContext) throws ActionException {
+        return null;  //To change body of implemented methods use File | Settings | File Templates.
     }
 
     @Override
     public Class<RunBackTestAction> getActionType() {
-        return RunBackTestAction.class;
+        return null;  //To change body of implemented methods use File | Settings | File Templates.
     }
 
     @Override
-    public void undo(RunBackTestAction runBackTestAction, RunBackTestResult runBackTestResult,
-                     ExecutionContext executionContext) throws ActionException {
-
-
+    public void undo(RunBackTestAction runBackTestAction, RunBackTestResult runBackTestResult, ExecutionContext executionContext) throws ActionException {
+        //To change body of implemented methods use File | Settings | File Templates.
     }
 }
