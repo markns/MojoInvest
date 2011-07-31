@@ -1,7 +1,7 @@
 package com.mns.alphaposition.server.engine.strategy;
 
 import com.google.inject.Inject;
-import com.mns.alphaposition.server.engine.execution.Executor;
+import com.mns.alphaposition.server.engine.execution.NextTradingDayExecutor;
 import com.mns.alphaposition.server.engine.portfolio.Portfolio;
 import com.mns.alphaposition.shared.engine.model.Fund;
 import com.mns.alphaposition.shared.params.MomentumStrategyParams;
@@ -16,10 +16,10 @@ public class MomentumStrategy implements TradingStrategy<MomentumStrategyParams>
 
     private final RankingStrategy rankingStrategy;
     private final Portfolio portfolio;
-    private final Executor executor;
+    private final NextTradingDayExecutor executor;
 
     @Inject
-    public MomentumStrategy(RankingStrategy rankingStrategy, Executor executor, Portfolio portfolio) {
+    public MomentumStrategy(RankingStrategy rankingStrategy, NextTradingDayExecutor executor, Portfolio portfolio) {
         this.rankingStrategy = rankingStrategy;
         this.portfolio = portfolio;
         this.executor = executor;
@@ -33,11 +33,18 @@ public class MomentumStrategy implements TradingStrategy<MomentumStrategyParams>
 
         for (LocalDate rebalanceDate : rebalanceDates) {
             List<Fund> ranked = rankingStrategy.rank(rebalanceDate, funds, params.getRankingStrategyParams());
-            List<Fund> selection = getSelection(ranked, params);
+            List<Fund> selection;
+            try {
+                selection = getSelection(ranked, params);
+            } catch (StrategyException e) {
+                System.out.println(rebalanceDate + " " + e.getMessage());
+                continue;
+            }
+            System.out.print(rebalanceDate + " ");
+
             sellLosers(rebalanceDate, selection);
             buyWinners(params, rebalanceDate, selection);
 
-            System.out.print(rebalanceDate + " ");
             System.out.println(portfolio);
         }
     }
@@ -56,7 +63,7 @@ public class MomentumStrategy implements TradingStrategy<MomentumStrategyParams>
         BigDecimal availableCash = portfolio.getCash().
                 subtract(executor.getTransactionCost().
                         multiply(numEmpty));
-
+        //TODO: MUST figure out why we were buying more than were sold, when execution price was 0 and ProShares
         for (Fund fund : selection) {
             if (!portfolio.contains(fund)) {
                 BigDecimal allocation = availableCash
@@ -66,7 +73,10 @@ public class MomentumStrategy implements TradingStrategy<MomentumStrategyParams>
         }
     }
 
-    private List<Fund> getSelection(List<Fund> ranked, MomentumStrategyParams params) {
+    private List<Fund> getSelection(List<Fund> ranked, MomentumStrategyParams params)
+            throws StrategyException {
+        if (ranked.size() <= params.getPortfolioSize() * 2)
+            throw new StrategyException("Not enough funds in population to make selection");
         return ranked.subList(0, params.getPortfolioSize());
     }
 

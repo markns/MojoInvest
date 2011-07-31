@@ -3,8 +3,9 @@ package com.mns.alphaposition.server.engine;
 import com.google.appengine.tools.development.testing.LocalDatastoreServiceTestConfig;
 import com.google.appengine.tools.development.testing.LocalServiceTestHelper;
 import com.googlecode.objectify.ObjectifyService;
+import com.mns.alphaposition.server.data.FundSet;
 import com.mns.alphaposition.server.data.QuoteSet;
-import com.mns.alphaposition.server.engine.execution.Executor;
+import com.mns.alphaposition.server.engine.execution.NextTradingDayExecutor;
 import com.mns.alphaposition.server.engine.model.QuoteDao;
 import com.mns.alphaposition.server.engine.portfolio.Portfolio;
 import com.mns.alphaposition.server.engine.strategy.MomentumStrategy;
@@ -23,29 +24,34 @@ import org.junit.Test;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class MomentumStrategyTests {
 
+    private final QuoteDao quoteDao = new QuoteDao(ObjectifyService.factory());
+
     private final PortfolioParams portfolioParams =
             new PortfolioParams(new BigDecimal("1000"), new BigDecimal("12.95"));
-    private final Portfolio portfolio = new Portfolio(portfolioParams);
-    private final Executor executor = new Executor(portfolio, portfolioParams.getTransactionCost());
+    private final Portfolio portfolio = new Portfolio(portfolioParams, quoteDao);
+    private final NextTradingDayExecutor executor = new NextTradingDayExecutor(portfolio, portfolioParams.getTransactionCost(), quoteDao);
 
     private final RankingStrategyParams rankingStrategyParams = new SimpleRankingStrategyParams(10, 9);
     private final MomentumStrategyParams strategyParams = new MomentumStrategyParams(1, rankingStrategyParams, 3);
 
-    private final LocalDate fromDate = new LocalDate(2009, 1, 1);
+    private final LocalDate fromDate = new LocalDate(2000, 1, 1);
     private final LocalDate toDate = new LocalDate(2011, 1, 1);
 
-    private final String[] fundStrs = {"iShares FTSE China 25 Index Fund,FXI,China Region,iShares,7030000000,0.0072,2004-10-05,15407400",
-            "iShares MSCI Taiwan Index,EWT,China Region,iShares,3450000000,0.0071,2000-06-20,11161600",
-            "iShares Silver Trust,SLV,Commodities Precious Metals,iShares,12350000000,0.005,2006-04-21,71429800",
-            "iShares S&P Global Telecommunications,IXP,Communications,iShares,413300000,0.0048,2001-11-12,39416",
-            "iShares Dow Jones US Consumer Services,IYC,Consumer Discretionary,iShares,247920000,0.0047,2000-06-12,38952"};
-    private final List<Fund> funds = loadAList(fundStrs);
+//    private final String[] fundStrs = {"iShares FTSE China 25 Index Fund,FXI,China Region,iShares,7030000000,0.0072,2004-10-05,15407400",
+//            "iShares MSCI Taiwan Index,EWT,China Region,iShares,3450000000,0.0071,2000-06-20,11161600",
+//            "iShares Silver Trust,SLV,Commodities Precious Metals,iShares,12350000000,0.005,2006-04-21,71429800",
+//            "iShares S&P Global Telecommunications,IXP,Communications,iShares,413300000,0.0048,2001-11-12,39416",
+//            "iShares Dow Jones US Consumer Services,IYC,Consumer Discretionary,iShares,247920000,0.0047,2000-06-12,38952"};
 
-    private final QuoteDao quoteDao = new QuoteDao(ObjectifyService.factory());
+    private final List<Fund> funds = FundSet.getFundsByProvider(Arrays.asList("First Trust"));
+    private final List<Quote> quotes = QuoteSet.getQuotesByProvider(Arrays.asList("First Trust"));
+
+
 
     private final LocalDatastoreServiceTestConfig config = new LocalDatastoreServiceTestConfig();
     private final LocalServiceTestHelper helper = new LocalServiceTestHelper(config);
@@ -55,7 +61,7 @@ public class MomentumStrategyTests {
     @Before
     public void setUp() {
         helper.setUp();
-        quoteDao.put(QuoteSet.getQuotes());
+        quoteDao.put(quotes);
         time = System.currentTimeMillis();
         for (Fund fund : funds) {
             List<Quote> quotes = quoteDao.query(fund);
@@ -69,6 +75,7 @@ public class MomentumStrategyTests {
 
     @Test
     public void testMomentumStrategy() {
+        System.out.println("Starting run of testMomentumStrategy");
         SimpleRankingStrategy rankingStrategy = new SimpleRankingStrategy(quoteDao);
         MomentumStrategy tradingStrategy = new MomentumStrategy(rankingStrategy, executor, portfolio);
         time = System.currentTimeMillis();

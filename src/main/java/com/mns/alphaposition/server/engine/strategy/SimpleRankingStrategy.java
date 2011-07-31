@@ -29,6 +29,7 @@ public class SimpleRankingStrategy implements RankingStrategy<SimpleRankingStrat
                 params.getAveragingRange());
         Collection<Quote> toQuotes = quoteDao.getAverage(funds, rebalanceDate, params.getAveragingRange());
 
+        //TODO: This method should be optimised
         Map<Fund, PerformanceStat> ranker = new HashMap<Fund, PerformanceStat>(funds.size());
         Map<String, Fund> lookup = new HashMap<String, Fund>(funds.size());
         for (Fund fund : funds) {
@@ -41,16 +42,20 @@ public class SimpleRankingStrategy implements RankingStrategy<SimpleRankingStrat
         for (Quote toQuote : toQuotes) {
             ranker.get(lookup.get(toQuote.getSymbol())).toQuote = toQuote;
         }
-        for (PerformanceStat stat : ranker.values()) {
-            if (stat.fromQuote != null && stat.toQuote != null) {
-                stat.percentChange = percentageChange(stat.fromQuote, stat.toQuote);
+        Map<Fund, PerformanceStat> rankerNotNull = new HashMap<Fund, PerformanceStat>(funds.size());
+        for (Map.Entry<Fund, PerformanceStat> entry : ranker.entrySet()) {
+            if (entry.getValue().fromQuote != null && entry.getValue().toQuote != null) {
+                rankerNotNull.put(entry.getKey(), entry.getValue());
             }
+        }
+        for (PerformanceStat stat : rankerNotNull.values()) {
+            stat.percentChange = percentageChange(stat.fromQuote, stat.toQuote);
         }
 
         //Begin guava voodoo
-        Ordering<Fund> valueComparator = Ordering.natural().onResultOf(Functions.forMap(ranker)).reverse()
+        Ordering<Fund> valueComparator = Ordering.natural().onResultOf(Functions.forMap(rankerNotNull)).reverse()
                 .compound(Ordering.natural());
-        SortedMap<Fund, PerformanceStat> map = ImmutableSortedMap.copyOf(ranker, valueComparator);
+        SortedMap<Fund, PerformanceStat> map = ImmutableSortedMap.copyOf(rankerNotNull, valueComparator);
 
         for (Map.Entry<Fund, PerformanceStat> entry : map.entrySet()) {
             System.out.println(entry.getKey().getSymbol() + " "

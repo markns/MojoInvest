@@ -36,7 +36,7 @@ public class TradingDayUtils {
 
     public static List<LocalDate> getDailySeries(LocalDate fromDate, LocalDate toDate, boolean forwards) {
         List<LocalDate> dates = new ArrayList<LocalDate>();
-        while (toDate.isAfter(fromDate)) {
+        while (toDate.isAfter(fromDate) || toDate.isEqual(fromDate)) {
             toDate = rollIfRequired(toDate);
             dates.add(toDate);
             toDate = toDate.minusDays(1);

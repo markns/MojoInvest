@@ -7,6 +7,7 @@ import com.mns.alphaposition.server.engine.transaction.BuyTransaction;
 import com.mns.alphaposition.server.engine.transaction.SellTransaction;
 import com.mns.alphaposition.server.engine.transaction.Transaction;
 import com.mns.alphaposition.shared.engine.model.Fund;
+import com.mns.alphaposition.shared.engine.model.Quote;
 import org.joda.time.LocalDate;
 
 import java.math.BigDecimal;
@@ -30,19 +31,19 @@ public class NextTradingDayExecutor {
     }
 
     public void buy(Fund fund, LocalDate date, BigDecimal allocation) {
-        System.out.println("Buying " + fund + " " + allocation + " " + date);
-        //TODO: getExecutionPrice()
-        BigDecimal executionPrice = BigDecimal.ONE;
-        Transaction tx = new BuyTransaction(fund, date, allocation, executionPrice, transactionCost);
+        //TODO: get execution price should be mid between open and close
+        Quote executionQuote = quoteDao.get(fund, date);
+        System.out.println("Buying " + fund + " " + allocation + " " + date + " " + executionQuote.getClose());
+        Transaction tx = new BuyTransaction(fund, date, allocation, executionQuote.getClose(), transactionCost);
         portfolio.add(tx);
     }
 
     public void sellAll(Fund fund, LocalDate date) {
-        System.out.println("Selling " + fund + " " + date);
-        //TODO: getExecutionPrice()
-        BigDecimal executionPrice = BigDecimal.ONE;
+        //TODO: get execution price should be mid between open and close
+        Quote executionQuote = quoteDao.get(fund, date);
+        System.out.println("Selling " + fund + " " + date + " " + executionQuote.getClose());
         Position position = portfolio.get(fund);
-        Transaction tx = new SellTransaction(fund, date, position.shares(), executionPrice, transactionCost);
+        Transaction tx = new SellTransaction(fund, date, position.shares(), executionQuote.getClose(), transactionCost);
         portfolio.add(tx);
     }
 }

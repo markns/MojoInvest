@@ -27,6 +27,7 @@ public class QuoteUtilsTests {
 
         List<Quote> expected = new ArrayList<Quote>();
 
+        expected.add(new Quote("EWA", new LocalDate(2011, 7, 4), new BigDecimal("1"), new BigDecimal("1"), new BigDecimal("1"), new BigDecimal("1"), new BigDecimal("1"), new BigDecimal("1"), true));
         expected.add(new Quote("EWA", new LocalDate(2011, 7, 5), new BigDecimal("1"), new BigDecimal("1"), new BigDecimal("1"), new BigDecimal("1"), new BigDecimal("1"), new BigDecimal("1"), true));
         expected.add(new Quote("EWA", new LocalDate(2011, 7, 6), new BigDecimal("1"), new BigDecimal("1"), new BigDecimal("1"), new BigDecimal("1"), new BigDecimal("1"), new BigDecimal("1"), true));
         expected.add(new Quote("EWA", new LocalDate(2011, 7, 8), new BigDecimal("1"), new BigDecimal("1"), new BigDecimal("1"), new BigDecimal("1"), new BigDecimal("1"), new BigDecimal("1"), true));
@@ -39,6 +40,26 @@ public class QuoteUtilsTests {
 
         assertEquals(expected, actual);
     }
+
+
+    @Test
+    public void testFill2() {
+
+        List<Quote> quotes = new ArrayList<Quote>();
+
+        quotes.add(new Quote("XPP", new LocalDate("2009-06-04"), new BigDecimal("1"), new BigDecimal("1"), new BigDecimal("1"), new BigDecimal("1"), new BigDecimal("1"), new BigDecimal("1"), false));
+        quotes.add(new Quote("XPP", new LocalDate("2009-06-05"), new BigDecimal("2"), new BigDecimal("1"), new BigDecimal("1"), new BigDecimal("1"), new BigDecimal("1"), new BigDecimal("1"), false));
+        quotes.add(new Quote("XPP", new LocalDate("2009-06-08"), new BigDecimal("3"), new BigDecimal("1"), new BigDecimal("1"), new BigDecimal("1"), new BigDecimal("1"), new BigDecimal("1"), false));
+
+        List<Quote> expected = new ArrayList<Quote>();
+
+        expected.add(new Quote("XPP", new LocalDate("2009-06-09"), new BigDecimal("3"), new BigDecimal("1"), new BigDecimal("1"), new BigDecimal("1"), new BigDecimal("1"), new BigDecimal("1"), true));
+
+        List<Quote> actual = QuoteUtils.getMissingQuotes(new LocalDate("2009-06-04"), new LocalDate("2009-06-09"), quotes);
+
+        assertEquals(expected, actual);
+    }
+
 
 
 }

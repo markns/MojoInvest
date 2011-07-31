@@ -92,6 +92,12 @@ public class QuoteDao extends DAOBase {
         return get(keys);
     }
 
+    public Quote get(Fund fund, LocalDate date) {
+        Key<Quote> key = new Key<Quote>(Quote.class, QuoteUtils.quoteId(fund.getSymbol(), date));
+        return ofy().get(key);
+    }
+
+
     public Collection<Quote> getAverage(Collection<Fund> funds, LocalDate date, int averagingRange) {
         List<LocalDate> dates = TradingDayUtils.getDailySeries(date.minusDays(averagingRange), date, true);
         Collection<Quote> averageQuotes = new ArrayList<Quote>();
@@ -137,7 +143,6 @@ public class QuoteDao extends DAOBase {
         }
         return byFund;
     }
-
 
     public Map<LocalDate, List<Quote>> getByDate(Collection<Fund> funds, List<LocalDate> dates) {
         Collection<Quote> quotes = get(funds, dates);

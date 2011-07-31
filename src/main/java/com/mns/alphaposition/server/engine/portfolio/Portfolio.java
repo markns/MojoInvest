@@ -1,10 +1,13 @@
 package com.mns.alphaposition.server.engine.portfolio;
 
+import com.mns.alphaposition.server.engine.model.QuoteDao;
 import com.mns.alphaposition.server.engine.transaction.Transaction;
 import com.mns.alphaposition.shared.engine.model.Fund;
 import com.mns.alphaposition.shared.params.PortfolioParams;
+import org.joda.time.LocalDate;
 
 import java.math.BigDecimal;
+import java.math.MathContext;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -37,20 +40,22 @@ public class Portfolio {
 
     private BigDecimal cash;
 
+    private QuoteDao quoteDao;
+
     private BigDecimal initialInvestment;
 
     private HashMap<Fund, Position> positions;
 
-    public Portfolio(PortfolioParams params) {
+    public Portfolio(PortfolioParams params, QuoteDao quoteDao) {
         this.cash = params.getInitialInvestment();
         this.initialInvestment = params.getInitialInvestment();
         this.positions = new HashMap<Fund, Position>();
+        this.quoteDao = quoteDao;
     }
 
     public BigDecimal getCash() {
         return cash;
     }
-
 
 
     public boolean contains(Fund fund) {
@@ -101,64 +106,65 @@ public class Portfolio {
     }
 
 
-    //    public BigDecimal costBasis() {
-//        BigDecimal costBasis = BigDecimal.ZERO;
-//        for (Position position : positions.values()) {
-//            if (position.shares().compareTo(BigDecimal.ZERO) == 0)
-//                continue;
-//            costBasis = costBasis.add(position.costBasis());
-//        }
-//        return costBasis;
-//    }
-//
-//    public BigDecimal gain(Map<Fund, BigDecimal> sharePrices) {
-//        BigDecimal gain = BigDecimal.ZERO;
-//        for (Position position : positions.values()) {
-//            if (position.shares().compareTo(BigDecimal.ZERO) == 0)
-//                continue;
-//            BigDecimal sharePrice = sharePrices.get(position.getSymbol());
-//            gain = gain.add(position.gain(sharePrice));
-//        }
-//        return gain;
-//    }
-//
-//    public BigDecimal gainPercentage(Map<String, BigDecimal> sharePrices) {
-//        BigDecimal gainPercentage = BigDecimal.ZERO;
-//        try {
-//            gainPercentage = gain(sharePrices).divide(costBasis(), MathContext.DECIMAL32)
-//                    //multiply by 100 for percentage
-//                    .multiply(BigDecimal.TEN.multiply(BigDecimal.TEN));
-//        } catch (ArithmeticException e) {
-//            //TODO: Is this acceptable?
-//            //pass;
-//        }
-//        return gainPercentage;
-//    }
-//
-//    public BigDecimal returnsGain(Map<String, BigDecimal> sharePrices) {
-//        BigDecimal returnsGain = BigDecimal.ZERO;
-//        for (Position position : positions.values()) {
-//            BigDecimal sharePrice = sharePrices.get(position.getSymbol());
-//            returnsGain = returnsGain.add(position.returnsGain(sharePrice));
-//        }
-//        return returnsGain;
-//    }
-//
-//    public BigDecimal cashOut() {
-//        BigDecimal cashOut = BigDecimal.ZERO;
-//        for (Position position : positions.values()) {
-//            cashOut = cashOut.add(position.cashOut());
-//        }
-//        return cashOut;
-//    }
-//
-//    public BigDecimal overallReturn(Map<String, BigDecimal> sharePrices) {
-//        return returnsGain(sharePrices).divide(cashOut().negate(), MathContext.DECIMAL32)
-//                //multiply by 100 for percentage
-//                .multiply(BigDecimal.TEN.multiply(BigDecimal.TEN));
+    public BigDecimal costBasis() {
+        BigDecimal costBasis = BigDecimal.ZERO;
+        for (Position position : positions.values()) {
+            if (position.shares().compareTo(BigDecimal.ZERO) == 0)
+                continue;
+            costBasis = costBasis.add(position.costBasis());
+        }
+        return costBasis;
+    }
+
+    public BigDecimal gain() {
+        BigDecimal gain = BigDecimal.ZERO;
+        for (Position position : positions.values()) {
+            if (position.shares().compareTo(BigDecimal.ZERO) == 0)
+                continue;
+//            quoteDao.get(position.getFund(), new LocalDate("2011-06-24")).getClose();
+            BigDecimal sharePrice = quoteDao.get(position.getFund(), new LocalDate("2011-06-24")).getClose();
+            gain = gain.add(position.gain(sharePrice));
+        }
+        return gain;
+    }
+
+    public BigDecimal gainPercentage(Map<String, BigDecimal> sharePrices) {
+        BigDecimal gainPercentage = BigDecimal.ZERO;
+        try {
+            gainPercentage = gain().divide(costBasis(), MathContext.DECIMAL32)
+                    //multiply by 100 for percentage
+                    .multiply(BigDecimal.TEN.multiply(BigDecimal.TEN));
+        } catch (ArithmeticException e) {
+            //TODO: Is this acceptable?
+            //pass;
+        }
+        return gainPercentage;
+    }
+
+    public BigDecimal returnsGain() {
+        BigDecimal returnsGain = BigDecimal.ZERO;
+        for (Position position : positions.values()) {
+            BigDecimal sharePrice = quoteDao.get(position.getFund(), new LocalDate("2011-06-24")).getClose();
+            returnsGain = returnsGain.add(position.returnsGain(sharePrice));
+        }
+        return returnsGain;
+    }
+
+    public BigDecimal cashOut() {
+        BigDecimal cashOut = BigDecimal.ZERO;
+        for (Position position : positions.values()) {
+            cashOut = cashOut.add(position.cashOut());
+        }
+        return cashOut;
+    }
+
+    public BigDecimal overallReturn() {
+        return returnsGain().divide(cashOut().negate(), MathContext.DECIMAL32)
+                //multiply by 100 for percentage
+                .multiply(BigDecimal.TEN.multiply(BigDecimal.TEN));
 
 
-//    }
+    }
 
 
     @Override
@@ -167,6 +173,7 @@ public class Portfolio {
         for (Map.Entry<Fund, Position> entry : positions.entrySet()) {
             sb.append(entry.getKey()).append(" ").append(entry.getValue().shares()).append("\n");
         }
+        sb.append("Overall return: ").append(overallReturn());
         return sb.toString();
     }
 }
