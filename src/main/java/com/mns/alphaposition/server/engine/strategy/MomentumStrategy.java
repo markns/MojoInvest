@@ -40,7 +40,7 @@ public class MomentumStrategy implements TradingStrategy<MomentumStrategyParams>
                 System.out.println(rebalanceDate + " " + e.getMessage());
                 continue;
             }
-            System.out.print(rebalanceDate + " ");
+            System.out.println("** " + rebalanceDate + " **");
 
             sellLosers(rebalanceDate, selection);
             buyWinners(params, rebalanceDate, selection);

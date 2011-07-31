@@ -57,12 +57,12 @@ public class SimpleRankingStrategy implements RankingStrategy<SimpleRankingStrat
                 .compound(Ordering.natural());
         SortedMap<Fund, PerformanceStat> map = ImmutableSortedMap.copyOf(rankerNotNull, valueComparator);
 
-        for (Map.Entry<Fund, PerformanceStat> entry : map.entrySet()) {
-            System.out.println(entry.getKey().getSymbol() + " "
-                    + entry.getValue().fromQuote.getClose() + " "
-                    + entry.getValue().toQuote.getClose() + " "
-                    + entry.getValue().percentChange);
-        }
+//        for (Map.Entry<Fund, PerformanceStat> entry : map.entrySet()) {
+//            System.out.println(entry.getKey().getSymbol() + " "
+//                    + entry.getValue().fromQuote.getClose() + " "
+//                    + entry.getValue().toQuote.getClose() + " "
+//                    + entry.getValue().percentChange);
+//        }
 
         return new ArrayList<Fund>(map.keySet());
     }

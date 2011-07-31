@@ -31,14 +31,14 @@ public class MomentumStrategyTests {
     private final QuoteDao quoteDao = new QuoteDao(ObjectifyService.factory());
 
     private final PortfolioParams portfolioParams =
-            new PortfolioParams(new BigDecimal("1000"), new BigDecimal("12.95"));
+            new PortfolioParams(new BigDecimal("10000"), new BigDecimal("12.95"));
     private final Portfolio portfolio = new Portfolio(portfolioParams, quoteDao);
     private final NextTradingDayExecutor executor = new NextTradingDayExecutor(portfolio, portfolioParams.getTransactionCost(), quoteDao);
 
     private final RankingStrategyParams rankingStrategyParams = new SimpleRankingStrategyParams(10, 9);
     private final MomentumStrategyParams strategyParams = new MomentumStrategyParams(1, rankingStrategyParams, 3);
 
-    private final LocalDate fromDate = new LocalDate(2000, 1, 1);
+    private final LocalDate fromDate = new LocalDate(2005, 1, 1);
     private final LocalDate toDate = new LocalDate(2011, 1, 1);
 
 //    private final String[] fundStrs = {"iShares FTSE China 25 Index Fund,FXI,China Region,iShares,7030000000,0.0072,2004-10-05,15407400",
@@ -47,8 +47,9 @@ public class MomentumStrategyTests {
 //            "iShares S&P Global Telecommunications,IXP,Communications,iShares,413300000,0.0048,2001-11-12,39416",
 //            "iShares Dow Jones US Consumer Services,IYC,Consumer Discretionary,iShares,247920000,0.0047,2000-06-12,38952"};
 
-    private final List<Fund> funds = FundSet.getFundsByProvider(Arrays.asList("First Trust"));
-    private final List<Quote> quotes = QuoteSet.getQuotesByProvider(Arrays.asList("First Trust"));
+    public static final String provider = "iPath";
+    private final List<Fund> funds = FundSet.getFundsByProvider(Arrays.asList(provider));
+    private final List<Quote> quotes = QuoteSet.getQuotesByProvider(Arrays.asList(provider));
 
 
 

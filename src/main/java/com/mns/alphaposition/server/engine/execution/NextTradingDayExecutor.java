@@ -34,7 +34,8 @@ public class NextTradingDayExecutor {
         //TODO: get execution price should be mid between open and close
         Quote executionQuote = quoteDao.get(fund, date);
         System.out.println("Buying " + fund + " " + allocation + " " + date + " " + executionQuote.getClose());
-        Transaction tx = new BuyTransaction(fund, date, allocation, executionQuote.getClose(), transactionCost);
+        BigDecimal shares = allocation.divide(executionQuote.getClose(), 0, BigDecimal.ROUND_DOWN);
+        Transaction tx = new BuyTransaction(fund, date, shares, executionQuote.getClose(), transactionCost);
         portfolio.add(tx);
     }
 

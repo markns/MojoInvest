@@ -111,11 +111,18 @@ public class Fund implements Comparable<Fund> {
     public String toString() {
         return "Fund{" +
                 "symbol='" + symbol + '\'' +
-                ", name='" + name + '\'' +
-                ", category='" + category + '\'' +
-                ", provider='" + provider + '\'' +
                 '}';
     }
+
+//    @Override
+//    public String toString() {
+//        return "Fund{" +
+//                "symbol='" + symbol + '\'' +
+//                ", name='" + name + '\'' +
+//                ", category='" + category + '\'' +
+//                ", provider='" + provider + '\'' +
+//                '}';
+//    }
 
     @Override
     public boolean equals(Object o) {
