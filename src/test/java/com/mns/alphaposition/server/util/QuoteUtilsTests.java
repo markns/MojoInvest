@@ -62,4 +62,25 @@ public class QuoteUtilsTests {
 
 
 
+    @Test
+    public void testFillQuotesExtendBeforeFromDate() {
+
+        List<Quote> quotes = new ArrayList<Quote>();
+
+        quotes.add(new Quote("XPP", new LocalDate("2009-06-04"), new BigDecimal("1"), new BigDecimal("1"), new BigDecimal("1"), new BigDecimal("1"), new BigDecimal("1"), new BigDecimal("1"), false));
+        quotes.add(new Quote("XPP", new LocalDate("2009-06-05"), new BigDecimal("2"), new BigDecimal("1"), new BigDecimal("1"), new BigDecimal("1"), new BigDecimal("1"), new BigDecimal("1"), false));
+        quotes.add(new Quote("XPP", new LocalDate("2009-06-08"), new BigDecimal("3"), new BigDecimal("1"), new BigDecimal("1"), new BigDecimal("1"), new BigDecimal("1"), new BigDecimal("1"), false));
+        quotes.add(new Quote("XPP", new LocalDate("2009-06-10"), new BigDecimal("4"), new BigDecimal("1"), new BigDecimal("1"), new BigDecimal("1"), new BigDecimal("1"), new BigDecimal("1"), false));
+
+        List<Quote> expected = new ArrayList<Quote>();
+
+        expected.add(new Quote("XPP", new LocalDate("2009-06-09"), new BigDecimal("3"), new BigDecimal("1"), new BigDecimal("1"), new BigDecimal("1"), new BigDecimal("1"), new BigDecimal("1"), true));
+        expected.add(new Quote("XPP", new LocalDate("2009-06-11"), new BigDecimal("4"), new BigDecimal("1"), new BigDecimal("1"), new BigDecimal("1"), new BigDecimal("1"), new BigDecimal("1"), true));
+
+        List<Quote> actual = QuoteUtils.getMissingQuotes(new LocalDate("2009-06-09"), new LocalDate("2009-06-11"), quotes);
+
+        assertEquals(expected, actual);
+    }
+
+
 }

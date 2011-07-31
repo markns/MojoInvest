@@ -20,6 +20,7 @@ public class QuoteUtils {
         return forDatastore(date) + " " + symbol;
     }
 
+    //TODO : tidy this method up
     public static List<Quote> getMissingQuotes(LocalDate fromDate, LocalDate toDate, List<Quote> quotes) {
 
         sortByDate(quotes);
@@ -33,17 +34,31 @@ public class QuoteUtils {
 
         for (LocalDate date : dates) {
             if (date.isBefore(earliestQuote.getDate())) {
+//                System.out.println("before");
                 missingQuotes.add(rollQuote(quote, date));
-            } else {
-                if (date.equals(quote.getDate())) {
-                    previousQuote = quote;
-                    if (quoteIter.hasNext()) {
-                        quote = quoteIter.next();
-                    }
+                continue;
+            }
+            while (date.isAfter(quote.getDate())) {
+//                System.out.println("after " + quote.getDate());
+                previousQuote = quote;
+                if (quoteIter.hasNext()) {
+                    quote = quoteIter.next();
                 } else {
-                    missingQuotes.add(rollQuote(previousQuote, date));
+                    break;
                 }
             }
+
+            if (date.equals(quote.getDate())) {
+//                System.out.println("equals");
+                previousQuote = quote;
+                if (quoteIter.hasNext()) {
+                    quote = quoteIter.next();
+                }
+            } else {
+//                System.out.println("added missing " + previousQuote);
+                missingQuotes.add(rollQuote(previousQuote, date));
+            }
+
         }
         return missingQuotes;
     }

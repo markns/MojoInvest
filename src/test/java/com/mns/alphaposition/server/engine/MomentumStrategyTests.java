@@ -23,7 +23,6 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -86,16 +85,6 @@ public class MomentumStrategyTests {
     @After
     public void tearDown() {
         helper.tearDown();
-    }
-
-    private static List<Fund> loadAList(String[] someStrs) {
-        List<Fund> funds1 = new ArrayList<Fund>();
-        for (String str : someStrs) {
-            String[] split = str.split(",");
-            funds1.add(new Fund(split[1], split[0], split[2], split[3], new BigDecimal(split[4]),
-                    new BigDecimal(split[5]), new LocalDate(split[6]), new BigDecimal(split[7])));
-        }
-        return funds1;
     }
 
 
