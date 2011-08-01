@@ -10,7 +10,6 @@ import java.math.BigDecimal;
 import java.math.MathContext;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Map;
 import java.util.Set;
 
 /**
@@ -69,7 +68,7 @@ public class Portfolio {
     public void add(Transaction transaction) throws PositionException {
         Fund fund = transaction.getFund();
         if (!positions.containsKey(fund)) {
-            positions.put(fund, new Position(fund));
+            positions.put(fund, new Position(quoteDao, fund));
         }
         positions.get(fund).add(transaction);
         cash = cash.add(transaction.getCashValue());
@@ -116,22 +115,20 @@ public class Portfolio {
         return costBasis;
     }
 
-    public BigDecimal gain() {
+    public BigDecimal gain(LocalDate date) {
         BigDecimal gain = BigDecimal.ZERO;
         for (Position position : positions.values()) {
             if (position.shares().compareTo(BigDecimal.ZERO) == 0)
                 continue;
-//            quoteDao.get(position.getFund(), new LocalDate("2011-06-24")).getClose();
-            BigDecimal sharePrice = quoteDao.get(position.getFund(), new LocalDate("2011-06-24")).getClose();
-            gain = gain.add(position.gain(sharePrice));
+            gain = gain.add(position.gain(date));
         }
         return gain;
     }
 
-    public BigDecimal gainPercentage(Map<String, BigDecimal> sharePrices) {
+    public BigDecimal gainPercentage(LocalDate date) {
         BigDecimal gainPercentage = BigDecimal.ZERO;
         try {
-            gainPercentage = gain().divide(costBasis(), MathContext.DECIMAL32)
+            gainPercentage = gain(date).divide(costBasis(), MathContext.DECIMAL32)
                     //multiply by 100 for percentage
                     .multiply(BigDecimal.TEN.multiply(BigDecimal.TEN));
         } catch (ArithmeticException e) {
@@ -141,11 +138,10 @@ public class Portfolio {
         return gainPercentage;
     }
 
-    public BigDecimal returnsGain() {
+    public BigDecimal returnsGain(LocalDate date) {
         BigDecimal returnsGain = BigDecimal.ZERO;
         for (Position position : positions.values()) {
-            BigDecimal sharePrice = quoteDao.get(position.getFund(), new LocalDate("2011-06-24")).getClose();
-            returnsGain = returnsGain.add(position.returnsGain(sharePrice));
+            returnsGain = returnsGain.add(position.returnsGain(date));
         }
         return returnsGain;
     }
@@ -158,22 +154,11 @@ public class Portfolio {
         return cashOut;
     }
 
-    public BigDecimal overallReturn() {
-        return returnsGain().divide(cashOut().negate(), MathContext.DECIMAL32)
+    public BigDecimal overallReturn(LocalDate date) {
+        return returnsGain(date)
+                .divide(cashOut().negate(), MathContext.DECIMAL32)
                 //multiply by 100 for percentage
                 .multiply(BigDecimal.TEN.multiply(BigDecimal.TEN));
-
-
     }
 
-
-    @Override
-    public String toString() {
-        StringBuilder sb = new StringBuilder("Current Portfolio:").append("\n");
-        for (Map.Entry<Fund, Position> entry : positions.entrySet()) {
-            sb.append(entry.getKey()).append(" ").append(entry.getValue().shares()).append("\n");
-        }
-        sb.append("Overall return: ").append(overallReturn());
-        return sb.toString();
-    }
 }

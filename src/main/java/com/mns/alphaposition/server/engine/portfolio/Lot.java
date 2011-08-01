@@ -36,6 +36,8 @@ import java.util.List;
 
 public class Lot {
 
+
+
     /**
      * Share count of the transaction that opened the lot
      */

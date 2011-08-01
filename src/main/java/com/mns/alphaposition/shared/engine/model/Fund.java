@@ -111,6 +111,7 @@ public class Fund implements Comparable<Fund> {
     public String toString() {
         return "Fund{" +
                 "symbol='" + symbol + '\'' +
+                ", name='" + name + '\'' +
                 '}';
     }
 

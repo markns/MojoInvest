@@ -1,9 +1,12 @@
 package com.mns.alphaposition.server.engine.portfolio;
 
+import com.mns.alphaposition.server.engine.model.QuoteDao;
 import com.mns.alphaposition.server.engine.transaction.BuyTransaction;
 import com.mns.alphaposition.server.engine.transaction.SellTransaction;
 import com.mns.alphaposition.server.engine.transaction.Transaction;
 import com.mns.alphaposition.shared.engine.model.Fund;
+import com.mns.alphaposition.shared.engine.model.Quote;
+import org.joda.time.LocalDate;
 
 import java.math.BigDecimal;
 import java.math.MathContext;
@@ -34,13 +37,17 @@ import java.util.Map;
  */
 public class Position {
 
+    private QuoteDao quoteDao;
+
     private Fund fund;
+
 
     private Map<String, Transaction> transactions;
 
     private List<Lot> lots;
 
-    public Position(Fund fund) {
+    public Position(QuoteDao quoteDao, Fund fund) {
+        this.quoteDao = quoteDao;
         this.fund = fund;
         this.transactions = new HashMap<String, Transaction>();
         this.lots = new ArrayList<Lot>();
@@ -139,24 +146,26 @@ public class Position {
         return costBasis;
     }
 
-    public BigDecimal marketValue(BigDecimal sharePrice) {
+    public BigDecimal marketValue(LocalDate date) {
+        Quote quote = quoteDao.get(fund, date);
         BigDecimal marketValue = BigDecimal.ZERO;
         for (Lot lot : lots) {
-            marketValue = marketValue.add(lot.marketValue(sharePrice));
+            marketValue = marketValue.add(lot.marketValue(quote.getClose()));
         }
         return marketValue;
     }
 
-    public BigDecimal gain(BigDecimal sharePrice) {
+    public BigDecimal gain(LocalDate date) {
+        Quote quote = quoteDao.get(fund, date);
         BigDecimal gain = BigDecimal.ZERO;
         for (Lot lot : lots) {
-            gain = gain.add(lot.gain(sharePrice));
+            gain = gain.add(lot.gain(quote.getClose()));
         }
         return gain;
     }
 
-    public BigDecimal gainPercentage(BigDecimal sharePrice) {
-        return gain(sharePrice).divide(costBasis(), MathContext.DECIMAL32)
+    public BigDecimal gainPercentage(LocalDate date) {
+        return gain(date).divide(costBasis(), MathContext.DECIMAL32)
                 //multiply by 100 for percentage
                 .multiply(BigDecimal.TEN.multiply(BigDecimal.TEN));
     }
@@ -169,16 +178,17 @@ public class Position {
         return todaysGain;
     }
 
-    public BigDecimal overallReturn(BigDecimal sharePrice) {
-        return returnsGain(sharePrice).divide(cashOut().negate(), MathContext.DECIMAL32)
+    public BigDecimal overallReturn(LocalDate date) {
+        return returnsGain(date).divide(cashOut().negate(), MathContext.DECIMAL32)
                 //multiply by 100 for percentage
                 .multiply(BigDecimal.TEN.multiply(BigDecimal.TEN));
     }
 
-    public BigDecimal returnsGain(BigDecimal sharePrice) {
+    public BigDecimal returnsGain(LocalDate date) {
+        Quote quote = quoteDao.get(fund, date);
         BigDecimal returnsGain = BigDecimal.ZERO;
         for (Lot lot : lots) {
-            returnsGain = returnsGain.add(lot.returnsGain(sharePrice));
+            returnsGain = returnsGain.add(lot.returnsGain(quote.getClose()));
         }
         return returnsGain;
     }

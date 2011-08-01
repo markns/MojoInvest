@@ -47,11 +47,9 @@ public class MomentumStrategyTests {
 //            "iShares S&P Global Telecommunications,IXP,Communications,iShares,413300000,0.0048,2001-11-12,39416",
 //            "iShares Dow Jones US Consumer Services,IYC,Consumer Discretionary,iShares,247920000,0.0047,2000-06-12,38952"};
 
-    public static final String provider = "iPath";
+    public static final String provider = "ProShares";
     private final List<Fund> funds = FundSet.getFundsByProvider(Arrays.asList(provider));
     private final List<Quote> quotes = QuoteSet.getQuotesByProvider(Arrays.asList(provider));
-
-
 
     private final LocalDatastoreServiceTestConfig config = new LocalDatastoreServiceTestConfig();
     private final LocalServiceTestHelper helper = new LocalServiceTestHelper(config);
@@ -65,8 +63,12 @@ public class MomentumStrategyTests {
         time = System.currentTimeMillis();
         for (Fund fund : funds) {
             List<Quote> quotes = quoteDao.query(fund);
+//            QuoteUtils.sortByDate(quotes);
+//            System.out.println(quotes.get(0).getDate());
+//            List<Quote> missingQuotes = QuoteUtils.getMissingQuotes(quotes.get(0).getDate(),
             List<Quote> missingQuotes = QuoteUtils.getMissingQuotes(fund.getInceptionDate(),
                     new LocalDate("2011-06-24"), quotes);
+
             quoteDao.put(missingQuotes);
         }
         System.out.println(System.currentTimeMillis() - time);

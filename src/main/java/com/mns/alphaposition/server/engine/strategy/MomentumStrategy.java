@@ -3,6 +3,7 @@ package com.mns.alphaposition.server.engine.strategy;
 import com.google.inject.Inject;
 import com.mns.alphaposition.server.engine.execution.NextTradingDayExecutor;
 import com.mns.alphaposition.server.engine.portfolio.Portfolio;
+import com.mns.alphaposition.server.engine.portfolio.Position;
 import com.mns.alphaposition.shared.engine.model.Fund;
 import com.mns.alphaposition.shared.params.MomentumStrategyParams;
 import com.mns.alphaposition.shared.util.TradingDayUtils;
@@ -11,6 +12,7 @@ import org.joda.time.LocalDate;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.List;
+import java.util.Map;
 
 public class MomentumStrategy implements TradingStrategy<MomentumStrategyParams> {
 
@@ -45,7 +47,16 @@ public class MomentumStrategy implements TradingStrategy<MomentumStrategyParams>
             sellLosers(rebalanceDate, selection);
             buyWinners(params, rebalanceDate, selection);
 
-            System.out.println(portfolio);
+            for (Map.Entry<Fund, Position> e : portfolio.getActivePositions().entrySet()) {
+                System.out.println(e.getValue().getFund()
+                        + " shares: " + e.getValue().shares()
+                        + ", marketValue: " + e.getValue().marketValue(rebalanceDate)
+                        + ", returnsGain: " + e.getValue().returnsGain(rebalanceDate)
+                        + ", gain%: " + e.getValue().gainPercentage(rebalanceDate));
+
+            }
+
+            System.out.println("Overall return: " + portfolio.overallReturn(rebalanceDate));
         }
     }
 
@@ -63,7 +74,7 @@ public class MomentumStrategy implements TradingStrategy<MomentumStrategyParams>
         BigDecimal availableCash = portfolio.getCash().
                 subtract(executor.getTransactionCost().
                         multiply(numEmpty));
-        //TODO: MUST figure out why we were buying more than were sold, when execution price was 0 and ProShares
+        System.out.println("Available cash: " + availableCash);
         for (Fund fund : selection) {
             if (!portfolio.contains(fund)) {
                 BigDecimal allocation = availableCash
