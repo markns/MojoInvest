@@ -10,10 +10,9 @@ import org.joda.time.LocalDate;
 
 import java.math.BigDecimal;
 import java.math.MathContext;
+import java.math.RoundingMode;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 
 /**
@@ -41,15 +40,11 @@ public class Position {
 
     private Fund fund;
 
-
-    private Map<String, Transaction> transactions;
-
     private List<Lot> lots;
 
     public Position(QuoteDao quoteDao, Fund fund) {
         this.quoteDao = quoteDao;
         this.fund = fund;
-        this.transactions = new HashMap<String, Transaction>();
         this.lots = new ArrayList<Lot>();
     }
 
@@ -57,34 +52,30 @@ public class Position {
         return fund;
     }
 
-    public Map<String, Transaction> getTransactions() {
-        return transactions;
+
+    private Quote getQuote(LocalDate date) {
+        //TODO: cache here?
+        return quoteDao.get(fund, date);
     }
 
-    public List<Lot> getLots() {
-        return lots;
-    }
-
-    public void add(Transaction transaction) throws PositionException {
+    public void add(BuyTransaction transaction) throws PositionException {
         if (!fund.equals(transaction.getFund())) {
             throw new PositionException("Attempt to add a " + transaction.getFund() +
                     " transaction to a " + fund + " position");
         }
-        if (transactions.containsKey(transaction.getRef())) {
-            throw new PositionException("Attempt to add " + transaction + " which has " +
-                    "already contributed to the position");
-        }
+        lots.add(new Lot(transaction));
+    }
 
-        if (transaction instanceof BuyTransaction) {
-            lots.add(new Lot((BuyTransaction) transaction));
-        } else if (transaction instanceof SellTransaction) {
-            if (!saleIsValid(transaction)) {
-                throw new PositionException(this + " is not large enough to be able " +
-                        "to meet sale " + transaction);
-            }
-            updateLots(transaction);
+    public void add(SellTransaction transaction) throws PositionException {
+        if (!fund.equals(transaction.getFund())) {
+            throw new PositionException("Attempt to add a " + transaction.getFund() +
+                    " transaction to a " + fund + " position");
         }
-        transactions.put(transaction.getRef(), transaction);
+        if (!saleIsValid(transaction)) {
+            throw new PositionException(this + " is not large enough to be able " +
+                    "to meet sale " + transaction);
+        }
+        updateLots(transaction);
     }
 
     private boolean saleIsValid(Transaction transaction) {
@@ -92,42 +83,41 @@ public class Position {
         for (Lot lot : lots) {
             openPosition = openPosition.add(lot.getRemainingQuantity());
         }
-        return openPosition.compareTo(transaction.getUnits()) != -1;
+        return openPosition.compareTo(transaction.getQuantity()) != -1;
     }
 
-    private boolean updateLots(Transaction tx) {
+    private boolean updateLots(SellTransaction tx) {
 
         for (Lot lot : lots) {
             if (!lot.closed()) {
 
-                BigDecimal remainder = lot.getRemainingQuantity().subtract(tx.getUnits());
+                BigDecimal remainder = lot.getRemainingQuantity().subtract(tx.getQuantity());
 
-                if (remainder.compareTo(BigDecimal.ZERO) == -1) {
+                if (remainder.compareTo(BigDecimal.ZERO) < 0) {
 
                     //TODO: What do we do with the commission - should it be split?
-                    Transaction closingTransaction = new SellTransaction(tx.getFund(),
+                    SellTransaction closingTransaction = new SellTransaction(tx.getFund(),
                             tx.getDate(), lot.getRemainingQuantity(), tx.getPrice(),
                             tx.getCommission());
 
-                    Transaction overflowTransaction = new SellTransaction(tx.getFund(),
+                    SellTransaction overflowTransaction = new SellTransaction(tx.getFund(),
                             tx.getDate(), remainder.negate(), tx.getPrice(),
                             tx.getCommission());
 
                     lot.addClosingTransaction(closingTransaction);
-                    lot.setRemainingQuantity(BigDecimal.ZERO);
 
-                    if (updateLots(overflowTransaction))
+                    if (updateLots(overflowTransaction)) {
                         break;
+                    }
 
                 } else {
                     lot.addClosingTransaction(tx);
-                    lot.setRemainingQuantity(remainder);
-
                     return true;
                 }
             }
         }
-        return true;
+        throw new PositionException("Updating lots didn't end correctly");
+
     }
 
     public BigDecimal shares() {
@@ -138,6 +128,13 @@ public class Position {
         return shares;
     }
 
+    /*
+     The lot calculations are by far the trickiest part of entire process. Once that step is done, the summary values
+     for each security are calculated. These are the values that appear in each row under the Performance tab. First,
+     cost basis, market value, gain, and todays gain are all computed as the sum of the corresponding values of all the
+     lots for a security.
+     */
+
     public BigDecimal costBasis() {
         BigDecimal costBasis = BigDecimal.ZERO;
         for (Lot lot : lots) {
@@ -147,7 +144,7 @@ public class Position {
     }
 
     public BigDecimal marketValue(LocalDate date) {
-        Quote quote = quoteDao.get(fund, date);
+        Quote quote = getQuote(date);
         BigDecimal marketValue = BigDecimal.ZERO;
         for (Lot lot : lots) {
             marketValue = marketValue.add(lot.marketValue(quote.getClose()));
@@ -155,19 +152,14 @@ public class Position {
         return marketValue;
     }
 
+
     public BigDecimal gain(LocalDate date) {
-        Quote quote = quoteDao.get(fund, date);
+        Quote quote = getQuote(date);
         BigDecimal gain = BigDecimal.ZERO;
         for (Lot lot : lots) {
             gain = gain.add(lot.gain(quote.getClose()));
         }
         return gain;
-    }
-
-    public BigDecimal gainPercentage(LocalDate date) {
-        return gain(date).divide(costBasis(), MathContext.DECIMAL32)
-                //multiply by 100 for percentage
-                .multiply(BigDecimal.TEN.multiply(BigDecimal.TEN));
     }
 
     public BigDecimal todaysGain(BigDecimal priceChange) {
@@ -178,14 +170,29 @@ public class Position {
         return todaysGain;
     }
 
-    public BigDecimal overallReturn(LocalDate date) {
+    /*
+     * Then the gain percentage is calculated by:
+     *  gain percentage = gain / cost basis
+     */
+    public BigDecimal gainPercentage(LocalDate date) {
+        return gain(date).divide(costBasis(), RoundingMode.HALF_EVEN)
+                //multiply by 100 for percentage
+                .multiply(BigDecimal.TEN.multiply(BigDecimal.TEN));
+    }
+
+    /*
+     * The total return for each security is calculated similarly: Returns gain and cash out are summed over all the
+     * lots for the security, then the total return is calculated by:
+     *  total return = returns gain / cash out
+     */
+    public BigDecimal totalReturn(LocalDate date) {
         return returnsGain(date).divide(cashOut().negate(), MathContext.DECIMAL32)
                 //multiply by 100 for percentage
                 .multiply(BigDecimal.TEN.multiply(BigDecimal.TEN));
     }
 
     public BigDecimal returnsGain(LocalDate date) {
-        Quote quote = quoteDao.get(fund, date);
+        Quote quote = getQuote(date);
         BigDecimal returnsGain = BigDecimal.ZERO;
         for (Lot lot : lots) {
             returnsGain = returnsGain.add(lot.returnsGain(quote.getClose()));
@@ -193,15 +200,6 @@ public class Position {
         return returnsGain;
     }
 
-    public BigDecimal cashIn() {
-        BigDecimal cashIn = BigDecimal.ZERO;
-        for (Lot lot : lots) {
-            cashIn = cashIn.add(lot.cashIn());
-        }
-        return cashIn;
-    }
-
-    //TODO: Consider making cashout an absolute value
     public BigDecimal cashOut() {
         BigDecimal cashOut = BigDecimal.ZERO;
         for (Lot lot : lots) {

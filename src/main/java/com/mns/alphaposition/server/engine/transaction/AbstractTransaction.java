@@ -36,7 +36,7 @@ public abstract class AbstractTransaction implements Transaction {
         return date;
     }
 
-    public BigDecimal getUnits() {
+    public BigDecimal getQuantity() {
         return units;
     }
 

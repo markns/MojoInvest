@@ -1,13 +1,14 @@
 package com.mns.alphaposition.server.engine.portfolio;
 
 import com.mns.alphaposition.server.engine.model.QuoteDao;
-import com.mns.alphaposition.server.engine.transaction.Transaction;
+import com.mns.alphaposition.server.engine.transaction.BuyTransaction;
+import com.mns.alphaposition.server.engine.transaction.SellTransaction;
 import com.mns.alphaposition.shared.engine.model.Fund;
 import com.mns.alphaposition.shared.params.PortfolioParams;
 import org.joda.time.LocalDate;
 
 import java.math.BigDecimal;
-import java.math.MathContext;
+import java.math.RoundingMode;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
@@ -41,13 +42,10 @@ public class Portfolio {
 
     private QuoteDao quoteDao;
 
-    private BigDecimal initialInvestment;
-
     private HashMap<Fund, Position> positions;
 
     public Portfolio(PortfolioParams params, QuoteDao quoteDao) {
         this.cash = params.getInitialInvestment();
-        this.initialInvestment = params.getInitialInvestment();
         this.positions = new HashMap<Fund, Position>();
         this.quoteDao = quoteDao;
     }
@@ -55,7 +53,6 @@ public class Portfolio {
     public BigDecimal getCash() {
         return cash;
     }
-
 
     public boolean contains(Fund fund) {
         return getActivePositions().containsKey(fund);
@@ -65,10 +62,19 @@ public class Portfolio {
         return positions.get(fund);
     }
 
-    public void add(Transaction transaction) throws PositionException {
+    public void add(BuyTransaction transaction) throws PositionException {
         Fund fund = transaction.getFund();
         if (!positions.containsKey(fund)) {
             positions.put(fund, new Position(quoteDao, fund));
+        }
+        positions.get(fund).add(transaction);
+        cash = cash.add(transaction.getCashValue());
+    }
+
+    public void add(SellTransaction transaction) throws PositionException {
+        Fund fund = transaction.getFund();
+        if (!positions.containsKey(fund)) {
+            throw new PositionException("Cannot sell a fund that is not held");
         }
         positions.get(fund).add(transaction);
         cash = cash.add(transaction.getCashValue());
@@ -105,42 +111,75 @@ public class Portfolio {
     }
 
 
+    /*
+     Next, the summary values for the portfolio are calculated. These are the values that appear along the final row in
+      the Performance tab. First, for each of the securities in the portfolio, cost basis, market value, gain, and
+      today's gain are converted from the security's currency to the portfolio currency (which you can set in the Edit
+      Portfolio page). Then the converted values are summed over all the currencies to give the portfolio values. Market
+      value is adjusted by adding any cash deposits and subtracting any cash withdrawals.
+     */
+
     public BigDecimal costBasis() {
         BigDecimal costBasis = BigDecimal.ZERO;
         for (Position position : positions.values()) {
-            if (position.shares().compareTo(BigDecimal.ZERO) == 0)
-                continue;
+            //adjust for currency
             costBasis = costBasis.add(position.costBasis());
         }
         return costBasis;
     }
 
+    public BigDecimal marketValue(LocalDate date) {
+        BigDecimal marketValue = BigDecimal.ZERO;
+        for (Position position : positions.values()) {
+            //adjust for currency
+            marketValue = marketValue.add(position.marketValue(date));
+        }
+        return marketValue.add(cash);
+    }
+
     public BigDecimal gain(LocalDate date) {
         BigDecimal gain = BigDecimal.ZERO;
         for (Position position : positions.values()) {
-            if (position.shares().compareTo(BigDecimal.ZERO) == 0)
-                continue;
+            //adjust for currency
             gain = gain.add(position.gain(date));
         }
         return gain;
     }
 
-    public BigDecimal gainPercentage(LocalDate date) {
-        BigDecimal gainPercentage = BigDecimal.ZERO;
-        try {
-            gainPercentage = gain(date).divide(costBasis(), MathContext.DECIMAL32)
-                    //multiply by 100 for percentage
-                    .multiply(BigDecimal.TEN.multiply(BigDecimal.TEN));
-        } catch (ArithmeticException e) {
-            //TODO: Is this acceptable?
-            //pass;
+    public BigDecimal todaysGain(BigDecimal priceChange) {
+        BigDecimal todaysGain = BigDecimal.ZERO;
+        for (Position position : positions.values()) {
+            //adjust for currency
+            todaysGain = todaysGain.add(position.todaysGain(priceChange));
         }
-        return gainPercentage;
+        return todaysGain;
+    }
+
+    /*
+        Then gain percentage is computed in the by-now familiar way:
+        gain percentage = gain / cost basis
+     */
+
+    public BigDecimal gainPercentage(LocalDate date) {
+        return gain(date).divide(costBasis(), RoundingMode.HALF_EVEN);
+    }
+
+    /*
+        Finally, the overall return is computed by converting the returns gain and cash out from each of the securities
+        from the security currency to the portfolio currency, then summing them to get portfolio values. The total
+        return is the calculated by:
+        overall return = returns gain / cash out
+     */
+
+    public BigDecimal overallReturn(LocalDate date) {
+        return returnsGain(date).divide(cashOut(), RoundingMode.HALF_EVEN)
+                .multiply(BigDecimal.TEN.multiply(BigDecimal.TEN));
     }
 
     public BigDecimal returnsGain(LocalDate date) {
         BigDecimal returnsGain = BigDecimal.ZERO;
         for (Position position : positions.values()) {
+            //adjust for currency
             returnsGain = returnsGain.add(position.returnsGain(date));
         }
         return returnsGain;
@@ -149,16 +188,11 @@ public class Portfolio {
     public BigDecimal cashOut() {
         BigDecimal cashOut = BigDecimal.ZERO;
         for (Position position : positions.values()) {
+            //adjust for currency
             cashOut = cashOut.add(position.cashOut());
         }
         return cashOut;
     }
 
-    public BigDecimal overallReturn(LocalDate date) {
-        return returnsGain(date)
-                .divide(cashOut().negate(), MathContext.DECIMAL32)
-                //multiply by 100 for percentage
-                .multiply(BigDecimal.TEN.multiply(BigDecimal.TEN));
-    }
 
 }

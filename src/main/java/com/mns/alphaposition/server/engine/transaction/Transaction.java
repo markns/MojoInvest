@@ -67,7 +67,7 @@ public interface Transaction {
 
     LocalDate getDate();
 
-    BigDecimal getUnits();
+    BigDecimal getQuantity();
 
     BigDecimal getPrice();
 

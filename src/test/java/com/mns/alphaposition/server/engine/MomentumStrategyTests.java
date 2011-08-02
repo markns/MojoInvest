@@ -47,7 +47,7 @@ public class MomentumStrategyTests {
 //            "iShares S&P Global Telecommunications,IXP,Communications,iShares,413300000,0.0048,2001-11-12,39416",
 //            "iShares Dow Jones US Consumer Services,IYC,Consumer Discretionary,iShares,247920000,0.0047,2000-06-12,38952"};
 
-    public static final String provider = "ProShares";
+    public static final String provider = "State Street Global Advisors";
     private final List<Fund> funds = FundSet.getFundsByProvider(Arrays.asList(provider));
     private final List<Quote> quotes = QuoteSet.getQuotesByProvider(Arrays.asList(provider));
 

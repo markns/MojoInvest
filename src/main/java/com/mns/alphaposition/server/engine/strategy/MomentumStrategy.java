@@ -51,7 +51,7 @@ public class MomentumStrategy implements TradingStrategy<MomentumStrategyParams>
                 System.out.println(e.getValue().getFund()
                         + " shares: " + e.getValue().shares()
                         + ", marketValue: " + e.getValue().marketValue(rebalanceDate)
-                        + ", returnsGain: " + e.getValue().returnsGain(rebalanceDate)
+                        + ", returnsGain: " + e.getValue().totalReturn(rebalanceDate)
                         + ", gain%: " + e.getValue().gainPercentage(rebalanceDate));
 
             }
