@@ -1,5 +1,6 @@
 package com.mns.alphaposition.server.engine.portfolio;
 
+import com.google.inject.Inject;
 import com.mns.alphaposition.server.engine.model.QuoteDao;
 import com.mns.alphaposition.server.engine.transaction.BuyTransaction;
 import com.mns.alphaposition.server.engine.transaction.SellTransaction;
@@ -44,6 +45,7 @@ public class Portfolio {
 
     private HashMap<Fund, Position> positions;
 
+    @Inject
     public Portfolio(PortfolioParams params, QuoteDao quoteDao) {
         this.cash = params.getInitialInvestment();
         this.positions = new HashMap<Fund, Position>();

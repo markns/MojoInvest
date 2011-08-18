@@ -5,6 +5,7 @@ import com.google.appengine.tools.development.testing.LocalServiceTestHelper;
 import com.googlecode.objectify.ObjectifyService;
 import com.mns.alphaposition.server.data.FundSet;
 import com.mns.alphaposition.server.data.QuoteSet;
+import com.mns.alphaposition.server.engine.execution.Executor;
 import com.mns.alphaposition.server.engine.execution.NextTradingDayExecutor;
 import com.mns.alphaposition.server.engine.model.QuoteDao;
 import com.mns.alphaposition.server.engine.portfolio.Portfolio;
@@ -33,7 +34,7 @@ public class MomentumStrategyTests {
     private final PortfolioParams portfolioParams =
             new PortfolioParams(new BigDecimal("10000"), new BigDecimal("12.95"));
     private final Portfolio portfolio = new Portfolio(portfolioParams, quoteDao);
-    private final NextTradingDayExecutor executor = new NextTradingDayExecutor(portfolio, portfolioParams.getTransactionCost(), quoteDao);
+    private final Executor executor = new NextTradingDayExecutor(portfolio, portfolioParams.getTransactionCost(), quoteDao);
 
     private final RankingStrategyParams rankingStrategyParams = new SimpleRankingStrategyParams(10, 9);
     private final MomentumStrategyParams strategyParams = new MomentumStrategyParams(1, rankingStrategyParams, 3);

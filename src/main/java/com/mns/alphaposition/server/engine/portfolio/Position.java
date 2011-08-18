@@ -1,5 +1,6 @@
 package com.mns.alphaposition.server.engine.portfolio;
 
+import com.google.inject.Inject;
 import com.mns.alphaposition.server.engine.model.QuoteDao;
 import com.mns.alphaposition.server.engine.transaction.BuyTransaction;
 import com.mns.alphaposition.server.engine.transaction.SellTransaction;
@@ -42,6 +43,7 @@ public class Position {
 
     private List<Lot> lots;
 
+    @Inject
     public Position(QuoteDao quoteDao, Fund fund) {
         this.quoteDao = quoteDao;
         this.fund = fund;

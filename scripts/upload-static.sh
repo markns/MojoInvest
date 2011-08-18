@@ -5,6 +5,6 @@
 	--passin \
 	--config_file=config.yml \
 	--filename="../data/etf-static-ishares-small.csv" \
-	--url=http://alphaposition.appspot.com/remote_api \
-	--application=s~alphaposition \
+	--url=http://mojointest.appspot.com/remote_api \
+	--application=mojointest \
 	--kind=Fund

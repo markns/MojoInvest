@@ -1,7 +1,7 @@
 package com.mns.alphaposition.server.engine.strategy;
 
 import com.google.inject.Inject;
-import com.mns.alphaposition.server.engine.execution.NextTradingDayExecutor;
+import com.mns.alphaposition.server.engine.execution.Executor;
 import com.mns.alphaposition.server.engine.portfolio.Portfolio;
 import com.mns.alphaposition.server.engine.portfolio.Position;
 import com.mns.alphaposition.shared.engine.model.Fund;
@@ -18,10 +18,10 @@ public class MomentumStrategy implements TradingStrategy<MomentumStrategyParams>
 
     private final RankingStrategy rankingStrategy;
     private final Portfolio portfolio;
-    private final NextTradingDayExecutor executor;
+    private final Executor executor;
 
     @Inject
-    public MomentumStrategy(RankingStrategy rankingStrategy, NextTradingDayExecutor executor, Portfolio portfolio) {
+    public MomentumStrategy(RankingStrategy rankingStrategy, Executor executor, Portfolio portfolio) {
         this.rankingStrategy = rankingStrategy;
         this.portfolio = portfolio;
         this.executor = executor;

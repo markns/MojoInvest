@@ -3,6 +3,7 @@ package com.mns.alphaposition.server.engine.strategy;
 import com.google.common.base.Functions;
 import com.google.common.collect.ImmutableSortedMap;
 import com.google.common.collect.Ordering;
+import com.google.inject.Inject;
 import com.mns.alphaposition.server.engine.model.QuoteDao;
 import com.mns.alphaposition.shared.engine.model.Fund;
 import com.mns.alphaposition.shared.engine.model.Quote;
@@ -17,6 +18,7 @@ public class SimpleRankingStrategy implements RankingStrategy<SimpleRankingStrat
 
     private QuoteDao quoteDao;
 
+    @Inject
     public SimpleRankingStrategy(QuoteDao quoteDao) {
         this.quoteDao = quoteDao;
     }

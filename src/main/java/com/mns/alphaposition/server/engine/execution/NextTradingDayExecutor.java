@@ -1,5 +1,6 @@
 package com.mns.alphaposition.server.engine.execution;
 
+import com.google.inject.Inject;
 import com.mns.alphaposition.server.engine.model.QuoteDao;
 import com.mns.alphaposition.server.engine.portfolio.Portfolio;
 import com.mns.alphaposition.server.engine.portfolio.Position;
@@ -11,7 +12,7 @@ import org.joda.time.LocalDate;
 
 import java.math.BigDecimal;
 
-public class NextTradingDayExecutor {
+public class NextTradingDayExecutor implements Executor {
 
     private Portfolio portfolio;
 
@@ -19,16 +20,19 @@ public class NextTradingDayExecutor {
 
     private QuoteDao quoteDao;
 
+    @Inject
     public NextTradingDayExecutor(Portfolio portfolio, BigDecimal transactionCost, QuoteDao quoteDao) {
         this.portfolio = portfolio;
         this.transactionCost = transactionCost;
         this.quoteDao = quoteDao;
     }
 
+    @Override
     public BigDecimal getTransactionCost() {
         return transactionCost;
     }
 
+    @Override
     public void buy(Fund fund, LocalDate date, BigDecimal allocation) {
         //TODO: get execution price should be mid between open and close
         Quote executionQuote = quoteDao.get(fund, date);
@@ -38,6 +42,7 @@ public class NextTradingDayExecutor {
         portfolio.add(tx);
     }
 
+    @Override
     public void sellAll(Fund fund, LocalDate date) {
         //TODO: get execution price should be mid between open and close
         Quote executionQuote = quoteDao.get(fund, date);

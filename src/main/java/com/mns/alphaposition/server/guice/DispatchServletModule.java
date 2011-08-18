@@ -16,15 +16,9 @@
 
 package com.mns.alphaposition.server.guice;
 
-import com.dyuproject.openid.OpenIdServletFilter;
 import com.google.inject.Singleton;
 import com.google.inject.servlet.ServletModule;
 import com.googlecode.objectify.ObjectifyFactory;
-import com.gwtplatform.dispatch.server.guice.DispatchServiceImpl;
-import com.gwtplatform.dispatch.server.guice.HttpSessionSecurityCookieFilter;
-import com.gwtplatform.dispatch.shared.ActionImpl;
-import com.gwtplatform.dispatch.shared.SecurityCookie;
-import com.mns.alphaposition.shared.Constants;
 
 /**
  * @author Mark Nuttall-Smith
@@ -37,17 +31,20 @@ public class DispatchServletModule extends ServletModule {
         // Model object managers
         bind(ObjectifyFactory.class).in(Singleton.class);
 
-        bindConstant().annotatedWith(SecurityCookie.class).to(Constants.securityCookieName);
+//        bindConstant().annotatedWith(SecurityCookie.class).to(Constants.securityCookieName);
 
-        bind(OpenIdServletFilter.class).in(Singleton.class);
+//        bind(OpenIdServletFilter.class).in(Singleton.class);
 
+
+        serve("*.html").with(MyServlet.class);
+        serve("/my/*").with(MyServlet.class);
 
 
         // TODO philippe.beaudoin@gmail.com
         // Uncomment when http://code.google.com/p/mns/issues/detail?id=27 is unblocked.
         // filter("*").through( CrawlFilter.class );
-        filter("*").through(HttpSessionSecurityCookieFilter.class);
-        serve("/" + ActionImpl.DEFAULT_SERVICE_NAME).with(DispatchServiceImpl.class);
+//        filter("*").through(HttpSessionSecurityCookieFilter.class);
+//        serve("/" + ActionImpl.DEFAULT_SERVICE_NAME).with(DispatchServiceImpl.class);
 //        serve("/openid/login").with(OpenIdServlet.class);
     }
 
