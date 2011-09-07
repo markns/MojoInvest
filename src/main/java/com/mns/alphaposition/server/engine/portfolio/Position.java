@@ -1,12 +1,11 @@
 package com.mns.alphaposition.server.engine.portfolio;
 
-import com.google.inject.Inject;
 import com.mns.alphaposition.server.engine.model.QuoteDao;
 import com.mns.alphaposition.server.engine.transaction.BuyTransaction;
 import com.mns.alphaposition.server.engine.transaction.SellTransaction;
 import com.mns.alphaposition.server.engine.transaction.Transaction;
-import com.mns.alphaposition.shared.engine.model.Fund;
-import com.mns.alphaposition.shared.engine.model.Quote;
+import com.mns.alphaposition.server.engine.model.Fund;
+import com.mns.alphaposition.server.engine.model.Quote;
 import org.joda.time.LocalDate;
 
 import java.math.BigDecimal;
@@ -43,7 +42,6 @@ public class Position {
 
     private List<Lot> lots;
 
-    @Inject
     public Position(QuoteDao quoteDao, Fund fund) {
         this.quoteDao = quoteDao;
         this.fund = fund;

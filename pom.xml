@@ -238,6 +238,11 @@
             <version>${gwtp.version}</version>
             <scope>provided</scope>
         </dependency>
+        <dependency>
+            <groupId>com.gwtplatform</groupId>
+            <artifactId>gwtp-crawler</artifactId>
+            <version>${gwtp.version}</version>
+        </dependency>
 
         <!-- Objectify dependencies -->
         <dependency>
@@ -376,30 +381,16 @@
             </plugin>
 
             <!-- GWT configuration -->
-            <!--<plugin>-->
-            <!--<groupId>org.codehaus.mojo</groupId>-->
-            <!--<artifactId>gwt-maven-plugin</artifactId>-->
-            <!--<version>${gwt-maven-plugin.version}</version>-->
-            <!--<configuration>-->
-            <!--<appEngineVersion>${gae.version}</appEngineVersion>-->
-            <!--<appEngineHome>${gae.home}</appEngineHome>-->
-            <!--<logLevel>INFO</logLevel>-->
-            <!--<style>${gwt.style}</style>-->
-            <!--<hostedWebapp>${webapp.directory}</hostedWebapp>-->
-            <!--<server>com.google.appengine.tools.development.gwt.AppEngineLauncher</server>-->
-            <!--<copyWebapp>true</copyWebapp>-->
-            <!--<runTarget>index.html</runTarget>-->
-            <!--</configuration>-->
-            <!--<executions>-->
-            <!--<execution>-->
-            <!--<id>gwtcompile</id>-->
-            <!--<phase>prepare-package</phase>-->
-            <!--<goals>-->
-            <!--<goal>compile</goal>-->
-            <!--</goals>-->
-            <!--</execution>-->
-            <!--</executions>-->
-            <!--</plugin>-->
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>gwt-maven-plugin</artifactId>
+                <configuration>
+                    <server>com.google.appengine.tools.development.gwt.AppEngineLauncher</server>
+                    <hostedWebapp>${webappDirectory}</hostedWebapp>
+                    <copyWebapp>true</copyWebapp>
+                    <runTarget>Alphaposition.html</runTarget>
+                </configuration>
+            </plugin>
 
             <!-- AppEngine configuration -->
             <plugin>

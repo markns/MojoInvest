@@ -5,9 +5,9 @@ import com.google.common.collect.ImmutableSortedMap;
 import com.google.common.collect.Ordering;
 import com.google.inject.Inject;
 import com.mns.alphaposition.server.engine.model.QuoteDao;
-import com.mns.alphaposition.shared.engine.model.Fund;
-import com.mns.alphaposition.shared.engine.model.Quote;
-import com.mns.alphaposition.shared.params.SimpleRankingStrategyParams;
+import com.mns.alphaposition.server.engine.model.Fund;
+import com.mns.alphaposition.server.engine.model.Quote;
+import com.mns.alphaposition.server.engine.params.SimpleRankingStrategyParams;
 import org.joda.time.LocalDate;
 
 import java.math.BigDecimal;

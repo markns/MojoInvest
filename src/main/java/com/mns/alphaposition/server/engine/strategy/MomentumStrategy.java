@@ -1,12 +1,12 @@
 package com.mns.alphaposition.server.engine.strategy;
 
 import com.google.inject.Inject;
+import com.mns.alphaposition.server.util.TradingDayUtils;
 import com.mns.alphaposition.server.engine.execution.Executor;
 import com.mns.alphaposition.server.engine.portfolio.Portfolio;
 import com.mns.alphaposition.server.engine.portfolio.Position;
-import com.mns.alphaposition.shared.engine.model.Fund;
-import com.mns.alphaposition.shared.params.MomentumStrategyParams;
-import com.mns.alphaposition.shared.util.TradingDayUtils;
+import com.mns.alphaposition.server.engine.model.Fund;
+import com.mns.alphaposition.server.engine.params.MomentumStrategyParams;
 import org.joda.time.LocalDate;
 
 import java.math.BigDecimal;

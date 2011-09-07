@@ -5,11 +5,9 @@ import com.googlecode.objectify.Key;
 import com.googlecode.objectify.ObjectifyFactory;
 import com.googlecode.objectify.Query;
 import com.mns.alphaposition.server.model.DAOBase;
-import com.mns.alphaposition.shared.engine.model.Fund;
-import com.mns.alphaposition.shared.engine.model.Quote;
-import com.mns.alphaposition.shared.util.FundUtils;
-import com.mns.alphaposition.shared.util.QuoteUtils;
-import com.mns.alphaposition.shared.util.TradingDayUtils;
+import com.mns.alphaposition.server.util.FundUtils;
+import com.mns.alphaposition.server.util.QuoteUtils;
+import com.mns.alphaposition.server.util.TradingDayUtils;
 import org.joda.time.LocalDate;
 
 import java.math.BigDecimal;

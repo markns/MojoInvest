@@ -50,6 +50,6 @@
     <source path='shared'/>
 
     <define-configuration-property name="gin.ginjector" is-multi-valued="false"/>
-    <set-configuration-property name="gin.ginjector" value="com.mns.alphaposition.client.gin.AlphapositionGinjector"/>
+    <set-configuration-property name="gin.ginjector" value="com.mns.alphaposition.client.gin.ClientGinjector"/>
 
 </module>

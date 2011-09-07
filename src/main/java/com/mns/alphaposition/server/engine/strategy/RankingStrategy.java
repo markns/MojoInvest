@@ -1,7 +1,7 @@
 package com.mns.alphaposition.server.engine.strategy;
 
-import com.mns.alphaposition.shared.engine.model.Fund;
-import com.mns.alphaposition.shared.params.RankingStrategyParams;
+import com.mns.alphaposition.server.engine.model.Fund;
+import com.mns.alphaposition.server.engine.params.RankingStrategyParams;
 import org.joda.time.LocalDate;
 
 import java.util.List;

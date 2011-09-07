@@ -1,6 +1,6 @@
 package com.mns.alphaposition.server.engine.execution;
 
-import com.mns.alphaposition.shared.engine.model.Fund;
+import com.mns.alphaposition.server.engine.model.Fund;
 import org.joda.time.LocalDate;
 
 import java.math.BigDecimal;

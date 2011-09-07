@@ -1,7 +1,7 @@
 package com.mns.alphaposition.server.data;
 
 import au.com.bytecode.opencsv.CSVReader;
-import com.mns.alphaposition.shared.engine.model.Quote;
+import com.mns.alphaposition.server.engine.model.Quote;
 import org.joda.time.LocalDate;
 import org.junit.Test;
 

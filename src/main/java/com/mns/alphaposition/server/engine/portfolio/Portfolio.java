@@ -4,8 +4,8 @@ import com.google.inject.Inject;
 import com.mns.alphaposition.server.engine.model.QuoteDao;
 import com.mns.alphaposition.server.engine.transaction.BuyTransaction;
 import com.mns.alphaposition.server.engine.transaction.SellTransaction;
-import com.mns.alphaposition.shared.engine.model.Fund;
-import com.mns.alphaposition.shared.params.PortfolioParams;
+import com.mns.alphaposition.server.engine.model.Fund;
+import com.mns.alphaposition.server.engine.params.PortfolioParams;
 import org.joda.time.LocalDate;
 
 import java.math.BigDecimal;

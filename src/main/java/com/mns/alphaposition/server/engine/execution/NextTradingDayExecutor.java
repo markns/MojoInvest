@@ -6,8 +6,8 @@ import com.mns.alphaposition.server.engine.portfolio.Portfolio;
 import com.mns.alphaposition.server.engine.portfolio.Position;
 import com.mns.alphaposition.server.engine.transaction.BuyTransaction;
 import com.mns.alphaposition.server.engine.transaction.SellTransaction;
-import com.mns.alphaposition.shared.engine.model.Fund;
-import com.mns.alphaposition.shared.engine.model.Quote;
+import com.mns.alphaposition.server.engine.model.Fund;
+import com.mns.alphaposition.server.engine.model.Quote;
 import org.joda.time.LocalDate;
 
 import java.math.BigDecimal;
@@ -37,7 +37,8 @@ public class NextTradingDayExecutor implements Executor {
         //TODO: get execution price should be mid between open and close
         Quote executionQuote = quoteDao.get(fund, date);
         BigDecimal shares = allocation.divide(executionQuote.getClose(), 0, BigDecimal.ROUND_DOWN);
-        System.out.println("Buying " + fund + " amount: " + allocation + ", price: " + executionQuote.getClose() + ", shares: " + shares);
+        System.out.println("Buying " + fund + " amount: " + allocation +
+                ", price: " + executionQuote.getClose() + ", shares: " + shares);
         BuyTransaction tx = new BuyTransaction(fund, date, shares, executionQuote.getClose(), transactionCost);
         portfolio.add(tx);
     }
@@ -47,8 +48,10 @@ public class NextTradingDayExecutor implements Executor {
         //TODO: get execution price should be mid between open and close
         Quote executionQuote = quoteDao.get(fund, date);
         Position position = portfolio.get(fund);
-        System.out.println("Selling " + fund + " price: " + executionQuote.getClose() + ", gain%: " + position.gainPercentage(date));
-        SellTransaction tx = new SellTransaction(fund, date, position.shares(), executionQuote.getClose(), transactionCost);
+        System.out.println("Selling " + fund + " price: " + executionQuote.getClose() +
+                ", gain%: " + position.gainPercentage(date));
+        SellTransaction tx = new SellTransaction(fund, date, position.shares(),
+                executionQuote.getClose(), transactionCost);
         portfolio.add(tx);
     }
 }
