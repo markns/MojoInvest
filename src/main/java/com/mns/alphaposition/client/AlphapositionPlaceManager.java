@@ -24,11 +24,13 @@ import com.gwtplatform.mvp.client.proxy.TokenFormatter;
 import com.mns.alphaposition.client.gin.DefaultPlace;
 
 public class AlphapositionPlaceManager extends PlaceManagerImpl {
+
     private final PlaceRequest defaultPlaceRequest;
 
     @Inject
     public AlphapositionPlaceManager(final EventBus eventBus,
-                                     final TokenFormatter tokenFormatter, @DefaultPlace String defaultNameToken) {
+                                     final TokenFormatter tokenFormatter,
+                                     @DefaultPlace String defaultNameToken) {
         super(eventBus, tokenFormatter);
 
         this.defaultPlaceRequest = new PlaceRequest(defaultNameToken);

@@ -33,7 +33,7 @@ public class FundSet {
 
     private static List<Fund> getFundInternal(int index, String property) {
         CSVReader reader = new CSVReader(new BufferedReader(new InputStreamReader(QuoteSet.class.getClassLoader()
-                .getResourceAsStream("etf-static.csv"))));
+                .getResourceAsStream("data/etf-static.csv"))));
 //        .getResourceAsStream("quote/ishares/ishares.csv"))));
         List<Fund> funds = new ArrayList<Fund>();
         try {

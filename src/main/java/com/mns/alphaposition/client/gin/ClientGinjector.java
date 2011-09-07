@@ -17,28 +17,34 @@
 package com.mns.alphaposition.client.gin;
 
 import com.google.gwt.event.shared.EventBus;
+import com.google.gwt.inject.client.AsyncProvider;
 import com.google.gwt.inject.client.GinModules;
 import com.google.gwt.inject.client.Ginjector;
+import com.google.inject.Provider;
 import com.gwtplatform.dispatch.client.gin.DispatchAsyncModule;
 import com.gwtplatform.dispatch.shared.DispatchAsync;
 import com.gwtplatform.mvp.client.proxy.PlaceManager;
-import com.mns.alphaposition.client.resources.Resources;
-import com.mns.alphaposition.client.resources.Translations;
+import com.mns.alphaposition.client.presenter.BreadcrumbsPresenter;
+import com.mns.alphaposition.client.presenter.HomePresenter;
+import com.mns.alphaposition.client.presenter.ProductListPresenter;
 
-/**
- * @author Mark Nuttall-Smith
- */
 @GinModules({DispatchAsyncModule.class, ClientModule.class})
 public interface ClientGinjector extends Ginjector {
 
     EventBus getEventBus();
 
+    AsyncProvider<HomePresenter> getHomePresenter();
+
+    Provider<BreadcrumbsPresenter> getBreadcrumbsPresenter();
+
     PlaceManager getPlaceManager();
 
-    Resources getResources();
+//    Resources getResources();
+
+    AsyncProvider<ProductListPresenter> getProductListPresenter();
 
     DispatchAsync getDispatcher();
 
-    Translations getTranslations();
+//    Translations getTranslations();
 
 }

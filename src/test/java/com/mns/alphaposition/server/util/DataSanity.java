@@ -25,7 +25,7 @@ public class DataSanity {
     @Test
     public void findFundsWithNoData() throws IOException {
         CSVReader reader = new CSVReader(new BufferedReader(new InputStreamReader(QuoteSet.class.getClassLoader()
-                .getResourceAsStream("etf-static.csv"))));
+                .getResourceAsStream("data/etf-static.csv"))));
         for (String[] row : reader.readAll()) {
             File file = new File(DATA_DIR + row[1] + ".csv");
             if (!file.exists()) {
@@ -38,7 +38,7 @@ public class DataSanity {
     @Test
     public void fundStatistics() throws IOException {
         CSVReader reader = new CSVReader(new BufferedReader(new InputStreamReader(QuoteSet.class.getClassLoader()
-                .getResourceAsStream("etf-static.csv"))));
+                .getResourceAsStream("data/etf-static.csv"))));
         Map<String, Integer> categories = new HashMap<String, Integer>();
         Map<String, Integer> providers = new HashMap<String, Integer>();
         for (String[] row : reader.readAll()) {

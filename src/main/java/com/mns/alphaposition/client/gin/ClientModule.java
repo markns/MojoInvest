@@ -27,28 +27,26 @@ import com.mns.alphaposition.client.view.BreadcrumbsView;
 import com.mns.alphaposition.client.view.HomeView;
 import com.mns.alphaposition.client.view.ProductListView;
 
-/**
- * @author Christian Goudreau
- */
 public class ClientModule extends AbstractPresenterModule {
-  @Override
-  protected void configure() {
-    // Default implementation of standard resources
-    install(new DefaultModule(AlphapositionPlaceManager.class));
 
-    // Constants
-    bindConstant().annotatedWith(DefaultPlace.class).to(NameTokens.homePage);
+    @Override
+    protected void configure() {
+        // Default implementation of standard resources
+        install(new DefaultModule(AlphapositionPlaceManager.class));
 
-    // Presenters
-    bindPresenter(BreadcrumbsPresenter.class,
-        BreadcrumbsPresenter.MyView.class, BreadcrumbsView.class,
-        BreadcrumbsPresenter.MyProxy.class);
-    bindPresenter(HomePresenter.class, HomePresenter.MyView.class,
-        HomeView.class, HomePresenter.MyProxy.class);
-    bindPresenter(ProductListPresenter.class,
-        ProductListPresenter.MyView.class, ProductListView.class,
-        ProductListPresenter.MyProxy.class);
+        // Constants
+        bindConstant().annotatedWith(DefaultPlace.class).to(NameTokens.homePage);
+
+        // Presenters
+        bindPresenter(BreadcrumbsPresenter.class,
+                BreadcrumbsPresenter.MyView.class, BreadcrumbsView.class,
+                BreadcrumbsPresenter.MyProxy.class);
+        bindPresenter(HomePresenter.class, HomePresenter.MyView.class,
+                HomeView.class, HomePresenter.MyProxy.class);
+        bindPresenter(ProductListPresenter.class,
+                ProductListPresenter.MyView.class, ProductListView.class,
+                ProductListPresenter.MyProxy.class);
 //    bindPresenter(ProductPresenter.class, ProductPresenter.MyView.class,
 //        ProductView.class, ProductPresenter.MyProxy.class);
-  }
+    }
 }

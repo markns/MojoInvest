@@ -17,7 +17,9 @@
 package com.mns.alphaposition.server.guice;
 
 import com.gwtplatform.dispatch.server.guice.HandlerModule;
+import com.mns.alphaposition.server.handler.GetProductListHandler;
 import com.mns.alphaposition.server.handler.RunBackTestHandler;
+import com.mns.alphaposition.shared.action.GetProductListAction;
 import com.mns.alphaposition.shared.action.RunBackTestAction;
 
 /**
@@ -30,5 +32,6 @@ public class ServerModule extends HandlerModule {
     @Override
     protected void configureHandlers() {
         bindHandler(RunBackTestAction.class, RunBackTestHandler.class);
+        bindHandler(GetProductListAction.class, GetProductListHandler.class);
     }
 }

@@ -18,7 +18,7 @@ public class QuoteSet {
 
     public static List<Quote> getQuotesByProvider(List<String> providers) {
         CSVReader fundCsv = new CSVReader(new BufferedReader(new InputStreamReader(QuoteSet.class.getClassLoader()
-                .getResourceAsStream("etf-static.csv"))));
+                .getResourceAsStream("data/etf-static.csv"))));
 //                        .getResourceAsStream("quote/ishares/ishares.csv"))));
         List<Quote> quotes = new ArrayList<Quote>();
         try {
@@ -26,7 +26,7 @@ public class QuoteSet {
                 String property = fundRow[3];
                 if (providers.contains(property)) {
                     InputStream is = QuoteSet.class.getClassLoader().
-                            getResourceAsStream("quote/" + fundRow[1] + ".csv");
+                            getResourceAsStream("data/quote/" + fundRow[1] + ".csv");
 //                            getResourceAsStream("quote/ishares/" + fundRow[1] + ".csv");
                     if (is != null) {
                         CSVReader quoteCsv = new CSVReader(new BufferedReader(new InputStreamReader(is)));

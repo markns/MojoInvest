@@ -42,11 +42,11 @@ public class HomeView extends ViewWithUiHandlers<HomeUiHandlers>
   @UiField
   Button all;
 
-  @UiField
-  Button favorites;
-
-  @UiField
-  Button specials;
+//  @UiField
+//  Button favorites;
+//
+//  @UiField
+//  Button specials;
 
   private final Widget widget;
 

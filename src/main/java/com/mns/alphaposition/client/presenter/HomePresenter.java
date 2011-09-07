@@ -16,7 +16,8 @@ import com.mns.alphaposition.client.NameTokens;
 import com.mns.alphaposition.client.view.HomeUiHandlers;
 
 
-public class HomePresenter extends Presenter<HomePresenter.MyView, HomePresenter.MyProxy>
+public class HomePresenter
+        extends Presenter<HomePresenter.MyView, HomePresenter.MyProxy>
         implements HomeUiHandlers {
     /**
      * {@link HomePresenter}'s proxy.
