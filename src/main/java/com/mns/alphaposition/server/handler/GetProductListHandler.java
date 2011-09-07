@@ -20,6 +20,7 @@ import com.google.inject.Inject;
 import com.gwtplatform.dispatch.server.ExecutionContext;
 import com.gwtplatform.dispatch.server.actionhandler.ActionHandler;
 import com.gwtplatform.dispatch.shared.ActionException;
+import com.mns.alphaposition.server.PortfolioProvider;
 import com.mns.alphaposition.shared.Product;
 import com.mns.alphaposition.shared.action.GetProductListAction;
 import com.mns.alphaposition.shared.action.GetProductListResult;
@@ -30,31 +31,41 @@ import java.util.ArrayList;
  * @author Philippe Beaudoin
  */
 public class GetProductListHandler implements
-    ActionHandler<GetProductListAction, GetProductListResult> {
+        ActionHandler<GetProductListAction, GetProductListResult> {
 
-  private final ProductDatabase database;
+    private final ProductDatabase database;
 
-  @Inject
-  public GetProductListHandler(ProductDatabase database) {
-    this.database = database;
-  }
+    private final TestStrategy strategy;
 
-  @Override
-  public GetProductListResult execute(final GetProductListAction action,
-      final ExecutionContext context) throws ActionException {
-    ArrayList<Product> products = database.getMatching(action.getFlags());
-    return new GetProductListResult(products);
-  }
+    private final PortfolioProvider portfolioProvider;
 
-  @Override
-  public Class<GetProductListAction> getActionType() {
-    return GetProductListAction.class;
-  }
+    @Inject
+    public GetProductListHandler(ProductDatabase database, TestStrategy strategy,
+                                 PortfolioProvider portfolioProvider) {
+        this.database = database;
+        this.strategy = strategy;
+        this.portfolioProvider = portfolioProvider;
+    }
 
-  @Override
-  public void undo(final GetProductListAction action,
-      final GetProductListResult result, final ExecutionContext context)
-      throws ActionException {
-    // No undo
-  }
+    @Override
+    public GetProductListResult execute(final GetProductListAction action,
+                                        final ExecutionContext context) throws ActionException {
+
+        portfolioProvider.setFlags(action.getFlags());
+        strategy.execute();
+        ArrayList<Product> products = database.getMatching(action.getFlags());
+        return new GetProductListResult(products);
+    }
+
+    @Override
+    public Class<GetProductListAction> getActionType() {
+        return GetProductListAction.class;
+    }
+
+    @Override
+    public void undo(final GetProductListAction action,
+                     final GetProductListResult result, final ExecutionContext context)
+            throws ActionException {
+        // No undo
+    }
 }
