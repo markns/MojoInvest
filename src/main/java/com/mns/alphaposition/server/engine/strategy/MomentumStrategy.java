@@ -6,7 +6,7 @@ import com.mns.alphaposition.server.engine.execution.Executor;
 import com.mns.alphaposition.server.engine.portfolio.Portfolio;
 import com.mns.alphaposition.server.engine.portfolio.Position;
 import com.mns.alphaposition.server.engine.model.Fund;
-import com.mns.alphaposition.server.engine.params.MomentumStrategyParams;
+import com.mns.alphaposition.shared.params.MomentumStrategyParams;
 import org.joda.time.LocalDate;
 
 import java.math.BigDecimal;

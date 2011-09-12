@@ -1,6 +1,10 @@
 package com.mns.alphaposition.server.guice;
 
 import com.google.inject.AbstractModule;
+import com.google.inject.assistedinject.FactoryModuleBuilder;
+import com.mns.alphaposition.server.engine.portfolio.Portfolio;
+import com.mns.alphaposition.server.engine.portfolio.PortfolioFactory;
+import com.mns.alphaposition.server.engine.portfolio.SimplePortfolio;
 
 public class EngineModule extends AbstractModule {
 
@@ -16,7 +20,9 @@ public class EngineModule extends AbstractModule {
 //        bind(TradingStrategy.class).to(MomentumStrategy.class);
 //        bind(Executor.class).to(NextTradingDayExecutor.class);
 
-
+        install(new FactoryModuleBuilder()
+                .implement(Portfolio.class, SimplePortfolio.class)
+                .build(PortfolioFactory.class));
 
     }
 }

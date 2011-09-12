@@ -3,6 +3,7 @@ package com.mns.alphaposition.server.engine;
 import com.google.appengine.tools.development.testing.LocalDatastoreServiceTestConfig;
 import com.google.appengine.tools.development.testing.LocalServiceTestHelper;
 import com.googlecode.objectify.ObjectifyService;
+import com.mns.alphaposition.server.engine.portfolio.SimplePortfolio;
 import com.mns.alphaposition.server.util.QuoteUtils;
 import com.mns.alphaposition.server.data.FundSet;
 import com.mns.alphaposition.server.data.QuoteSet;
@@ -14,10 +15,10 @@ import com.mns.alphaposition.server.engine.strategy.MomentumStrategy;
 import com.mns.alphaposition.server.engine.strategy.SimpleRankingStrategy;
 import com.mns.alphaposition.server.engine.model.Fund;
 import com.mns.alphaposition.server.engine.model.Quote;
-import com.mns.alphaposition.server.engine.params.MomentumStrategyParams;
-import com.mns.alphaposition.server.engine.params.PortfolioParams;
-import com.mns.alphaposition.server.engine.params.RankingStrategyParams;
-import com.mns.alphaposition.server.engine.params.SimpleRankingStrategyParams;
+import com.mns.alphaposition.shared.params.MomentumStrategyParams;
+import com.mns.alphaposition.shared.params.PortfolioParams;
+import com.mns.alphaposition.shared.params.RankingStrategyParams;
+import com.mns.alphaposition.shared.params.SimpleRankingStrategyParams;
 import org.joda.time.LocalDate;
 import org.junit.After;
 import org.junit.Before;
@@ -33,7 +34,7 @@ public class MomentumStrategyTests {
 
     private final PortfolioParams portfolioParams =
             new PortfolioParams(new BigDecimal("10000"), new BigDecimal("12.95"));
-    private final Portfolio portfolio = new Portfolio(portfolioParams, quoteDao);
+    private final Portfolio portfolio = new SimplePortfolio(quoteDao, portfolioParams);
     private final Executor executor = new NextTradingDayExecutor(portfolio, portfolioParams.getTransactionCost(), quoteDao);
 
     private final RankingStrategyParams rankingStrategyParams = new SimpleRankingStrategyParams(10, 9);

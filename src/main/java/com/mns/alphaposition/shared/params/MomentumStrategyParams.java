@@ -1,4 +1,4 @@
-package com.mns.alphaposition.server.engine.params;
+package com.mns.alphaposition.shared.params;
 
 public class MomentumStrategyParams<T> implements StrategyParams<T> {
 
@@ -7,6 +7,9 @@ public class MomentumStrategyParams<T> implements StrategyParams<T> {
     private RankingStrategyParams rankingStrategyParams;
 
     private int portfolioSize;
+
+    public MomentumStrategyParams() {
+    }
 
     public MomentumStrategyParams(int rebalanceFrequency, RankingStrategyParams rankingStrategyParams,
                                   int portfolioSize) {

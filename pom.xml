@@ -291,6 +291,13 @@
             <version>${joda-time.version}</version>
         </dependency>
 
+        <!--GWT Math dependencies-->
+        <!--<dependency>-->
+            <!--<groupId>com.googlecode</groupId>-->
+            <!--<artifactId>gwt-math</artifactId>-->
+            <!--<version>2.1</version>-->
+        <!--</dependency>-->
+
         <!--Commons dependencies-->
         <dependency>
             <groupId>commons-lang</groupId>

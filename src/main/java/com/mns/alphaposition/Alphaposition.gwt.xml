@@ -36,6 +36,7 @@
     <inherits name='com.gwtplatform.mvp.Mvp'/>
     <inherits name="com.googlecode.objectify.Objectify"/>
 
+
     <!-- Specify the app entry point class.                         -->
     <entry-point class='com.mns.alphaposition.client.Alphaposition'/>
 

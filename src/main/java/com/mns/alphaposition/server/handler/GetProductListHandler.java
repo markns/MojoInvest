@@ -20,12 +20,16 @@ import com.google.inject.Inject;
 import com.gwtplatform.dispatch.server.ExecutionContext;
 import com.gwtplatform.dispatch.server.actionhandler.ActionHandler;
 import com.gwtplatform.dispatch.shared.ActionException;
-import com.mns.alphaposition.server.PortfolioProvider;
+import com.mns.alphaposition.server.engine.portfolio.Portfolio;
+import com.mns.alphaposition.server.engine.portfolio.PortfolioFactory;
+import com.mns.alphaposition.server.engine.portfolio.PortfolioProvider;
+import com.mns.alphaposition.server.engine.strategy.TradingStrategy;
 import com.mns.alphaposition.shared.Product;
 import com.mns.alphaposition.shared.action.GetProductListAction;
 import com.mns.alphaposition.shared.action.GetProductListResult;
 
 import java.util.ArrayList;
+import java.util.Set;
 
 /**
  * @author Philippe Beaudoin
@@ -35,24 +39,32 @@ public class GetProductListHandler implements
 
     private final ProductDatabase database;
 
-    private final TestStrategy strategy;
-
     private final PortfolioProvider portfolioProvider;
+    private final PortfolioFactory portfolioFactory;
+
+    private final Set<TradingStrategy> strategies;
 
     @Inject
-    public GetProductListHandler(ProductDatabase database, TestStrategy strategy,
+    public GetProductListHandler(PortfolioFactory portfolioFactory,
+                                 ProductDatabase database,
+                                 Set<TradingStrategy> strategies,
                                  PortfolioProvider portfolioProvider) {
+        this.portfolioFactory = portfolioFactory;
         this.database = database;
-        this.strategy = strategy;
+        this.strategies = strategies;
         this.portfolioProvider = portfolioProvider;
     }
 
     @Override
     public GetProductListResult execute(final GetProductListAction action,
                                         final ExecutionContext context) throws ActionException {
-
-        portfolioProvider.setFlags(action.getFlags());
-        strategy.execute();
+        Portfolio portfolio = portfolioFactory.create(action.getPortfolioParams());
+        portfolioProvider.setPortfolio(portfolio);
+        for (TradingStrategy strategy : strategies) {
+            if (strategy.supports(action.getStrategyParams())) {
+                strategy.execute(action);
+            }
+        }
         ArrayList<Product> products = database.getMatching(action.getFlags());
         return new GetProductListResult(products);
     }

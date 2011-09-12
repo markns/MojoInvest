@@ -1,10 +1,13 @@
-package com.mns.alphaposition.server.engine.params;
+package com.mns.alphaposition.shared.params;
 
 public class SimpleRankingStrategyParams implements RankingStrategyParams {
 
     private int averagingRange;
 
     private int performanceRange;
+
+    public SimpleRankingStrategyParams() {
+    }
 
     public SimpleRankingStrategyParams(int averagingRange, int performanceRange) {
         this.averagingRange = averagingRange;
