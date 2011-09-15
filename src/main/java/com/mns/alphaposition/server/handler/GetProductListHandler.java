@@ -20,6 +20,7 @@ import com.google.inject.Inject;
 import com.gwtplatform.dispatch.server.ExecutionContext;
 import com.gwtplatform.dispatch.server.actionhandler.ActionHandler;
 import com.gwtplatform.dispatch.shared.ActionException;
+import com.mns.alphaposition.server.engine.model.Fund;
 import com.mns.alphaposition.server.engine.portfolio.Portfolio;
 import com.mns.alphaposition.server.engine.portfolio.PortfolioFactory;
 import com.mns.alphaposition.server.engine.portfolio.PortfolioProvider;
@@ -27,6 +28,7 @@ import com.mns.alphaposition.server.engine.strategy.TradingStrategy;
 import com.mns.alphaposition.shared.Product;
 import com.mns.alphaposition.shared.action.GetProductListAction;
 import com.mns.alphaposition.shared.action.GetProductListResult;
+import org.joda.time.LocalDate;
 
 import java.util.ArrayList;
 import java.util.Set;
@@ -46,25 +48,29 @@ public class GetProductListHandler implements
 
     @Inject
     public GetProductListHandler(PortfolioFactory portfolioFactory,
-                                 ProductDatabase database,
+                                 PortfolioProvider portfolioProvider,
                                  Set<TradingStrategy> strategies,
-                                 PortfolioProvider portfolioProvider) {
+                                 ProductDatabase database) {
         this.portfolioFactory = portfolioFactory;
+        this.portfolioProvider = portfolioProvider;
         this.database = database;
         this.strategies = strategies;
-        this.portfolioProvider = portfolioProvider;
     }
 
     @Override
     public GetProductListResult execute(final GetProductListAction action,
                                         final ExecutionContext context) throws ActionException {
+
         Portfolio portfolio = portfolioFactory.create(action.getPortfolioParams());
         portfolioProvider.setPortfolio(portfolio);
+
         for (TradingStrategy strategy : strategies) {
             if (strategy.supports(action.getStrategyParams())) {
-                strategy.execute(action);
+                strategy.execute(new LocalDate(), new LocalDate(),
+                        new ArrayList<Fund>(), action.getStrategyParams());
             }
         }
+
         ArrayList<Product> products = database.getMatching(action.getFlags());
         return new GetProductListResult(products);
     }

@@ -1,6 +1,6 @@
 package com.mns.alphaposition.shared.params;
 
-public class MomentumStrategyParams<T> implements StrategyParams<T> {
+public class MomentumStrategyParams implements StrategyParams {
 
     private int rebalanceFrequency;
 

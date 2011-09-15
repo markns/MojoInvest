@@ -6,8 +6,11 @@ import org.joda.time.LocalDate;
 
 import java.util.List;
 
-public interface TradingStrategy<P extends StrategyParams> {
+public interface TradingStrategy {
 
-    void execute(LocalDate fromDate, LocalDate toDate, List<Fund> funds, P strategyParams);
+    void execute(LocalDate fromDate, LocalDate toDate, List<Fund> funds, StrategyParams strategyParams)
+            throws StrategyException;
 
+    boolean supports(StrategyParams strategyParams);
 }
+

@@ -1,12 +1,13 @@
 package com.mns.alphaposition.server.engine.strategy;
 
 import com.google.inject.Inject;
-import com.mns.alphaposition.server.util.TradingDayUtils;
 import com.mns.alphaposition.server.engine.execution.Executor;
+import com.mns.alphaposition.server.engine.model.Fund;
 import com.mns.alphaposition.server.engine.portfolio.Portfolio;
 import com.mns.alphaposition.server.engine.portfolio.Position;
-import com.mns.alphaposition.server.engine.model.Fund;
+import com.mns.alphaposition.server.util.TradingDayUtils;
 import com.mns.alphaposition.shared.params.MomentumStrategyParams;
+import com.mns.alphaposition.shared.params.StrategyParams;
 import org.joda.time.LocalDate;
 
 import java.math.BigDecimal;
@@ -14,7 +15,7 @@ import java.math.RoundingMode;
 import java.util.List;
 import java.util.Map;
 
-public class MomentumStrategy implements TradingStrategy<MomentumStrategyParams> {
+public class MomentumStrategy implements TradingStrategy {
 
     private final RankingStrategy rankingStrategy;
     private final Portfolio portfolio;
@@ -29,7 +30,11 @@ public class MomentumStrategy implements TradingStrategy<MomentumStrategyParams>
 
     @Override
     public void execute(LocalDate fromDate, LocalDate toDate, List<Fund> funds,
-                        MomentumStrategyParams params) {
+                        StrategyParams strategyParams) throws StrategyException {
+
+        if (!supports(strategyParams))
+            throw new StrategyException(this.getClass() + " doesn't support " + strategyParams.getClass());
+        MomentumStrategyParams params = (MomentumStrategyParams) strategyParams;
 
         List<LocalDate> rebalanceDates = getRebalanceDates(fromDate, toDate, params);
 
@@ -58,6 +63,11 @@ public class MomentumStrategy implements TradingStrategy<MomentumStrategyParams>
 
             System.out.println("Overall return: " + portfolio.overallReturn(rebalanceDate));
         }
+    }
+
+    @Override
+    public boolean supports(StrategyParams strategyParams) {
+        return strategyParams instanceof MomentumStrategyParams;
     }
 
     private void sellLosers(LocalDate rebalanceDate, List<Fund> selection) {
