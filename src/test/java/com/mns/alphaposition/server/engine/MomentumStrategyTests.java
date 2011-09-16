@@ -3,7 +3,9 @@ package com.mns.alphaposition.server.engine;
 import com.google.appengine.tools.development.testing.LocalDatastoreServiceTestConfig;
 import com.google.appengine.tools.development.testing.LocalServiceTestHelper;
 import com.googlecode.objectify.ObjectifyService;
+import com.mns.alphaposition.server.engine.portfolio.PortfolioProvider;
 import com.mns.alphaposition.server.engine.portfolio.SimplePortfolio;
+import com.mns.alphaposition.server.engine.strategy.StrategyException;
 import com.mns.alphaposition.server.util.QuoteUtils;
 import com.mns.alphaposition.server.data.FundSet;
 import com.mns.alphaposition.server.data.QuoteSet;
@@ -34,8 +36,11 @@ public class MomentumStrategyTests {
 
     private final PortfolioParams portfolioParams =
             new PortfolioParams(new BigDecimal("10000"), new BigDecimal("12.95"));
+
+    private final PortfolioProvider portfolioProvider = new PortfolioProvider();
     private final Portfolio portfolio = new SimplePortfolio(quoteDao, portfolioParams);
-    private final Executor executor = new NextTradingDayExecutor(portfolio, portfolioParams.getTransactionCost(), quoteDao);
+
+    private final Executor executor = new NextTradingDayExecutor(portfolioProvider, quoteDao);
 
     private final RankingStrategyParams rankingStrategyParams = new SimpleRankingStrategyParams(10, 9);
     private final MomentumStrategyParams strategyParams = new MomentumStrategyParams(1, rankingStrategyParams, 3);
@@ -62,6 +67,7 @@ public class MomentumStrategyTests {
     public void setUp() {
         helper.setUp();
         quoteDao.put(quotes);
+        portfolioProvider.setPortfolio(portfolio);
         time = System.currentTimeMillis();
         for (Fund fund : funds) {
             List<Quote> quotes = quoteDao.query(fund);
@@ -78,10 +84,10 @@ public class MomentumStrategyTests {
     }
 
     @Test
-    public void testMomentumStrategy() {
+    public void testMomentumStrategy() throws StrategyException {
         System.out.println("Starting run of testMomentumStrategy");
         SimpleRankingStrategy rankingStrategy = new SimpleRankingStrategy(quoteDao);
-        MomentumStrategy tradingStrategy = new MomentumStrategy(rankingStrategy, executor, portfolio);
+        MomentumStrategy tradingStrategy = new MomentumStrategy(rankingStrategy, executor, portfolioProvider);
         time = System.currentTimeMillis();
         tradingStrategy.execute(fromDate, toDate, funds, strategyParams);
         System.out.println(System.currentTimeMillis() - time);

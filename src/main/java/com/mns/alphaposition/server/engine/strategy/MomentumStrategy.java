@@ -4,6 +4,7 @@ import com.google.inject.Inject;
 import com.mns.alphaposition.server.engine.execution.Executor;
 import com.mns.alphaposition.server.engine.model.Fund;
 import com.mns.alphaposition.server.engine.portfolio.Portfolio;
+import com.mns.alphaposition.server.engine.portfolio.PortfolioProvider;
 import com.mns.alphaposition.server.engine.portfolio.Position;
 import com.mns.alphaposition.server.util.TradingDayUtils;
 import com.mns.alphaposition.shared.params.MomentumStrategyParams;
@@ -14,17 +15,21 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Logger;
 
 public class MomentumStrategy implements TradingStrategy {
 
+    private static final Logger log = Logger.getLogger(MomentumStrategy.class.getName());
+
     private final RankingStrategy rankingStrategy;
-    private final Portfolio portfolio;
+    private final PortfolioProvider portfolioProvider;
     private final Executor executor;
 
     @Inject
-    public MomentumStrategy(RankingStrategy rankingStrategy, Executor executor, Portfolio portfolio) {
+    public MomentumStrategy(RankingStrategy rankingStrategy, Executor executor,
+                            PortfolioProvider portfolioProvider) {
         this.rankingStrategy = rankingStrategy;
-        this.portfolio = portfolio;
+        this.portfolioProvider = portfolioProvider;
         this.executor = executor;
     }
 
@@ -52,8 +57,8 @@ public class MomentumStrategy implements TradingStrategy {
             sellLosers(rebalanceDate, selection);
             buyWinners(params, rebalanceDate, selection);
 
-            for (Map.Entry<Fund, Position> e : portfolio.getActivePositions().entrySet()) {
-                System.out.println(e.getValue().getFund()
+            for (Map.Entry<Fund, Position> e : portfolio().getActivePositions().entrySet()) {
+                log.info(e.getValue().getFund()
                         + " shares: " + e.getValue().shares()
                         + ", marketValue: " + e.getValue().marketValue(rebalanceDate)
                         + ", returnsGain: " + e.getValue().totalReturn(rebalanceDate)
@@ -61,7 +66,7 @@ public class MomentumStrategy implements TradingStrategy {
 
             }
 
-            System.out.println("Overall return: " + portfolio.overallReturn(rebalanceDate));
+            log.info("Overall return: " + portfolio().overallReturn(rebalanceDate));
         }
     }
 
@@ -70,8 +75,12 @@ public class MomentumStrategy implements TradingStrategy {
         return strategyParams instanceof MomentumStrategyParams;
     }
 
+    private Portfolio portfolio() {
+        return portfolioProvider.get();
+    }
+
     private void sellLosers(LocalDate rebalanceDate, List<Fund> selection) {
-        for (Fund fund : portfolio.getActiveHoldings()) {
+        for (Fund fund : portfolio().getActiveHoldings()) {
             if (!selection.contains(fund)) {
                 executor.sellAll(fund, rebalanceDate);
             }
@@ -80,13 +89,13 @@ public class MomentumStrategy implements TradingStrategy {
 
     private void buyWinners(MomentumStrategyParams params, LocalDate rebalanceDate, List<Fund> selection) {
 
-        BigDecimal numEmpty = new BigDecimal(params.getPortfolioSize() - portfolio.numberOfActivePositions());
-        BigDecimal availableCash = portfolio.getCash().
+        BigDecimal numEmpty = new BigDecimal(params.getPortfolioSize() - portfolio().numberOfActivePositions());
+        BigDecimal availableCash = portfolio().getCash().
                 subtract(executor.getTransactionCost().
                         multiply(numEmpty));
-        System.out.println("Available cash: " + availableCash);
+        log.info("Available cash: " + availableCash);
         for (Fund fund : selection) {
-            if (!portfolio.contains(fund)) {
+            if (!portfolio().contains(fund)) {
                 BigDecimal allocation = availableCash
                         .divide(numEmpty, RoundingMode.HALF_DOWN);
                 executor.buy(fund, rebalanceDate, allocation);

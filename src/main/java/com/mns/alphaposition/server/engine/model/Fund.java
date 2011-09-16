@@ -26,6 +26,10 @@ public class Fund implements Comparable<Fund> {
 
     private BigDecimal averageVol;
 
+    public Fund() {
+        //No arg for objectify
+    }
+
     public Fund(String symbol, String name, String category, String provider, BigDecimal aum,
                 BigDecimal expenseRatio, LocalDate inceptionDate, BigDecimal averageVol) {
         this.symbol = symbol;

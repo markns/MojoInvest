@@ -40,22 +40,29 @@ import java.util.Set;
  */
 public class SimplePortfolio implements Portfolio {
 
-    private BigDecimal cash;
+    private HashMap<Fund, Position> positions;
 
     private QuoteDao quoteDao;
 
-    private HashMap<Fund, Position> positions;
+    private BigDecimal cash;
+
+    private BigDecimal transactionCost;
 
     @Inject
     public SimplePortfolio(QuoteDao quoteDao, @Assisted PortfolioParams params) {
         this.quoteDao = quoteDao;
         this.positions = new HashMap<Fund, Position>();
         this.cash = params.getInitialInvestment();
+        this.transactionCost = params.getTransactionCost();
     }
 
     @Override
     public BigDecimal getCash() {
         return cash;
+    }
+
+    public BigDecimal getTransactionCost() {
+        return transactionCost;
     }
 
     @Override

@@ -30,7 +30,7 @@ public class FundDao extends DAOBase {
         super(objectifyFactory);
     }
 
-    public Collection<Fund> getAll() {
+    public List<Fund> getAll() {
         Query<Fund> q = ofy().query(Fund.class);
         return q.list();
     }

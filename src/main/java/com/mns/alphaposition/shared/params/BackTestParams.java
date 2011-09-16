@@ -1,8 +1,8 @@
 package com.mns.alphaposition.shared.params;
 
 import com.google.gwt.user.client.rpc.IsSerializable;
-import org.joda.time.LocalDate;
 
+import java.util.Date;
 import java.util.Map;
 
 public class BackTestParams implements IsSerializable{
@@ -11,9 +11,9 @@ public class BackTestParams implements IsSerializable{
 //    ERROR: Line 10: No source code is available for type org.joda.time.LocalDate; did you forget to inherit a required module?.
 
 //probably best to only pass java.util.Date to and from client - can adapt on way in and out?
-    private LocalDate fromDate;
+    private Date fromDate;
 
-    private LocalDate toDate;
+    private Date toDate;
 
     private Map<String, String> fundsFilter;
 
@@ -22,7 +22,7 @@ public class BackTestParams implements IsSerializable{
     public BackTestParams() {
     }
 
-    public BackTestParams(LocalDate fromDate, LocalDate toDate,
+    public BackTestParams(Date fromDate, Date toDate,
                           Map<String, String> fundsFilter, StrategyParams strategyParams) {
         this.fromDate = fromDate;
         this.toDate = toDate;
@@ -30,11 +30,11 @@ public class BackTestParams implements IsSerializable{
         this.strategyParams = strategyParams;
     }
 
-    public LocalDate getFromDate() {
+    public Date getFromDate() {
         return fromDate;
     }
 
-    public LocalDate getToDate() {
+    public Date getToDate() {
         return toDate;
     }
 

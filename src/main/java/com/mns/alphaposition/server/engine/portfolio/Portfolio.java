@@ -12,6 +12,8 @@ import java.util.Set;
 public interface Portfolio {
     BigDecimal getCash();
 
+    BigDecimal getTransactionCost();
+
     boolean contains(Fund fund);
 
     Position get(Fund fund);

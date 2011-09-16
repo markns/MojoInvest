@@ -1,8 +1,7 @@
 package com.mns.alphaposition.shared.action;
 
 import com.gwtplatform.dispatch.shared.Action;
-import com.mns.alphaposition.shared.params.PortfolioParams;
-import com.mns.alphaposition.shared.params.StrategyParams;
+import com.mns.alphaposition.shared.params.*;
 
 import java.math.BigDecimal;
 
@@ -12,7 +11,9 @@ public class GetProductListAction implements Action<GetProductListResult> {
 
     private PortfolioParams portfolioParams = new PortfolioParams(BigDecimal.TEN, BigDecimal.TEN);
 
-    private StrategyParams strategyParams;
+
+    RankingStrategyParams rankingParams = new SimpleRankingStrategyParams(10, 9);
+    private StrategyParams strategyParams = new MomentumStrategyParams(1, rankingParams, 3);
 
     public GetProductListAction(int flags) {
         this.flags = flags;

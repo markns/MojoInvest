@@ -1,9 +1,8 @@
-package com.mns.alphaposition.server.data;
+package com.mns.alphaposition.server.handler;
 
 import au.com.bytecode.opencsv.CSVReader;
 import com.mns.alphaposition.server.engine.model.Fund;
 import org.joda.time.LocalDate;
-import org.junit.Test;
 
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
@@ -69,12 +68,11 @@ public class FundSet {
         return new BigDecimal(str);
     }
 
-    @Test
+
     public void testGetFundsByProvider() {
         List<Fund> quotes = getFundsByProvider(Arrays.asList("iShares"));
     }
 
-    @Test
     public void testGetFundsByCategory() {
         List<Fund> quotes = getFundsByCategory(Arrays.asList("Equity Energy", "Financial"));
     }
