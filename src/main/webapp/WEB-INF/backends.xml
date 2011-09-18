@@ -1,0 +1,8 @@
+<backends>
+    <backend name="example">
+        <class>B1</class>
+        <options>
+            <dynamic>true</dynamic>
+        </options>
+    </backend>
+</backends>

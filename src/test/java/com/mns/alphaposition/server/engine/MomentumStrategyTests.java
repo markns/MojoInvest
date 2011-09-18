@@ -67,7 +67,7 @@ public class MomentumStrategyTests {
     public void setUp() {
         helper.setUp();
         quoteDao.put(quotes);
-        portfolioProvider.setPortfolio(portfolio);
+//        portfolioProvider.setPortfolio(portfolio);
         time = System.currentTimeMillis();
         for (Fund fund : funds) {
             List<Quote> quotes = quoteDao.query(fund);

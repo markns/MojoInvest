@@ -17,9 +17,12 @@
 package com.mns.alphaposition.server.handler;
 
 import com.google.inject.Inject;
+import com.google.inject.Provider;
+import com.google.inject.servlet.RequestScoped;
 import com.gwtplatform.dispatch.server.ExecutionContext;
 import com.gwtplatform.dispatch.server.actionhandler.ActionHandler;
 import com.gwtplatform.dispatch.shared.ActionException;
+import com.mns.alphaposition.server.engine.model.Fund;
 import com.mns.alphaposition.server.engine.model.FundDao;
 import com.mns.alphaposition.server.engine.portfolio.Portfolio;
 import com.mns.alphaposition.server.engine.portfolio.PortfolioFactory;
@@ -31,12 +34,11 @@ import com.mns.alphaposition.shared.action.GetProductListAction;
 import com.mns.alphaposition.shared.action.GetProductListResult;
 import org.joda.time.LocalDate;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.Map;
 
-/**
- * @author Philippe Beaudoin
- */
+@RequestScoped
 public class GetProductListHandler implements
         ActionHandler<GetProductListAction, GetProductListResult> {
 
@@ -48,6 +50,9 @@ public class GetProductListHandler implements
     private final FundDao fundDao;
 
     private final Map<Class, TradingStrategy> strategies;
+
+    @Inject Provider<HttpServletRequest> requestProvider;
+
 
     @Inject
     public GetProductListHandler(PortfolioFactory portfolioFactory,
@@ -67,12 +72,14 @@ public class GetProductListHandler implements
                                         final ExecutionContext context) throws ActionException {
 
         Portfolio portfolio = portfolioFactory.create(action.getPortfolioParams());
-        portfolioProvider.setPortfolio(portfolio);
+//        portfolioProvider.setPortfolio(portfolio);
+        HttpServletRequest request = requestProvider.get();
+        request.setAttribute("portfolio", portfolio);
 
         try {
             TradingStrategy strategy = strategies.get(action.getStrategyParams().getClass());
             strategy.execute(new LocalDate(2000, 1, 1), new LocalDate(2011, 6, 1),
-                            fundDao.getAll(), action.getStrategyParams());
+                            new ArrayList<Fund>(), action.getStrategyParams());
         } catch (StrategyException e) {
             throw new ActionException();
         }
