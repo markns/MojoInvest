@@ -24,6 +24,7 @@ import com.gwtplatform.dispatch.shared.ActionImpl;
 import com.gwtplatform.crawler.server.CrawlFilter;
 import com.gwtplatform.crawler.server.ServiceKey;
 import com.gwtplatform.crawler.server.ServiceUrl;
+import com.mns.alphaposition.server.backend.FundLoader;
 
 /**
  * @author Mark Nuttall-Smith
@@ -39,6 +40,8 @@ public class DispatchServletModule extends ServletModule {
         bindConstant().annotatedWith(ServiceKey.class).to("123456");
         bindConstant().annotatedWith(ServiceUrl.class).to("http://crawlservice.appspot.com/");
         filter("/*").through(CrawlFilter.class);
+
+        serve("/funds").with(FundLoader.class);
 
         serve("/" + ActionImpl.DEFAULT_SERVICE_NAME + "*").with(
                 DispatchServiceImpl.class);
