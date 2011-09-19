@@ -41,7 +41,7 @@ public class DispatchServletModule extends ServletModule {
         bindConstant().annotatedWith(ServiceUrl.class).to("http://crawlservice.appspot.com/");
         filter("/*").through(CrawlFilter.class);
 
-        serve("/funds").with(FundLoader.class);
+        serve("/fundloader").with(FundLoader.class);
 
         serve("/" + ActionImpl.DEFAULT_SERVICE_NAME + "*").with(
                 DispatchServiceImpl.class);

@@ -30,6 +30,9 @@ public class Fund implements Comparable<Fund> {
 
     private LocalDate inceptionDate;
 
+    //TODO: Update this each time the fund is updated from msn
+    private LocalDate lastUpdated;
+
 //    private BigDecimal aum;
 //
 //    private BigDecimal expenseRatio;

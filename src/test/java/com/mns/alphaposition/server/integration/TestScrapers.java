@@ -35,22 +35,25 @@ public class TestScrapers {
 
     @Test
     public void testSnapshotScrape() throws IOException {
-        URL url = ClassLoader.getSystemResource("etfsnapshot.html");
+        URL url = ClassLoader.getSystemResource("etfsnapshot_bad.html");
         String html = FileUtils.readFileToString(new File(url.getFile()));
         Document doc = Jsoup.parse(html);
-        Element area1 = doc.getElementById("area1");
 
-        Element tbody = area1.child(0).getElementsByTag("tbody").get(0);
+        for (Element element : doc.select("span")) {
+            if ("QUICK STATS".equals(element.text())) {
+                Element tbody = element.parent().parent().getElementsByTag("tbody").get(0);
+                String category = tbody.child(3).child(1).text();
+                String provider = tbody.child(4).child(1).text();
+                String index = tbody.child(5).child(1).text();
+                String inceptionDate = tbody.child(6).child(1).text();
+            }
 
-        String category = tbody.child(3).child(1).text();
-        String provider = tbody.child(4).child(1).text();
-        String index = tbody.child(5).child(1).text();
-        String inceptionDate = tbody.child(6).child(1).text();
+            if ("OVERVIEW".equals(element.text())) {
+                String overview = element.parent().parent().ownText();
 
-        if (!"OVERVIEW".equals(area1.child(1).child(0).text())) {
-            throw new IllegalStateException("Source has changed");
+            }
+
         }
-        String overview = area1.child(1).childNode(2).toString();
 
 
     }
