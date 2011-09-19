@@ -9,6 +9,8 @@ import java.math.BigDecimal;
 @Cached
 public class Fund implements Comparable<Fund> {
 
+
+
     @Id
     private String symbol;
 
@@ -18,13 +20,21 @@ public class Fund implements Comparable<Fund> {
 
     private String provider;
 
-    private BigDecimal aum;
+    private boolean active;
 
-    private BigDecimal expenseRatio;
+    private String country;
+
+    private String index;
+
+    private String overview;
 
     private LocalDate inceptionDate;
 
-    private BigDecimal averageVol;
+//    private BigDecimal aum;
+//
+//    private BigDecimal expenseRatio;
+//
+//    private BigDecimal averageVol;
 
     public Fund() {
         //No arg for objectify
@@ -36,10 +46,10 @@ public class Fund implements Comparable<Fund> {
         this.name = name;
         this.category = category;
         this.provider = provider;
-        this.aum = aum;
-        this.expenseRatio = expenseRatio;
+//        this.aum = aum;
+//        this.expenseRatio = expenseRatio;
         this.inceptionDate = inceptionDate;
-        this.averageVol = averageVol;
+//        this.averageVol = averageVol;
     }
 
     public String getSymbol() {
@@ -74,22 +84,6 @@ public class Fund implements Comparable<Fund> {
         this.provider = provider;
     }
 
-    public BigDecimal getAum() {
-        return aum;
-    }
-
-    public void setAum(BigDecimal aum) {
-        this.aum = aum;
-    }
-
-    public BigDecimal getExpenseRatio() {
-        return expenseRatio;
-    }
-
-    public void setExpenseRatio(BigDecimal expenseRatio) {
-        this.expenseRatio = expenseRatio;
-    }
-
     public LocalDate getInceptionDate() {
         return inceptionDate;
     }
@@ -98,12 +92,36 @@ public class Fund implements Comparable<Fund> {
         this.inceptionDate = inceptionDate;
     }
 
-    public BigDecimal getAverageVol() {
-        return averageVol;
+    public boolean isActive() {
+        return active;
     }
 
-    public void setAverageVol(BigDecimal averageVol) {
-        this.averageVol = averageVol;
+    public void setActive(boolean active) {
+        this.active = active;
+    }
+
+    public String getCountry() {
+        return country;
+    }
+
+    public void setCountry(String country) {
+        this.country = country;
+    }
+
+    public String getIndex() {
+        return index;
+    }
+
+    public void setIndex(String index) {
+        this.index = index;
+    }
+
+    public String getOverview() {
+        return overview;
+    }
+
+    public void setOverview(String overview) {
+        this.overview = overview;
     }
 
     @Override
