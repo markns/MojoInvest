@@ -3,6 +3,7 @@ package com.mns.alphaposition.server.backend;
 import com.google.inject.Singleton;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
+
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
@@ -29,10 +30,14 @@ public class FundLoader extends HttpServlet {
             throws IOException {
 
         try {
-            String html = fetch("http://moneycentral.msn.com/investor/partsub/funds/etfperformancetracker.aspx", "tab=mkt&p=0");
+            String html = fetch("http://moneycentral.msn.com/investor/partsub/funds/etfperformancetracker.aspx",
+                    "tab=mkt&p=0");
             List<FundLite> fundLites = scrapeList(html);
             for (FundLite fundLite : fundLites) {
-                html = fetch("http://moneycentral.msn.com/investor/partsub/funds/etfsnapshot.asp", "symbol=" + fundLite.symbol);
+                if ("TICKER".equals(fundLite.symbol))
+                    continue;
+                html = fetch("http://moneycentral.msn.com/investor/partsub/funds/etfsnapshot.asp",
+                        "symbol=" + fundLite.symbol);
                 FundDetails details = scrapeDetails(html);
                 buildFund(fundLite, details);
             }
@@ -44,7 +49,7 @@ public class FundLoader extends HttpServlet {
     }
 
     private void buildFund(FundLite fundLite, FundDetails details) {
-        log.severe(fundLite + " " + details);
+        log.warning(fundLite + " " + details);
     }
 
     private String fetch(String url, String query) throws Exception {
@@ -92,7 +97,7 @@ public class FundLoader extends HttpServlet {
         String provider = tbody.child(4).child(1).text();
         String index = tbody.child(5).child(1).text();
         String inceptionDate = tbody.child(6).child(1).text();
-        String overview = area1.child(1).childNode(2).toString();
+        String overview = area1.child(1).childNode(1).toString();
 
         return new FundDetails(category, provider, index, inceptionDate, overview);
     }
@@ -100,10 +105,12 @@ public class FundLoader extends HttpServlet {
     private static class FundLite {
         String name;
         String symbol;
+
         private FundLite(String name, String symbol) {
             this.name = name;
             this.symbol = symbol;
         }
+
         @Override
         public String toString() {
             return name + " " + symbol;
@@ -116,6 +123,7 @@ public class FundLoader extends HttpServlet {
         String index;
         String inceptionDate;
         String overview;
+
         public FundDetails(String category, String provider, String index, String inceptionDate, String overview) {
             this.category = category;
             this.provider = provider;
@@ -123,6 +131,7 @@ public class FundLoader extends HttpServlet {
             this.inceptionDate = inceptionDate;
             this.overview = overview;
         }
+
         @Override
         public String toString() {
             return category + " " + provider + " " + index + " " + inceptionDate + " " + overview;
