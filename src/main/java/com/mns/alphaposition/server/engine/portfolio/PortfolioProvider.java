@@ -3,7 +3,6 @@ package com.mns.alphaposition.server.engine.portfolio;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 import com.google.inject.servlet.RequestScoped;
-import sun.plugin.dom.exception.InvalidStateException;
 
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;

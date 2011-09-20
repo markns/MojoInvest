@@ -3,7 +3,7 @@
     <cron>
         <url>/fundloader</url>
         <description>Updates the fund static</description>
-        <schedule>every 2 hours</schedule>
+        <schedule>every 12 hours</schedule>
         <!--<timezone>America/New_York</timezone>-->
     </cron>
 </cronentries>
