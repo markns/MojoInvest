@@ -24,7 +24,7 @@ import com.gwtplatform.dispatch.shared.ActionImpl;
 import com.gwtplatform.crawler.server.CrawlFilter;
 import com.gwtplatform.crawler.server.ServiceKey;
 import com.gwtplatform.crawler.server.ServiceUrl;
-import com.mns.alphaposition.server.backend.FundLoader;
+import com.mns.alphaposition.server.servlet.FundLoader;
 
 /**
  * @author Mark Nuttall-Smith

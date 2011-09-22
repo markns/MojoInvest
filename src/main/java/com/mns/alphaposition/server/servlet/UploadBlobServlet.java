@@ -1,4 +1,4 @@
-package com.mns.alphaposition.server.backend;
+package com.mns.alphaposition.server.servlet;
 import com.google.appengine.api.blobstore.BlobKey;
 import com.google.appengine.api.blobstore.BlobstoreService;
 import com.google.appengine.api.blobstore.BlobstoreServiceFactory;

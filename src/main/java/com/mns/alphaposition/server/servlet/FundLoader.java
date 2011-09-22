@@ -1,4 +1,4 @@
-package com.mns.alphaposition.server.backend;
+package com.mns.alphaposition.server.servlet;
 
 import com.google.inject.Singleton;
 import org.jsoup.Jsoup;

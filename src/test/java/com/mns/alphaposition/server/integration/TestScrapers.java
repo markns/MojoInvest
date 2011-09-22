@@ -35,7 +35,7 @@ public class TestScrapers {
 
     @Test
     public void testSnapshotScrape() throws IOException {
-        URL url = ClassLoader.getSystemResource("etfsnapshot_bad.html");
+        URL url = ClassLoader.getSystemResource("etfsnapshot.html");
         String html = FileUtils.readFileToString(new File(url.getFile()));
         Document doc = Jsoup.parse(html);
 

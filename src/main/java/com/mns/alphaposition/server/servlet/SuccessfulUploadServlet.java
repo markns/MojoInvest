@@ -1,4 +1,4 @@
-package com.mns.alphaposition.server.backend;
+package com.mns.alphaposition.server.servlet;
 
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
