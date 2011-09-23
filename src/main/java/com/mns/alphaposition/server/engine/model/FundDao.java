@@ -68,4 +68,7 @@ public class FundDao extends DAOBase {
         return ofy().put(fund);
     }
 
+    public Map<Key<Fund>, Fund> put(Collection<Fund> funds) {
+        return ofy().put(funds);
+    }
 }

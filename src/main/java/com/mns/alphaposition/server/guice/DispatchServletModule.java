@@ -24,7 +24,8 @@ import com.gwtplatform.dispatch.shared.ActionImpl;
 import com.gwtplatform.crawler.server.CrawlFilter;
 import com.gwtplatform.crawler.server.ServiceKey;
 import com.gwtplatform.crawler.server.ServiceUrl;
-import com.mns.alphaposition.server.servlet.FundLoader;
+import com.mns.alphaposition.server.servlet.FundLoaderServlet;
+import com.mns.alphaposition.server.servlet.QuoteViewerServlet;
 
 /**
  * @author Mark Nuttall-Smith
@@ -34,6 +35,9 @@ public class DispatchServletModule extends ServletModule {
     @Override
     public void configureServlets() {
 
+        serve("/quoteviewer").with(QuoteViewerServlet.class);
+        serve("/fundloader").with(FundLoaderServlet.class);
+
         // Model object managers
         bind(ObjectifyFactory.class).in(Singleton.class);
 
@@ -41,7 +45,6 @@ public class DispatchServletModule extends ServletModule {
         bindConstant().annotatedWith(ServiceUrl.class).to("http://crawlservice.appspot.com/");
         filter("/*").through(CrawlFilter.class);
 
-        serve("/fundloader").with(FundLoader.class);
 
         serve("/" + ActionImpl.DEFAULT_SERVICE_NAME + "*").with(
                 DispatchServiceImpl.class);

@@ -27,7 +27,6 @@ import com.googlecode.objectify.ObjectifyFactory;
  * @author Phillipe Beaudoin
  * @author Jeff Schnitzer
  */
-@RequestScoped
 public abstract class DAOBase {
 
     private final ObjectifyFactory factory;

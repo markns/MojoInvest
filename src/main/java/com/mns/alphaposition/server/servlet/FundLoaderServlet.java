@@ -1,6 +1,11 @@
 package com.mns.alphaposition.server.servlet;
 
+import com.google.inject.Inject;
 import com.google.inject.Singleton;
+import com.mns.alphaposition.server.engine.model.Fund;
+import com.mns.alphaposition.server.engine.model.FundDao;
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -20,15 +25,42 @@ import java.util.List;
 import java.util.logging.Logger;
 
 @Singleton
-public class FundLoader extends HttpServlet {
+public class FundLoaderServlet extends HttpServlet {
 
-    private static final Logger log = Logger.getLogger(FundLoader.class.getName());
+    private static final Logger log = Logger.getLogger(FundLoaderServlet.class.getName());
+
+    private FundDao dao;
+
+    @Inject
+    public FundLoaderServlet(FundDao dao) {
+        this.dao = dao;
+    }
 
     public void doGet(HttpServletRequest req, HttpServletResponse resp)
             throws IOException {
         List<FundLite> fundLites = scrapeFundList();
         if (fundLites != null)
             scrapeFundDetails(fundLites);
+        List<Fund> funds = buildFunds(fundLites);
+        log.info("Saving " + funds.size() + " funds");
+        dao.put(funds);
+    }
+
+    private List<Fund> buildFunds(List<FundLite> fundLites) {
+        List<Fund> funds = new ArrayList<Fund>();
+        DateTimeFormatter fmt = DateTimeFormat.forPattern("MM/dd/yyyy");
+        for (FundLite fundLite : fundLites) {
+            try {
+                //TODO: Add more validation to the fields here. Only create a fund if it has good data
+                Fund fund = new Fund(fundLite.symbol, fundLite.name, fundLite.category, fundLite.provider, true, "US",
+                        fundLite.index, fundLite.overview, fmt.parseDateTime(fundLite.inceptionDate).toLocalDate());
+                funds.add(fund);
+            } catch (Exception e) {
+                log.severe("Exception while creating fund with fields: " + fundLite.symbol + " " +
+                        fundLite.name + " " + fundLite.inceptionDate);
+            }
+        }
+        return funds;
     }
 
     private List<FundLite> scrapeFundList() throws IOException {
@@ -37,7 +69,7 @@ public class FundLoader extends HttpServlet {
         List<FundLite> fundLites = null;
         if (html != null) {
             fundLites = scrapeList(html);
-            log.warning("Scraped a list of " + fundLites.size() + " funds from msn moneycentral");
+            log.info("Scraped a list of " + fundLites.size() + " funds from msn moneycentral");
         }
         return fundLites;
     }
@@ -46,7 +78,6 @@ public class FundLoader extends HttpServlet {
         for (FundLite fundLite : fundLites) {
             if ("TICKER".equals(fundLite.symbol))
                 continue;
-            log.warning("Loading details for " + fundLite.symbol);
             String html = fetch("http://moneycentral.msn.com/investor/partsub/funds/etfsnapshot.asp",
                     "symbol=" + fundLite.symbol);
             scrapeDetails(html, fundLite);
@@ -62,6 +93,8 @@ public class FundLoader extends HttpServlet {
         for (Element element : tr) {
             String name = ((Element) element.childNode(1)).text();
             String symbol = ((Element) element.childNode(2)).text();
+            if ("TICKER".equals(symbol))
+                continue;
             FundLite p = new FundLite(name, symbol);
             data.add(p);
         }
@@ -103,8 +136,7 @@ public class FundLoader extends HttpServlet {
             return sb.toString();
         } catch (IOException e) {
             log.severe(e.getMessage() + "\n" + e.getCause());
-            //TODO: Don't return null
-            return null;
+            throw new IllegalStateException(e);
         }
     }
 

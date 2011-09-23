@@ -5,11 +5,10 @@ import org.joda.time.LocalDate;
 
 import javax.persistence.Id;
 import java.math.BigDecimal;
+import java.util.Date;
 
 @Cached
 public class Fund implements Comparable<Fund> {
-
-
 
     @Id
     private String symbol;
@@ -31,7 +30,7 @@ public class Fund implements Comparable<Fund> {
     private LocalDate inceptionDate;
 
     //TODO: Update this each time the fund is updated from msn
-    private LocalDate lastUpdated;
+    private Date lastUpdated;
 
 //    private BigDecimal aum;
 //
@@ -43,6 +42,21 @@ public class Fund implements Comparable<Fund> {
         //No arg for objectify
     }
 
+    public Fund(String symbol, String name, String category, String provider, boolean active, String country,
+                String index, String overview, LocalDate inceptionDate) {
+        this.symbol = symbol;
+        this.name = name;
+        this.category = category;
+        this.provider = provider;
+        this.active = active;
+        this.country = country;
+        this.index = index;
+        this.overview = overview;
+        this.inceptionDate = inceptionDate;
+        this.lastUpdated = new Date();
+    }
+
+    @Deprecated
     public Fund(String symbol, String name, String category, String provider, BigDecimal aum,
                 BigDecimal expenseRatio, LocalDate inceptionDate, BigDecimal averageVol) {
         this.symbol = symbol;
