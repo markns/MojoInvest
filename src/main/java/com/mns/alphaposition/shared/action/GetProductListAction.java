@@ -12,8 +12,8 @@ public class GetProductListAction implements Action<GetProductListResult> {
     private PortfolioParams portfolioParams = new PortfolioParams(BigDecimal.TEN, BigDecimal.TEN);
 
 
-    RankingStrategyParams rankingParams = new SimpleRankingStrategyParams(10, 9);
-    private StrategyParams strategyParams = new MomentumStrategyParams(1, rankingParams, 3);
+    RankingStrategyParams rankingParams = new SimpleRankingStrategyParams(1, 9);
+    private StrategyParams strategyParams = new MomentumStrategyParams(12, rankingParams, 3);
 
     public GetProductListAction(int flags) {
         this.flags = flags;

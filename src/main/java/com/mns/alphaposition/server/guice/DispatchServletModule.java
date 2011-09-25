@@ -19,12 +19,13 @@ package com.mns.alphaposition.server.guice;
 import com.google.inject.Singleton;
 import com.google.inject.servlet.ServletModule;
 import com.googlecode.objectify.ObjectifyFactory;
-import com.gwtplatform.dispatch.server.guice.DispatchServiceImpl;
-import com.gwtplatform.dispatch.shared.ActionImpl;
 import com.gwtplatform.crawler.server.CrawlFilter;
 import com.gwtplatform.crawler.server.ServiceKey;
 import com.gwtplatform.crawler.server.ServiceUrl;
+import com.gwtplatform.dispatch.server.guice.DispatchServiceImpl;
+import com.gwtplatform.dispatch.shared.ActionImpl;
 import com.mns.alphaposition.server.servlet.FundLoaderServlet;
+import com.mns.alphaposition.server.servlet.FundViewerServlet;
 import com.mns.alphaposition.server.servlet.QuoteViewerServlet;
 
 /**
@@ -36,6 +37,7 @@ public class DispatchServletModule extends ServletModule {
     public void configureServlets() {
 
         serve("/quoteviewer").with(QuoteViewerServlet.class);
+        serve("/fundviewer").with(FundViewerServlet.class);
         serve("/fundloader").with(FundLoaderServlet.class);
 
         // Model object managers

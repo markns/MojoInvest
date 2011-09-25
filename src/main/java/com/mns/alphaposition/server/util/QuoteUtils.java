@@ -5,6 +5,7 @@ import org.joda.time.LocalDate;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 
+import java.math.BigDecimal;
 import java.util.*;
 
 public class QuoteUtils {
@@ -79,5 +80,30 @@ public class QuoteUtils {
         });
     }
 
+    public static Quote fromStringArray(String[] row) {
+        return new Quote(row[0],
+                new LocalDate(row[1]),
+                row[2].isEmpty() ? null : new BigDecimal(row[2]),
+                row[3].isEmpty() ? null : new BigDecimal(row[3]),
+                row[4].isEmpty() ? null : new BigDecimal(row[4]),
+                row[5].isEmpty() ? null : new BigDecimal(row[5]),
+                row[6].isEmpty() ? null : new BigDecimal(row[6]),
+                row[7].isEmpty() ? null : new BigDecimal(row[7]),
+                false);
+    }
 
+
+    public static String[] toStringArray(Quote quote) {
+        String[] arr = new String[9];
+        arr[0] = quote.getSymbol();
+        arr[1] = quote.getDate().toString();
+        arr[2] = quote.getOpen().toString();
+        arr[3] = quote.getHigh().toString();
+        arr[4] = quote.getLow().toString();
+        arr[5] = quote.getClose().toString();
+        arr[6] = quote.getVolume().toString();
+        arr[7] = quote.getAdjClose().toString();
+        arr[8] = quote.isRolled() + "";
+        return arr;
+    }
 }

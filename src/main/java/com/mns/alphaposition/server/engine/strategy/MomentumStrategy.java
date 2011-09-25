@@ -49,10 +49,10 @@ public class MomentumStrategy implements TradingStrategy {
             try {
                 selection = getSelection(ranked, params);
             } catch (StrategyException e) {
-                System.out.println(rebalanceDate + " " + e.getMessage());
+                log.info(rebalanceDate + " " + e.getMessage());
                 continue;
             }
-            System.out.println("** " + rebalanceDate + " **");
+            log.info("** " + rebalanceDate + " **");
 
             sellLosers(rebalanceDate, selection);
             buyWinners(params, rebalanceDate, selection);

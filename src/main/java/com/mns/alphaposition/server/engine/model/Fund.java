@@ -151,6 +151,9 @@ public class Fund implements Comparable<Fund> {
         return "Fund{" +
                 "symbol='" + symbol + '\'' +
                 ", name='" + name + '\'' +
+                ", category='" + category + '\'' +
+                ", provider='" + provider + '\'' +
+                ", inceptionDate=" + inceptionDate +
                 '}';
     }
 

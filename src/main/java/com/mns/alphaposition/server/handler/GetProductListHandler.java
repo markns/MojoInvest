@@ -18,7 +18,6 @@ package com.mns.alphaposition.server.handler;
 
 import com.google.inject.Inject;
 import com.google.inject.Provider;
-import com.google.inject.servlet.RequestScoped;
 import com.gwtplatform.dispatch.server.ExecutionContext;
 import com.gwtplatform.dispatch.server.actionhandler.ActionHandler;
 import com.gwtplatform.dispatch.shared.ActionException;
@@ -36,9 +35,10 @@ import org.joda.time.LocalDate;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
-@RequestScoped
 public class GetProductListHandler implements
         ActionHandler<GetProductListAction, GetProductListResult> {
 
@@ -51,7 +51,8 @@ public class GetProductListHandler implements
 
     private final Map<Class, TradingStrategy> strategies;
 
-    @Inject Provider<HttpServletRequest> requestProvider;
+    @Inject
+    Provider<HttpServletRequest> requestProvider;
 
 
     @Inject
@@ -76,20 +77,17 @@ public class GetProductListHandler implements
         HttpServletRequest request = requestProvider.get();
         request.setAttribute("portfolio", portfolio);
 
+        Map<String, Object> queryParams = new HashMap<String, Object>();
+        queryParams.put("provider", "iShares");
+        List<Fund> funds = fundDao.query(queryParams);
+
         try {
             TradingStrategy strategy = strategies.get(action.getStrategyParams().getClass());
-            strategy.execute(new LocalDate(2000, 1, 1), new LocalDate(2011, 6, 1),
-                            new ArrayList<Fund>(), action.getStrategyParams());
+            strategy.execute(new LocalDate(2000, 1, 1), new LocalDate(2011, 9, 16),
+                    funds, action.getStrategyParams());
         } catch (StrategyException e) {
             throw new ActionException();
         }
-
-//        for (TradingStrategy strategy : strategies) {
-//            if (strategy.supports(action.getStrategyParams())) {
-//                strategy.execute(new LocalDate(), new LocalDate(),
-//                        new ArrayList<Fund>(), action.getStrategyParams());
-//            }
-//        }
 
         ArrayList<Product> products = database.getMatching(action.getFlags());
         return new GetProductListResult(products);

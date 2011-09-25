@@ -1,5 +1,6 @@
 package com.mns.alphaposition.server.engine.model;
 
+import com.googlecode.objectify.annotation.Cached;
 import com.googlecode.objectify.annotation.Unindexed;
 import com.mns.alphaposition.server.util.QuoteUtils;
 import org.joda.time.LocalDate;
@@ -7,17 +8,7 @@ import org.joda.time.LocalDate;
 import javax.persistence.Id;
 import java.math.BigDecimal;
 
-/**
- * <quote date="1996-09-11">
- * <Date>1996-09-11</Date>
- * <Open>18.75</Open>
- * <High>19.00</High>
- * <Low>18.50</Low>
- * <Close>18.87</Close>
- * <Volume>1267200</Volume>
- * <Adj_Close>0.79</Adj_Close>
- * </quote>
- */
+@Cached
 public class Quote {
 
     @Id
