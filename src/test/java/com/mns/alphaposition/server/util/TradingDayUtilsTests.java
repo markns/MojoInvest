@@ -33,7 +33,7 @@ public class TradingDayUtilsTests {
         };
         List<LocalDate> sl = loadAList(dtStrs);
         LocalDate queryDate = new LocalDate(2011, 7, 30);
-        List<LocalDate> dates = TradingDayUtils.getMonthlySeries(queryDate.minusYears(1), queryDate, false);
+        List<LocalDate> dates = TradingDayUtils.getMonthlySeries(queryDate.minusYears(1), queryDate, 1, false);
         assertEquals(dates, sl);
     }
 
