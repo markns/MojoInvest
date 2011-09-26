@@ -43,6 +43,9 @@ public class MomentumStrategy implements TradingStrategy {
 
         List<LocalDate> rebalanceDates = getRebalanceDates(fromDate, toDate, params);
 
+
+
+
         for (LocalDate rebalanceDate : rebalanceDates) {
             List<Fund> ranked = rankingStrategy.rank(rebalanceDate, funds, params.getRankingStrategyParams());
             List<Fund> selection;

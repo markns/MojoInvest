@@ -26,7 +26,7 @@ public class QuoteViewerServlet extends HttpServlet {
 
         long t = System.currentTimeMillis();
 
-        List<Quote> quotes = dao.query("AADR");
+        List<Quote> quotes = dao.list();
 
 
 		resp.setContentType("text/html");

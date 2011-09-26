@@ -193,4 +193,8 @@ public class Fund implements Comparable<Fund> {
         result = 31 * result + (inceptionDate != null ? inceptionDate.hashCode() : 0);
         return result;
     }
+
+    public String toCsv() {
+        return null;  //To change body of created methods use File | Settings | File Templates.
+    }
 }
