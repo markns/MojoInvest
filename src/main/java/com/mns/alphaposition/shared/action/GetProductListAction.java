@@ -9,9 +9,7 @@ public class GetProductListAction implements Action<GetProductListResult> {
 
     int flags;
 
-    private PortfolioParams portfolioParams = new PortfolioParams(BigDecimal.TEN, BigDecimal.TEN);
-
-
+    private PortfolioParams portfolioParams = new PortfolioParams(new BigDecimal("10000"), BigDecimal.TEN);
     RankingStrategyParams rankingParams = new SimpleRankingStrategyParams(1, 9);
     private StrategyParams strategyParams = new MomentumStrategyParams(1, rankingParams, 3);
 

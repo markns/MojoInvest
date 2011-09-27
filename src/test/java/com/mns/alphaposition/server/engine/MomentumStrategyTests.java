@@ -87,7 +87,7 @@ public class MomentumStrategyTests {
     public void testMomentumStrategy() throws StrategyException {
         System.out.println("Starting run of testMomentumStrategy");
         SimpleRankingStrategy rankingStrategy = new SimpleRankingStrategy(quoteDao);
-        MomentumStrategy tradingStrategy = new MomentumStrategy(rankingStrategy, executor, portfolioProvider);
+        MomentumStrategy tradingStrategy = new MomentumStrategy(rankingStrategy, executor, portfolioProvider, quoteDao);
         time = System.currentTimeMillis();
         tradingStrategy.execute(fromDate, toDate, funds, strategyParams);
         System.out.println(System.currentTimeMillis() - time);

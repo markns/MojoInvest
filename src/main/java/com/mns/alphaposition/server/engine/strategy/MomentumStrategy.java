@@ -3,6 +3,8 @@ package com.mns.alphaposition.server.engine.strategy;
 import com.google.inject.Inject;
 import com.mns.alphaposition.server.engine.execution.Executor;
 import com.mns.alphaposition.server.engine.model.Fund;
+import com.mns.alphaposition.server.engine.model.Quote;
+import com.mns.alphaposition.server.engine.model.QuoteDao;
 import com.mns.alphaposition.server.engine.portfolio.Portfolio;
 import com.mns.alphaposition.server.engine.portfolio.PortfolioProvider;
 import com.mns.alphaposition.server.engine.portfolio.Position;
@@ -13,6 +15,8 @@ import org.joda.time.LocalDate;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Logger;
@@ -25,12 +29,15 @@ public class MomentumStrategy implements TradingStrategy {
     private final PortfolioProvider portfolioProvider;
     private final Executor executor;
 
+    private final QuoteDao dao;
+
     @Inject
     public MomentumStrategy(RankingStrategy rankingStrategy, Executor executor,
-                            PortfolioProvider portfolioProvider) {
+                            PortfolioProvider portfolioProvider, QuoteDao dao) {
         this.rankingStrategy = rankingStrategy;
         this.portfolioProvider = portfolioProvider;
         this.executor = executor;
+        this.dao = dao;
     }
 
     @Override
@@ -43,8 +50,16 @@ public class MomentumStrategy implements TradingStrategy {
 
         List<LocalDate> rebalanceDates = getRebalanceDates(fromDate, toDate, params);
 
-
-
+        List<LocalDate> requiredDates = new ArrayList<LocalDate>();
+        for (LocalDate rebalanceDate : rebalanceDates) {
+            requiredDates.add(rebalanceDate.minusMonths(9));
+        }
+        requiredDates.addAll(rebalanceDates);
+        log.info("Attempting to load quotes for " + funds.size() + " funds and " +
+                requiredDates.size() + " dates.");
+        long t = System.currentTimeMillis();
+        Collection<Quote> quotes = dao.get(funds, requiredDates);
+        log.info("Loading " + quotes.size() + " quotes took " + (System.currentTimeMillis() - t));
 
         for (LocalDate rebalanceDate : rebalanceDates) {
             List<Fund> ranked = rankingStrategy.rank(rebalanceDate, funds, params.getRankingStrategyParams());

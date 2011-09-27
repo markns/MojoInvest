@@ -21,17 +21,6 @@
         </developer>
     </developers>
 
-    <!--<scm>-->
-    <!--<connection>scm:hg:http://mns.googlecode.com/hg/</connection>-->
-    <!--<developerConnection>scm:hg:https://mns.googlecode.com/hg/</developerConnection>-->
-    <!--<url>http://code.google.com/p/mns/source/browse/</url>-->
-    <!--</scm>-->
-
-    <!--<issueManagement>-->
-    <!--<system>Google Code</system>-->
-    <!--<url>http://code.google.com/p/mns/issues</url>-->
-    <!--</issueManagement>-->
-
     <properties>
         <!-- Project properties -->
         <target.jdk>1.6</target.jdk>
@@ -149,12 +138,15 @@
             <artifactId>appengine-api-labs</artifactId>
             <version>${gae.version}</version>
         </dependency>
-
-        <dependency>
+       <dependency>
             <groupId>com.google.appengine</groupId>
             <artifactId>appengine-mapper</artifactId>
             <version>r150</version>
             <exclusions>
+                <exclusion>
+                    <groupId>com.google.code.guice</groupId>
+                    <artifactId>guice</artifactId>
+                </exclusion>
                 <exclusion>
                     <groupId>com.google.code.guice</groupId>
                     <artifactId>guice-servlet</artifactId>

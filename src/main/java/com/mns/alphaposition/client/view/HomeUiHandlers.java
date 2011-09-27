@@ -9,7 +9,7 @@ import com.gwtplatform.mvp.client.UiHandlers;
  */
 public interface HomeUiHandlers extends UiHandlers {
 
-  void revealAllProductsList();
+    void revealAllProductsList();
 
 //  void revealFavoriteProductsList();
 //  void revealSpecialsList();
