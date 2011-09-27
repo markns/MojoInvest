@@ -11,7 +11,7 @@ import java.util.Map;
 
 public class FundDao extends DAOBase {
 
-    private static boolean objectsRegistered;
+    private boolean objectsRegistered;
 
     @Override
     protected boolean areObjectsRegistered() {

@@ -15,7 +15,7 @@ import java.util.*;
 
 public class QuoteDao extends DAOBase {
 
-    private static boolean objectsRegistered;
+    private boolean objectsRegistered;
 
     @Override
     protected boolean areObjectsRegistered() {

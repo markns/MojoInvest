@@ -13,7 +13,7 @@ public class GetProductListAction implements Action<GetProductListResult> {
 
 
     RankingStrategyParams rankingParams = new SimpleRankingStrategyParams(1, 9);
-    private StrategyParams strategyParams = new MomentumStrategyParams(12, rankingParams, 3);
+    private StrategyParams strategyParams = new MomentumStrategyParams(1, rankingParams, 3);
 
     public GetProductListAction(int flags) {
         this.flags = flags;
