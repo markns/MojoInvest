@@ -3,9 +3,7 @@
              xmlns:g="urn:import:com.google.gwt.user.client.ui">
 
     <g:HTMLPanel>
-        <h1>I love Suzy Poozy...</h1>
-
-        <g:Button ui:field='all'>Touch her bum</g:Button>
+        <g:Button ui:field='all'>Run</g:Button>
 
         <!--<g:Button ui:field='favorites'>Favorite Products</g:Button>-->
         <!--<g:Button ui:field='specials'>Specials</g:Button>-->
