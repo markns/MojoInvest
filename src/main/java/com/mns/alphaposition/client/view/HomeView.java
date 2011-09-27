@@ -32,15 +32,15 @@ import com.mns.alphaposition.client.presenter.HomePresenter;
  * @author Philippe Beaudoin
  */
 public class HomeView extends ViewWithUiHandlers<HomeUiHandlers>
-  implements HomePresenter.MyView {
+        implements HomePresenter.MyView {
 
-  interface HomeViewUiBinder extends UiBinder<Widget, HomeView> {
-  }
+    interface HomeViewUiBinder extends UiBinder<Widget, HomeView> {
+    }
 
-  private static HomeViewUiBinder uiBinder = GWT.create(HomeViewUiBinder.class);
+    private static HomeViewUiBinder uiBinder = GWT.create(HomeViewUiBinder.class);
 
-  @UiField
-  Button all;
+    @UiField
+    Button all;
 
 //  @UiField
 //  Button favorites;
@@ -48,22 +48,22 @@ public class HomeView extends ViewWithUiHandlers<HomeUiHandlers>
 //  @UiField
 //  Button specials;
 
-  private final Widget widget;
+    private final Widget widget;
 
-  @Inject
-  public HomeView() {
-    widget = uiBinder.createAndBindUi(this);
-  }
+    @Inject
+    public HomeView() {
+        widget = uiBinder.createAndBindUi(this);
+    }
 
-  @Override
-  public Widget asWidget() {
-    return widget;
-  }
+    @Override
+    public Widget asWidget() {
+        return widget;
+    }
 
-  @UiHandler("all")
-  void onAllClicked(ClickEvent event) {
-    getUiHandlers().revealAllProductsList();
-  }
+    @UiHandler("all")
+    void onAllClicked(ClickEvent event) {
+        getUiHandlers().revealAllProductsList();
+    }
 
 //  @UiHandler("favorites")
 //  void onFavoritesClicked(ClickEvent event) {
