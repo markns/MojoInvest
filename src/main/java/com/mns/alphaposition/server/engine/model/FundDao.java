@@ -11,7 +11,12 @@ import java.util.Map;
 
 public class FundDao extends DAOBase {
 
-    private boolean objectsRegistered;
+    private static boolean objectsRegistered;
+
+    @Inject
+    public FundDao(final ObjectifyFactory objectifyFactory) {
+        super(objectifyFactory);
+    }
 
     @Override
     protected boolean areObjectsRegistered() {
@@ -23,11 +28,6 @@ public class FundDao extends DAOBase {
         objectsRegistered = true;
         ofyFactory.register(Fund.class);
         ofyFactory.getConversions().add(new MyTypeConverters());
-    }
-
-    @Inject
-    public FundDao(final ObjectifyFactory objectifyFactory) {
-        super(objectifyFactory);
     }
 
     public List<Fund> list() {

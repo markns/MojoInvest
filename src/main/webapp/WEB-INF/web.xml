@@ -31,6 +31,15 @@
         <listener-class>com.mns.alphaposition.server.guice.MyGuiceServletContextListener</listener-class>
     </listener>
 
+    <security-constraint>
+        <web-resource-collection>
+            <url-pattern>/mapreduce/*</url-pattern>
+        </web-resource-collection>
+        <auth-constraint>
+            <role-name>admin</role-name>
+        </auth-constraint>
+    </security-constraint>
+
     <!--Remote Api -->
     <servlet>
         <servlet-name>RemoteApi</servlet-name>

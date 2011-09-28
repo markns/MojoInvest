@@ -36,12 +36,14 @@ public class DispatchServletModule extends ServletModule {
     @Override
     public void configureServlets() {
 
+        // Model object managers
+        bind(ObjectifyFactory.class).in(Singleton.class);
+
         serve("/quoteviewer").with(QuoteViewerServlet.class);
         serve("/fundviewer").with(FundViewerServlet.class);
         serve("/fundloader").with(FundLoaderServlet.class);
 
-        // Model object managers
-        bind(ObjectifyFactory.class).in(Singleton.class);
+//        bind(ObjectifyFactory.class).asEagerSingleton();
 
         bindConstant().annotatedWith(ServiceKey.class).to("123456");
         bindConstant().annotatedWith(ServiceUrl.class).to("http://crawlservice.appspot.com/");

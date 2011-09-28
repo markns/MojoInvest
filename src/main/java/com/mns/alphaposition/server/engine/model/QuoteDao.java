@@ -15,12 +15,18 @@ import java.util.*;
 
 public class QuoteDao extends DAOBase {
 
-    private boolean objectsRegistered;
+    private static boolean objectsRegistered;
+
+    @Inject
+    public QuoteDao(final ObjectifyFactory objectifyFactory) {
+        super(objectifyFactory);
+    }
 
     @Override
     protected boolean areObjectsRegistered() {
         return objectsRegistered;
     }
+
 
     @Override
     protected void registerObjects(ObjectifyFactory ofyFactory) {
@@ -28,12 +34,6 @@ public class QuoteDao extends DAOBase {
         ofyFactory.register(Quote.class);
         ofyFactory.getConversions().add(new MyTypeConverters());
     }
-
-    @Inject
-    public QuoteDao(final ObjectifyFactory objectifyFactory) {
-        super(objectifyFactory);
-    }
-
 
     public Quote find(Key<Quote> key) {
         return ofy().find(key);

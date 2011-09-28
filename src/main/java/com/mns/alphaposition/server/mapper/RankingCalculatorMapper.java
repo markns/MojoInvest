@@ -8,6 +8,8 @@ import com.google.common.base.Functions;
 import com.google.common.base.Joiner;
 import com.google.common.collect.ImmutableSortedMap;
 import com.google.common.collect.Ordering;
+import com.google.inject.Inject;
+import com.google.inject.MembersInjector;
 import com.googlecode.objectify.ObjectifyService;
 import com.mns.alphaposition.server.engine.model.Quote;
 import com.mns.alphaposition.server.engine.model.QuoteDao;
@@ -31,10 +33,16 @@ public class RankingCalculatorMapper extends
 
     private static final Logger log = Logger.getLogger(RankingCalculatorMapper.class.getName());
 
-    private final QuoteDao dao = new QuoteDao(ObjectifyService.factory());
+    private QuoteDao dao = new QuoteDao(ObjectifyService.factory());
+
+    @Inject
+    MembersInjector<QuoteDao> daoInjector;
 
     @Override
     public void map(BlobstoreRecordKey key, byte[] segment, Context context) {
+
+        requestStaticInjection(QuoteDao.class);
+
 
         String line = new String(segment);
 
@@ -58,20 +66,21 @@ public class RankingCalculatorMapper extends
             }
         }
 
-        Ordering<String> valueComparator = Ordering.natural().onResultOf(Functions.forMap(ranker));
-        SortedSet<String> rank = ImmutableSortedMap.copyOf(ranker, valueComparator).keySet();
+        if (ranker.size() > 0) {
 
-        Joiner joiner = Joiner.on(",");
-        String m9 = joiner.join(rank);
+            Ordering<String> valueComparator = Ordering.natural().onResultOf(Functions.forMap(ranker));
+            SortedSet<String> rank = ImmutableSortedMap.copyOf(ranker, valueComparator).keySet();
 
-        Entity ranking = new Entity("Ranking", fmt.print(date));
+            Joiner joiner = Joiner.on(",");
+            String m9 = joiner.join(rank);
 
-        ranking.setUnindexedProperty("m9", m9);
+            Entity ranking = new Entity("Ranking", fmt.print(date));
+            ranking.setUnindexedProperty("m9", m9);
 
-        DatastoreMutationPool mutationPool = this.getAppEngineContext(context)
-                .getMutationPool();
-        mutationPool.put(ranking);
-
+            DatastoreMutationPool mutationPool = this.getAppEngineContext(context)
+                    .getMutationPool();
+            mutationPool.put(ranking);
+        }
     }
 
     private static BigDecimal percentageChange(Quote fromQuote, Quote toQuote) {
