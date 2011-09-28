@@ -18,10 +18,7 @@ import org.joda.time.format.DateTimeFormatter;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.SortedSet;
+import java.util.*;
 import java.util.logging.Logger;
 
 public class RankingCalculatorMapper extends
@@ -68,8 +65,9 @@ public class RankingCalculatorMapper extends
 
             SortedSet<String> rank = ImmutableSortedMap.copyOf(ranker, valueComparator).keySet();
 
+            List<String> rankList = new ArrayList<String>(rank);
             Joiner joiner = Joiner.on(",");
-            String m9 = joiner.join(rank);
+            String m9 = joiner.join(rankList.subList(0, 50));
 
             Entity ranking = new Entity("Ranking", fmt.print(date));
             ranking.setUnindexedProperty("m9", m9);
