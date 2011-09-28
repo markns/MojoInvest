@@ -9,8 +9,6 @@ import com.google.common.base.Joiner;
 import com.google.common.collect.ImmutableSortedMap;
 import com.google.common.collect.Ordering;
 import com.google.inject.Inject;
-import com.google.inject.MembersInjector;
-import com.googlecode.objectify.ObjectifyService;
 import com.mns.alphaposition.server.engine.model.Quote;
 import com.mns.alphaposition.server.engine.model.QuoteDao;
 import org.apache.hadoop.io.NullWritable;
@@ -33,16 +31,11 @@ public class RankingCalculatorMapper extends
 
     private static final Logger log = Logger.getLogger(RankingCalculatorMapper.class.getName());
 
-    private QuoteDao dao = new QuoteDao(ObjectifyService.factory());
-
     @Inject
-    MembersInjector<QuoteDao> daoInjector;
+    private QuoteDao dao;
 
     @Override
     public void map(BlobstoreRecordKey key, byte[] segment, Context context) {
-
-        requestStaticInjection(QuoteDao.class);
-
 
         String line = new String(segment);
 
@@ -55,7 +48,7 @@ public class RankingCalculatorMapper extends
         List<Quote> fromQuotes = dao.query(date.minusMonths(9));
 
         Map<String, Quote> fromQuoteMap = new HashMap<String, Quote>(fromQuotes.size());
-        for (Quote quote : fromQuoteMap.values()) {
+        for (Quote quote : fromQuotes) {
             fromQuoteMap.put(quote.getSymbol(), quote);
         }
 
@@ -68,7 +61,7 @@ public class RankingCalculatorMapper extends
 
         if (ranker.size() > 0) {
 
-            Ordering<String> valueComparator = Ordering.natural().onResultOf(Functions.forMap(ranker));
+            Ordering<String> valueComparator = Ordering.natural().onResultOf(Functions.forMap(ranker)).reverse();
             SortedSet<String> rank = ImmutableSortedMap.copyOf(ranker, valueComparator).keySet();
 
             Joiner joiner = Joiner.on(",");

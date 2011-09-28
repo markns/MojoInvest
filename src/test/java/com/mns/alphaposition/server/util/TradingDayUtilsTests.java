@@ -109,7 +109,7 @@ public class TradingDayUtilsTests {
     public void outputDates() {
 
         List<LocalDate> dates = TradingDayUtils
-                .getDailySeries(new LocalDate("1993-01-22"), new LocalDate("2011-09-16"), true);
+                .getDailySeries(new LocalDate("2006-06-16"), new LocalDate("2011-09-16"), true);
 
         for (LocalDate date : dates) {
             System.out.println(date);

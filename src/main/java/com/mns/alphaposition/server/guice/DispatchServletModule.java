@@ -16,6 +16,7 @@
 
 package com.mns.alphaposition.server.guice;
 
+import com.google.appengine.tools.mapreduce.InjectingMapReduceServlet;
 import com.google.inject.Singleton;
 import com.google.inject.servlet.ServletModule;
 import com.googlecode.objectify.ObjectifyFactory;
@@ -38,6 +39,9 @@ public class DispatchServletModule extends ServletModule {
 
         // Model object managers
         bind(ObjectifyFactory.class).in(Singleton.class);
+
+        serve("/mapreduce/*").with(InjectingMapReduceServlet.class);
+        bind(InjectingMapReduceServlet.class).in(Singleton.class);
 
         serve("/quoteviewer").with(QuoteViewerServlet.class);
         serve("/fundviewer").with(FundViewerServlet.class);
