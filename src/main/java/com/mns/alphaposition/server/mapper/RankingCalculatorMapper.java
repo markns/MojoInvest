@@ -61,7 +61,11 @@ public class RankingCalculatorMapper extends
 
         if (ranker.size() > 0) {
 
-            Ordering<String> valueComparator = Ordering.natural().onResultOf(Functions.forMap(ranker)).reverse();
+            Ordering<String> valueComparator = Ordering.natural()
+                    .reverse()
+                    .onResultOf(Functions.forMap(ranker))
+                    .compound(Ordering.natural());
+
             SortedSet<String> rank = ImmutableSortedMap.copyOf(ranker, valueComparator).keySet();
 
             Joiner joiner = Joiner.on(",");
