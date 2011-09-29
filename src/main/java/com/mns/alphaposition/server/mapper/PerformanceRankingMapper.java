@@ -21,12 +21,12 @@ import java.math.RoundingMode;
 import java.util.*;
 import java.util.logging.Logger;
 
-public class RankingCalculatorMapper extends
+public class PerformanceRankingMapper extends
         AppEngineMapper<BlobstoreRecordKey, byte[], NullWritable, NullWritable> {
 
     public static final DateTimeFormatter fmt = DateTimeFormat.forPattern("yyyy-MM-dd");
 
-    private static final Logger log = Logger.getLogger(RankingCalculatorMapper.class.getName());
+    private static final Logger log = Logger.getLogger(PerformanceRankingMapper.class.getName());
 
     @Inject
     private QuoteDao dao;
@@ -39,11 +39,34 @@ public class RankingCalculatorMapper extends
         log.info("At offset: " + key.getOffset());
         log.info("Got value: " + line);
 
-        LocalDate date = fmt.parseDateTime(line).toLocalDate();
+        LocalDate date = fmt.parseDateTime(line.trim()).toLocalDate();
 
         List<Quote> toQuotes = dao.query(date);
         List<Quote> fromQuotes = dao.query(date.minusMonths(9));
 
+        Map<String, BigDecimal> ranker = buildRanker(toQuotes, fromQuotes);
+
+        if (ranker.size() > 0) {
+
+            Ordering<String> valueComparator = Ordering.natural()
+                    .reverse()
+                    .onResultOf(Functions.forMap(ranker))
+                    .compound(Ordering.natural());
+
+            SortedSet<String> rank = ImmutableSortedMap.copyOf(ranker, valueComparator).keySet();
+
+            String m9 = createRankString(rank);
+
+            Entity ranking = new Entity("Ranking", fmt.print(date));
+            ranking.setUnindexedProperty("m9", m9);
+
+            DatastoreMutationPool mutationPool = this.getAppEngineContext(context)
+                    .getMutationPool();
+            mutationPool.put(ranking);
+        }
+    }
+
+    private Map<String, BigDecimal> buildRanker(List<Quote> toQuotes, List<Quote> fromQuotes) {
         Map<String, Quote> fromQuoteMap = new HashMap<String, Quote>(fromQuotes.size());
         for (Quote quote : fromQuotes) {
             fromQuoteMap.put(quote.getSymbol(), quote);
@@ -55,27 +78,16 @@ public class RankingCalculatorMapper extends
                 ranker.put(toQuote.getSymbol(), percentageChange(fromQuoteMap.get(toQuote.getSymbol()), toQuote));
             }
         }
+        return ranker;
+    }
 
-        if (ranker.size() > 0) {
-
-            Ordering<String> valueComparator = Ordering.natural()
-                    .reverse()
-                    .onResultOf(Functions.forMap(ranker))
-                    .compound(Ordering.natural());
-
-            SortedSet<String> rank = ImmutableSortedMap.copyOf(ranker, valueComparator).keySet();
-
-            List<String> rankList = new ArrayList<String>(rank);
-            Joiner joiner = Joiner.on(",");
-            String m9 = joiner.join(rankList.subList(0, 50));
-
-            Entity ranking = new Entity("Ranking", fmt.print(date));
-            ranking.setUnindexedProperty("m9", m9);
-
-            DatastoreMutationPool mutationPool = this.getAppEngineContext(context)
-                    .getMutationPool();
-            mutationPool.put(ranking);
+    private String createRankString(SortedSet<String> rank) {
+        List<String> rankList = new ArrayList<String>(rank);
+        Joiner joiner = Joiner.on(",");
+        if (rankList.size() > 50) {
+            return joiner.join(rankList.subList(0, 50));
         }
+        return joiner.join(rankList);
     }
 
     private static BigDecimal percentageChange(Quote fromQuote, Quote toQuote) {
