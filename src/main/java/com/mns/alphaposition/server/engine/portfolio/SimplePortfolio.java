@@ -196,6 +196,9 @@ public class SimplePortfolio implements Portfolio {
 
     @Override
     public BigDecimal overallReturn(LocalDate date) {
+        if (positions.size() == 0)
+            return BigDecimal.ZERO;
+
         return returnsGain(date).divide(cashOut(), RoundingMode.HALF_EVEN)
                 .multiply(BigDecimal.TEN.multiply(BigDecimal.TEN));
     }

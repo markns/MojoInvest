@@ -3,20 +3,18 @@ package com.mns.alphaposition.server.engine;
 import com.google.appengine.tools.development.testing.LocalDatastoreServiceTestConfig;
 import com.google.appengine.tools.development.testing.LocalServiceTestHelper;
 import com.googlecode.objectify.ObjectifyService;
-import com.mns.alphaposition.server.engine.portfolio.PortfolioProvider;
-import com.mns.alphaposition.server.engine.portfolio.SimplePortfolio;
-import com.mns.alphaposition.server.engine.strategy.StrategyException;
-import com.mns.alphaposition.server.util.QuoteUtils;
 import com.mns.alphaposition.server.data.FundSet;
 import com.mns.alphaposition.server.data.QuoteSet;
 import com.mns.alphaposition.server.engine.execution.Executor;
 import com.mns.alphaposition.server.engine.execution.NextTradingDayExecutor;
-import com.mns.alphaposition.server.engine.model.QuoteDao;
+import com.mns.alphaposition.server.engine.model.*;
 import com.mns.alphaposition.server.engine.portfolio.Portfolio;
+import com.mns.alphaposition.server.engine.portfolio.PortfolioProvider;
+import com.mns.alphaposition.server.engine.portfolio.SimplePortfolio;
 import com.mns.alphaposition.server.engine.strategy.MomentumStrategy;
 import com.mns.alphaposition.server.engine.strategy.SimpleRankingStrategy;
-import com.mns.alphaposition.server.engine.model.Fund;
-import com.mns.alphaposition.server.engine.model.Quote;
+import com.mns.alphaposition.server.engine.strategy.StrategyException;
+import com.mns.alphaposition.server.util.QuoteUtils;
 import com.mns.alphaposition.shared.params.MomentumStrategyParams;
 import com.mns.alphaposition.shared.params.PortfolioParams;
 import com.mns.alphaposition.shared.params.RankingStrategyParams;
@@ -33,6 +31,8 @@ import java.util.List;
 public class MomentumStrategyTests {
 
     private final QuoteDao quoteDao = new QuoteDao(ObjectifyService.factory());
+    private final RankingDao rankingDao = new RankingDao(ObjectifyService.factory());
+    private final FundDao fundDao = new FundDao(ObjectifyService.factory());
 
     private final PortfolioParams portfolioParams =
             new PortfolioParams(new BigDecimal("10000"), new BigDecimal("12.95"));
@@ -87,7 +87,8 @@ public class MomentumStrategyTests {
     public void testMomentumStrategy() throws StrategyException {
         System.out.println("Starting run of testMomentumStrategy");
         SimpleRankingStrategy rankingStrategy = new SimpleRankingStrategy(quoteDao);
-        MomentumStrategy tradingStrategy = new MomentumStrategy(rankingStrategy, executor, portfolioProvider, quoteDao);
+        MomentumStrategy tradingStrategy = new MomentumStrategy(rankingStrategy, executor, portfolioProvider,
+                rankingDao, fundDao);
         time = System.currentTimeMillis();
         tradingStrategy.execute(fromDate, toDate, funds, strategyParams);
         System.out.println(System.currentTimeMillis() - time);

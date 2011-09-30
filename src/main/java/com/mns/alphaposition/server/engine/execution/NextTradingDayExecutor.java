@@ -42,8 +42,8 @@ public class NextTradingDayExecutor implements Executor {
         //TODO: get execution price should be mid between open and close
         Quote executionQuote = quoteDao.get(fund, date);
         BigDecimal shares = allocation.divide(executionQuote.getClose(), 0, BigDecimal.ROUND_DOWN);
-        log.info("Buying " + fund + " amount: " + allocation +
-                ", price: " + executionQuote.getClose() + ", shares: " + shares);
+//        log.info("Buying " + fund + " amount: " + allocation +
+//                ", price: " + executionQuote.getClose() + ", shares: " + shares);
         BuyTransaction tx = new BuyTransaction(fund, date, shares, executionQuote.getClose(), getTransactionCost());
         portfolio().add(tx);
     }
@@ -53,8 +53,8 @@ public class NextTradingDayExecutor implements Executor {
         //TODO: get execution price should be mid between open and close
         Quote executionQuote = quoteDao.get(fund, date);
         Position position = portfolio().get(fund);
-        log.info("Selling " + fund + " price: " + executionQuote.getClose() +
-                ", gain%: " + position.gainPercentage(date));
+//        log.info("Selling " + fund + " price: " + executionQuote.getClose() +
+//                ", gain%: " + position.gainPercentage(date));
         SellTransaction tx = new SellTransaction(fund, date, position.shares(),
                 executionQuote.getClose(), getTransactionCost());
         portfolio().add(tx);

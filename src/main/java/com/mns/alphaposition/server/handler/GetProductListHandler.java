@@ -73,13 +73,13 @@ public class GetProductListHandler implements
                                         final ExecutionContext context) throws ActionException {
 
         Portfolio portfolio = portfolioFactory.create(action.getPortfolioParams());
-//        portfolioProvider.setPortfolio(portfolio);
         HttpServletRequest request = requestProvider.get();
         request.setAttribute("portfolio", portfolio);
 
         Map<String, Object> queryParams = new HashMap<String, Object>();
         queryParams.put("provider", "iShares");
         List<Fund> funds = fundDao.query(queryParams);
+//        List<Fund> funds = fundDao.list();
 
         try {
             TradingStrategy strategy = strategies.get(action.getStrategyParams().getClass());
