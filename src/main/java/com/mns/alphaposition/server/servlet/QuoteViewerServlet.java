@@ -21,15 +21,16 @@ public class QuoteViewerServlet extends HttpServlet {
         this.dao = dao;
     }
 
+    @Override
     public void doGet(HttpServletRequest req, HttpServletResponse resp)
-			throws IOException {
+            throws IOException {
 
         long t = System.currentTimeMillis();
 
         List<Quote> quotes = dao.list();
 
 
-		resp.setContentType("text/html");
+        resp.setContentType("text/html");
 
         resp.getWriter().println("Time taken for query: " + (System.currentTimeMillis() - t));
 
@@ -38,5 +39,5 @@ public class QuoteViewerServlet extends HttpServlet {
             resp.getWriter().println("<li>" + quote + "</li>");
         }
         resp.getWriter().println("</ul>");
-	}
+    }
 }

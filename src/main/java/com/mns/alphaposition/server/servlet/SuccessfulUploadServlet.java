@@ -7,7 +7,9 @@ import java.io.IOException;
 
 @SuppressWarnings("serial")
 public class SuccessfulUploadServlet extends HttpServlet {
-	public void doGet(HttpServletRequest req, HttpServletResponse resp)
+
+    @Override
+    public void doGet(HttpServletRequest req, HttpServletResponse resp)
 			throws IOException {
 
 		String blobKey = req.getParameter("blob-key");

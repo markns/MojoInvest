@@ -11,7 +11,9 @@ import java.util.Map;
 
 @SuppressWarnings("serial")
 public class UploadBlobServlet extends HttpServlet {
-	public void doPost(HttpServletRequest req, HttpServletResponse resp)
+
+    @Override
+    public void doPost(HttpServletRequest req, HttpServletResponse resp)
 			throws IOException {
 
 		BlobstoreService blobstoreService = BlobstoreServiceFactory.getBlobstoreService();

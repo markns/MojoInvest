@@ -27,6 +27,7 @@ import com.gwtplatform.dispatch.server.guice.DispatchServiceImpl;
 import com.gwtplatform.dispatch.shared.ActionImpl;
 import com.mns.alphaposition.server.servlet.FundLoaderServlet;
 import com.mns.alphaposition.server.servlet.FundViewerServlet;
+import com.mns.alphaposition.server.servlet.HistoricQuoteLoaderServlet;
 import com.mns.alphaposition.server.servlet.QuoteViewerServlet;
 
 /**
@@ -46,8 +47,7 @@ public class DispatchServletModule extends ServletModule {
         serve("/quoteviewer").with(QuoteViewerServlet.class);
         serve("/fundviewer").with(FundViewerServlet.class);
         serve("/fundloader").with(FundLoaderServlet.class);
-
-//        bind(ObjectifyFactory.class).asEagerSingleton();
+        serve("/historicquoteloader").with(HistoricQuoteLoaderServlet.class);
 
         bindConstant().annotatedWith(ServiceKey.class).to("123456");
         bindConstant().annotatedWith(ServiceUrl.class).to("http://crawlservice.appspot.com/");

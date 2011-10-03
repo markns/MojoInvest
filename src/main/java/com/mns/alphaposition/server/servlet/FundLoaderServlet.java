@@ -4,6 +4,7 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.mns.alphaposition.server.engine.model.Fund;
 import com.mns.alphaposition.server.engine.model.FundDao;
+import com.mns.alphaposition.server.util.HttpUtils;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 import org.jsoup.Jsoup;
@@ -14,12 +15,7 @@ import org.jsoup.select.Elements;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.net.URL;
-import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
@@ -36,6 +32,7 @@ public class FundLoaderServlet extends HttpServlet {
         this.dao = dao;
     }
 
+    @Override
     public void doGet(HttpServletRequest req, HttpServletResponse resp)
             throws IOException {
         List<FundLite> fundLites = scrapeFundList();
@@ -64,7 +61,7 @@ public class FundLoaderServlet extends HttpServlet {
     }
 
     private List<FundLite> scrapeFundList() throws IOException {
-        String html = fetch("http://moneycentral.msn.com/investor/partsub/funds/etfperformancetracker.aspx",
+        String html = HttpUtils.fetch("http://moneycentral.msn.com/investor/partsub/funds/etfperformancetracker.aspx",
                 "tab=mkt&show=all");
         List<FundLite> fundLites = null;
         if (html != null) {
@@ -78,7 +75,7 @@ public class FundLoaderServlet extends HttpServlet {
         for (FundLite fundLite : fundLites) {
             if ("TICKER".equals(fundLite.symbol))
                 continue;
-            String html = fetch("http://moneycentral.msn.com/investor/partsub/funds/etfsnapshot.asp",
+            String html = HttpUtils.fetch("http://moneycentral.msn.com/investor/partsub/funds/etfsnapshot.asp",
                     "symbol=" + fundLite.symbol);
             scrapeDetails(html, fundLite);
         }
@@ -119,26 +116,7 @@ public class FundLoaderServlet extends HttpServlet {
         }
     }
 
-    private String fetch(String url, String query) {
-        String charset = "UTF-8";
-        try {
-            URLConnection connection = new URL(url + "?" + query).openConnection();
-            connection.setRequestProperty("Accept-Charset", charset);
-            connection.setReadTimeout(10);
-            InputStream response = connection.getInputStream();
-            BufferedReader reader = new BufferedReader(new InputStreamReader(response));
-            StringBuilder sb = new StringBuilder();
-            String line;
-            while ((line = reader.readLine()) != null) {
-                sb.append(line);
-            }
-            reader.close();
-            return sb.toString();
-        } catch (IOException e) {
-            log.severe(e.getMessage() + "\n" + e.getCause());
-            throw new IllegalStateException(e);
-        }
-    }
+
 
     private static class FundLite {
         String name;

@@ -25,6 +25,7 @@ public class FundViewerServlet extends HttpServlet {
         this.dao = dao;
     }
 
+    @Override
     public void doGet(HttpServletRequest req, HttpServletResponse resp)
             throws IOException {
 
@@ -45,6 +46,7 @@ public class FundViewerServlet extends HttpServlet {
         resp.getWriter().println("</ul>");
     }
 
+    @Override
     public void doPost(HttpServletRequest request,
                        HttpServletResponse response)
             throws ServletException, IOException {
