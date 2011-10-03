@@ -116,7 +116,7 @@ public class HistoricQuoteLoaderServlet extends HttpServlet {
             for (QuoteType qt : query.getResults().getQuote()) {
                 //OldQuote XML returned from YQL doesn't contain symbol, so set it here
                 quotes.add(new Quote(symbol,
-                        new LocalDate(fmt.parseDateTime(qt.getDate())),
+                        new LocalDate(qt.getDate()),
                         new BigDecimal(qt.getOpen()),
                         new BigDecimal(qt.getHigh()),
                         new BigDecimal(qt.getLow()),
