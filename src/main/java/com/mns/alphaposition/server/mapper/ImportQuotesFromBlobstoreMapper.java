@@ -11,10 +11,10 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.logging.Logger;
 
-public class ImportFromBlobstoreMapper extends
+public class ImportQuotesFromBlobstoreMapper extends
         AppEngineMapper<BlobstoreRecordKey, byte[], NullWritable, NullWritable> {
 
-    private static final Logger log = Logger.getLogger(ImportFromBlobstoreMapper.class.getName());
+    private static final Logger log = Logger.getLogger(ImportQuotesFromBlobstoreMapper.class.getName());
 
     SimpleDateFormat fmt = new SimpleDateFormat("yyyy-MM-dd");
 
