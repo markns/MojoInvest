@@ -1,4 +1,4 @@
-package com.mns.alphaposition.server.mapper;
+package com.mns.alphaposition.server.mapreduce;
 
 import com.google.appengine.api.datastore.Entity;
 import com.google.appengine.tools.mapreduce.AppEngineMapper;
