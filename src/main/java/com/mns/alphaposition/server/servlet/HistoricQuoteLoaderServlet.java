@@ -25,6 +25,8 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 @Singleton
 public class HistoricQuoteLoaderServlet extends HttpServlet {
@@ -40,6 +42,9 @@ public class HistoricQuoteLoaderServlet extends HttpServlet {
     public static final String SYMBOL = "symbol";
     public static final String START = "start";
     public static final String END = "end";
+    public static final String RANGE = "range";
+
+    Pattern p = Pattern.compile("^([0-9]+)([a-zA-Z])");
 
     private final FundDao fundDao;
     private final QuoteDao quoteDao;
@@ -54,26 +59,45 @@ public class HistoricQuoteLoaderServlet extends HttpServlet {
     public void doGet(HttpServletRequest req, HttpServletResponse resp)
             throws IOException {
 
-        LocalDate startDate = fmt.parseDateTime(req.getParameter(START)).toLocalDate();
-        LocalDate endDate =  fmt.parseDateTime(req.getParameter(END)).toLocalDate();
+        DateRange dateRange = new DateRange(req).parse();
+        LocalDate startDate = dateRange.getStartDate();
+        LocalDate endDate = dateRange.getEndDate();
+        List<String> symbols = parseSymbols(req);
 
-        List<Quote> quotes = new ArrayList<Quote>();
-        if (req.getParameter(SYMBOL) != null) {
-            log.info("Loading quotes for " + req.getParameter(SYMBOL) + " between " + startDate + " and " + endDate);
-            quotes.addAll(getHistoricQuotes(req.getParameter(SYMBOL), startDate, endDate));
-        } else {
-            List<Fund> funds = fundDao.list();
-            log.info("Loading quotes for " + funds.size() + " funds between " + startDate + " and " + endDate);
-            for (Fund fund : funds) {
-                quotes.addAll(getHistoricQuotes(fund.getSymbol(), startDate, endDate));
-            }
-        }
-
+        List<Quote> quotes = getHistoricQuotes(symbols, startDate, endDate);
         quoteDao.put(quotes);
     }
 
-    public List<Quote> getHistoricQuotes(final String symbol, LocalDate startDate, LocalDate endDate) {
+    private List<String> parseSymbols(HttpServletRequest req) {
+        List<String> symbols = new ArrayList<String>();
+        if (req.getParameter(SYMBOL) != null) {
+            symbols.add(req.getParameter(SYMBOL));
+        } else {
+            List<Fund> funds = fundDao.list();
+            for (Fund fund : funds) {
+                symbols.add(fund.getSymbol());
+            }
+        }
+        return symbols;
+    }
 
+    private List<Quote> getHistoricQuotes(List<String> symbols, LocalDate startDate, LocalDate endDate) {
+        if (symbols.size() == 1) {
+            log.info("Loading quotes for " + symbols.get(0) + " between " + startDate + " and " + endDate);
+        } else {
+            log.info("Loading quotes for " + symbols.size() + " funds between " + startDate + " and " + endDate);
+        }
+
+        List<Quote> quotes = new ArrayList<Quote>();
+        for (String symbol : symbols) {
+            quotes.addAll(getHistoricQuotes(symbol, startDate, endDate));
+        }
+        return quotes;
+    }
+
+    public List<Quote> getHistoricQuotes(final String symbol, LocalDate startDate, LocalDate endDate) {
+        if (startDate == null || endDate == null)
+            throw new IllegalArgumentException("Start date and end date cannot be null");
         if (endDate.isBefore(startDate))
             throw new IllegalArgumentException("End date cannot be before start date");
         if (symbol == null)
@@ -129,4 +153,54 @@ public class HistoricQuoteLoaderServlet extends HttpServlet {
         return quotes;
     }
 
+    private class DateRange {
+        private HttpServletRequest req;
+        private LocalDate startDate;
+        private LocalDate endDate;
+
+        public DateRange(HttpServletRequest req) {
+            this.req = req;
+        }
+
+        public LocalDate getStartDate() {
+            return startDate;
+        }
+
+        public LocalDate getEndDate() {
+            return endDate;
+        }
+
+        public DateRange parse() {
+            if (req.getParameter(RANGE) != null) {
+                endDate = new LocalDate();
+                startDate = parseDateFromRange(endDate, req.getParameter(RANGE));
+            } else if (req.getParameter(START) != null && req.getParameter(END) != null) {
+                startDate = fmt.parseDateTime(req.getParameter(START)).toLocalDate();
+                endDate = fmt.parseDateTime(req.getParameter(END)).toLocalDate();
+            } else {
+                throw new IllegalArgumentException("Either date range, or start and end dates, must be specified");
+            }
+            return this;
+        }
+
+        private LocalDate parseDateFromRange(LocalDate endDate, String range) {
+            Matcher m = p.matcher(range);
+            if (m.find()) {
+                int num = Integer.parseInt(m.group(1));
+                String unit = m.group(2);
+                if (unit.toUpperCase().equals("D")) {
+                    return endDate.minusDays(num);
+                } else if (unit.toUpperCase().equals("W")) {
+                    return endDate.minusWeeks(num);
+                } else if (unit.toUpperCase().equals("M")) {
+                    return endDate.minusMonths(num);
+                } else if (unit.toUpperCase().equals("Y")) {
+                    return endDate.minusYears(num);
+                } else {
+                    throw new IllegalArgumentException("Unable to parse unit '" + unit + "' to determine date range.");
+                }
+            }
+            throw new IllegalArgumentException("Unable to parse '" + range + "' to determine date range.");
+        }
+    }
 }
