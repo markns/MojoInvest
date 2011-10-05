@@ -31,6 +31,10 @@ public class Ranking {
         this.m9 = m9;
     }
 
+    public String getDate() {
+        return date;
+    }
+
     public List<String> getM9() {
         return toList(SPLITTER.split(m9));
     }
@@ -41,4 +45,11 @@ public class Ranking {
                 : Lists.newArrayList(iterable.iterator());
     }
 
+    @Override
+    public String toString() {
+        return "Ranking{" +
+                "date='" + date + '\'' +
+                ", m9='" + m9 + '\'' +
+                '}';
+    }
 }

@@ -25,10 +25,7 @@ import com.gwtplatform.crawler.server.ServiceKey;
 import com.gwtplatform.crawler.server.ServiceUrl;
 import com.gwtplatform.dispatch.server.guice.DispatchServiceImpl;
 import com.gwtplatform.dispatch.shared.ActionImpl;
-import com.mns.alphaposition.server.servlet.FundLoaderServlet;
-import com.mns.alphaposition.server.servlet.FundViewerServlet;
-import com.mns.alphaposition.server.servlet.HistoricQuoteLoaderServlet;
-import com.mns.alphaposition.server.servlet.QuoteViewerServlet;
+import com.mns.alphaposition.server.servlet.*;
 
 /**
  * @author Mark Nuttall-Smith
@@ -48,6 +45,7 @@ public class DispatchServletModule extends ServletModule {
         serve("/fundviewer").with(FundViewerServlet.class);
         serve("/fundloader").with(FundLoaderServlet.class);
         serve("/historicquoteloader").with(HistoricQuoteLoaderServlet.class);
+        serve("/ranking").with(TestRankingPerformance.class);
 
         bindConstant().annotatedWith(ServiceKey.class).to("123456");
         bindConstant().annotatedWith(ServiceUrl.class).to("http://crawlservice.appspot.com/");
