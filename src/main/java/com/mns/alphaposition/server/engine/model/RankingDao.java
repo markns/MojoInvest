@@ -30,7 +30,7 @@ public class RankingDao extends DAOBase {
     protected void registerObjects(ObjectifyFactory ofyFactory) {
         objectsRegistered = true;
         ofyFactory.register(Ranking.class);
-        ofyFactory.register(RankingList.class);
+        ofyFactory.register(RankingText.class);
     }
 
     public Collection<Ranking> get(List<LocalDate> dates) {
@@ -54,26 +54,17 @@ public class RankingDao extends DAOBase {
         return q.list();
     }
 
-    //Test
-    public Collection<RankingList> getLists(List<LocalDate> dates) {
-        List<Key<RankingList>> keys = new ArrayList<Key<RankingList>>(dates.size());
+    public Map<Key<RankingText>, RankingText> put(List<RankingText> rankingTexts) {
+        return ofy().put(rankingTexts);
+    }
+
+    public Collection<RankingText> getRankingText(List<LocalDate> dates) {
+        List<Key<RankingText>> keys = new ArrayList<Key<RankingText>>(dates.size());
         for (LocalDate date : dates) {
-            keys.add(new Key<RankingList>(RankingList.class, date.toString()));
+            keys.add(new Key<RankingText>(RankingText.class, date.toString()));
         }
         return ofy().get(keys).values();
     }
 
 
-    public RankingList getList(LocalDate date) {
-        return getList(new Key<RankingList>(RankingList.class, date.toString()));
-    }
-
-
-    public RankingList getList(Key<RankingList> key) {
-        return ofy().get(key);
-    }
-
-    public Map<Key<RankingList>, RankingList> put(List<RankingList> rankingLists) {
-        return ofy().put(rankingLists);
-    }
 }

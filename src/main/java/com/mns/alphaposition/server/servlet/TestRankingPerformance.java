@@ -4,7 +4,7 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.mns.alphaposition.server.engine.model.Ranking;
 import com.mns.alphaposition.server.engine.model.RankingDao;
-import com.mns.alphaposition.server.engine.model.RankingList;
+import com.mns.alphaposition.server.engine.model.RankingText;
 import com.mns.alphaposition.server.util.TradingDayUtils;
 import org.joda.time.LocalDate;
 
@@ -37,28 +37,44 @@ public class TestRankingPerformance extends HttpServlet {
             resp.setContentType("text/html");
             resp.getWriter().println("Time taken for query: " + (System.currentTimeMillis() - t));
             resp.getWriter().println("<ul>");
-            List<RankingList> rankingLists = new ArrayList<RankingList>(rankings.size());
+            List<RankingText> rankingTexts = new ArrayList<RankingText>(rankings.size());
             for (Ranking ranking : rankings) {
-                rankingLists.add(new RankingList(ranking.getDate(), ranking.getM9()));
+                rankingTexts.add(new RankingText(ranking.getDate(), b(ranking.m9()), b(ranking.m9())));
                 resp.getWriter().println("<li>" + ranking + "</li>");
             }
             resp.getWriter().println("</ul>");
             t = System.currentTimeMillis();
-            dao.put(rankingLists);
+            dao.put(rankingTexts);
             resp.getWriter().println("Time taken for put: " + (System.currentTimeMillis() - t));
         }
         LocalDate from = new LocalDate("2002-05-22");
         LocalDate to = new LocalDate("2011-09-16");
         List<LocalDate> dates = TradingDayUtils.getDailySeries(from, to, true);
 
+        resp.setContentType("text/html");
+        resp.getWriter().println("<ul>");
         long x = System.currentTimeMillis();
-        Collection<Ranking> rankings = dao.get(dates);
-        resp.getWriter().println("Time taken to get " + rankings.size() + " rankings: " + (System.currentTimeMillis() - x));
+//        Collection<Ranking> rankings = dao.get(dates);
+//        resp.getWriter().println("<li>" + "Time taken to get " + rankings.size() + " rankings: " + (System.currentTimeMillis() - x) + "</li>");
+//
+//        x = System.currentTimeMillis();
+//        Collection<RankingText> rankingTexts = dao.getRankingText(dates);
+//        resp.getWriter().println("<li>" + "Time taken to get " + rankingTexts.size() + " rankingTexts: " + (System.currentTimeMillis() - x) + "</li>");
 
         x = System.currentTimeMillis();
-        Collection<RankingList> rankingLists = dao.getLists(dates);
-        resp.getWriter().println("Time taken to get " + rankingLists.size() + " rankingLists: " + (System.currentTimeMillis() - x));
+        Collection<Ranking> rankings = dao.get(dates.subList(dates.size() - 121, dates.size() - 1));
+        resp.getWriter().println("<li>" + "Time taken to get " + rankings.size() + " rankings: " + (System.currentTimeMillis() - x) + "</li>");
+
+        x = System.currentTimeMillis();
+        Collection<RankingText> rankingTexts = dao.getRankingText(dates.subList(dates.size() - 121, dates.size() - 1));
+        resp.getWriter().println("<li>" + "Time taken to get " + rankingTexts.size() + " rankingTexts: " + (System.currentTimeMillis() - x) + "</li>");
 
     }
+
+    private String b(String s) {
+        return s + "," + s + "," + s + "," + s + "," + s + "," + s + "," + s + "," + s + "," + s + "," + s + "," +
+                s + "," + s + "," + s + "," + s + "," + s + "," + s + "," + s + "," + s + "," + s + "," + s;
+    }
+
 
 }

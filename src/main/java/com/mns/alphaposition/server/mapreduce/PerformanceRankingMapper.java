@@ -1,6 +1,7 @@
 package com.mns.alphaposition.server.mapreduce;
 
 import com.google.appengine.api.datastore.Entity;
+import com.google.appengine.api.datastore.Text;
 import com.google.appengine.tools.mapreduce.AppEngineMapper;
 import com.google.appengine.tools.mapreduce.BlobstoreRecordKey;
 import com.google.appengine.tools.mapreduce.DatastoreMutationPool;
@@ -58,7 +59,7 @@ public class PerformanceRankingMapper extends
             String m9 = createRankString(rank);
 
             Entity ranking = new Entity("Ranking", fmt.print(date));
-            ranking.setUnindexedProperty("m9", m9);
+            ranking.setUnindexedProperty("m9", new Text(m9));
 
             DatastoreMutationPool mutationPool = this.getAppEngineContext(context)
                     .getMutationPool();
@@ -83,7 +84,7 @@ public class PerformanceRankingMapper extends
 
     private String createRankString(SortedSet<String> rank) {
         List<String> rankList = new ArrayList<String>(rank);
-        Joiner joiner = Joiner.on(",");
+        Joiner joiner = Joiner.on("|");
         if (rankList.size() > 50) {
             return joiner.join(rankList.subList(0, 50));
         }

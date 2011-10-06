@@ -35,6 +35,10 @@ public class Ranking {
         return date;
     }
 
+    public String m9() {
+        return m9;
+    }
+
     public List<String> getM9() {
         return toList(SPLITTER.split(m9));
     }
