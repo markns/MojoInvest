@@ -67,4 +67,12 @@ public class RankingDao extends DAOBase {
     }
 
 
+    public Key<RankingText> put(RankingText rankingText) {
+        return ofy().put(rankingText);
+    }
+
+    public Map<Key<RankingText>, RankingText> put(Iterable<RankingText> rankingTexts) {
+        return ofy().put(rankingTexts);
+    }
+
 }
