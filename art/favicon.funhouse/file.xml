@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>layers</key>
+	<array>
+		<dict>
+			<key>file</key>
+			<string>favicon.jpg</string>
+			<key>offsetX</key>
+			<real>0.0</real>
+			<key>offsetY</key>
+			<real>0.0</real>
+			<key>type</key>
+			<string>image</string>
+		</dict>
+		<dict>
+			<key>classname</key>
+			<string>CICrop</string>
+			<key>type</key>
+			<string>filter</string>
+			<key>values</key>
+			<dict>
+				<key>inputRectangle_CIVectorValue</key>
+				<string>[-2 13 302 287]</string>
+			</dict>
+		</dict>
+	</array>
+	<key>windowHeight</key>
+	<real>96</real>
+	<key>windowWidth</key>
+	<real>62</real>
+</dict>
+</plist>
