@@ -32,12 +32,12 @@
     </listener>
 
     <!--<security-constraint>-->
-        <!--<web-resource-collection>-->
-            <!--<url-pattern>/mapreduce/*</url-pattern>-->
-        <!--</web-resource-collection>-->
-        <!--<auth-constraint>-->
-            <!--<role-name>admin</role-name>-->
-        <!--</auth-constraint>-->
+    <!--<web-resource-collection>-->
+    <!--<url-pattern>/mapreduce/*</url-pattern>-->
+    <!--</web-resource-collection>-->
+    <!--<auth-constraint>-->
+    <!--<role-name>admin</role-name>-->
+    <!--</auth-constraint>-->
     <!--</security-constraint>-->
 
     <!--Remote Api -->
@@ -50,31 +50,42 @@
         <url-pattern>/remote_api</url-pattern>
     </servlet-mapping>
 
+
+    <servlet>
+        <servlet-name>PipelineServlet</servlet-name>
+        <servlet-class>com.google.appengine.tools.pipeline.impl.servlets.PipelineServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>PipelineServlet</servlet-name>
+        <url-pattern>/_ah/pipeline/*</url-pattern>
+    </servlet-mapping>
+
+
     <!--Mapper servlet for uploading data-->
-    <servlet>
-        <servlet-name>mapreduce</servlet-name>
-        <servlet-class>com.google.appengine.tools.mapreduce.MapReduceServlet</servlet-class>
-    </servlet>
-    <servlet-mapping>
-        <servlet-name>mapreduce</servlet-name>
-        <url-pattern>/mapreduce/*</url-pattern>
-    </servlet-mapping>
-    <servlet>
-        <servlet-name>Upload</servlet-name>
-        <servlet-class>com.mns.alphaposition.server.servlet.UploadBlobServlet</servlet-class>
-    </servlet>
-    <servlet-mapping>
-        <servlet-name>Upload</servlet-name>
-        <url-pattern>/upload</url-pattern>
-    </servlet-mapping>
-    <servlet>
-        <servlet-name>SuccessfulUpload</servlet-name>
-        <servlet-class>com.mns.alphaposition.server.servlet.SuccessfulUploadServlet</servlet-class>
-    </servlet>
-    <servlet-mapping>
-        <servlet-name>SuccessfulUpload</servlet-name>
-        <url-pattern>/upload-success</url-pattern>
-    </servlet-mapping>
+    <!--<servlet>-->
+        <!--<servlet-name>mapreduce</servlet-name>-->
+        <!--<servlet-class>com.google.appengine.tools.mapreduce.MapReduceServlet</servlet-class>-->
+    <!--</servlet>-->
+    <!--<servlet-mapping>-->
+        <!--<servlet-name>mapreduce</servlet-name>-->
+        <!--<url-pattern>/mapreduce/*</url-pattern>-->
+    <!--</servlet-mapping>-->
+    <!--<servlet>-->
+        <!--<servlet-name>Upload</servlet-name>-->
+        <!--<servlet-class>com.mns.alphaposition.server.servlet.UploadBlobServlet</servlet-class>-->
+    <!--</servlet>-->
+    <!--<servlet-mapping>-->
+        <!--<servlet-name>Upload</servlet-name>-->
+        <!--<url-pattern>/upload</url-pattern>-->
+    <!--</servlet-mapping>-->
+    <!--<servlet>-->
+        <!--<servlet-name>SuccessfulUpload</servlet-name>-->
+        <!--<servlet-class>com.mns.alphaposition.server.servlet.SuccessfulUploadServlet</servlet-class>-->
+    <!--</servlet>-->
+    <!--<servlet-mapping>-->
+        <!--<servlet-name>SuccessfulUpload</servlet-name>-->
+        <!--<url-pattern>/upload-success</url-pattern>-->
+    <!--</servlet-mapping>-->
 
 
 </web-app>

@@ -1,100 +1,92 @@
-a, a:visited, a:hover {
-    text-decoration: underline;
-    cursor: pointer;
-    cursor: hand;
-    color: #e8351d;
+a,a:visited,a:hover {
+	text-decoration: underline;
+	cursor: pointer;
+	cursor: hand;
+	color: #e8351d;
 }
 
 .username {
-    font-weight: bold;
+	font-weight: bold;
 }
 
 /* Standard margins for forms embedded in tabs. */
 .formMargin {
-    margin: 10px;
+	margin: 10px;
 }
 
 .errorText {
-    color: red;
-    font-size: 80%;
-    margin-top: 2px;
+	color: red;
+	font-size: 80%;
+	margin-top: 2px;
 }
 
-.round1, .round2, .round4 {
-    font-size: 0px;
-    height: 1px;
-    margin: 0px;
-    padding: 0px;
-    background-color: darkPanelColor;
+.round1,.round2,.round4 {
+	font-size: 0px;
+	height: 1px;
+	margin: 0px;
+	padding: 0px;
+	background-color: darkPanelColor;
 }
 
 .round1 {
-    border-left: 1px solid white;
-    border-right: 1px solid white;
+	border-left: 1px solid white;
+	border-right: 1px solid white;
 }
 
 .round2 {
-    border-left: 2px solid white;
-    border-right: 2px solid white;
+	border-left: 2px solid white;
+	border-right: 2px solid white;
 }
 
 .round4 {
-    border-left: 4px solid white;
-    border-right: 4px solid white;
+	border-left: 4px solid white;
+	border-right: 4px solid white;
 }
 
 .black {
-    background-color: black;
+	background-color: black;
 }
 
 .gray {
-    background-color: gray;
+	background-color: gray;
 }
 
 .yellow {
-    background-color: yellow;
+	background-color: yellow;
 }
 
 .blue {
-    background-color: blue;
+	background-color: blue;
 }
 
-@if user.agent ie6
-{
-.transparent {
-    filter: literal("alpha(opacity=50)");
+@if user.agent ie6 {
+	.transparent {
+		filter: literal("alpha(opacity=50)");
+	}
 }
-
-    }
-
-@elif user.agent ie8
-{
-.transparent {
-    -ms-filter: "alpha(opacity=50)";
+@elif user.agent ie8 {
+	.transparent {
+		-ms-filter: "alpha(opacity=50)";
+	}
 }
-
-    }
-
-@else
-{
-.transparent {
-    opacity: 0.5;
+@else {
+	.transparent {
+		opacity: 0.5;
+	}
 }
-
-    }
 
 .vertex {
-    z-index: 4;
+	z-index: 4;
 }
 
 .edge {
-    z-index: 3;
+	z-index: 3;
 }
 
 .cell {
-    z-index: 2;
+	z-index: 2;
 }
 
 .selectedCell {
-    z-index: 5;
+	z-index: 5;
 }

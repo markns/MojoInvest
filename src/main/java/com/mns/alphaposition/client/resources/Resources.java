@@ -25,7 +25,7 @@ import com.google.gwt.resources.client.ImageResource;
  */
 public interface Resources extends ClientBundle {
 
-    @Source("logo.png")
+    @Source("mojo_logo.png")
     ImageResource logo();
 
     @Source("Alphaposition.css")
