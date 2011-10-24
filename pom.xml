@@ -185,6 +185,11 @@
                 </exclusion>
             </exclusions>
         </dependency>
+        <dependency>
+            <groupId>com.google.appengine</groupId>
+            <artifactId>appengine-pipeline</artifactId>
+            <version>1.0</version>
+        </dependency>
 
         <dependency>
             <groupId>javax.persistence</groupId>
@@ -366,7 +371,7 @@
         </dependency>
 
         <!-- SLF4J logging dependencies -->
-<!--        <dependency>
+        <!--        <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-log4j12</artifactId>
             <version>${slf4f.version}</version>
@@ -517,28 +522,28 @@
                 </executions>
             </plugin>
 
-            <!--<plugin>-->
-            <!--<groupId>org.apache.maven.plugins</groupId>-->
-            <!--<artifactId>maven-install-plugin</artifactId>-->
-            <!--<executions>-->
-            <!--<execution>-->
-            <!--<id>hack-binary</id>-->
-            <!--<phase>validate</phase>-->
-            <!--<configuration>-->
-            <!--<file>${basedir}/lib/appengine-mapper-r150.jar</file>-->
-            <!--<repositoryLayout>default</repositoryLayout>-->
-            <!--<groupId>com.google.appengine</groupId>-->
-            <!--<artifactId>appengine-mapper</artifactId>-->
-            <!--<version>r150</version>-->
-            <!--<packaging>jar</packaging>-->
-            <!--<generatePom>true</generatePom>-->
-            <!--</configuration>-->
-            <!--<goals>-->
-            <!--<goal>install-file</goal>-->
-            <!--</goals>-->
-            <!--</execution>-->
-            <!--</executions>-->
-            <!--</plugin>-->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-install-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>hack-binary</id>
+                        <phase>validate</phase>
+                        <configuration>
+                            <file>${basedir}/lib/appengine-pipeline.jar</file>
+                            <repositoryLayout>default</repositoryLayout>
+                            <groupId>com.google.appengine</groupId>
+                            <artifactId>appengine-pipeline</artifactId>
+                            <version>1.0</version>
+                            <packaging>jar</packaging>
+                            <generatePom>true</generatePom>
+                        </configuration>
+                        <goals>
+                            <goal>install-file</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
 
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
@@ -556,7 +561,6 @@
                     <packageName>com.mns.alphaposition.server.yql</packageName>
                 </configuration>
             </plugin>
-
 
         </plugins>
 

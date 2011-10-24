@@ -122,7 +122,7 @@ public class QuoteDao extends DAOBase {
             close = close.divide(size, BigDecimal.ROUND_HALF_EVEN);
 //            volume = volume.divide(size, BigDecimal.ROUND_HALF_EVEN);
 //            adjClose = adjClose.divide(size, BigDecimal.ROUND_HALF_EVEN);
-            averageQuotes.add(new Quote(entry.getKey().getSymbol(), date, open, high, low, close, volume, adjClose, true));
+            averageQuotes.add(new Quote(entry.getKey().getSymbol(), date, open, high, low, close, null, null, volume, adjClose, true));
         }
         return averageQuotes;
     }

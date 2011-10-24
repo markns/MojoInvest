@@ -37,7 +37,7 @@ public class HistoricQuoteLoaderServlet extends HttpServlet {
 
     private static final String yqlGet = "http://query.yahooapis.com/v1/public/yql";
 
-    public static final String DATATABLES = "http://datatables.org/alltables.env";
+    public static final String DATATABLES = "store://datatables.org/alltableswithkeys";
 
     public static final String SYMBOL = "symbol";
     public static final String START = "start";
@@ -137,6 +137,7 @@ public class HistoricQuoteLoaderServlet extends HttpServlet {
     private List<Quote> parseQuotes(String symbol, QueryType query) {
         final List<Quote> quotes = new ArrayList<Quote>();
         if (query.getResults() != null && query.getResults().getQuote() != null) {
+
             for (QuoteType qt : query.getResults().getQuote()) {
                 //OldQuote XML returned from YQL doesn't contain symbol, so set it here
                 quotes.add(new Quote(symbol,
@@ -145,6 +146,8 @@ public class HistoricQuoteLoaderServlet extends HttpServlet {
                         new BigDecimal(qt.getHigh()),
                         new BigDecimal(qt.getLow()),
                         new BigDecimal(qt.getClose()),
+                        //bid, ask
+                        null, null,
                         new BigDecimal(qt.getVolume()),
                         new BigDecimal(qt.getAdjClose()),
                         false));

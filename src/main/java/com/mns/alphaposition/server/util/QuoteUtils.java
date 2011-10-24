@@ -66,7 +66,7 @@ public class QuoteUtils {
 
     private static Quote rollQuote(Quote quote, LocalDate date) {
         return new Quote(quote.getSymbol(), date, quote.getOpen(),
-                quote.getHigh(), quote.getLow(), quote.getClose(), quote.getVolume(),
+                quote.getHigh(), quote.getLow(), quote.getClose(), null, null, quote.getVolume(),
                 quote.getAdjClose(), true);
     }
 
@@ -87,7 +87,7 @@ public class QuoteUtils {
                 row[3].isEmpty() ? null : new BigDecimal(row[3]),
                 row[4].isEmpty() ? null : new BigDecimal(row[4]),
                 row[5].isEmpty() ? null : new BigDecimal(row[5]),
-                row[6].isEmpty() ? null : new BigDecimal(row[6]),
+                null, null, row[6].isEmpty() ? null : new BigDecimal(row[6]),
                 row[7].isEmpty() ? null : new BigDecimal(row[7]),
                 false);
     }

@@ -31,6 +31,12 @@ public class Quote {
     private BigDecimal close;
 
     @Unindexed
+    private BigDecimal bid;
+
+    @Unindexed
+    private BigDecimal ask;
+
+    @Unindexed
     private BigDecimal volume;
 
     @Unindexed
@@ -44,7 +50,8 @@ public class Quote {
     }
 
     public Quote(String symbol, LocalDate date, BigDecimal open, BigDecimal high, BigDecimal low,
-                 BigDecimal close, BigDecimal volume, BigDecimal adjClose, boolean rolled) {
+                 BigDecimal close, BigDecimal bid, BigDecimal ask,
+                 BigDecimal volume, BigDecimal adjClose, boolean rolled) {
         this.id = QuoteUtils.quoteId(symbol, date);
         this.symbol = symbol;
         this.date = date;
@@ -52,22 +59,11 @@ public class Quote {
         this.high = high;
         this.low = low;
         this.close = close;
+        this.bid = bid;
+        this.ask = ask;
         this.volume = volume;
         this.adjClose = adjClose;
         this.rolled = rolled;
-    }
-
-    public Quote(Quote quote) {
-        this.id = quote.getId();
-        this.symbol = quote.getSymbol();
-        this.date = quote.getDate();
-        this.open = quote.getOpen();
-        this.high = quote.getHigh();
-        this.low = quote.getLow();
-        this.close = quote.getClose();
-        this.volume = quote.getVolume();
-        this.adjClose = quote.getAdjClose();
-        this.rolled = quote.rolled;
     }
 
     public String getId() {
