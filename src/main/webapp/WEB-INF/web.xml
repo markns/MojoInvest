@@ -3,11 +3,11 @@
          xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
          version="2.5">
 
-    <display-name>AlphaPosition</display-name>
+    <display-name>MojoInvest</display-name>
 
     <!-- Default page to serve -->
     <welcome-file-list>
-        <welcome-file>Alphaposition.html</welcome-file>
+        <welcome-file>Mojoinvest.html</welcome-file>
     </welcome-file-list>
 
     <filter>
@@ -28,7 +28,7 @@
          filter(String).through(Class<? extends Filter)
      -->
     <listener>
-        <listener-class>com.mns.alphaposition.server.guice.MyGuiceServletContextListener</listener-class>
+        <listener-class>com.mns.mojoinvest.server.guice.MyGuiceServletContextListener</listener-class>
     </listener>
 
     <!--<security-constraint>-->
@@ -72,7 +72,7 @@
     <!--</servlet-mapping>-->
     <!--<servlet>-->
         <!--<servlet-name>Upload</servlet-name>-->
-        <!--<servlet-class>com.mns.alphaposition.server.servlet.UploadBlobServlet</servlet-class>-->
+        <!--<servlet-class>com.mns.mojoinvestrver.servlet.UploadBlobServlet</servlet-class>-->
     <!--</servlet>-->
     <!--<servlet-mapping>-->
         <!--<servlet-name>Upload</servlet-name>-->
@@ -80,7 +80,7 @@
     <!--</servlet-mapping>-->
     <!--<servlet>-->
         <!--<servlet-name>SuccessfulUpload</servlet-name>-->
-        <!--<servlet-class>com.mns.alphaposition.server.servlet.SuccessfulUploadServlet</servlet-class>-->
+        <!--<servlet-class>com.mns.mojoinvestrver.servlet.SuccessfulUploadServlet</servlet-class>-->
     <!--</servlet>-->
     <!--<servlet-mapping>-->
         <!--<servlet-name>SuccessfulUpload</servlet-name>-->

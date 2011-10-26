@@ -2,12 +2,12 @@
 <%--<%@ page import="com.google.appengine.tools.pipeline.demo.*" %>--%>
 <%@ page import="com.google.appengine.tools.pipeline.PipelineService" %>
 <%@ page import="com.google.appengine.tools.pipeline.PipelineServiceFactory" %>
-<%@ page import="com.mns.alphaposition.server.engine.model.Quote" %>
-<%@ page import="com.mns.alphaposition.server.pipeline.RealtimePipeline.DailyPipeline" %>
+<%@ page import="com.mns.mojoinvest.server.engine.model.Quote" %>
+<%@ page import="com.mns.mojoinvest.server.pipeline.RealtimePipeline.DailyPipeline" %>
 <%@ page import="java.util.List" %>
-<%@ page import="com.mns.alphaposition.server.engine.model.QuoteDao" %>
+<%@ page import="com.mns.mojoinvest.server.engine.model.QuoteDao" %>
 <%@ page import="com.googlecode.objectify.ObjectifyService" %>
-<%@ page import="com.mns.alphaposition.server.engine.model.FundDao" %>
+<%@ page import="com.mns.mojoinvest.server.engine.model.FundDao" %>
 
 <%!
     private static final String TEXT_PARAM_NAME = "text";

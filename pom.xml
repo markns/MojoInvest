@@ -3,7 +3,7 @@
 
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.mns</groupId>
-    <artifactId>alphaposition</artifactId>
+    <artifactId>mojoinvest</artifactId>
     <packaging>war</packaging>
     <version>0.1-SNAPSHOT</version>
     <name>MojoInvest</name>
@@ -32,7 +32,7 @@
         <!-- Dependencies versions -->
         <aopalliance.version>1.0</aopalliance.version>
         <dyuproject-openid.version>1.1.7</dyuproject-openid.version>
-        <gae.version>1.5.4</gae.version>
+        <gae.version>1.5.5</gae.version>
         <gin.version>1.5.0</gin.version>
         <guice.version>3.0</guice.version>
         <gwt.version>2.3.0</gwt.version>
@@ -446,7 +446,7 @@
                     <server>com.google.appengine.tools.development.gwt.AppEngineLauncher</server>
                     <hostedWebapp>${webappDirectory}</hostedWebapp>
                     <copyWebapp>true</copyWebapp>
-                    <runTarget>Alphaposition.html</runTarget>
+                    <runTarget>Mojoinvest.html</runTarget>
 
                     <appEngineVersion>${gae.version}</appEngineVersion>
                     <appEngineHome>${gae.home}</appEngineHome>
@@ -558,7 +558,7 @@
                 </executions>
                 <configuration>
                     <schemaDirectory>src/main/resources/yql</schemaDirectory>
-                    <packageName>com.mns.alphaposition.server.yql</packageName>
+                    <packageName>com.mns.mojoinvest.server.yql</packageName>
                 </configuration>
             </plugin>
 

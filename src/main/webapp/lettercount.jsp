@@ -1,6 +1,6 @@
 <%@ page import="com.google.appengine.tools.pipeline.*" %>
 <%--<%@ page import="com.google.appengine.tools.pipeline.demo.*" %>--%>
-<%@ page import="com.mns.alphaposition.server.pipeline.LetterCountExample.LetterCounter" %>
+<%@ page import="com.mns.mojoinvest.server.pipeline.LetterCountExample.LetterCounter" %>
 <%@ page import="java.util.SortedMap" %>
 
 <%!
