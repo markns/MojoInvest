@@ -23,64 +23,63 @@ import java.util.Map.Entry;
 
 /**
  * @author rudominer@google.com (Mitch Rudominer)
- * 
  */
 public class LetterCountExample {
 
-  public static class LetterCounter extends Job1<SortedMap<Character, Integer>, String> {
-    @Override
-    public Value<SortedMap<Character, Integer>> run(String text) {
-      String[] words = text.split("[^a-zA-Z]");
-      List<FutureValue<SortedMap<Character, Integer>>> countsForEachWord =
-          new LinkedList<FutureValue<SortedMap<Character, Integer>>>();
-      for (String word : words) {
-        countsForEachWord.add(futureCall(new SingleWordCounterJob(), immediate(word)));
-      }
-      return futureCall(new CountCombinerJob(), futureList(countsForEachWord));
-    }
-  }
-
-  public static class SingleWordCounterJob extends Job1<SortedMap<Character, Integer>, String> {
-    @Override
-    public Value<SortedMap<Character, Integer>> run(String word) {
-      return immediate(countLetters(word));
-    }
-  }
-
-  public static SortedMap<Character, Integer> countLetters(String text) {
-    SortedMap<Character, Integer> charMap = new TreeMap<Character, Integer>();
-    for (char c : text.toCharArray()) {
-      incrementCount(c, 1, charMap);
-    }
-    return charMap;
-  }
-
-  public static class CountCombinerJob extends
-          Job1<SortedMap<Character, Integer>, List<SortedMap<Character, Integer>>> {
-    @Override
-    public Value<SortedMap<Character, Integer>> run(List<SortedMap<Character, Integer>> listOfMaps) {
-      SortedMap<Character, Integer> totalMap = new TreeMap<Character, Integer>();
-      for (SortedMap<Character, Integer> charMap : listOfMaps) {
-        for (Entry<Character, Integer> pair : charMap.entrySet()) {
-          incrementCount(pair.getKey(), pair.getValue(), totalMap);
+    public static class LetterCounter extends Job1<SortedMap<Character, Integer>, String> {
+        @Override
+        public Value<SortedMap<Character, Integer>> run(String text) {
+            String[] words = text.split("[^a-zA-Z]");
+            List<FutureValue<SortedMap<Character, Integer>>> countsForEachWord =
+                    new LinkedList<FutureValue<SortedMap<Character, Integer>>>();
+            for (String word : words) {
+                countsForEachWord.add(futureCall(new SingleWordCounterJob(), immediate(word)));
+            }
+            return futureCall(new CountCombinerJob(), futureList(countsForEachWord));
         }
-      }
-      return immediate(totalMap);
     }
-  }
 
-  private static void incrementCount(char c, int increment, Map<Character, Integer> charMap) {
-    Integer countInteger = charMap.get(c);
-    int count = (null == countInteger ? 0 : countInteger) + increment;
-    charMap.put(c, count);
-  }
-
-  public static void main(String[] args) {
-    String text = "ab cd";
-    String regex = "[^a-z,A-Z]";
-    String[] words = text.split(regex);
-    for (String word : words) {
-      System.out.println("[" + word + "]");
+    public static class SingleWordCounterJob extends Job1<SortedMap<Character, Integer>, String> {
+        @Override
+        public Value<SortedMap<Character, Integer>> run(String word) {
+            return immediate(countLetters(word));
+        }
     }
-  }
+
+    public static SortedMap<Character, Integer> countLetters(String text) {
+        SortedMap<Character, Integer> charMap = new TreeMap<Character, Integer>();
+        for (char c : text.toCharArray()) {
+            incrementCount(c, 1, charMap);
+        }
+        return charMap;
+    }
+
+    public static class CountCombinerJob extends
+            Job1<SortedMap<Character, Integer>, List<SortedMap<Character, Integer>>> {
+        @Override
+        public Value<SortedMap<Character, Integer>> run(List<SortedMap<Character, Integer>> listOfMaps) {
+            SortedMap<Character, Integer> totalMap = new TreeMap<Character, Integer>();
+            for (SortedMap<Character, Integer> charMap : listOfMaps) {
+                for (Entry<Character, Integer> pair : charMap.entrySet()) {
+                    incrementCount(pair.getKey(), pair.getValue(), totalMap);
+                }
+            }
+            return immediate(totalMap);
+        }
+    }
+
+    private static void incrementCount(char c, int increment, Map<Character, Integer> charMap) {
+        Integer countInteger = charMap.get(c);
+        int count = (null == countInteger ? 0 : countInteger) + increment;
+        charMap.put(c, count);
+    }
+
+    public static void main(String[] args) {
+        String text = "ab cd";
+        String regex = "[^a-z,A-Z]";
+        String[] words = text.split(regex);
+        for (String word : words) {
+            System.out.println("[" + word + "]");
+        }
+    }
 }

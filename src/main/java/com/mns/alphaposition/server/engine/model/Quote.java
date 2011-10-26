@@ -6,10 +6,11 @@ import com.mns.alphaposition.server.util.QuoteUtils;
 import org.joda.time.LocalDate;
 
 import javax.persistence.Id;
+import java.io.Serializable;
 import java.math.BigDecimal;
 
 @Cached
-public class Quote {
+public class Quote implements Serializable {
 
     @Id
     private String id;

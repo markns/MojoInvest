@@ -1,0 +1,1679 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<query xmlns:yahoo="http://www.yahooapis.com/v1/base.rng"
+    yahoo:count="20" yahoo:created="2011-10-25T10:01:43Z" yahoo:lang="en-US">
+    <diagnostics>
+        <publiclyCallable>true</publiclyCallable>
+        <url execution-start-time="22" execution-stop-time="151"
+            execution-time="129" proxy="DEFAULT"><![CDATA[http://www.datatables.org/yahoo/finance/yahoo.finance.quotes.xml]]></url>
+        <url execution-start-time="156" execution-stop-time="259"
+            execution-time="103" proxy="DEFAULT"><![CDATA[http://download.finance.yahoo.com/d/quotes.csv?f=aa2bb2b3b4cc1c3c6c8dd1d2ee1e7e8e9ghjkg1g3g4g5g6ii5j1j3j4j5j6k1k2k4k5ll1l2l3mm2m3m4m5m6m7m8nn4opp1p2p5p6qrr1r2r5r6r7ss1s7t1t7t8vv1v7ww1w4xy&s=WMCR,WMH,WMW,WOOD,WPS,WREI,WSTE,WXSP,XBI,XES,XGC,XHB,XHE,XIV,XLB,XLE,XLF,XLG,XLI,XLK]]></url>
+        <query execution-start-time="155" execution-stop-time="261"
+            execution-time="106" params="{url=[http://download.finance.yahoo.com/d/quotes.csv?f=aa2bb2b3b4cc1c3c6c8dd1d2ee1e7e8e9ghjkg1g3g4g5g6ii5j1j3j4j5j6k1k2k4k5ll1l2l3mm2m3m4m5m6m7m8nn4opp1p2p5p6qrr1r2r5r6r7ss1s7t1t7t8vv1v7ww1w4xy&amp;s=WMCR,WMH,WMW,WOOD,WPS,WREI,WSTE,WXSP,XBI,XES,XGC,XHB,XHE,XIV,XLB,XLE,XLF,XLG,XLI,XLK]}"><![CDATA[select * from csv where url=@url and columns='Ask,AverageDailyVolume,Bid,AskRealtime,BidRealtime,BookValue,Change&PercentChange,Change,Commission,ChangeRealtime,AfterHoursChangeRealtime,DividendShare,LastTradeDate,TradeDate,EarningsShare,ErrorIndicationreturnedforsymbolchangedinvalid,EPSEstimateCurrentYear,EPSEstimateNextYear,EPSEstimateNextQuarter,DaysLow,DaysHigh,YearLow,YearHigh,HoldingsGainPercent,AnnualizedGain,HoldingsGain,HoldingsGainPercentRealtime,HoldingsGainRealtime,MoreInfo,OrderBookRealtime,MarketCapitalization,MarketCapRealtime,EBITDA,ChangeFromYearLow,PercentChangeFromYearLow,LastTradeRealtimeWithTime,ChangePercentRealtime,ChangeFromYearHigh,PercebtChangeFromYearHigh,LastTradeWithTime,LastTradePriceOnly,HighLimit,LowLimit,DaysRange,DaysRangeRealtime,FiftydayMovingAverage,TwoHundreddayMovingAverage,ChangeFromTwoHundreddayMovingAverage,PercentChangeFromTwoHundreddayMovingAverage,ChangeFromFiftydayMovingAverage,PercentChangeFromFiftydayMovingAverage,Name,Notes,Open,PreviousClose,PricePaid,ChangeinPercent,PriceSales,PriceBook,ExDividendDate,PERatio,DividendPayDate,PERatioRealtime,PEGRatio,PriceEPSEstimateCurrentYear,PriceEPSEstimateNextYear,Symbol,SharesOwned,ShortRatio,LastTradeTime,TickerTrend,OneyrTargetPrice,Volume,HoldingsValue,HoldingsValueRealtime,YearRange,DaysValueChange,DaysValueChangeRealtime,StockExchange,DividendYield']]></query>
+        <javascript execution-time="333" instructions-used="2313837" table-name="yahoo.finance.quotes"/>
+        <user-time>487</user-time>
+        <service-time>232</service-time>
+        <build-version>22535</build-version>
+    </diagnostics>
+    <results>
+        <quote symbol="WMCR">
+            <Ask/>
+            <AverageDailyVolume>19503</AverageDailyVolume>
+            <Bid/>
+            <AskRealtime>0.00</AskRealtime>
+            <BidRealtime>0.00</BidRealtime>
+            <BookValue>0.00</BookValue>
+            <Change_PercentChange>0.00 - 0.00%</Change_PercentChange>
+            <Change>0.00</Change>
+            <Commission/>
+            <ChangeRealtime>0.00</ChangeRealtime>
+            <AfterHoursChangeRealtime>N/A - N/A</AfterHoursChangeRealtime>
+            <DividendShare>0.06</DividendShare>
+            <LastTradeDate>10/24/2011</LastTradeDate>
+            <TradeDate/>
+            <EarningsShare>0.00</EarningsShare>
+            <ErrorIndicationreturnedforsymbolchangedinvalid/>
+            <EPSEstimateCurrentYear>0.00</EPSEstimateCurrentYear>
+            <EPSEstimateNextYear>0.00</EPSEstimateNextYear>
+            <EPSEstimateNextQuarter>0.00</EPSEstimateNextQuarter>
+            <DaysLow/>
+            <DaysHigh/>
+            <YearLow>13.66</YearLow>
+            <YearHigh>20.80</YearHigh>
+            <HoldingsGainPercent>- - -</HoldingsGainPercent>
+            <AnnualizedGain/>
+            <HoldingsGain/>
+            <HoldingsGainPercentRealtime>N/A - N/A</HoldingsGainPercentRealtime>
+            <HoldingsGainRealtime/>
+            <MoreInfo>cn</MoreInfo>
+            <OrderBookRealtime/>
+            <MarketCapitalization/>
+            <MarketCapRealtime/>
+            <EBITDA>0</EBITDA>
+            <ChangeFromYearLow>+2.12</ChangeFromYearLow>
+            <PercentChangeFromYearLow>+15.52%</PercentChangeFromYearLow>
+            <LastTradeRealtimeWithTime>N/A - &lt;b&gt;15.78&lt;/b&gt;</LastTradeRealtimeWithTime>
+            <ChangePercentRealtime>N/A - 0.00%</ChangePercentRealtime>
+            <ChangeFromYearHigh>-5.02</ChangeFromYearHigh>
+            <PercebtChangeFromYearHigh>-24.13%</PercebtChangeFromYearHigh>
+            <LastTradeWithTime>Oct 24 - &lt;b&gt;15.78&lt;/b&gt;</LastTradeWithTime>
+            <LastTradePriceOnly>15.78</LastTradePriceOnly>
+            <HighLimit/>
+            <LowLimit/>
+            <DaysRange>N/A - N/A</DaysRange>
+            <DaysRangeRealtime>N/A - N/A</DaysRangeRealtime>
+            <FiftydayMovingAverage>15.1163</FiftydayMovingAverage>
+            <TwoHundreddayMovingAverage>17.6391</TwoHundreddayMovingAverage>
+            <ChangeFromTwoHundreddayMovingAverage>-1.8591</ChangeFromTwoHundreddayMovingAverage>
+            <PercentChangeFromTwoHundreddayMovingAverage>-10.54%</PercentChangeFromTwoHundreddayMovingAverage>
+            <ChangeFromFiftydayMovingAverage>+0.6637</ChangeFromFiftydayMovingAverage>
+            <PercentChangeFromFiftydayMovingAverage>+4.39%</PercentChangeFromFiftydayMovingAverage>
+            <Name>Wilshire Micro-Ca</Name>
+            <Notes/>
+            <Open/>
+            <PreviousClose>15.78</PreviousClose>
+            <PricePaid/>
+            <ChangeinPercent>0.00%</ChangeinPercent>
+            <PriceSales/>
+            <PriceBook/>
+            <ExDividendDate>27-Dec-10</ExDividendDate>
+            <PERatio/>
+            <DividendPayDate>31-Dec-10</DividendPayDate>
+            <PERatioRealtime/>
+            <PEGRatio/>
+            <PriceEPSEstimateCurrentYear/>
+            <PriceEPSEstimateNextYear/>
+            <Symbol>WMCR</Symbol>
+            <SharesOwned/>
+            <ShortRatio/>
+            <LastTradeTime>4:00pm</LastTradeTime>
+            <TickerTrend>&amp;nbsp;======&amp;nbsp;</TickerTrend>
+            <OneyrTargetPrice/>
+            <Volume>0</Volume>
+            <HoldingsValue/>
+            <HoldingsValueRealtime/>
+            <YearRange>13.66 - 20.80</YearRange>
+            <DaysValueChange>- - 0.00%</DaysValueChange>
+            <DaysValueChangeRealtime>N/A - N/A</DaysValueChangeRealtime>
+            <StockExchange>PCX</StockExchange>
+            <DividendYield>0.38</DividendYield>
+            <PercentChange>0.00%</PercentChange>
+        </quote>
+        <quote symbol="WMH">
+            <Ask/>
+            <AverageDailyVolume>300</AverageDailyVolume>
+            <Bid/>
+            <AskRealtime>0.00</AskRealtime>
+            <BidRealtime>0.00</BidRealtime>
+            <BookValue>0.00</BookValue>
+            <Change_PercentChange>0.00 - 0.00%</Change_PercentChange>
+            <Change>0.00</Change>
+            <Commission/>
+            <ChangeRealtime>0.00</ChangeRealtime>
+            <AfterHoursChangeRealtime>N/A - N/A</AfterHoursChangeRealtime>
+            <DividendShare>1.132</DividendShare>
+            <LastTradeDate>10/24/2011</LastTradeDate>
+            <TradeDate/>
+            <EarningsShare>0.00</EarningsShare>
+            <ErrorIndicationreturnedforsymbolchangedinvalid/>
+            <EPSEstimateCurrentYear>0.00</EPSEstimateCurrentYear>
+            <EPSEstimateNextYear>0.00</EPSEstimateNextYear>
+            <EPSEstimateNextQuarter>0.00</EPSEstimateNextQuarter>
+            <DaysLow/>
+            <DaysHigh/>
+            <YearLow>37.80</YearLow>
+            <YearHigh>51.50</YearHigh>
+            <HoldingsGainPercent>- - -</HoldingsGainPercent>
+            <AnnualizedGain/>
+            <HoldingsGain/>
+            <HoldingsGainPercentRealtime>N/A - N/A</HoldingsGainPercentRealtime>
+            <HoldingsGainRealtime/>
+            <MoreInfo>cned</MoreInfo>
+            <OrderBookRealtime/>
+            <MarketCapitalization/>
+            <MarketCapRealtime/>
+            <EBITDA>0</EBITDA>
+            <ChangeFromYearLow>+5.42</ChangeFromYearLow>
+            <PercentChangeFromYearLow>+14.34%</PercentChangeFromYearLow>
+            <LastTradeRealtimeWithTime>N/A - &lt;b&gt;43.22&lt;/b&gt;</LastTradeRealtimeWithTime>
+            <ChangePercentRealtime>N/A - 0.00%</ChangePercentRealtime>
+            <ChangeFromYearHigh>-8.28</ChangeFromYearHigh>
+            <PercebtChangeFromYearHigh>-16.08%</PercebtChangeFromYearHigh>
+            <LastTradeWithTime>Oct 24 - &lt;b&gt;43.22&lt;/b&gt;</LastTradeWithTime>
+            <LastTradePriceOnly>43.22</LastTradePriceOnly>
+            <HighLimit/>
+            <LowLimit/>
+            <DaysRange>N/A - N/A</DaysRange>
+            <DaysRangeRealtime>N/A - N/A</DaysRangeRealtime>
+            <FiftydayMovingAverage>41.6869</FiftydayMovingAverage>
+            <TwoHundreddayMovingAverage>44.595</TwoHundreddayMovingAverage>
+            <ChangeFromTwoHundreddayMovingAverage>-1.375</ChangeFromTwoHundreddayMovingAverage>
+            <PercentChangeFromTwoHundreddayMovingAverage>-3.08%</PercentChangeFromTwoHundreddayMovingAverage>
+            <ChangeFromFiftydayMovingAverage>+1.5331</ChangeFromFiftydayMovingAverage>
+            <PercentChangeFromFiftydayMovingAverage>+3.68%</PercentChangeFromFiftydayMovingAverage>
+            <Name>Merrill Lynch &amp; C</Name>
+            <Notes/>
+            <Open/>
+            <PreviousClose>43.22</PreviousClose>
+            <PricePaid/>
+            <ChangeinPercent>0.00%</ChangeinPercent>
+            <PriceSales/>
+            <PriceBook/>
+            <ExDividendDate>Oct  5</ExDividendDate>
+            <PERatio/>
+            <DividendPayDate>Dec 23</DividendPayDate>
+            <PERatioRealtime/>
+            <PEGRatio/>
+            <PriceEPSEstimateCurrentYear/>
+            <PriceEPSEstimateNextYear/>
+            <Symbol>WMH</Symbol>
+            <SharesOwned/>
+            <ShortRatio/>
+            <LastTradeTime>4:00pm</LastTradeTime>
+            <TickerTrend>&amp;nbsp;======&amp;nbsp;</TickerTrend>
+            <OneyrTargetPrice/>
+            <Volume>0</Volume>
+            <HoldingsValue/>
+            <HoldingsValueRealtime/>
+            <YearRange>37.80 - 51.50</YearRange>
+            <DaysValueChange>- - 0.00%</DaysValueChange>
+            <DaysValueChangeRealtime>N/A - N/A</DaysValueChangeRealtime>
+            <StockExchange>AMEX</StockExchange>
+            <DividendYield>2.62</DividendYield>
+            <PercentChange>0.00%</PercentChange>
+        </quote>
+        <quote symbol="WMW">
+            <Ask/>
+            <AverageDailyVolume>5559</AverageDailyVolume>
+            <Bid/>
+            <AskRealtime>0.00</AskRealtime>
+            <BidRealtime>0.00</BidRealtime>
+            <BookValue>0.00</BookValue>
+            <Change_PercentChange>0.00 - 0.00%</Change_PercentChange>
+            <Change>0.00</Change>
+            <Commission/>
+            <ChangeRealtime>0.00</ChangeRealtime>
+            <AfterHoursChangeRealtime>N/A - N/A</AfterHoursChangeRealtime>
+            <DividendShare>0.00</DividendShare>
+            <LastTradeDate>10/24/2011</LastTradeDate>
+            <TradeDate/>
+            <EarningsShare>0.00</EarningsShare>
+            <ErrorIndicationreturnedforsymbolchangedinvalid/>
+            <EPSEstimateCurrentYear>0.00</EPSEstimateCurrentYear>
+            <EPSEstimateNextYear>0.00</EPSEstimateNextYear>
+            <EPSEstimateNextQuarter>0.00</EPSEstimateNextQuarter>
+            <DaysLow/>
+            <DaysHigh/>
+            <YearLow>10.21</YearLow>
+            <YearHigh>13.00</YearHigh>
+            <HoldingsGainPercent>- - -</HoldingsGainPercent>
+            <AnnualizedGain/>
+            <HoldingsGain/>
+            <HoldingsGainPercentRealtime>N/A - N/A</HoldingsGainPercentRealtime>
+            <HoldingsGainRealtime/>
+            <MoreInfo>cn</MoreInfo>
+            <OrderBookRealtime/>
+            <MarketCapitalization/>
+            <MarketCapRealtime/>
+            <EBITDA>0</EBITDA>
+            <ChangeFromYearLow>+1.94</ChangeFromYearLow>
+            <PercentChangeFromYearLow>+19.00%</PercentChangeFromYearLow>
+            <LastTradeRealtimeWithTime>N/A - &lt;b&gt;12.15&lt;/b&gt;</LastTradeRealtimeWithTime>
+            <ChangePercentRealtime>N/A - 0.00%</ChangePercentRealtime>
+            <ChangeFromYearHigh>-0.85</ChangeFromYearHigh>
+            <PercebtChangeFromYearHigh>-6.54%</PercebtChangeFromYearHigh>
+            <LastTradeWithTime>Oct 24 - &lt;b&gt;12.15&lt;/b&gt;</LastTradeWithTime>
+            <LastTradePriceOnly>12.15</LastTradePriceOnly>
+            <HighLimit/>
+            <LowLimit/>
+            <DaysRange>N/A - N/A</DaysRange>
+            <DaysRangeRealtime>N/A - N/A</DaysRangeRealtime>
+            <FiftydayMovingAverage>11.1794</FiftydayMovingAverage>
+            <TwoHundreddayMovingAverage>11.9191</TwoHundreddayMovingAverage>
+            <ChangeFromTwoHundreddayMovingAverage>+0.2309</ChangeFromTwoHundreddayMovingAverage>
+            <PercentChangeFromTwoHundreddayMovingAverage>+1.94%</PercentChangeFromTwoHundreddayMovingAverage>
+            <ChangeFromFiftydayMovingAverage>+0.9706</ChangeFromFiftydayMovingAverage>
+            <PercentChangeFromFiftydayMovingAverage>+8.68%</PercentChangeFromFiftydayMovingAverage>
+            <Name>DEUTSCHE BANK AKT</Name>
+            <Notes/>
+            <Open/>
+            <PreviousClose>12.15</PreviousClose>
+            <PricePaid/>
+            <ChangeinPercent>0.00%</ChangeinPercent>
+            <PriceSales/>
+            <PriceBook/>
+            <ExDividendDate/>
+            <PERatio/>
+            <DividendPayDate/>
+            <PERatioRealtime/>
+            <PEGRatio/>
+            <PriceEPSEstimateCurrentYear/>
+            <PriceEPSEstimateNextYear/>
+            <Symbol>WMW</Symbol>
+            <SharesOwned/>
+            <ShortRatio/>
+            <LastTradeTime>4:00pm</LastTradeTime>
+            <TickerTrend>&amp;nbsp;======&amp;nbsp;</TickerTrend>
+            <OneyrTargetPrice/>
+            <Volume>0</Volume>
+            <HoldingsValue/>
+            <HoldingsValueRealtime/>
+            <YearRange>10.21 - 13.00</YearRange>
+            <DaysValueChange>- - 0.00%</DaysValueChange>
+            <DaysValueChangeRealtime>N/A - N/A</DaysValueChangeRealtime>
+            <StockExchange>PCX</StockExchange>
+            <DividendYield/>
+            <PercentChange>0.00%</PercentChange>
+        </quote>
+        <quote symbol="WOOD">
+            <Ask/>
+            <AverageDailyVolume>54780</AverageDailyVolume>
+            <Bid>34.82</Bid>
+            <AskRealtime>0.00</AskRealtime>
+            <BidRealtime>34.82</BidRealtime>
+            <BookValue>0.00</BookValue>
+            <Change_PercentChange>0.00 - 0.00%</Change_PercentChange>
+            <Change>0.00</Change>
+            <Commission/>
+            <ChangeRealtime>0.00</ChangeRealtime>
+            <AfterHoursChangeRealtime>N/A - N/A</AfterHoursChangeRealtime>
+            <DividendShare>0.584</DividendShare>
+            <LastTradeDate>10/24/2011</LastTradeDate>
+            <TradeDate/>
+            <EarningsShare>0.00</EarningsShare>
+            <ErrorIndicationreturnedforsymbolchangedinvalid/>
+            <EPSEstimateCurrentYear>0.00</EPSEstimateCurrentYear>
+            <EPSEstimateNextYear>0.00</EPSEstimateNextYear>
+            <EPSEstimateNextQuarter>0.00</EPSEstimateNextQuarter>
+            <DaysLow/>
+            <DaysHigh/>
+            <YearLow>33.26</YearLow>
+            <YearHigh>52.97</YearHigh>
+            <HoldingsGainPercent>- - -</HoldingsGainPercent>
+            <AnnualizedGain/>
+            <HoldingsGain/>
+            <HoldingsGainPercentRealtime>N/A - N/A</HoldingsGainPercentRealtime>
+            <HoldingsGainRealtime/>
+            <MoreInfo>cned</MoreInfo>
+            <OrderBookRealtime/>
+            <MarketCapitalization/>
+            <MarketCapRealtime/>
+            <EBITDA>0</EBITDA>
+            <ChangeFromYearLow>+4.35</ChangeFromYearLow>
+            <PercentChangeFromYearLow>+13.08%</PercentChangeFromYearLow>
+            <LastTradeRealtimeWithTime>N/A - &lt;b&gt;37.61&lt;/b&gt;</LastTradeRealtimeWithTime>
+            <ChangePercentRealtime>N/A - 0.00%</ChangePercentRealtime>
+            <ChangeFromYearHigh>-15.36</ChangeFromYearHigh>
+            <PercebtChangeFromYearHigh>-29.00%</PercebtChangeFromYearHigh>
+            <LastTradeWithTime>Oct 24 - &lt;b&gt;37.61&lt;/b&gt;</LastTradeWithTime>
+            <LastTradePriceOnly>37.61</LastTradePriceOnly>
+            <HighLimit/>
+            <LowLimit/>
+            <DaysRange>N/A - N/A</DaysRange>
+            <DaysRangeRealtime>N/A - N/A</DaysRangeRealtime>
+            <FiftydayMovingAverage>35.9353</FiftydayMovingAverage>
+            <TwoHundreddayMovingAverage>41.6654</TwoHundreddayMovingAverage>
+            <ChangeFromTwoHundreddayMovingAverage>-4.0554</ChangeFromTwoHundreddayMovingAverage>
+            <PercentChangeFromTwoHundreddayMovingAverage>-9.73%</PercentChangeFromTwoHundreddayMovingAverage>
+            <ChangeFromFiftydayMovingAverage>+1.6747</ChangeFromFiftydayMovingAverage>
+            <PercentChangeFromFiftydayMovingAverage>+4.66%</PercentChangeFromFiftydayMovingAverage>
+            <Name>iShares S&amp;P Globa</Name>
+            <Notes/>
+            <Open/>
+            <PreviousClose>37.61</PreviousClose>
+            <PricePaid/>
+            <ChangeinPercent>0.00%</ChangeinPercent>
+            <PriceSales/>
+            <PriceBook/>
+            <ExDividendDate>Jun 21</ExDividendDate>
+            <PERatio/>
+            <DividendPayDate>Jun 27</DividendPayDate>
+            <PERatioRealtime/>
+            <PEGRatio/>
+            <PriceEPSEstimateCurrentYear/>
+            <PriceEPSEstimateNextYear/>
+            <Symbol>WOOD</Symbol>
+            <SharesOwned/>
+            <ShortRatio/>
+            <LastTradeTime>3:57pm</LastTradeTime>
+            <TickerTrend>&amp;nbsp;======&amp;nbsp;</TickerTrend>
+            <OneyrTargetPrice/>
+            <Volume>0</Volume>
+            <HoldingsValue/>
+            <HoldingsValueRealtime/>
+            <YearRange>33.26 - 52.97</YearRange>
+            <DaysValueChange>- - 0.00%</DaysValueChange>
+            <DaysValueChangeRealtime>N/A - N/A</DaysValueChangeRealtime>
+            <StockExchange>NGM</StockExchange>
+            <DividendYield>1.55</DividendYield>
+            <PercentChange>0.00%</PercentChange>
+        </quote>
+        <quote symbol="WPS">
+            <Ask/>
+            <AverageDailyVolume>17814</AverageDailyVolume>
+            <Bid/>
+            <AskRealtime>0.00</AskRealtime>
+            <BidRealtime>0.00</BidRealtime>
+            <BookValue>0.00</BookValue>
+            <Change_PercentChange>0.00 - 0.00%</Change_PercentChange>
+            <Change>0.00</Change>
+            <Commission/>
+            <ChangeRealtime>0.00</ChangeRealtime>
+            <AfterHoursChangeRealtime>N/A - N/A</AfterHoursChangeRealtime>
+            <DividendShare>1.917</DividendShare>
+            <LastTradeDate>10/24/2011</LastTradeDate>
+            <TradeDate/>
+            <EarningsShare>0.00</EarningsShare>
+            <ErrorIndicationreturnedforsymbolchangedinvalid/>
+            <EPSEstimateCurrentYear>0.00</EPSEstimateCurrentYear>
+            <EPSEstimateNextYear>0.00</EPSEstimateNextYear>
+            <EPSEstimateNextQuarter>0.00</EPSEstimateNextQuarter>
+            <DaysLow/>
+            <DaysHigh/>
+            <YearLow>26.91</YearLow>
+            <YearHigh>36.21</YearHigh>
+            <HoldingsGainPercent>- - -</HoldingsGainPercent>
+            <AnnualizedGain/>
+            <HoldingsGain/>
+            <HoldingsGainPercentRealtime>N/A - N/A</HoldingsGainPercentRealtime>
+            <HoldingsGainRealtime/>
+            <MoreInfo>cn</MoreInfo>
+            <OrderBookRealtime/>
+            <MarketCapitalization/>
+            <MarketCapRealtime/>
+            <EBITDA>0</EBITDA>
+            <ChangeFromYearLow>+3.41</ChangeFromYearLow>
+            <PercentChangeFromYearLow>+12.67%</PercentChangeFromYearLow>
+            <LastTradeRealtimeWithTime>N/A - &lt;b&gt;30.32&lt;/b&gt;</LastTradeRealtimeWithTime>
+            <ChangePercentRealtime>N/A - 0.00%</ChangePercentRealtime>
+            <ChangeFromYearHigh>-5.89</ChangeFromYearHigh>
+            <PercebtChangeFromYearHigh>-16.27%</PercebtChangeFromYearHigh>
+            <LastTradeWithTime>Oct 24 - &lt;b&gt;30.32&lt;/b&gt;</LastTradeWithTime>
+            <LastTradePriceOnly>30.32</LastTradePriceOnly>
+            <HighLimit/>
+            <LowLimit/>
+            <DaysRange>N/A - N/A</DaysRange>
+            <DaysRangeRealtime>N/A - N/A</DaysRangeRealtime>
+            <FiftydayMovingAverage>29.224</FiftydayMovingAverage>
+            <TwoHundreddayMovingAverage>32.7181</TwoHundreddayMovingAverage>
+            <ChangeFromTwoHundreddayMovingAverage>-2.3981</ChangeFromTwoHundreddayMovingAverage>
+            <PercentChangeFromTwoHundreddayMovingAverage>-7.33%</PercentChangeFromTwoHundreddayMovingAverage>
+            <ChangeFromFiftydayMovingAverage>+1.096</ChangeFromFiftydayMovingAverage>
+            <PercentChangeFromFiftydayMovingAverage>+3.75%</PercentChangeFromFiftydayMovingAverage>
+            <Name>iShares Trust iSh</Name>
+            <Notes/>
+            <Open/>
+            <PreviousClose>30.32</PreviousClose>
+            <PricePaid/>
+            <ChangeinPercent>0.00%</ChangeinPercent>
+            <PriceSales/>
+            <PriceBook/>
+            <ExDividendDate>Sep 22</ExDividendDate>
+            <PERatio/>
+            <DividendPayDate>Sep 29</DividendPayDate>
+            <PERatioRealtime/>
+            <PEGRatio/>
+            <PriceEPSEstimateCurrentYear/>
+            <PriceEPSEstimateNextYear/>
+            <Symbol>WPS</Symbol>
+            <SharesOwned/>
+            <ShortRatio/>
+            <LastTradeTime>4:00pm</LastTradeTime>
+            <TickerTrend>&amp;nbsp;======&amp;nbsp;</TickerTrend>
+            <OneyrTargetPrice/>
+            <Volume>0</Volume>
+            <HoldingsValue/>
+            <HoldingsValueRealtime/>
+            <YearRange>26.91 - 36.21</YearRange>
+            <DaysValueChange>- - 0.00%</DaysValueChange>
+            <DaysValueChangeRealtime>N/A - N/A</DaysValueChangeRealtime>
+            <StockExchange>PCX</StockExchange>
+            <DividendYield>6.32</DividendYield>
+            <PercentChange>0.00%</PercentChange>
+        </quote>
+        <quote symbol="WREI">
+            <Ask/>
+            <AverageDailyVolume>8808</AverageDailyVolume>
+            <Bid/>
+            <AskRealtime>0.00</AskRealtime>
+            <BidRealtime>0.00</BidRealtime>
+            <BookValue>0.00</BookValue>
+            <Change_PercentChange>0.00 - 0.00%</Change_PercentChange>
+            <Change>0.00</Change>
+            <Commission/>
+            <ChangeRealtime>0.00</ChangeRealtime>
+            <AfterHoursChangeRealtime>N/A - N/A</AfterHoursChangeRealtime>
+            <DividendShare>0.904</DividendShare>
+            <LastTradeDate>10/24/2011</LastTradeDate>
+            <TradeDate/>
+            <EarningsShare>0.00</EarningsShare>
+            <ErrorIndicationreturnedforsymbolchangedinvalid/>
+            <EPSEstimateCurrentYear>0.00</EPSEstimateCurrentYear>
+            <EPSEstimateNextYear>0.00</EPSEstimateNextYear>
+            <EPSEstimateNextQuarter>0.00</EPSEstimateNextQuarter>
+            <DaysLow/>
+            <DaysHigh/>
+            <YearLow>25.76</YearLow>
+            <YearHigh>34.93</YearHigh>
+            <HoldingsGainPercent>- - -</HoldingsGainPercent>
+            <AnnualizedGain/>
+            <HoldingsGain/>
+            <HoldingsGainPercentRealtime>N/A - N/A</HoldingsGainPercentRealtime>
+            <HoldingsGainRealtime/>
+            <MoreInfo>cn</MoreInfo>
+            <OrderBookRealtime/>
+            <MarketCapitalization/>
+            <MarketCapRealtime/>
+            <EBITDA>0</EBITDA>
+            <ChangeFromYearLow>+5.28</ChangeFromYearLow>
+            <PercentChangeFromYearLow>+20.50%</PercentChangeFromYearLow>
+            <LastTradeRealtimeWithTime>N/A - &lt;b&gt;31.04&lt;/b&gt;</LastTradeRealtimeWithTime>
+            <ChangePercentRealtime>N/A - 0.00%</ChangePercentRealtime>
+            <ChangeFromYearHigh>-3.89</ChangeFromYearHigh>
+            <PercebtChangeFromYearHigh>-11.14%</PercebtChangeFromYearHigh>
+            <LastTradeWithTime>Oct 24 - &lt;b&gt;31.04&lt;/b&gt;</LastTradeWithTime>
+            <LastTradePriceOnly>31.04</LastTradePriceOnly>
+            <HighLimit/>
+            <LowLimit/>
+            <DaysRange>N/A - N/A</DaysRange>
+            <DaysRangeRealtime>N/A - N/A</DaysRangeRealtime>
+            <FiftydayMovingAverage>29.3191</FiftydayMovingAverage>
+            <TwoHundreddayMovingAverage>31.7945</TwoHundreddayMovingAverage>
+            <ChangeFromTwoHundreddayMovingAverage>-0.7545</ChangeFromTwoHundreddayMovingAverage>
+            <PercentChangeFromTwoHundreddayMovingAverage>-2.37%</PercentChangeFromTwoHundreddayMovingAverage>
+            <ChangeFromFiftydayMovingAverage>+1.7209</ChangeFromFiftydayMovingAverage>
+            <PercentChangeFromFiftydayMovingAverage>+5.87%</PercentChangeFromFiftydayMovingAverage>
+            <Name>Wilshire US REIT</Name>
+            <Notes/>
+            <Open/>
+            <PreviousClose>31.04</PreviousClose>
+            <PricePaid/>
+            <ChangeinPercent>0.00%</ChangeinPercent>
+            <PriceSales/>
+            <PriceBook/>
+            <ExDividendDate>Sep 26</ExDividendDate>
+            <PERatio/>
+            <DividendPayDate>Sep 30</DividendPayDate>
+            <PERatioRealtime/>
+            <PEGRatio/>
+            <PriceEPSEstimateCurrentYear/>
+            <PriceEPSEstimateNextYear/>
+            <Symbol>WREI</Symbol>
+            <SharesOwned/>
+            <ShortRatio/>
+            <LastTradeTime>4:00pm</LastTradeTime>
+            <TickerTrend>&amp;nbsp;======&amp;nbsp;</TickerTrend>
+            <OneyrTargetPrice/>
+            <Volume>0</Volume>
+            <HoldingsValue/>
+            <HoldingsValueRealtime/>
+            <YearRange>25.76 - 34.93</YearRange>
+            <DaysValueChange>- - 0.00%</DaysValueChange>
+            <DaysValueChangeRealtime>N/A - N/A</DaysValueChangeRealtime>
+            <StockExchange>PCX</StockExchange>
+            <DividendYield>2.91</DividendYield>
+            <PercentChange>0.00%</PercentChange>
+        </quote>
+        <quote symbol="WSTE">
+            <Ask>15.26</Ask>
+            <AverageDailyVolume>892</AverageDailyVolume>
+            <Bid>8.00</Bid>
+            <AskRealtime>15.26</AskRealtime>
+            <BidRealtime>8.00</BidRealtime>
+            <BookValue>0.00</BookValue>
+            <Change_PercentChange>0.00 - 0.00%</Change_PercentChange>
+            <Change>0.00</Change>
+            <Commission/>
+            <ChangeRealtime>0.00</ChangeRealtime>
+            <AfterHoursChangeRealtime>N/A - N/A</AfterHoursChangeRealtime>
+            <DividendShare>0.00</DividendShare>
+            <LastTradeDate>10/17/2011</LastTradeDate>
+            <TradeDate/>
+            <EarningsShare>0.00</EarningsShare>
+            <ErrorIndicationreturnedforsymbolchangedinvalid/>
+            <EPSEstimateCurrentYear>0.00</EPSEstimateCurrentYear>
+            <EPSEstimateNextYear>0.00</EPSEstimateNextYear>
+            <EPSEstimateNextQuarter>0.00</EPSEstimateNextQuarter>
+            <DaysLow/>
+            <DaysHigh/>
+            <YearLow>11.29</YearLow>
+            <YearHigh>15.36</YearHigh>
+            <HoldingsGainPercent>- - -</HoldingsGainPercent>
+            <AnnualizedGain/>
+            <HoldingsGain/>
+            <HoldingsGainPercentRealtime>N/A - N/A</HoldingsGainPercentRealtime>
+            <HoldingsGainRealtime/>
+            <MoreInfo>n</MoreInfo>
+            <OrderBookRealtime/>
+            <MarketCapitalization/>
+            <MarketCapRealtime/>
+            <EBITDA>0</EBITDA>
+            <ChangeFromYearLow>+0.90</ChangeFromYearLow>
+            <PercentChangeFromYearLow>+7.97%</PercentChangeFromYearLow>
+            <LastTradeRealtimeWithTime>N/A - &lt;b&gt;12.19&lt;/b&gt;</LastTradeRealtimeWithTime>
+            <ChangePercentRealtime>N/A - 0.00%</ChangePercentRealtime>
+            <ChangeFromYearHigh>-3.17</ChangeFromYearHigh>
+            <PercebtChangeFromYearHigh>-20.64%</PercebtChangeFromYearHigh>
+            <LastTradeWithTime>Oct 17 - &lt;b&gt;12.19&lt;/b&gt;</LastTradeWithTime>
+            <LastTradePriceOnly>12.19</LastTradePriceOnly>
+            <HighLimit/>
+            <LowLimit/>
+            <DaysRange>N/A - N/A</DaysRange>
+            <DaysRangeRealtime>N/A - N/A</DaysRangeRealtime>
+            <FiftydayMovingAverage>12.0074</FiftydayMovingAverage>
+            <TwoHundreddayMovingAverage>13.6947</TwoHundreddayMovingAverage>
+            <ChangeFromTwoHundreddayMovingAverage>-1.5047</ChangeFromTwoHundreddayMovingAverage>
+            <PercentChangeFromTwoHundreddayMovingAverage>-10.99%</PercentChangeFromTwoHundreddayMovingAverage>
+            <ChangeFromFiftydayMovingAverage>+0.1826</ChangeFromFiftydayMovingAverage>
+            <PercentChangeFromFiftydayMovingAverage>+1.52%</PercentChangeFromFiftydayMovingAverage>
+            <Name>Global X Waste Ma</Name>
+            <Notes/>
+            <Open/>
+            <PreviousClose>12.19</PreviousClose>
+            <PricePaid/>
+            <ChangeinPercent>0.00%</ChangeinPercent>
+            <PriceSales/>
+            <PriceBook/>
+            <ExDividendDate/>
+            <PERatio/>
+            <DividendPayDate/>
+            <PERatioRealtime/>
+            <PEGRatio/>
+            <PriceEPSEstimateCurrentYear/>
+            <PriceEPSEstimateNextYear/>
+            <Symbol>WSTE</Symbol>
+            <SharesOwned/>
+            <ShortRatio/>
+            <LastTradeTime>2:12pm</LastTradeTime>
+            <TickerTrend>&amp;nbsp;======&amp;nbsp;</TickerTrend>
+            <OneyrTargetPrice/>
+            <Volume>0</Volume>
+            <HoldingsValue/>
+            <HoldingsValueRealtime/>
+            <YearRange>11.29 - 15.36</YearRange>
+            <DaysValueChange>- - 0.00%</DaysValueChange>
+            <DaysValueChangeRealtime>N/A - N/A</DaysValueChangeRealtime>
+            <StockExchange>PCX</StockExchange>
+            <DividendYield/>
+            <PercentChange>0.00%</PercentChange>
+        </quote>
+        <quote symbol="WXSP">
+            <Ask/>
+            <AverageDailyVolume>1436</AverageDailyVolume>
+            <Bid/>
+            <AskRealtime>0.00</AskRealtime>
+            <BidRealtime>0.00</BidRealtime>
+            <BookValue>0.00</BookValue>
+            <Change_PercentChange>0.00 - 0.00%</Change_PercentChange>
+            <Change>0.00</Change>
+            <Commission/>
+            <ChangeRealtime>0.00</ChangeRealtime>
+            <AfterHoursChangeRealtime>N/A - N/A</AfterHoursChangeRealtime>
+            <DividendShare>0.335</DividendShare>
+            <LastTradeDate>10/24/2011</LastTradeDate>
+            <TradeDate/>
+            <EarningsShare>0.00</EarningsShare>
+            <ErrorIndicationreturnedforsymbolchangedinvalid/>
+            <EPSEstimateCurrentYear>0.00</EPSEstimateCurrentYear>
+            <EPSEstimateNextYear>0.00</EPSEstimateNextYear>
+            <EPSEstimateNextQuarter>0.00</EPSEstimateNextQuarter>
+            <DaysLow/>
+            <DaysHigh/>
+            <YearLow>24.50</YearLow>
+            <YearHigh>32.98</YearHigh>
+            <HoldingsGainPercent>- - -</HoldingsGainPercent>
+            <AnnualizedGain/>
+            <HoldingsGain/>
+            <HoldingsGainPercentRealtime>N/A - N/A</HoldingsGainPercentRealtime>
+            <HoldingsGainRealtime/>
+            <MoreInfo>cn</MoreInfo>
+            <OrderBookRealtime/>
+            <MarketCapitalization/>
+            <MarketCapRealtime/>
+            <EBITDA>0</EBITDA>
+            <ChangeFromYearLow>+3.49</ChangeFromYearLow>
+            <PercentChangeFromYearLow>+14.24%</PercentChangeFromYearLow>
+            <LastTradeRealtimeWithTime>N/A - &lt;b&gt;27.99&lt;/b&gt;</LastTradeRealtimeWithTime>
+            <ChangePercentRealtime>N/A - 0.00%</ChangePercentRealtime>
+            <ChangeFromYearHigh>-4.99</ChangeFromYearHigh>
+            <PercebtChangeFromYearHigh>-15.13%</PercebtChangeFromYearHigh>
+            <LastTradeWithTime>Oct 24 - &lt;b&gt;27.99&lt;/b&gt;</LastTradeWithTime>
+            <LastTradePriceOnly>27.99</LastTradePriceOnly>
+            <HighLimit/>
+            <LowLimit/>
+            <DaysRange>N/A - N/A</DaysRange>
+            <DaysRangeRealtime>N/A - N/A</DaysRangeRealtime>
+            <FiftydayMovingAverage>26.3659</FiftydayMovingAverage>
+            <TwoHundreddayMovingAverage>29.52</TwoHundreddayMovingAverage>
+            <ChangeFromTwoHundreddayMovingAverage>-1.53</ChangeFromTwoHundreddayMovingAverage>
+            <PercentChangeFromTwoHundreddayMovingAverage>-5.18%</PercentChangeFromTwoHundreddayMovingAverage>
+            <ChangeFromFiftydayMovingAverage>+1.6241</ChangeFromFiftydayMovingAverage>
+            <PercentChangeFromFiftydayMovingAverage>+6.16%</PercentChangeFromFiftydayMovingAverage>
+            <Name>Wilshire 4500 Com</Name>
+            <Notes/>
+            <Open/>
+            <PreviousClose>27.99</PreviousClose>
+            <PricePaid/>
+            <ChangeinPercent>0.00%</ChangeinPercent>
+            <PriceSales/>
+            <PriceBook/>
+            <ExDividendDate>27-Dec-10</ExDividendDate>
+            <PERatio/>
+            <DividendPayDate>31-Dec-10</DividendPayDate>
+            <PERatioRealtime/>
+            <PEGRatio/>
+            <PriceEPSEstimateCurrentYear/>
+            <PriceEPSEstimateNextYear/>
+            <Symbol>WXSP</Symbol>
+            <SharesOwned/>
+            <ShortRatio/>
+            <LastTradeTime>4:00pm</LastTradeTime>
+            <TickerTrend>&amp;nbsp;======&amp;nbsp;</TickerTrend>
+            <OneyrTargetPrice/>
+            <Volume>0</Volume>
+            <HoldingsValue/>
+            <HoldingsValueRealtime/>
+            <YearRange>24.50 - 32.98</YearRange>
+            <DaysValueChange>- - 0.00%</DaysValueChange>
+            <DaysValueChangeRealtime>N/A - N/A</DaysValueChangeRealtime>
+            <StockExchange>PCX</StockExchange>
+            <DividendYield>1.20</DividendYield>
+            <PercentChange>0.00%</PercentChange>
+        </quote>
+        <quote symbol="XBI">
+            <Ask/>
+            <AverageDailyVolume>335863</AverageDailyVolume>
+            <Bid/>
+            <AskRealtime>0.00</AskRealtime>
+            <BidRealtime>0.00</BidRealtime>
+            <BookValue>0.00</BookValue>
+            <Change_PercentChange>0.00 - 0.00%</Change_PercentChange>
+            <Change>0.00</Change>
+            <Commission/>
+            <ChangeRealtime>0.00</ChangeRealtime>
+            <AfterHoursChangeRealtime>N/A - N/A</AfterHoursChangeRealtime>
+            <DividendShare>0.00</DividendShare>
+            <LastTradeDate>10/24/2011</LastTradeDate>
+            <TradeDate/>
+            <EarningsShare>0.00</EarningsShare>
+            <ErrorIndicationreturnedforsymbolchangedinvalid/>
+            <EPSEstimateCurrentYear>0.00</EPSEstimateCurrentYear>
+            <EPSEstimateNextYear>0.00</EPSEstimateNextYear>
+            <EPSEstimateNextQuarter>0.00</EPSEstimateNextQuarter>
+            <DaysLow/>
+            <DaysHigh/>
+            <YearLow>54.71</YearLow>
+            <YearHigh>75.86</YearHigh>
+            <HoldingsGainPercent>- - -</HoldingsGainPercent>
+            <AnnualizedGain/>
+            <HoldingsGain/>
+            <HoldingsGainPercentRealtime>N/A - N/A</HoldingsGainPercentRealtime>
+            <HoldingsGainRealtime/>
+            <MoreInfo>cnpred</MoreInfo>
+            <OrderBookRealtime/>
+            <MarketCapitalization/>
+            <MarketCapRealtime/>
+            <EBITDA>0</EBITDA>
+            <ChangeFromYearLow>+11.82</ChangeFromYearLow>
+            <PercentChangeFromYearLow>+21.60%</PercentChangeFromYearLow>
+            <LastTradeRealtimeWithTime>N/A - &lt;b&gt;66.53&lt;/b&gt;</LastTradeRealtimeWithTime>
+            <ChangePercentRealtime>N/A - 0.00%</ChangePercentRealtime>
+            <ChangeFromYearHigh>-9.33</ChangeFromYearHigh>
+            <PercebtChangeFromYearHigh>-12.30%</PercebtChangeFromYearHigh>
+            <LastTradeWithTime>Oct 24 - &lt;b&gt;66.53&lt;/b&gt;</LastTradeWithTime>
+            <LastTradePriceOnly>66.53</LastTradePriceOnly>
+            <HighLimit/>
+            <LowLimit/>
+            <DaysRange>N/A - N/A</DaysRange>
+            <DaysRangeRealtime>N/A - N/A</DaysRangeRealtime>
+            <FiftydayMovingAverage>62.3086</FiftydayMovingAverage>
+            <TwoHundreddayMovingAverage>67.8471</TwoHundreddayMovingAverage>
+            <ChangeFromTwoHundreddayMovingAverage>-1.3171</ChangeFromTwoHundreddayMovingAverage>
+            <PercentChangeFromTwoHundreddayMovingAverage>-1.94%</PercentChangeFromTwoHundreddayMovingAverage>
+            <ChangeFromFiftydayMovingAverage>+4.2214</ChangeFromFiftydayMovingAverage>
+            <PercentChangeFromFiftydayMovingAverage>+6.77%</PercentChangeFromFiftydayMovingAverage>
+            <Name>SPDR Series Trust</Name>
+            <Notes/>
+            <Open/>
+            <PreviousClose>66.53</PreviousClose>
+            <PricePaid/>
+            <ChangeinPercent>0.00%</ChangeinPercent>
+            <PriceSales/>
+            <PriceBook/>
+            <ExDividendDate>18-Dec-09</ExDividendDate>
+            <PERatio/>
+            <DividendPayDate>31-Dec-09</DividendPayDate>
+            <PERatioRealtime/>
+            <PEGRatio/>
+            <PriceEPSEstimateCurrentYear/>
+            <PriceEPSEstimateNextYear/>
+            <Symbol>XBI</Symbol>
+            <SharesOwned/>
+            <ShortRatio/>
+            <LastTradeTime>4:00pm</LastTradeTime>
+            <TickerTrend>&amp;nbsp;======&amp;nbsp;</TickerTrend>
+            <OneyrTargetPrice/>
+            <Volume>0</Volume>
+            <HoldingsValue/>
+            <HoldingsValueRealtime/>
+            <YearRange>54.71 - 75.86</YearRange>
+            <DaysValueChange>- - 0.00%</DaysValueChange>
+            <DaysValueChangeRealtime>N/A - N/A</DaysValueChangeRealtime>
+            <StockExchange>PCX</StockExchange>
+            <DividendYield/>
+            <PercentChange>0.00%</PercentChange>
+        </quote>
+        <quote symbol="XES">
+            <Ask>37.69</Ask>
+            <AverageDailyVolume>349971</AverageDailyVolume>
+            <Bid>30.06</Bid>
+            <AskRealtime>37.69</AskRealtime>
+            <BidRealtime>30.06</BidRealtime>
+            <BookValue>0.00</BookValue>
+            <Change_PercentChange>0.00 - 0.00%</Change_PercentChange>
+            <Change>0.00</Change>
+            <Commission/>
+            <ChangeRealtime>0.00</ChangeRealtime>
+            <AfterHoursChangeRealtime>N/A - N/A</AfterHoursChangeRealtime>
+            <DividendShare>0.294</DividendShare>
+            <LastTradeDate>10/24/2011</LastTradeDate>
+            <TradeDate/>
+            <EarningsShare>0.00</EarningsShare>
+            <ErrorIndicationreturnedforsymbolchangedinvalid/>
+            <EPSEstimateCurrentYear>0.00</EPSEstimateCurrentYear>
+            <EPSEstimateNextYear>0.00</EPSEstimateNextYear>
+            <EPSEstimateNextQuarter>0.00</EPSEstimateNextQuarter>
+            <DaysLow/>
+            <DaysHigh/>
+            <YearLow>26.64</YearLow>
+            <YearHigh>44.63</YearHigh>
+            <HoldingsGainPercent>- - -</HoldingsGainPercent>
+            <AnnualizedGain/>
+            <HoldingsGain/>
+            <HoldingsGainPercentRealtime>N/A - N/A</HoldingsGainPercentRealtime>
+            <HoldingsGainRealtime/>
+            <MoreInfo>cnpIed</MoreInfo>
+            <OrderBookRealtime/>
+            <MarketCapitalization/>
+            <MarketCapRealtime/>
+            <EBITDA>0</EBITDA>
+            <ChangeFromYearLow>+8.10</ChangeFromYearLow>
+            <PercentChangeFromYearLow>+30.41%</PercentChangeFromYearLow>
+            <LastTradeRealtimeWithTime>N/A - &lt;b&gt;34.74&lt;/b&gt;</LastTradeRealtimeWithTime>
+            <ChangePercentRealtime>N/A - 0.00%</ChangePercentRealtime>
+            <ChangeFromYearHigh>-9.89</ChangeFromYearHigh>
+            <PercebtChangeFromYearHigh>-22.16%</PercebtChangeFromYearHigh>
+            <LastTradeWithTime>Oct 24 - &lt;b&gt;34.74&lt;/b&gt;</LastTradeWithTime>
+            <LastTradePriceOnly>34.74</LastTradePriceOnly>
+            <HighLimit/>
+            <LowLimit/>
+            <DaysRange>N/A - N/A</DaysRange>
+            <DaysRangeRealtime>N/A - N/A</DaysRangeRealtime>
+            <FiftydayMovingAverage>32.258</FiftydayMovingAverage>
+            <TwoHundreddayMovingAverage>37.7826</TwoHundreddayMovingAverage>
+            <ChangeFromTwoHundreddayMovingAverage>-3.0426</ChangeFromTwoHundreddayMovingAverage>
+            <PercentChangeFromTwoHundreddayMovingAverage>-8.05%</PercentChangeFromTwoHundreddayMovingAverage>
+            <ChangeFromFiftydayMovingAverage>+2.482</ChangeFromFiftydayMovingAverage>
+            <PercentChangeFromFiftydayMovingAverage>+7.69%</PercentChangeFromFiftydayMovingAverage>
+            <Name>SPDR Series Trust</Name>
+            <Notes/>
+            <Open/>
+            <PreviousClose>34.74</PreviousClose>
+            <PricePaid/>
+            <ChangeinPercent>0.00%</ChangeinPercent>
+            <PriceSales/>
+            <PriceBook/>
+            <ExDividendDate>Sep 16</ExDividendDate>
+            <PERatio/>
+            <DividendPayDate>Sep 28</DividendPayDate>
+            <PERatioRealtime/>
+            <PEGRatio/>
+            <PriceEPSEstimateCurrentYear/>
+            <PriceEPSEstimateNextYear/>
+            <Symbol>XES</Symbol>
+            <SharesOwned/>
+            <ShortRatio/>
+            <LastTradeTime>4:00pm</LastTradeTime>
+            <TickerTrend>&amp;nbsp;======&amp;nbsp;</TickerTrend>
+            <OneyrTargetPrice/>
+            <Volume>0</Volume>
+            <HoldingsValue/>
+            <HoldingsValueRealtime/>
+            <YearRange>26.64 - 44.63</YearRange>
+            <DaysValueChange>- - 0.00%</DaysValueChange>
+            <DaysValueChangeRealtime>N/A - N/A</DaysValueChangeRealtime>
+            <StockExchange>PCX</StockExchange>
+            <DividendYield>0.85</DividendYield>
+            <PercentChange>0.00%</PercentChange>
+        </quote>
+        <quote symbol="XGC">
+            <Ask/>
+            <AverageDailyVolume>4540</AverageDailyVolume>
+            <Bid/>
+            <AskRealtime>0.00</AskRealtime>
+            <BidRealtime>0.00</BidRealtime>
+            <BookValue>0.00</BookValue>
+            <Change_PercentChange>0.00 - 0.00%</Change_PercentChange>
+            <Change>0.00</Change>
+            <Commission/>
+            <ChangeRealtime>0.00</ChangeRealtime>
+            <AfterHoursChangeRealtime>N/A - N/A</AfterHoursChangeRealtime>
+            <DividendShare>0.429</DividendShare>
+            <LastTradeDate>10/24/2011</LastTradeDate>
+            <TradeDate/>
+            <EarningsShare>0.00</EarningsShare>
+            <ErrorIndicationreturnedforsymbolchangedinvalid/>
+            <EPSEstimateCurrentYear>0.00</EPSEstimateCurrentYear>
+            <EPSEstimateNextYear>0.00</EPSEstimateNextYear>
+            <EPSEstimateNextQuarter>0.00</EPSEstimateNextQuarter>
+            <DaysLow/>
+            <DaysHigh/>
+            <YearLow>14.79</YearLow>
+            <YearHigh>25.59</YearHigh>
+            <HoldingsGainPercent>- - -</HoldingsGainPercent>
+            <AnnualizedGain/>
+            <HoldingsGain/>
+            <HoldingsGainPercentRealtime>N/A - N/A</HoldingsGainPercentRealtime>
+            <HoldingsGainRealtime/>
+            <MoreInfo>c</MoreInfo>
+            <OrderBookRealtime/>
+            <MarketCapitalization/>
+            <MarketCapRealtime/>
+            <EBITDA>0</EBITDA>
+            <ChangeFromYearLow>+2.95</ChangeFromYearLow>
+            <PercentChangeFromYearLow>+19.95%</PercentChangeFromYearLow>
+            <LastTradeRealtimeWithTime>N/A - &lt;b&gt;17.74&lt;/b&gt;</LastTradeRealtimeWithTime>
+            <ChangePercentRealtime>N/A - 0.00%</ChangePercentRealtime>
+            <ChangeFromYearHigh>-7.85</ChangeFromYearHigh>
+            <PercebtChangeFromYearHigh>-30.68%</PercebtChangeFromYearHigh>
+            <LastTradeWithTime>Oct 24 - &lt;b&gt;17.74&lt;/b&gt;</LastTradeWithTime>
+            <LastTradePriceOnly>17.74</LastTradePriceOnly>
+            <HighLimit/>
+            <LowLimit/>
+            <DaysRange>N/A - N/A</DaysRange>
+            <DaysRangeRealtime>N/A - N/A</DaysRangeRealtime>
+            <FiftydayMovingAverage>17.172</FiftydayMovingAverage>
+            <TwoHundreddayMovingAverage>21.4169</TwoHundreddayMovingAverage>
+            <ChangeFromTwoHundreddayMovingAverage>-3.6769</ChangeFromTwoHundreddayMovingAverage>
+            <PercentChangeFromTwoHundreddayMovingAverage>-17.17%</PercentChangeFromTwoHundreddayMovingAverage>
+            <ChangeFromFiftydayMovingAverage>+0.568</ChangeFromFiftydayMovingAverage>
+            <PercentChangeFromFiftydayMovingAverage>+3.31%</PercentChangeFromFiftydayMovingAverage>
+            <Name>Guggenheim Intern</Name>
+            <Notes/>
+            <Open/>
+            <PreviousClose>17.74</PreviousClose>
+            <PricePaid/>
+            <ChangeinPercent>0.00%</ChangeinPercent>
+            <PriceSales/>
+            <PriceBook/>
+            <ExDividendDate>27-Dec-10</ExDividendDate>
+            <PERatio/>
+            <DividendPayDate>31-Dec-10</DividendPayDate>
+            <PERatioRealtime/>
+            <PEGRatio/>
+            <PriceEPSEstimateCurrentYear/>
+            <PriceEPSEstimateNextYear/>
+            <Symbol>XGC</Symbol>
+            <SharesOwned/>
+            <ShortRatio/>
+            <LastTradeTime>4:00pm</LastTradeTime>
+            <TickerTrend>&amp;nbsp;======&amp;nbsp;</TickerTrend>
+            <OneyrTargetPrice/>
+            <Volume>0</Volume>
+            <HoldingsValue/>
+            <HoldingsValueRealtime/>
+            <YearRange>14.79 - 25.59</YearRange>
+            <DaysValueChange>- - 0.00%</DaysValueChange>
+            <DaysValueChangeRealtime>N/A - N/A</DaysValueChangeRealtime>
+            <StockExchange>PCX</StockExchange>
+            <DividendYield>2.42</DividendYield>
+            <PercentChange>0.00%</PercentChange>
+        </quote>
+        <quote symbol="XHB">
+            <Ask>17.26</Ask>
+            <AverageDailyVolume>5485320</AverageDailyVolume>
+            <Bid>15.58</Bid>
+            <AskRealtime>17.26</AskRealtime>
+            <BidRealtime>15.58</BidRealtime>
+            <BookValue>0.00</BookValue>
+            <Change_PercentChange>0.00 - 0.00%</Change_PercentChange>
+            <Change>0.00</Change>
+            <Commission/>
+            <ChangeRealtime>0.00</ChangeRealtime>
+            <AfterHoursChangeRealtime>N/A - N/A</AfterHoursChangeRealtime>
+            <DividendShare>0.349</DividendShare>
+            <LastTradeDate>10/24/2011</LastTradeDate>
+            <TradeDate/>
+            <EarningsShare>0.00</EarningsShare>
+            <ErrorIndicationreturnedforsymbolchangedinvalid/>
+            <EPSEstimateCurrentYear>0.00</EPSEstimateCurrentYear>
+            <EPSEstimateNextYear>0.00</EPSEstimateNextYear>
+            <EPSEstimateNextQuarter>0.00</EPSEstimateNextQuarter>
+            <DaysLow/>
+            <DaysHigh/>
+            <YearLow>12.53</YearLow>
+            <YearHigh>19.21</YearHigh>
+            <HoldingsGainPercent>- - -</HoldingsGainPercent>
+            <AnnualizedGain/>
+            <HoldingsGain/>
+            <HoldingsGainPercentRealtime>N/A - N/A</HoldingsGainPercentRealtime>
+            <HoldingsGainRealtime/>
+            <MoreInfo>cnped</MoreInfo>
+            <OrderBookRealtime/>
+            <MarketCapitalization/>
+            <MarketCapRealtime/>
+            <EBITDA>0</EBITDA>
+            <ChangeFromYearLow>+3.96</ChangeFromYearLow>
+            <PercentChangeFromYearLow>+31.60%</PercentChangeFromYearLow>
+            <LastTradeRealtimeWithTime>N/A - &lt;b&gt;16.49&lt;/b&gt;</LastTradeRealtimeWithTime>
+            <ChangePercentRealtime>N/A - 0.00%</ChangePercentRealtime>
+            <ChangeFromYearHigh>-2.72</ChangeFromYearHigh>
+            <PercebtChangeFromYearHigh>-14.16%</PercebtChangeFromYearHigh>
+            <LastTradeWithTime>Oct 24 - &lt;b&gt;16.49&lt;/b&gt;</LastTradeWithTime>
+            <LastTradePriceOnly>16.49</LastTradePriceOnly>
+            <HighLimit/>
+            <LowLimit/>
+            <DaysRange>N/A - N/A</DaysRange>
+            <DaysRangeRealtime>N/A - N/A</DaysRangeRealtime>
+            <FiftydayMovingAverage>14.2977</FiftydayMovingAverage>
+            <TwoHundreddayMovingAverage>16.4838</TwoHundreddayMovingAverage>
+            <ChangeFromTwoHundreddayMovingAverage>+0.0062</ChangeFromTwoHundreddayMovingAverage>
+            <PercentChangeFromTwoHundreddayMovingAverage>+0.04%</PercentChangeFromTwoHundreddayMovingAverage>
+            <ChangeFromFiftydayMovingAverage>+2.1923</ChangeFromFiftydayMovingAverage>
+            <PercentChangeFromFiftydayMovingAverage>+15.33%</PercentChangeFromFiftydayMovingAverage>
+            <Name>SPDR Series Trust</Name>
+            <Notes/>
+            <Open/>
+            <PreviousClose>16.49</PreviousClose>
+            <PricePaid/>
+            <ChangeinPercent>0.00%</ChangeinPercent>
+            <PriceSales/>
+            <PriceBook/>
+            <ExDividendDate>Sep 16</ExDividendDate>
+            <PERatio/>
+            <DividendPayDate>Sep 28</DividendPayDate>
+            <PERatioRealtime/>
+            <PEGRatio/>
+            <PriceEPSEstimateCurrentYear/>
+            <PriceEPSEstimateNextYear/>
+            <Symbol>XHB</Symbol>
+            <SharesOwned/>
+            <ShortRatio/>
+            <LastTradeTime>4:00pm</LastTradeTime>
+            <TickerTrend>&amp;nbsp;======&amp;nbsp;</TickerTrend>
+            <OneyrTargetPrice/>
+            <Volume>0</Volume>
+            <HoldingsValue/>
+            <HoldingsValueRealtime/>
+            <YearRange>12.53 - 19.21</YearRange>
+            <DaysValueChange>- - 0.00%</DaysValueChange>
+            <DaysValueChangeRealtime>N/A - N/A</DaysValueChangeRealtime>
+            <StockExchange>PCX</StockExchange>
+            <DividendYield>2.12</DividendYield>
+            <PercentChange>0.00%</PercentChange>
+        </quote>
+        <quote symbol="XHE">
+            <Ask/>
+            <AverageDailyVolume>9416</AverageDailyVolume>
+            <Bid/>
+            <AskRealtime>0.00</AskRealtime>
+            <BidRealtime>0.00</BidRealtime>
+            <BookValue>0.00</BookValue>
+            <Change_PercentChange>0.00 - 0.00%</Change_PercentChange>
+            <Change>0.00</Change>
+            <Commission/>
+            <ChangeRealtime>0.00</ChangeRealtime>
+            <AfterHoursChangeRealtime>N/A - N/A</AfterHoursChangeRealtime>
+            <DividendShare>0.038</DividendShare>
+            <LastTradeDate>10/24/2011</LastTradeDate>
+            <TradeDate/>
+            <EarningsShare>0.00</EarningsShare>
+            <ErrorIndicationreturnedforsymbolchangedinvalid/>
+            <EPSEstimateCurrentYear>0.00</EPSEstimateCurrentYear>
+            <EPSEstimateNextYear>0.00</EPSEstimateNextYear>
+            <EPSEstimateNextQuarter>0.00</EPSEstimateNextQuarter>
+            <DaysLow/>
+            <DaysHigh/>
+            <YearLow>44.66</YearLow>
+            <YearHigh>57.31</YearHigh>
+            <HoldingsGainPercent>- - -</HoldingsGainPercent>
+            <AnnualizedGain/>
+            <HoldingsGain/>
+            <HoldingsGainPercentRealtime>N/A - N/A</HoldingsGainPercentRealtime>
+            <HoldingsGainRealtime/>
+            <MoreInfo>cn</MoreInfo>
+            <OrderBookRealtime/>
+            <MarketCapitalization/>
+            <MarketCapRealtime/>
+            <EBITDA>0</EBITDA>
+            <ChangeFromYearLow>+4.64</ChangeFromYearLow>
+            <PercentChangeFromYearLow>+10.39%</PercentChangeFromYearLow>
+            <LastTradeRealtimeWithTime>N/A - &lt;b&gt;49.30&lt;/b&gt;</LastTradeRealtimeWithTime>
+            <ChangePercentRealtime>N/A - 0.00%</ChangePercentRealtime>
+            <ChangeFromYearHigh>-8.01</ChangeFromYearHigh>
+            <PercebtChangeFromYearHigh>-13.98%</PercebtChangeFromYearHigh>
+            <LastTradeWithTime>Oct 24 - &lt;b&gt;49.30&lt;/b&gt;</LastTradeWithTime>
+            <LastTradePriceOnly>49.30</LastTradePriceOnly>
+            <HighLimit/>
+            <LowLimit/>
+            <DaysRange>N/A - N/A</DaysRange>
+            <DaysRangeRealtime>N/A - N/A</DaysRangeRealtime>
+            <FiftydayMovingAverage>47.4738</FiftydayMovingAverage>
+            <TwoHundreddayMovingAverage>51.9948</TwoHundreddayMovingAverage>
+            <ChangeFromTwoHundreddayMovingAverage>-2.6948</ChangeFromTwoHundreddayMovingAverage>
+            <PercentChangeFromTwoHundreddayMovingAverage>-5.18%</PercentChangeFromTwoHundreddayMovingAverage>
+            <ChangeFromFiftydayMovingAverage>+1.8262</ChangeFromFiftydayMovingAverage>
+            <PercentChangeFromFiftydayMovingAverage>+3.85%</PercentChangeFromFiftydayMovingAverage>
+            <Name>SPDR S&amp;P Health C</Name>
+            <Notes/>
+            <Open/>
+            <PreviousClose>49.30</PreviousClose>
+            <PricePaid/>
+            <ChangeinPercent>0.00%</ChangeinPercent>
+            <PriceSales/>
+            <PriceBook/>
+            <ExDividendDate>Sep 16</ExDividendDate>
+            <PERatio/>
+            <DividendPayDate>Sep 28</DividendPayDate>
+            <PERatioRealtime/>
+            <PEGRatio/>
+            <PriceEPSEstimateCurrentYear/>
+            <PriceEPSEstimateNextYear/>
+            <Symbol>XHE</Symbol>
+            <SharesOwned/>
+            <ShortRatio/>
+            <LastTradeTime>4:00pm</LastTradeTime>
+            <TickerTrend>&amp;nbsp;======&amp;nbsp;</TickerTrend>
+            <OneyrTargetPrice/>
+            <Volume>0</Volume>
+            <HoldingsValue/>
+            <HoldingsValueRealtime/>
+            <YearRange>44.66 - 57.31</YearRange>
+            <DaysValueChange>- - 0.00%</DaysValueChange>
+            <DaysValueChangeRealtime>N/A - N/A</DaysValueChangeRealtime>
+            <StockExchange>PCX</StockExchange>
+            <DividendYield>0.08</DividendYield>
+            <PercentChange>0.00%</PercentChange>
+        </quote>
+        <quote symbol="XIV">
+            <Ask>6.70</Ask>
+            <AverageDailyVolume>11034500</AverageDailyVolume>
+            <Bid>6.61</Bid>
+            <AskRealtime>6.70</AskRealtime>
+            <BidRealtime>6.61</BidRealtime>
+            <BookValue>0.00</BookValue>
+            <Change_PercentChange>0.00 - 0.00%</Change_PercentChange>
+            <Change>0.00</Change>
+            <Commission/>
+            <ChangeRealtime>0.00</ChangeRealtime>
+            <AfterHoursChangeRealtime>N/A - N/A</AfterHoursChangeRealtime>
+            <DividendShare>0.00</DividendShare>
+            <LastTradeDate>10/24/2011</LastTradeDate>
+            <TradeDate/>
+            <EarningsShare>0.00</EarningsShare>
+            <ErrorIndicationreturnedforsymbolchangedinvalid/>
+            <EPSEstimateCurrentYear>0.00</EPSEstimateCurrentYear>
+            <EPSEstimateNextYear>0.00</EPSEstimateNextYear>
+            <EPSEstimateNextQuarter>0.00</EPSEstimateNextQuarter>
+            <DaysLow/>
+            <DaysHigh/>
+            <YearLow>5.11</YearLow>
+            <YearHigh>19.36</YearHigh>
+            <HoldingsGainPercent>- - -</HoldingsGainPercent>
+            <AnnualizedGain/>
+            <HoldingsGain/>
+            <HoldingsGainPercentRealtime>N/A - N/A</HoldingsGainPercentRealtime>
+            <HoldingsGainRealtime/>
+            <MoreInfo>cn</MoreInfo>
+            <OrderBookRealtime/>
+            <MarketCapitalization/>
+            <MarketCapRealtime/>
+            <EBITDA>0</EBITDA>
+            <ChangeFromYearLow>+1.55</ChangeFromYearLow>
+            <PercentChangeFromYearLow>+30.33%</PercentChangeFromYearLow>
+            <LastTradeRealtimeWithTime>N/A - &lt;b&gt;6.66&lt;/b&gt;</LastTradeRealtimeWithTime>
+            <ChangePercentRealtime>N/A - 0.00%</ChangePercentRealtime>
+            <ChangeFromYearHigh>-12.70</ChangeFromYearHigh>
+            <PercebtChangeFromYearHigh>-65.60%</PercebtChangeFromYearHigh>
+            <LastTradeWithTime>Oct 24 - &lt;b&gt;6.66&lt;/b&gt;</LastTradeWithTime>
+            <LastTradePriceOnly>6.66</LastTradePriceOnly>
+            <HighLimit/>
+            <LowLimit/>
+            <DaysRange>N/A - N/A</DaysRange>
+            <DaysRangeRealtime>N/A - N/A</DaysRangeRealtime>
+            <FiftydayMovingAverage>6.3535</FiftydayMovingAverage>
+            <TwoHundreddayMovingAverage>12.9559</TwoHundreddayMovingAverage>
+            <ChangeFromTwoHundreddayMovingAverage>-6.2959</ChangeFromTwoHundreddayMovingAverage>
+            <PercentChangeFromTwoHundreddayMovingAverage>-48.59%</PercentChangeFromTwoHundreddayMovingAverage>
+            <ChangeFromFiftydayMovingAverage>+0.3065</ChangeFromFiftydayMovingAverage>
+            <PercentChangeFromFiftydayMovingAverage>+4.82%</PercentChangeFromFiftydayMovingAverage>
+            <Name>VelocityShares Da</Name>
+            <Notes/>
+            <Open/>
+            <PreviousClose>6.66</PreviousClose>
+            <PricePaid/>
+            <ChangeinPercent>0.00%</ChangeinPercent>
+            <PriceSales/>
+            <PriceBook/>
+            <ExDividendDate/>
+            <PERatio/>
+            <DividendPayDate/>
+            <PERatioRealtime/>
+            <PEGRatio/>
+            <PriceEPSEstimateCurrentYear/>
+            <PriceEPSEstimateNextYear/>
+            <Symbol>XIV</Symbol>
+            <SharesOwned/>
+            <ShortRatio/>
+            <LastTradeTime>4:00pm</LastTradeTime>
+            <TickerTrend>&amp;nbsp;======&amp;nbsp;</TickerTrend>
+            <OneyrTargetPrice/>
+            <Volume>400</Volume>
+            <HoldingsValue/>
+            <HoldingsValueRealtime/>
+            <YearRange>5.11 - 19.36</YearRange>
+            <DaysValueChange>- - 0.00%</DaysValueChange>
+            <DaysValueChangeRealtime>N/A - N/A</DaysValueChangeRealtime>
+            <StockExchange>PCX</StockExchange>
+            <DividendYield/>
+            <PercentChange>0.00%</PercentChange>
+        </quote>
+        <quote symbol="XLB">
+            <Ask>37.11</Ask>
+            <AverageDailyVolume>17248400</AverageDailyVolume>
+            <Bid>31.18</Bid>
+            <AskRealtime>37.11</AskRealtime>
+            <BidRealtime>31.18</BidRealtime>
+            <BookValue>0.00</BookValue>
+            <Change_PercentChange>0.00 - 0.00%</Change_PercentChange>
+            <Change>0.00</Change>
+            <Commission/>
+            <ChangeRealtime>0.00</ChangeRealtime>
+            <AfterHoursChangeRealtime>N/A - N/A</AfterHoursChangeRealtime>
+            <DividendShare>0.815</DividendShare>
+            <LastTradeDate>10/24/2011</LastTradeDate>
+            <TradeDate/>
+            <EarningsShare>0.00</EarningsShare>
+            <ErrorIndicationreturnedforsymbolchangedinvalid/>
+            <EPSEstimateCurrentYear>0.00</EPSEstimateCurrentYear>
+            <EPSEstimateNextYear>0.00</EPSEstimateNextYear>
+            <EPSEstimateNextQuarter>0.00</EPSEstimateNextQuarter>
+            <DaysLow/>
+            <DaysHigh/>
+            <YearLow>28.53</YearLow>
+            <YearHigh>41.28</YearHigh>
+            <HoldingsGainPercent>- - -</HoldingsGainPercent>
+            <AnnualizedGain/>
+            <HoldingsGain/>
+            <HoldingsGainPercentRealtime>N/A - N/A</HoldingsGainPercentRealtime>
+            <HoldingsGainRealtime/>
+            <MoreInfo>cn</MoreInfo>
+            <OrderBookRealtime/>
+            <MarketCapitalization/>
+            <MarketCapRealtime/>
+            <EBITDA>0</EBITDA>
+            <ChangeFromYearLow>+5.64</ChangeFromYearLow>
+            <PercentChangeFromYearLow>+19.77%</PercentChangeFromYearLow>
+            <LastTradeRealtimeWithTime>N/A - &lt;b&gt;34.17&lt;/b&gt;</LastTradeRealtimeWithTime>
+            <ChangePercentRealtime>N/A - 0.00%</ChangePercentRealtime>
+            <ChangeFromYearHigh>-7.11</ChangeFromYearHigh>
+            <PercebtChangeFromYearHigh>-17.22%</PercebtChangeFromYearHigh>
+            <LastTradeWithTime>Oct 24 - &lt;b&gt;34.17&lt;/b&gt;</LastTradeWithTime>
+            <LastTradePriceOnly>34.17</LastTradePriceOnly>
+            <HighLimit/>
+            <LowLimit/>
+            <DaysRange>N/A - N/A</DaysRange>
+            <DaysRangeRealtime>N/A - N/A</DaysRangeRealtime>
+            <FiftydayMovingAverage>32.3557</FiftydayMovingAverage>
+            <TwoHundreddayMovingAverage>36.4824</TwoHundreddayMovingAverage>
+            <ChangeFromTwoHundreddayMovingAverage>-2.3124</ChangeFromTwoHundreddayMovingAverage>
+            <PercentChangeFromTwoHundreddayMovingAverage>-6.34%</PercentChangeFromTwoHundreddayMovingAverage>
+            <ChangeFromFiftydayMovingAverage>+1.8143</ChangeFromFiftydayMovingAverage>
+            <PercentChangeFromFiftydayMovingAverage>+5.61%</PercentChangeFromFiftydayMovingAverage>
+            <Name>Materials Select</Name>
+            <Notes/>
+            <Open/>
+            <PreviousClose>34.17</PreviousClose>
+            <PricePaid/>
+            <ChangeinPercent>0.00%</ChangeinPercent>
+            <PriceSales/>
+            <PriceBook/>
+            <ExDividendDate>Sep 16</ExDividendDate>
+            <PERatio/>
+            <DividendPayDate>Sep 28</DividendPayDate>
+            <PERatioRealtime/>
+            <PEGRatio/>
+            <PriceEPSEstimateCurrentYear/>
+            <PriceEPSEstimateNextYear/>
+            <Symbol>XLB</Symbol>
+            <SharesOwned/>
+            <ShortRatio/>
+            <LastTradeTime>4:00pm</LastTradeTime>
+            <TickerTrend>&amp;nbsp;======&amp;nbsp;</TickerTrend>
+            <OneyrTargetPrice/>
+            <Volume>0</Volume>
+            <HoldingsValue/>
+            <HoldingsValueRealtime/>
+            <YearRange>28.53 - 41.28</YearRange>
+            <DaysValueChange>- - 0.00%</DaysValueChange>
+            <DaysValueChangeRealtime>N/A - N/A</DaysValueChangeRealtime>
+            <StockExchange>PCX</StockExchange>
+            <DividendYield>2.39</DividendYield>
+            <PercentChange>0.00%</PercentChange>
+        </quote>
+        <quote symbol="XLE">
+            <Ask>72.69</Ask>
+            <AverageDailyVolume>27730100</AverageDailyVolume>
+            <Bid>50.01</Bid>
+            <AskRealtime>72.69</AskRealtime>
+            <BidRealtime>50.01</BidRealtime>
+            <BookValue>0.00</BookValue>
+            <Change_PercentChange>0.00 - 0.00%</Change_PercentChange>
+            <Change>0.00</Change>
+            <Commission/>
+            <ChangeRealtime>0.00</ChangeRealtime>
+            <AfterHoursChangeRealtime>N/A - N/A</AfterHoursChangeRealtime>
+            <DividendShare>1.077</DividendShare>
+            <LastTradeDate>10/24/2011</LastTradeDate>
+            <TradeDate/>
+            <EarningsShare>0.00</EarningsShare>
+            <ErrorIndicationreturnedforsymbolchangedinvalid/>
+            <EPSEstimateCurrentYear>0.00</EPSEstimateCurrentYear>
+            <EPSEstimateNextYear>0.00</EPSEstimateNextYear>
+            <EPSEstimateNextQuarter>0.00</EPSEstimateNextQuarter>
+            <DaysLow/>
+            <DaysHigh/>
+            <YearLow>55.68</YearLow>
+            <YearHigh>80.97</YearHigh>
+            <HoldingsGainPercent>- - -</HoldingsGainPercent>
+            <AnnualizedGain/>
+            <HoldingsGain/>
+            <HoldingsGainPercentRealtime>N/A - N/A</HoldingsGainPercentRealtime>
+            <HoldingsGainRealtime/>
+            <MoreInfo>cn</MoreInfo>
+            <OrderBookRealtime/>
+            <MarketCapitalization/>
+            <MarketCapRealtime/>
+            <EBITDA>0</EBITDA>
+            <ChangeFromYearLow>+13.77</ChangeFromYearLow>
+            <PercentChangeFromYearLow>+24.73%</PercentChangeFromYearLow>
+            <LastTradeRealtimeWithTime>N/A - &lt;b&gt;69.45&lt;/b&gt;</LastTradeRealtimeWithTime>
+            <ChangePercentRealtime>N/A - 0.00%</ChangePercentRealtime>
+            <ChangeFromYearHigh>-11.52</ChangeFromYearHigh>
+            <PercebtChangeFromYearHigh>-14.23%</PercebtChangeFromYearHigh>
+            <LastTradeWithTime>Oct 24 - &lt;b&gt;69.45&lt;/b&gt;</LastTradeWithTime>
+            <LastTradePriceOnly>69.45</LastTradePriceOnly>
+            <HighLimit/>
+            <LowLimit/>
+            <DaysRange>N/A - N/A</DaysRange>
+            <DaysRangeRealtime>N/A - N/A</DaysRangeRealtime>
+            <FiftydayMovingAverage>63.8737</FiftydayMovingAverage>
+            <TwoHundreddayMovingAverage>71.2418</TwoHundreddayMovingAverage>
+            <ChangeFromTwoHundreddayMovingAverage>-1.7918</ChangeFromTwoHundreddayMovingAverage>
+            <PercentChangeFromTwoHundreddayMovingAverage>-2.52%</PercentChangeFromTwoHundreddayMovingAverage>
+            <ChangeFromFiftydayMovingAverage>+5.5763</ChangeFromFiftydayMovingAverage>
+            <PercentChangeFromFiftydayMovingAverage>+8.73%</PercentChangeFromFiftydayMovingAverage>
+            <Name>SPDR Select Secto</Name>
+            <Notes/>
+            <Open/>
+            <PreviousClose>69.45</PreviousClose>
+            <PricePaid/>
+            <ChangeinPercent>0.00%</ChangeinPercent>
+            <PriceSales/>
+            <PriceBook/>
+            <ExDividendDate>Sep 16</ExDividendDate>
+            <PERatio/>
+            <DividendPayDate>Sep 28</DividendPayDate>
+            <PERatioRealtime/>
+            <PEGRatio/>
+            <PriceEPSEstimateCurrentYear/>
+            <PriceEPSEstimateNextYear/>
+            <Symbol>XLE</Symbol>
+            <SharesOwned/>
+            <ShortRatio/>
+            <LastTradeTime>4:00pm</LastTradeTime>
+            <TickerTrend>&amp;nbsp;======&amp;nbsp;</TickerTrend>
+            <OneyrTargetPrice/>
+            <Volume>0</Volume>
+            <HoldingsValue/>
+            <HoldingsValueRealtime/>
+            <YearRange>55.68 - 80.97</YearRange>
+            <DaysValueChange>- - 0.00%</DaysValueChange>
+            <DaysValueChangeRealtime>N/A - N/A</DaysValueChangeRealtime>
+            <StockExchange>PCX</StockExchange>
+            <DividendYield>1.55</DividendYield>
+            <PercentChange>0.00%</PercentChange>
+        </quote>
+        <quote symbol="XLF">
+            <Ask>13.50</Ask>
+            <AverageDailyVolume>126447000</AverageDailyVolume>
+            <Bid>13.16</Bid>
+            <AskRealtime>13.50</AskRealtime>
+            <BidRealtime>13.16</BidRealtime>
+            <BookValue>0.00</BookValue>
+            <Change_PercentChange>0.00 - 0.00%</Change_PercentChange>
+            <Change>0.00</Change>
+            <Commission/>
+            <ChangeRealtime>0.00</ChangeRealtime>
+            <AfterHoursChangeRealtime>N/A - N/A</AfterHoursChangeRealtime>
+            <DividendShare>0.201</DividendShare>
+            <LastTradeDate>10/24/2011</LastTradeDate>
+            <TradeDate/>
+            <EarningsShare>0.00</EarningsShare>
+            <ErrorIndicationreturnedforsymbolchangedinvalid/>
+            <EPSEstimateCurrentYear>0.00</EPSEstimateCurrentYear>
+            <EPSEstimateNextYear>0.00</EPSEstimateNextYear>
+            <EPSEstimateNextQuarter>0.00</EPSEstimateNextQuarter>
+            <DaysLow/>
+            <DaysHigh/>
+            <YearLow>11.26</YearLow>
+            <YearHigh>17.20</YearHigh>
+            <HoldingsGainPercent>- - -</HoldingsGainPercent>
+            <AnnualizedGain/>
+            <HoldingsGain/>
+            <HoldingsGainPercentRealtime>N/A - N/A</HoldingsGainPercentRealtime>
+            <HoldingsGainRealtime/>
+            <MoreInfo>cn</MoreInfo>
+            <OrderBookRealtime/>
+            <MarketCapitalization/>
+            <MarketCapRealtime/>
+            <EBITDA>0</EBITDA>
+            <ChangeFromYearLow>+2.16</ChangeFromYearLow>
+            <PercentChangeFromYearLow>+19.18%</PercentChangeFromYearLow>
+            <LastTradeRealtimeWithTime>N/A - &lt;b&gt;13.42&lt;/b&gt;</LastTradeRealtimeWithTime>
+            <ChangePercentRealtime>N/A - 0.00%</ChangePercentRealtime>
+            <ChangeFromYearHigh>-3.78</ChangeFromYearHigh>
+            <PercebtChangeFromYearHigh>-21.98%</PercebtChangeFromYearHigh>
+            <LastTradeWithTime>Oct 24 - &lt;b&gt;13.42&lt;/b&gt;</LastTradeWithTime>
+            <LastTradePriceOnly>13.42</LastTradePriceOnly>
+            <HighLimit/>
+            <LowLimit/>
+            <DaysRange>N/A - N/A</DaysRange>
+            <DaysRangeRealtime>N/A - N/A</DaysRangeRealtime>
+            <FiftydayMovingAverage>12.3606</FiftydayMovingAverage>
+            <TwoHundreddayMovingAverage>14.2558</TwoHundreddayMovingAverage>
+            <ChangeFromTwoHundreddayMovingAverage>-0.8358</ChangeFromTwoHundreddayMovingAverage>
+            <PercentChangeFromTwoHundreddayMovingAverage>-5.86%</PercentChangeFromTwoHundreddayMovingAverage>
+            <ChangeFromFiftydayMovingAverage>+1.0594</ChangeFromFiftydayMovingAverage>
+            <PercentChangeFromFiftydayMovingAverage>+8.57%</PercentChangeFromFiftydayMovingAverage>
+            <Name>SPDR Select Secto</Name>
+            <Notes/>
+            <Open/>
+            <PreviousClose>13.42</PreviousClose>
+            <PricePaid/>
+            <ChangeinPercent>0.00%</ChangeinPercent>
+            <PriceSales/>
+            <PriceBook/>
+            <ExDividendDate>Sep 16</ExDividendDate>
+            <PERatio/>
+            <DividendPayDate>Sep 28</DividendPayDate>
+            <PERatioRealtime/>
+            <PEGRatio/>
+            <PriceEPSEstimateCurrentYear/>
+            <PriceEPSEstimateNextYear/>
+            <Symbol>XLF</Symbol>
+            <SharesOwned/>
+            <ShortRatio/>
+            <LastTradeTime>4:00pm</LastTradeTime>
+            <TickerTrend>&amp;nbsp;======&amp;nbsp;</TickerTrend>
+            <OneyrTargetPrice/>
+            <Volume>0</Volume>
+            <HoldingsValue/>
+            <HoldingsValueRealtime/>
+            <YearRange>11.26 - 17.20</YearRange>
+            <DaysValueChange>- - 0.00%</DaysValueChange>
+            <DaysValueChangeRealtime>N/A - N/A</DaysValueChangeRealtime>
+            <StockExchange>PCX</StockExchange>
+            <DividendYield>1.50</DividendYield>
+            <PercentChange>0.00%</PercentChange>
+        </quote>
+        <quote symbol="XLG">
+            <Ask>96.21</Ask>
+            <AverageDailyVolume>51697</AverageDailyVolume>
+            <Bid>84.07</Bid>
+            <AskRealtime>96.21</AskRealtime>
+            <BidRealtime>84.07</BidRealtime>
+            <BookValue>0.00</BookValue>
+            <Change_PercentChange>0.00 - 0.00%</Change_PercentChange>
+            <Change>0.00</Change>
+            <Commission/>
+            <ChangeRealtime>0.00</ChangeRealtime>
+            <AfterHoursChangeRealtime>N/A - N/A</AfterHoursChangeRealtime>
+            <DividendShare>1.803</DividendShare>
+            <LastTradeDate>10/24/2011</LastTradeDate>
+            <TradeDate/>
+            <EarningsShare>0.00</EarningsShare>
+            <ErrorIndicationreturnedforsymbolchangedinvalid/>
+            <EPSEstimateCurrentYear>0.00</EPSEstimateCurrentYear>
+            <EPSEstimateNextYear>0.00</EPSEstimateNextYear>
+            <EPSEstimateNextQuarter>0.00</EPSEstimateNextQuarter>
+            <DaysLow/>
+            <DaysHigh/>
+            <YearLow>79.85</YearLow>
+            <YearHigh>96.34</YearHigh>
+            <HoldingsGainPercent>- - -</HoldingsGainPercent>
+            <AnnualizedGain/>
+            <HoldingsGain/>
+            <HoldingsGainPercentRealtime>N/A - N/A</HoldingsGainPercentRealtime>
+            <HoldingsGainRealtime/>
+            <MoreInfo>cn</MoreInfo>
+            <OrderBookRealtime/>
+            <MarketCapitalization/>
+            <MarketCapRealtime/>
+            <EBITDA>0</EBITDA>
+            <ChangeFromYearLow>+10.40</ChangeFromYearLow>
+            <PercentChangeFromYearLow>+13.02%</PercentChangeFromYearLow>
+            <LastTradeRealtimeWithTime>N/A - &lt;b&gt;90.25&lt;/b&gt;</LastTradeRealtimeWithTime>
+            <ChangePercentRealtime>N/A - 0.00%</ChangePercentRealtime>
+            <ChangeFromYearHigh>-6.09</ChangeFromYearHigh>
+            <PercebtChangeFromYearHigh>-6.32%</PercebtChangeFromYearHigh>
+            <LastTradeWithTime>Oct 24 - &lt;b&gt;90.25&lt;/b&gt;</LastTradeWithTime>
+            <LastTradePriceOnly>90.25</LastTradePriceOnly>
+            <HighLimit/>
+            <LowLimit/>
+            <DaysRange>N/A - N/A</DaysRange>
+            <DaysRangeRealtime>N/A - N/A</DaysRangeRealtime>
+            <FiftydayMovingAverage>85.2949</FiftydayMovingAverage>
+            <TwoHundreddayMovingAverage>89.6488</TwoHundreddayMovingAverage>
+            <ChangeFromTwoHundreddayMovingAverage>+0.6012</ChangeFromTwoHundreddayMovingAverage>
+            <PercentChangeFromTwoHundreddayMovingAverage>+0.67%</PercentChangeFromTwoHundreddayMovingAverage>
+            <ChangeFromFiftydayMovingAverage>+4.9551</ChangeFromFiftydayMovingAverage>
+            <PercentChangeFromFiftydayMovingAverage>+5.81%</PercentChangeFromFiftydayMovingAverage>
+            <Name>Rydex Russell Top</Name>
+            <Notes/>
+            <Open/>
+            <PreviousClose>90.25</PreviousClose>
+            <PricePaid/>
+            <ChangeinPercent>0.00%</ChangeinPercent>
+            <PriceSales/>
+            <PriceBook/>
+            <ExDividendDate>Sep 16</ExDividendDate>
+            <PERatio/>
+            <DividendPayDate>Sep 30</DividendPayDate>
+            <PERatioRealtime/>
+            <PEGRatio/>
+            <PriceEPSEstimateCurrentYear/>
+            <PriceEPSEstimateNextYear/>
+            <Symbol>XLG</Symbol>
+            <SharesOwned/>
+            <ShortRatio/>
+            <LastTradeTime>4:00pm</LastTradeTime>
+            <TickerTrend>&amp;nbsp;======&amp;nbsp;</TickerTrend>
+            <OneyrTargetPrice/>
+            <Volume>0</Volume>
+            <HoldingsValue/>
+            <HoldingsValueRealtime/>
+            <YearRange>79.85 - 96.34</YearRange>
+            <DaysValueChange>- - 0.00%</DaysValueChange>
+            <DaysValueChangeRealtime>N/A - N/A</DaysValueChangeRealtime>
+            <StockExchange>PCX</StockExchange>
+            <DividendYield>2.00</DividendYield>
+            <PercentChange>0.00%</PercentChange>
+        </quote>
+        <quote symbol="XLI">
+            <Ask>33.73</Ask>
+            <AverageDailyVolume>30940800</AverageDailyVolume>
+            <Bid>25.50</Bid>
+            <AskRealtime>33.73</AskRealtime>
+            <BidRealtime>25.50</BidRealtime>
+            <BookValue>0.00</BookValue>
+            <Change_PercentChange>0.00 - 0.00%</Change_PercentChange>
+            <Change>0.00</Change>
+            <Commission/>
+            <ChangeRealtime>0.00</ChangeRealtime>
+            <AfterHoursChangeRealtime>N/A - N/A</AfterHoursChangeRealtime>
+            <DividendShare>0.687</DividendShare>
+            <LastTradeDate>10/24/2011</LastTradeDate>
+            <TradeDate/>
+            <EarningsShare>0.00</EarningsShare>
+            <ErrorIndicationreturnedforsymbolchangedinvalid/>
+            <EPSEstimateCurrentYear>0.00</EPSEstimateCurrentYear>
+            <EPSEstimateNextYear>0.00</EPSEstimateNextYear>
+            <EPSEstimateNextQuarter>0.00</EPSEstimateNextQuarter>
+            <DaysLow/>
+            <DaysHigh/>
+            <YearLow>28.36</YearLow>
+            <YearHigh>38.98</YearHigh>
+            <HoldingsGainPercent>- - -</HoldingsGainPercent>
+            <AnnualizedGain/>
+            <HoldingsGain/>
+            <HoldingsGainPercentRealtime>N/A - N/A</HoldingsGainPercentRealtime>
+            <HoldingsGainRealtime/>
+            <MoreInfo>cn</MoreInfo>
+            <OrderBookRealtime/>
+            <MarketCapitalization/>
+            <MarketCapRealtime/>
+            <EBITDA>0</EBITDA>
+            <ChangeFromYearLow>+4.92</ChangeFromYearLow>
+            <PercentChangeFromYearLow>+17.35%</PercentChangeFromYearLow>
+            <LastTradeRealtimeWithTime>N/A - &lt;b&gt;33.28&lt;/b&gt;</LastTradeRealtimeWithTime>
+            <ChangePercentRealtime>N/A - 0.00%</ChangePercentRealtime>
+            <ChangeFromYearHigh>-5.70</ChangeFromYearHigh>
+            <PercebtChangeFromYearHigh>-14.62%</PercebtChangeFromYearHigh>
+            <LastTradeWithTime>Oct 24 - &lt;b&gt;33.28&lt;/b&gt;</LastTradeWithTime>
+            <LastTradePriceOnly>33.28</LastTradePriceOnly>
+            <HighLimit/>
+            <LowLimit/>
+            <DaysRange>N/A - N/A</DaysRange>
+            <DaysRangeRealtime>N/A - N/A</DaysRangeRealtime>
+            <FiftydayMovingAverage>30.884</FiftydayMovingAverage>
+            <TwoHundreddayMovingAverage>34.3846</TwoHundreddayMovingAverage>
+            <ChangeFromTwoHundreddayMovingAverage>-1.1046</ChangeFromTwoHundreddayMovingAverage>
+            <PercentChangeFromTwoHundreddayMovingAverage>-3.21%</PercentChangeFromTwoHundreddayMovingAverage>
+            <ChangeFromFiftydayMovingAverage>+2.396</ChangeFromFiftydayMovingAverage>
+            <PercentChangeFromFiftydayMovingAverage>+7.76%</PercentChangeFromFiftydayMovingAverage>
+            <Name>SPDR Select Secto</Name>
+            <Notes/>
+            <Open/>
+            <PreviousClose>33.28</PreviousClose>
+            <PricePaid/>
+            <ChangeinPercent>0.00%</ChangeinPercent>
+            <PriceSales/>
+            <PriceBook/>
+            <ExDividendDate>Sep 16</ExDividendDate>
+            <PERatio/>
+            <DividendPayDate>Sep 28</DividendPayDate>
+            <PERatioRealtime/>
+            <PEGRatio/>
+            <PriceEPSEstimateCurrentYear/>
+            <PriceEPSEstimateNextYear/>
+            <Symbol>XLI</Symbol>
+            <SharesOwned/>
+            <ShortRatio/>
+            <LastTradeTime>4:00pm</LastTradeTime>
+            <TickerTrend>&amp;nbsp;======&amp;nbsp;</TickerTrend>
+            <OneyrTargetPrice/>
+            <Volume>0</Volume>
+            <HoldingsValue/>
+            <HoldingsValueRealtime/>
+            <YearRange>28.36 - 38.98</YearRange>
+            <DaysValueChange>- - 0.00%</DaysValueChange>
+            <DaysValueChangeRealtime>N/A - N/A</DaysValueChangeRealtime>
+            <StockExchange>PCX</StockExchange>
+            <DividendYield>2.06</DividendYield>
+            <PercentChange>0.00%</PercentChange>
+        </quote>
+        <quote symbol="XLK">
+            <Ask>27.67</Ask>
+            <AverageDailyVolume>18183600</AverageDailyVolume>
+            <Bid>23.65</Bid>
+            <AskRealtime>27.67</AskRealtime>
+            <BidRealtime>23.65</BidRealtime>
+            <BookValue>0.00</BookValue>
+            <Change_PercentChange>0.00 - 0.00%</Change_PercentChange>
+            <Change>0.00</Change>
+            <Commission/>
+            <ChangeRealtime>0.00</ChangeRealtime>
+            <AfterHoursChangeRealtime>N/A - N/A</AfterHoursChangeRealtime>
+            <DividendShare>0.366</DividendShare>
+            <LastTradeDate>10/24/2011</LastTradeDate>
+            <TradeDate/>
+            <EarningsShare>0.00</EarningsShare>
+            <ErrorIndicationreturnedforsymbolchangedinvalid/>
+            <EPSEstimateCurrentYear>0.00</EPSEstimateCurrentYear>
+            <EPSEstimateNextYear>0.00</EPSEstimateNextYear>
+            <EPSEstimateNextQuarter>0.00</EPSEstimateNextQuarter>
+            <DaysLow/>
+            <DaysHigh/>
+            <YearLow>22.47</YearLow>
+            <YearHigh>27.09</YearHigh>
+            <HoldingsGainPercent>- - -</HoldingsGainPercent>
+            <AnnualizedGain/>
+            <HoldingsGain/>
+            <HoldingsGainPercentRealtime>N/A - N/A</HoldingsGainPercentRealtime>
+            <HoldingsGainRealtime/>
+            <MoreInfo>cn</MoreInfo>
+            <OrderBookRealtime/>
+            <MarketCapitalization/>
+            <MarketCapRealtime/>
+            <EBITDA>0</EBITDA>
+            <ChangeFromYearLow>+3.46</ChangeFromYearLow>
+            <PercentChangeFromYearLow>+15.40%</PercentChangeFromYearLow>
+            <LastTradeRealtimeWithTime>N/A - &lt;b&gt;25.93&lt;/b&gt;</LastTradeRealtimeWithTime>
+            <ChangePercentRealtime>N/A - 0.00%</ChangePercentRealtime>
+            <ChangeFromYearHigh>-1.16</ChangeFromYearHigh>
+            <PercebtChangeFromYearHigh>-4.28%</PercebtChangeFromYearHigh>
+            <LastTradeWithTime>Oct 24 - &lt;b&gt;25.93&lt;/b&gt;</LastTradeWithTime>
+            <LastTradePriceOnly>25.93</LastTradePriceOnly>
+            <HighLimit/>
+            <LowLimit/>
+            <DaysRange>N/A - N/A</DaysRange>
+            <DaysRangeRealtime>N/A - N/A</DaysRangeRealtime>
+            <FiftydayMovingAverage>24.5677</FiftydayMovingAverage>
+            <TwoHundreddayMovingAverage>25.2248</TwoHundreddayMovingAverage>
+            <ChangeFromTwoHundreddayMovingAverage>+0.7052</ChangeFromTwoHundreddayMovingAverage>
+            <PercentChangeFromTwoHundreddayMovingAverage>+2.80%</PercentChangeFromTwoHundreddayMovingAverage>
+            <ChangeFromFiftydayMovingAverage>+1.3623</ChangeFromFiftydayMovingAverage>
+            <PercentChangeFromFiftydayMovingAverage>+5.55%</PercentChangeFromFiftydayMovingAverage>
+            <Name>SPDR Select Secto</Name>
+            <Notes/>
+            <Open/>
+            <PreviousClose>25.93</PreviousClose>
+            <PricePaid/>
+            <ChangeinPercent>0.00%</ChangeinPercent>
+            <PriceSales/>
+            <PriceBook/>
+            <ExDividendDate>Sep 16</ExDividendDate>
+            <PERatio/>
+            <DividendPayDate>Sep 28</DividendPayDate>
+            <PERatioRealtime/>
+            <PEGRatio/>
+            <PriceEPSEstimateCurrentYear/>
+            <PriceEPSEstimateNextYear/>
+            <Symbol>XLK</Symbol>
+            <SharesOwned/>
+            <ShortRatio/>
+            <LastTradeTime>4:00pm</LastTradeTime>
+            <TickerTrend>&amp;nbsp;======&amp;nbsp;</TickerTrend>
+            <OneyrTargetPrice/>
+            <Volume>0</Volume>
+            <HoldingsValue/>
+            <HoldingsValueRealtime/>
+            <YearRange>22.47 - 27.09</YearRange>
+            <DaysValueChange>- - 0.00%</DaysValueChange>
+            <DaysValueChangeRealtime>N/A - N/A</DaysValueChangeRealtime>
+            <StockExchange>PCX</StockExchange>
+            <DividendYield>1.41</DividendYield>
+            <PercentChange>0.00%</PercentChange>
+        </quote>
+    </results>
+</query>

@@ -24,7 +24,7 @@ public class FundDao extends DAOBase {
     }
 
     @Override
-    protected void registerObjects(ObjectifyFactory ofyFactory) {
+    public void registerObjects(ObjectifyFactory ofyFactory) {
         objectsRegistered = true;
         ofyFactory.register(Fund.class);
         ofyFactory.getConversions().add(new MyTypeConverters());

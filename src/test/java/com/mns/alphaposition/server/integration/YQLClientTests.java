@@ -11,6 +11,7 @@ import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 import org.junit.Test;
 
+import java.util.Arrays;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
@@ -24,7 +25,7 @@ public class YQLClientTests {
     private final HistoricQuoteLoaderServlet historicQuoteLoaderServlet =
             new HistoricQuoteLoaderServlet(fundDao, quoteDao);
 
-    private final QuoteFetcherJob quoteFetcherJob = new QuoteFetcherJob();
+    private final QuoteFetcherJob job = new QuoteFetcherJob();
 
     @Test
     public void testLocalDateFormatter() {
@@ -47,8 +48,9 @@ public class YQLClientTests {
     @Test
     public void testYqlRealtimeDataGet() {
 
-        Quote quote = quoteFetcherJob.getRealtimeQuote("BHH");
-        assertNull(quote.getClose());
+        List<String> symbols = Arrays.asList("BHH");
+        List<Quote> quotes = job.getQuotes(symbols);
+        assertNull(quotes.get(0).getClose());
 
     }
 

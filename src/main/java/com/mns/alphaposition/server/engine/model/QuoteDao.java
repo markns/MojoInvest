@@ -29,7 +29,7 @@ public class QuoteDao extends DAOBase {
 
 
     @Override
-    protected void registerObjects(ObjectifyFactory ofyFactory) {
+    public void registerObjects(ObjectifyFactory ofyFactory) {
         objectsRegistered = true;
         ofyFactory.register(Quote.class);
         ofyFactory.getConversions().add(new MyTypeConverters());
