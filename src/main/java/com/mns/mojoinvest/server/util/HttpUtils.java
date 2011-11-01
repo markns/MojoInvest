@@ -17,7 +17,7 @@ public class HttpUtils {
         try {
             URLConnection connection = new URL(url + "?" + query).openConnection();
             connection.setRequestProperty("Accept-Charset", charset);
-            connection.setReadTimeout(10);
+//            connection.setReadTimeout(10);
             InputStream response = connection.getInputStream();
             BufferedReader reader = new BufferedReader(new InputStreamReader(response));
             StringBuilder sb = new StringBuilder();

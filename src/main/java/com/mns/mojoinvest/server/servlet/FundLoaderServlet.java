@@ -60,7 +60,7 @@ public class FundLoaderServlet extends HttpServlet {
         return funds;
     }
 
-    private List<FundLite> scrapeFundList() throws IOException {
+    public List<FundLite> scrapeFundList() throws IOException {
         String html = HttpUtils.fetch("http://moneycentral.msn.com/investor/partsub/funds/etfperformancetracker.aspx",
                 "tab=mkt&show=all");
         List<FundLite> fundLites = null;
@@ -81,7 +81,7 @@ public class FundLoaderServlet extends HttpServlet {
         }
     }
 
-    public List<FundLite> scrapeList(String html) throws IOException {
+    private List<FundLite> scrapeList(String html) throws IOException {
         Document doc = Jsoup.parse(html);
         Element table = doc.getElementById("ctl00_ctl00_ctl00_ctl00_HtmlBody_HtmlBody_HtmlBody_Column1_dgETF");
         Element tbody = table.getElementsByTag("tbody").get(0);
@@ -99,7 +99,7 @@ public class FundLoaderServlet extends HttpServlet {
         return data;
     }
 
-    public void scrapeDetails(String html, FundLite fundLite) throws IOException {
+    private void scrapeDetails(String html, FundLite fundLite) throws IOException {
         Document doc = Jsoup.parse(html);
         for (Element element : doc.select("span")) {
             if ("QUICK STATS".equals(element.text())) {
@@ -118,7 +118,7 @@ public class FundLoaderServlet extends HttpServlet {
 
 
 
-    private static class FundLite {
+    public static class FundLite {
         String name;
         String symbol;
         String provider;
@@ -132,6 +132,9 @@ public class FundLoaderServlet extends HttpServlet {
             this.symbol = symbol;
         }
 
+        public String getSymbol() {
+            return symbol;
+        }
         @Override
         public String toString() {
             return name + " " + symbol + " " + provider + " " + category + " " + index + " " + inceptionDate;

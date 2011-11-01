@@ -1,13 +1,10 @@
 <%@ page import="com.google.appengine.tools.pipeline.JobInfo" %>
-<%--<%@ page import="com.google.appengine.tools.pipeline.demo.*" %>--%>
 <%@ page import="com.google.appengine.tools.pipeline.PipelineService" %>
 <%@ page import="com.google.appengine.tools.pipeline.PipelineServiceFactory" %>
 <%@ page import="com.mns.mojoinvest.server.engine.model.Quote" %>
-<%@ page import="com.mns.mojoinvest.server.pipeline.RealtimePipeline.DailyPipeline" %>
+<%@ page import="com.mns.mojoinvest.server.pipeline.DailyPipeline" %>
+<%@ page import="org.joda.time.LocalDate" %>
 <%@ page import="java.util.List" %>
-<%@ page import="com.mns.mojoinvest.server.engine.model.QuoteDao" %>
-<%@ page import="com.googlecode.objectify.ObjectifyService" %>
-<%@ page import="com.mns.mojoinvest.server.engine.model.FundDao" %>
 
 <%!
     private static final String TEXT_PARAM_NAME = "text";
@@ -32,7 +29,7 @@
 </HEAD>
 <BODY>
 
-<H2>Compute letter counts by spanwing a sub-job for each word</H2>
+<%--<H2>Compute letter counts by spanwing a sub-job for each word</H2>--%>
 
 <%
     String text = request.getParameter(TEXT_PARAM_NAME);
@@ -44,16 +41,12 @@
     }
     if (null != text) {
 %>
-<H4>Computing letter counts...</H4>
-<em><%=text%>
-</em>
-
+<H4>Daily pipeline...</H4>
 <p>
 
         <%
   if(null == pipelineId){
-
-    pipelineId = service.startNewPipeline(new DailyPipeline(), text);
+    pipelineId = service.startNewPipeline(new DailyPipeline(), new LocalDate(text));
   }
   JobInfo jobInfo = service.getJobInfo(pipelineId);
   switch(jobInfo.getJobState()){
@@ -124,11 +117,10 @@ Pipeline stopped. An error occurred.
 }// end: if
 else {
 %>
-Enter some text:
 <form method="post">
     <textarea name="<%=TEXT_PARAM_NAME%>" cols=40 rows=6></textarea>
     <br>
-    <input type="submit" value="Compute Letter Count">
+    <input type="submit" value="Run pipeline">
 </form>
 <%
     }

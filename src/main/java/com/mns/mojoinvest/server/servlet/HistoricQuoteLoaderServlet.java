@@ -64,8 +64,10 @@ public class HistoricQuoteLoaderServlet extends HttpServlet {
         LocalDate endDate = dateRange.getEndDate();
         List<String> symbols = parseSymbols(req);
 
-        List<Quote> quotes = getHistoricQuotes(symbols, startDate, endDate);
-        quoteDao.put(quotes);
+        for (String symbol : symbols) {
+            List<Quote> quotes = getHistoricQuotes(symbol, startDate, endDate);
+            quoteDao.put(quotes);
+        }
     }
 
     private List<String> parseSymbols(HttpServletRequest req) {
@@ -81,7 +83,7 @@ public class HistoricQuoteLoaderServlet extends HttpServlet {
         return symbols;
     }
 
-    private List<Quote> getHistoricQuotes(List<String> symbols, LocalDate startDate, LocalDate endDate) {
+    public List<Quote> getHistoricQuotes(List<String> symbols, LocalDate startDate, LocalDate endDate) {
         if (symbols.size() == 1) {
             log.info("Loading quotes for " + symbols.get(0) + " between " + startDate + " and " + endDate);
         } else {
