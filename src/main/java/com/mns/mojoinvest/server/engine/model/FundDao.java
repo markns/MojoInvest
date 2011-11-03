@@ -31,7 +31,7 @@ public class FundDao extends DAOBase {
     }
 
     public List<Fund> list() {
-        Query<Fund> q = ofy().query(Fund.class);
+        Query<Fund> q = ofy().query(Fund.class).filter("active =", true);
         return q.list();
     }
 

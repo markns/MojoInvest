@@ -15,16 +15,25 @@ public class FundUpdaterJob extends Job1<Void, List<Fund>> {
     private static final Logger log = Logger.getLogger(FundUpdaterJob.class.getName());
 
     @Override
-    public Value<Void> run(List<Fund> funds) {
+    public Value<Void> run(List<Fund> current) {
 
         //TODO: Figure out how to inject and serialize DAOs
         ObjectifyFactory factory = ObjectifyService.factory();
-        FundDao fundDao = new FundDao(factory);
-        fundDao.registerObjects(factory);
+        FundDao dao = new FundDao(factory);
+        dao.registerObjects(factory);
         //
 
-        log.info("Updating " + funds.size() + " funds");
-        fundDao.put(funds);
+        List<Fund> existing = dao.list();
+        //Subtract set of current funds from existing to find inactive.
+        existing.removeAll(current);
+        for (Fund fund : existing) {
+            fund.setActive(false);
+        }
+        log.info("Setting " + existing.size() + " funds as inactive: " + existing);
+        dao.put(existing);
+
+        log.info("Updating " + current.size() + " funds");
+        dao.put(current);
 
         return null;
     }

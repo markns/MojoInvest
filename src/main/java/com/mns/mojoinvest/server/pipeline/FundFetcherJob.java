@@ -46,7 +46,7 @@ public class FundFetcherJob extends Job0<List<Fund>> {
                 fundLists.add(futureCall(new FundFetcherBatchJob(), immediate(clone)));
                 batch.clear();
 
-                if (++c == 3)
+                if (++c == 2)
                     break;
             }
         }
