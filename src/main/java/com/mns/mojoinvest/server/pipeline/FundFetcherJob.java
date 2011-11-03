@@ -43,7 +43,7 @@ public class FundFetcherJob extends Job0<List<Fund>> {
             batch.add(symbol);
             if (batch.size() == BATCH_SIZE) {
                 List<String> clone = new ArrayList<String>(batch);
-                fundLists.add(futureCall(new FundFetcherBatch(), immediate(clone)));
+                fundLists.add(futureCall(new FundFetcherBatchJob(), immediate(clone)));
                 batch.clear();
 
                 if (++c == 3)
@@ -51,10 +51,10 @@ public class FundFetcherJob extends Job0<List<Fund>> {
             }
         }
         if (batch.size() > 0) {
-            fundLists.add(futureCall(new FundFetcherBatch(), immediate(batch)));
+            fundLists.add(futureCall(new FundFetcherBatchJob(), immediate(batch)));
         }
 
-        return futureCall(new MergeFundList(), futureList(fundLists));
+        return futureCall(new MergeFundListJob(), futureList(fundLists));
     }
 
     private String fetchAllFundsHtml() {
@@ -88,9 +88,9 @@ public class FundFetcherJob extends Job0<List<Fund>> {
     }
 
 
-    public static class FundFetcherBatch extends Job1<List<Fund>, List<String>> {
+    public static class FundFetcherBatchJob extends Job1<List<Fund>, List<String>> {
 
-        private static final Logger log = Logger.getLogger(FundFetcherBatch.class.getName());
+        private static final Logger log = Logger.getLogger(FundFetcherBatchJob.class.getName());
 
         @Override
         public Value<List<Fund>> run(List<String> symbols) {
@@ -105,7 +105,7 @@ public class FundFetcherJob extends Job0<List<Fund>> {
     }
 
 
-    private static class MergeFundList extends Job1<List<Fund>, List<List<Fund>>> {
+    private static class MergeFundListJob extends Job1<List<Fund>, List<List<Fund>>> {
 
         @Override
         public Value<List<Fund>> run(List<List<Fund>> lists) {
