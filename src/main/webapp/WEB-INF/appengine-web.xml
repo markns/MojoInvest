@@ -10,4 +10,7 @@
         <property name="java.util.logging.config.file" value="WEB-INF/logging.properties"/>
     </system-properties>
 
+    <!--TODO: Are we?-->
+    <threadsafe>true</threadsafe>
+
 </appengine-web-app>

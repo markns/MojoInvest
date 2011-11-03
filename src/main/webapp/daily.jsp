@@ -29,7 +29,7 @@
 </HEAD>
 <BODY>
 
-<%--<H2>Compute letter counts by spanwing a sub-job for each word</H2>--%>
+<H2>Compute letter counts by spanwing a sub-job for each word</H2>
 
 <%
     String text = request.getParameter(TEXT_PARAM_NAME);

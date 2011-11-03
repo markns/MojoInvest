@@ -4,11 +4,12 @@ import com.googlecode.objectify.annotation.Cached;
 import org.joda.time.LocalDate;
 
 import javax.persistence.Id;
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
 
 @Cached
-public class Fund implements Comparable<Fund> {
+public class Fund implements Serializable, Comparable<Fund> {
 
     @Id
     private String symbol;
