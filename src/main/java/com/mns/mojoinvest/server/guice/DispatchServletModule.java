@@ -38,7 +38,7 @@ public class DispatchServletModule extends ServletModule {
         // Model object managers
         bind(ObjectifyFactory.class).in(Singleton.class);
 
-        serve("/mapreduce/*").with(InjectingMapReduceServlet.class);
+        serve("/mapper/*").with(InjectingMapReduceServlet.class);
         bind(InjectingMapReduceServlet.class).in(Singleton.class);
 
         serve("/quoteviewer").with(QuoteViewerServlet.class);

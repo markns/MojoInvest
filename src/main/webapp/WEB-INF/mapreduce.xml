@@ -6,7 +6,7 @@
         <property>
             <name>mapreduce.map.class</name>
             <!--  Set this to be your Mapper class  -->
-            <value>com.mns.mojoinvest.server.mapreduce.ImportQuotesFromBlobstoreMapper</value>
+            <value>com.mns.mojoinvest.server.mapper.ImportQuotesFromBlobstoreMapper</value>
         </property>
 
         <!--  This is a default tool that lets us iterate over blobstore data -->
@@ -32,7 +32,7 @@
         <property>
             <name>mapreduce.map.class</name>
             <!--  Set this to be your Mapper class  -->
-            <value>com.mns.mojoinvest.server.mapreduce.PerformanceRankingMapper</value>
+            <value>com.mns.mojoinvest.server.mapper.PerformanceRankingMapper</value>
         </property>
 
         <!--  This is a default tool that lets us iterate over blobstore data -->
