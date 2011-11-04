@@ -24,12 +24,6 @@ public class FundFetcherJob extends Job0<List<Fund>> {
 
     private static final int BATCH_SIZE = 50;
 
-    public static void main(String[] args) {
-
-        FundFetcherJob job = new FundFetcherJob();
-        job.fetchAllFundsHtml();
-    }
-
     @Override
     public Value<List<Fund>> run() {
         String html = fetchAllFundsHtml();
@@ -37,7 +31,7 @@ public class FundFetcherJob extends Job0<List<Fund>> {
 
         log.info("Attempting to retrieve details for " + symbols.size() + " funds");
         List<FutureValue<List<Fund>>> fundLists = new ArrayList<FutureValue<List<Fund>>>();
-        List<String> batch = new ArrayList<String>();
+        List<String> batch = new ArrayList<String>(BATCH_SIZE);
         int c = 0;
         for (String symbol : symbols) {
             batch.add(symbol);

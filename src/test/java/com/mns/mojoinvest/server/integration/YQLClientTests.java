@@ -4,18 +4,15 @@ import com.googlecode.objectify.ObjectifyService;
 import com.mns.mojoinvest.server.engine.model.FundDao;
 import com.mns.mojoinvest.server.engine.model.Quote;
 import com.mns.mojoinvest.server.engine.model.QuoteDao;
-import com.mns.mojoinvest.server.pipeline.QuoteFetcherJob;
 import com.mns.mojoinvest.server.servlet.HistoricQuoteLoaderServlet;
 import org.joda.time.LocalDate;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 import org.junit.Test;
 
-import java.util.Arrays;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
 
 public class YQLClientTests {
 
@@ -24,8 +21,6 @@ public class YQLClientTests {
 
     private final HistoricQuoteLoaderServlet historicQuoteLoaderServlet =
             new HistoricQuoteLoaderServlet(fundDao, quoteDao);
-
-    private final QuoteFetcherJob job = new QuoteFetcherJob();
 
     @Test
     public void testLocalDateFormatter() {
@@ -43,15 +38,6 @@ public class YQLClientTests {
 
         //Could fail if number of quotes changes, but it shouldn't.
         assertEquals(254, quotes.size());
-    }
-
-    @Test
-    public void testYqlRealtimeDataGet() {
-
-        List<String> symbols = Arrays.asList("BHH");
-        List<Quote> quotes = job.getQuotes(symbols);
-        assertNull(quotes.get(0).getClose());
-
     }
 
 

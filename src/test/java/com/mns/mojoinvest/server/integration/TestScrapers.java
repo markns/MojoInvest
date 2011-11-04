@@ -9,7 +9,10 @@ import org.junit.Test;
 
 import java.io.File;
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.net.URL;
+import java.util.HashMap;
+import java.util.Map;
 
 public class TestScrapers {
 
@@ -58,5 +61,28 @@ public class TestScrapers {
 
     }
 
+    @Test
+    public void testQuoteScrape() throws IOException {
+        URL url = ClassLoader.getSystemResource("etf-quote-msn.html");
+        String html = FileUtils.readFileToString(new File(url.getFile()));
+        Document doc = Jsoup.parse(html);
 
+        Map<String, String> data = new HashMap<String, String>();
+        data.put("close", doc.getElementById("quickquoteb").getElementsByClass("lp").text());
+        for (Element span : doc.getElementById("area1").select("span")) {
+            if ("DETAILS".equals(span.text())) {
+                Element tbody = span.parent().parent().select("tbody").get(0);
+                for (Element tr : tbody.select("tr")) {
+                    data.put(tr.child(0).text(), tr.child(1).text());
+                }
+
+                System.out.println(data);
+            }
+        }
+    }
+
+    protected BigDecimal newBigDecimal(String str) {
+        str = str.replaceAll(",", "");
+        return new BigDecimal(str);
+    }
 }

@@ -1,6 +1,5 @@
 package com.mns.mojoinvest.server.pipeline;
 
-import com.google.appengine.tools.pipeline.ImmediateValue;
 import com.google.appengine.tools.pipeline.Job1;
 import com.google.appengine.tools.pipeline.Value;
 import com.mns.mojoinvest.server.engine.model.Fund;
@@ -19,14 +18,6 @@ import java.util.logging.Logger;
 public class FundDetailFetcherJob extends Job1<Fund, String> {
 
     private static final Logger log = Logger.getLogger(FundDetailFetcherJob.class.getName());
-
-    public static void main(String[] args) {
-
-        FundDetailFetcherJob job = new FundDetailFetcherJob();
-        Value<Fund> fund = job.run("AADR");
-        ImmediateValue<Fund> im = (ImmediateValue<Fund>) fund;
-        System.out.println(im);
-    }
 
     @Override
     public Value<Fund> run(String symbol) {
@@ -75,7 +66,7 @@ public class FundDetailFetcherJob extends Job1<Fund, String> {
                     details.index, details.overview, fmt.parseDateTime(details.inceptionDate).toLocalDate());
         } catch (IllegalArgumentException e) {
             log.severe("Exception while creating fund with fields: " + details.symbol + " " +
-            details.name + " " + details.inceptionDate);
+                    details.name + " " + details.inceptionDate);
         }
         return null;
     }

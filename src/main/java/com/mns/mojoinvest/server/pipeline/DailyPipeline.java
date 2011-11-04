@@ -19,7 +19,8 @@ public class DailyPipeline extends Job1<List<Quote>, LocalDate> {
 
         FutureValue<List<Fund>> funds = futureCall(new FundFetcherJob());
         futureCall(new FundUpdaterJob(), funds);
-        FutureValue<List<Quote>> quotes = futureCall(new EODQuoteFetcherJob(), funds);
+        FutureValue<List<Quote>> quotes = futureCall(new QuotesFetcherJob(), funds, immediate(date));
+        futureCall(new QuoteUpdaterJob(), quotes);
 
         /*quotes.add( */futureCall(new QuoteRollerJob(), immediate(date), waitFor(quotes));
 
