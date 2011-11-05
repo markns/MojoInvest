@@ -1,4 +1,4 @@
-package com.mns.mojoinvest.server.servlet;
+package com.mns.mojoinvest.server.servlet.blob;
 
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;

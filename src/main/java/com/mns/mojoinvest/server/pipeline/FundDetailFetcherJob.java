@@ -21,9 +21,13 @@ public class FundDetailFetcherJob extends Job1<Fund, String> {
 
     @Override
     public Value<Fund> run(String symbol) {
+        log.info("Attempting to fetch html for " + symbol);
         String html = fetchFundDetailHtml(symbol);
         Details details = scrapeDetails(html, symbol);
-        return immediate(buildFund(details));
+        log.info("Scraped details for " + symbol + " - " + details);
+        Fund fund = buildFund(details);
+        log.info("Constructed fund " + fund);
+        return immediate(fund);
     }
 
     private String fetchFundDetailHtml(String symbol) {

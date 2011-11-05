@@ -72,7 +72,7 @@
     </servlet-mapping>
     <servlet>
         <servlet-name>Upload</servlet-name>
-        <servlet-class>com.mns.mojoinvest.server.servlet.PerformanceRankingServlet</servlet-class>
+        <servlet-class>com.mns.mojoinvest.server.servlet.blob.UploadBlobServlet</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>Upload</servlet-name>
@@ -80,7 +80,7 @@
     </servlet-mapping>
     <servlet>
         <servlet-name>SuccessfulUpload</servlet-name>
-        <servlet-class>com.mns.mojoinvest.server.servlet.SuccessfulUploadServlet</servlet-class>
+        <servlet-class>com.mns.mojoinvest.server.servlet.blob.SuccessfulUploadServlet</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>SuccessfulUpload</servlet-name>

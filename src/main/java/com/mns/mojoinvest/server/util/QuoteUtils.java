@@ -2,20 +2,13 @@ package com.mns.mojoinvest.server.util;
 
 import com.mns.mojoinvest.server.engine.model.Quote;
 import org.joda.time.LocalDate;
-import org.joda.time.format.DateTimeFormat;
-import org.joda.time.format.DateTimeFormatter;
 
 import java.math.BigDecimal;
 import java.util.*;
 
+import static com.mns.mojoinvest.server.util.DatastoreUtils.forDatastore;
+
 public class QuoteUtils {
-
-
-    public static final DateTimeFormatter fmt = DateTimeFormat.forPattern("yyyy-MM-dd");
-
-    public static String forDatastore(LocalDate date) {
-        return fmt.print(date);
-    }
 
     public static String quoteId(String symbol, LocalDate date) {
         return forDatastore(date) + " " + symbol;
@@ -40,7 +33,7 @@ public class QuoteUtils {
                 continue;
             }
             while (date.isAfter(quote.getDate())) {
-//                System.out.println("after " + quote.getDate());
+//                System.out.println("after " + quote.getId());
                 previousQuote = quote;
                 if (quoteIter.hasNext()) {
                     quote = quoteIter.next();

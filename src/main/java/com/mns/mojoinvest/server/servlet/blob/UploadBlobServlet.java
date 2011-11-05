@@ -1,4 +1,4 @@
-package com.mns.mojoinvest.server.servlet;
+package com.mns.mojoinvest.server.servlet.blob;
 import com.google.appengine.api.blobstore.BlobKey;
 import com.google.appengine.api.blobstore.BlobstoreService;
 import com.google.appengine.api.blobstore.BlobstoreServiceFactory;

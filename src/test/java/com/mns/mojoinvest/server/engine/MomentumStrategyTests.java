@@ -8,6 +8,9 @@ import com.mns.mojoinvest.server.data.QuoteSet;
 import com.mns.mojoinvest.server.engine.execution.Executor;
 import com.mns.mojoinvest.server.engine.execution.NextTradingDayExecutor;
 import com.mns.mojoinvest.server.engine.model.*;
+import com.mns.mojoinvest.server.engine.model.dao.FundDao;
+import com.mns.mojoinvest.server.engine.model.dao.QuoteDao;
+import com.mns.mojoinvest.server.engine.model.dao.RankingDao;
 import com.mns.mojoinvest.server.engine.portfolio.Portfolio;
 import com.mns.mojoinvest.server.engine.portfolio.PortfolioProvider;
 import com.mns.mojoinvest.server.engine.portfolio.SimplePortfolio;
@@ -72,8 +75,8 @@ public class MomentumStrategyTests {
         for (Fund fund : funds) {
             List<Quote> quotes = quoteDao.query(fund);
 //            QuoteUtils.sortByDate(quotes);
-//            System.out.println(quotes.get(0).getDate());
-//            List<Quote> missingQuotes = QuoteUtils.getMissingQuotes(quotes.get(0).getDate(),
+//            System.out.println(quotes.getRanking(0).getId());
+//            List<Quote> missingQuotes = QuoteUtils.getMissingQuotes(quotes.getRanking(0).getId(),
             List<Quote> missingQuotes = QuoteUtils.getMissingQuotes(fund.getInceptionDate(),
                     new LocalDate("2011-06-24"), quotes);
 

@@ -6,7 +6,7 @@ import com.googlecode.objectify.Key;
 import com.googlecode.objectify.ObjectifyFactory;
 import com.googlecode.objectify.ObjectifyService;
 import com.mns.mojoinvest.server.engine.model.Quote;
-import com.mns.mojoinvest.server.engine.model.QuoteDao;
+import com.mns.mojoinvest.server.engine.model.dao.QuoteDao;
 
 import java.util.ArrayList;
 import java.util.Collection;

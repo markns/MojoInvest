@@ -2,9 +2,9 @@ package com.mns.mojoinvest.server.util;
 
 import au.com.bytecode.opencsv.CSVWriter;
 import com.googlecode.objectify.ObjectifyService;
-import com.mns.mojoinvest.server.engine.model.FundDao;
+import com.mns.mojoinvest.server.engine.model.dao.FundDao;
 import com.mns.mojoinvest.server.engine.model.Quote;
-import com.mns.mojoinvest.server.engine.model.QuoteDao;
+import com.mns.mojoinvest.server.engine.model.dao.QuoteDao;
 import com.mns.mojoinvest.server.servlet.FundLoaderServlet;
 import com.mns.mojoinvest.server.servlet.HistoricQuoteLoaderServlet;
 import org.joda.time.LocalDate;

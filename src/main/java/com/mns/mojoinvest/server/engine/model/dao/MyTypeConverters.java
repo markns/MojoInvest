@@ -1,4 +1,4 @@
-package com.mns.mojoinvest.server.engine.model;
+package com.mns.mojoinvest.server.engine.model.dao;
 
 import com.googlecode.objectify.impl.conv.Converter;
 import com.googlecode.objectify.impl.conv.ConverterLoadContext;

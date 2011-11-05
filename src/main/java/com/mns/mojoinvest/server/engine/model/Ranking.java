@@ -1,46 +1,63 @@
 package com.mns.mojoinvest.server.engine.model;
 
-
 import com.google.common.base.Splitter;
 import com.google.common.collect.Lists;
 import com.googlecode.objectify.annotation.Cached;
 import com.googlecode.objectify.annotation.Unindexed;
+import org.joda.time.LocalDate;
 
 import javax.persistence.Id;
+import javax.persistence.Transient;
 import java.util.List;
+
+import static com.mns.mojoinvest.server.util.DatastoreUtils.forDatastore;
 
 @Cached
 public class Ranking {
 
-    private static final Splitter SPLITTER = Splitter.on(',')
-            .trimResults()
-            .omitEmptyStrings();
-
     @Id
-    private String date;
+    private String id;
 
     @Unindexed
-    private String m9;
+    private String symbols;
+
+    @Unindexed
+    private String values;
+
+    @Transient
+    private List<String> symbolsList;
 
     public Ranking() {
         //no arg for objectify
     }
 
-    public Ranking(String date, String m9) {
-        this.date = date;
-        this.m9 = m9;
+    public Ranking(LocalDate date, RankingParams params, String symbols, String values) {
+        this.id = createId(date, params);
+        this.symbols = symbols;
+        this.values = values;
     }
 
-    public String getDate() {
-        return date;
+    public static String createId(LocalDate date, RankingParams params) {
+        return forDatastore(date) + " " + params;
     }
 
-    public String m9() {
-        return m9;
+    public String getId() {
+        return id;
     }
 
-    public List<String> getM9() {
-        return toList(SPLITTER.split(m9));
+    private static final Splitter SPLITTER = Splitter.on(',')
+            .trimResults()
+            .omitEmptyStrings();
+
+    public List<String> getSymbols() {
+        if (symbolsList == null) {
+            symbolsList = toList(SPLITTER.split(symbols));
+        }
+        return symbolsList;
+    }
+
+    public List<String> getValues() {
+        return toList(SPLITTER.split(values));
     }
 
     private static <E> List<E> toList(Iterable<E> iterable) {
@@ -52,8 +69,9 @@ public class Ranking {
     @Override
     public String toString() {
         return "Ranking{" +
-                "date='" + date + '\'' +
-                ", m9='" + m9 + '\'' +
+                "id='" + id + '\'' +
+                ", symbols='" + symbols + '\'' +
                 '}';
     }
+
 }

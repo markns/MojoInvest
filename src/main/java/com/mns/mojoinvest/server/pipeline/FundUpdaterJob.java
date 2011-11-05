@@ -5,7 +5,7 @@ import com.google.appengine.tools.pipeline.Value;
 import com.googlecode.objectify.ObjectifyFactory;
 import com.googlecode.objectify.ObjectifyService;
 import com.mns.mojoinvest.server.engine.model.Fund;
-import com.mns.mojoinvest.server.engine.model.FundDao;
+import com.mns.mojoinvest.server.engine.model.dao.FundDao;
 
 import java.util.List;
 import java.util.logging.Logger;

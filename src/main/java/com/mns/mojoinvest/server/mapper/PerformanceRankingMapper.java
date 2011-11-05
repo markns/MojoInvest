@@ -11,7 +11,7 @@ import com.google.common.collect.ImmutableSortedMap;
 import com.google.common.collect.Ordering;
 import com.google.inject.Inject;
 import com.mns.mojoinvest.server.engine.model.Quote;
-import com.mns.mojoinvest.server.engine.model.QuoteDao;
+import com.mns.mojoinvest.server.engine.model.dao.QuoteDao;
 import org.apache.hadoop.io.NullWritable;
 import org.joda.time.LocalDate;
 import org.joda.time.format.DateTimeFormat;
@@ -58,7 +58,7 @@ public class PerformanceRankingMapper extends
 
             String m9 = createRankString(rank);
 
-            Entity ranking = new Entity("Ranking", fmt.print(date));
+            Entity ranking = new Entity("OldRanking", fmt.print(date));
             ranking.setUnindexedProperty("m9", new Text(m9));
 
             DatastoreMutationPool mutationPool = this.getAppEngineContext(context)
@@ -85,9 +85,6 @@ public class PerformanceRankingMapper extends
     private String createRankString(SortedSet<String> rank) {
         List<String> rankList = new ArrayList<String>(rank);
         Joiner joiner = Joiner.on("|");
-        if (rankList.size() > 50) {
-            return joiner.join(rankList.subList(0, 50));
-        }
         return joiner.join(rankList);
     }
 

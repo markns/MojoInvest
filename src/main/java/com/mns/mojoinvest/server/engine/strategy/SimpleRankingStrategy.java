@@ -4,7 +4,7 @@ import com.google.common.base.Functions;
 import com.google.common.collect.ImmutableSortedMap;
 import com.google.common.collect.Ordering;
 import com.google.inject.Inject;
-import com.mns.mojoinvest.server.engine.model.QuoteDao;
+import com.mns.mojoinvest.server.engine.model.dao.QuoteDao;
 import com.mns.mojoinvest.server.engine.model.Fund;
 import com.mns.mojoinvest.server.engine.model.Quote;
 import com.mns.mojoinvest.shared.params.SimpleRankingStrategyParams;
@@ -60,7 +60,7 @@ public class SimpleRankingStrategy implements RankingStrategy<SimpleRankingStrat
         SortedMap<Fund, PerformanceStat> map = ImmutableSortedMap.copyOf(rankerNotNull, valueComparator);
 
 //        for (Map.Entry<Fund, PerformanceStat> entry : map.entrySet()) {
-//            System.out.println(entry.getKey().getSymbol() + " "
+//            System.out.println(entry.getId().getSymbol() + " "
 //                    + entry.getValue().fromQuote.getClose() + " "
 //                    + entry.getValue().toQuote.getClose() + " "
 //                    + entry.getValue().percentChange);

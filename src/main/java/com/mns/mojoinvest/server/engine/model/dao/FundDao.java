@@ -1,8 +1,8 @@
-package com.mns.mojoinvest.server.engine.model;
+package com.mns.mojoinvest.server.engine.model.dao;
 
 import com.google.inject.Inject;
 import com.googlecode.objectify.*;
-import com.mns.mojoinvest.server.model.DAOBase;
+import com.mns.mojoinvest.server.engine.model.Fund;
 
 import java.util.ArrayList;
 import java.util.Collection;

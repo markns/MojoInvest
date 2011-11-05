@@ -3,7 +3,7 @@ package com.mns.mojoinvest.server.servlet;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.mns.mojoinvest.server.engine.model.Fund;
-import com.mns.mojoinvest.server.engine.model.FundDao;
+import com.mns.mojoinvest.server.engine.model.dao.FundDao;
 import com.mns.mojoinvest.server.util.HttpUtils;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;

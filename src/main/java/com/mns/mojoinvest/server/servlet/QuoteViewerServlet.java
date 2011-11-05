@@ -3,7 +3,7 @@ package com.mns.mojoinvest.server.servlet;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.mns.mojoinvest.server.engine.model.Quote;
-import com.mns.mojoinvest.server.engine.model.QuoteDao;
+import com.mns.mojoinvest.server.engine.model.dao.QuoteDao;
 
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;

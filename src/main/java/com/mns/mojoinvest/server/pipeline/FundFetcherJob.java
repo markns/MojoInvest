@@ -22,7 +22,7 @@ public class FundFetcherJob extends Job0<List<Fund>> {
 
     private static final Logger log = Logger.getLogger(FundFetcherJob.class.getName());
 
-    private static final int BATCH_SIZE = 50;
+    private static final int BATCH_SIZE = 100;
 
     @Override
     public Value<List<Fund>> run() {
@@ -66,14 +66,14 @@ public class FundFetcherJob extends Job0<List<Fund>> {
         return html;
     }
 
-    private List<String> scrapeSymbols(String html) {
+    protected List<String> scrapeSymbols(String html) {
         Document doc = Jsoup.parse(html);
         Element table = doc.getElementById("ctl00_ctl00_ctl00_ctl00_HtmlBody_HtmlBody_HtmlBody_Column1_dgETF");
         Element tbody = table.getElementsByTag("tbody").get(0);
         Elements tr = tbody.getElementsByTag("tr");
         List<String> symbols = new ArrayList<String>();
         for (Element element : tr) {
-            String symbol = ((Element) element.childNode(2)).text();
+            String symbol = element.child(1).text();
             if ("TICKER".equals(symbol))
                 continue;
             symbols.add(symbol);

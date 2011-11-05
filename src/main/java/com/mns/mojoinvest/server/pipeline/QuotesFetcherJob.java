@@ -16,7 +16,7 @@ public class QuotesFetcherJob extends Job2<List<Quote>, List<Fund>, LocalDate> {
 
     private static final Logger log = Logger.getLogger(QuotesFetcherJob.class.getName());
 
-    private static final int BATCH_SIZE = 50;
+    private static final int BATCH_SIZE = 100;
 
     @Override
     public Value<List<Quote>> run(List<Fund> funds, LocalDate date) {

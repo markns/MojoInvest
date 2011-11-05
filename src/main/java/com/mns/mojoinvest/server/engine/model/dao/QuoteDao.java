@@ -1,10 +1,11 @@
-package com.mns.mojoinvest.server.engine.model;
+package com.mns.mojoinvest.server.engine.model.dao;
 
 import com.google.inject.Inject;
 import com.googlecode.objectify.Key;
 import com.googlecode.objectify.ObjectifyFactory;
 import com.googlecode.objectify.Query;
-import com.mns.mojoinvest.server.model.DAOBase;
+import com.mns.mojoinvest.server.engine.model.Fund;
+import com.mns.mojoinvest.server.engine.model.Quote;
 import com.mns.mojoinvest.server.util.FundUtils;
 import com.mns.mojoinvest.server.util.QuoteUtils;
 import com.mns.mojoinvest.server.util.TradingDayUtils;

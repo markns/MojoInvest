@@ -18,7 +18,7 @@ package com.mns.mojoinvest.client;
 
 /**
  * The central location of all name tokens for the application. All
- * {@link com.gwtplatform.mvp.client.proxy.ProxyPlace} classes get their tokens from here. This class also makes
+ * {@link com.gwtplatform.mvp.client.proxy.ProxyPlace} classes getRanking their tokens from here. This class also makes
  * it easy to use name tokens as a resource within UIBinder xml files.
  * <p/>
  * The public static final String is used within the annotation

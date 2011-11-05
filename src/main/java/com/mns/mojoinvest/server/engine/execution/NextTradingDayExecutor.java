@@ -3,7 +3,7 @@ package com.mns.mojoinvest.server.engine.execution;
 import com.google.inject.Inject;
 import com.mns.mojoinvest.server.engine.model.Fund;
 import com.mns.mojoinvest.server.engine.model.Quote;
-import com.mns.mojoinvest.server.engine.model.QuoteDao;
+import com.mns.mojoinvest.server.engine.model.dao.QuoteDao;
 import com.mns.mojoinvest.server.engine.portfolio.Portfolio;
 import com.mns.mojoinvest.server.engine.portfolio.PortfolioProvider;
 import com.mns.mojoinvest.server.engine.portfolio.Position;
@@ -39,7 +39,7 @@ public class NextTradingDayExecutor implements Executor {
 
     @Override
     public void buy(Fund fund, LocalDate date, BigDecimal allocation) {
-        //TODO: get execution price should be mid between open and close
+        //TODO: getRanking execution price should be mid between open and close
         Quote executionQuote = quoteDao.get(fund, date);
         BigDecimal shares = allocation.divide(executionQuote.getClose(), 0, BigDecimal.ROUND_DOWN);
 //        log.info("Buying " + fund + " amount: " + allocation +
@@ -50,7 +50,7 @@ public class NextTradingDayExecutor implements Executor {
 
     @Override
     public void sellAll(Fund fund, LocalDate date) {
-        //TODO: get execution price should be mid between open and close
+        //TODO: getRanking execution price should be mid between open and close
         Quote executionQuote = quoteDao.get(fund, date);
         Position position = portfolio().get(fund);
 //        log.info("Selling " + fund + " price: " + executionQuote.getClose() +

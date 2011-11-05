@@ -3,10 +3,9 @@ package com.mns.mojoinvest.server.engine.strategy;
 import com.google.inject.Inject;
 import com.googlecode.objectify.NotFoundException;
 import com.mns.mojoinvest.server.engine.execution.Executor;
-import com.mns.mojoinvest.server.engine.model.Fund;
-import com.mns.mojoinvest.server.engine.model.FundDao;
-import com.mns.mojoinvest.server.engine.model.Ranking;
-import com.mns.mojoinvest.server.engine.model.RankingDao;
+import com.mns.mojoinvest.server.engine.model.*;
+import com.mns.mojoinvest.server.engine.model.dao.FundDao;
+import com.mns.mojoinvest.server.engine.model.dao.RankingDao;
 import com.mns.mojoinvest.server.engine.portfolio.Portfolio;
 import com.mns.mojoinvest.server.engine.portfolio.PortfolioProvider;
 import com.mns.mojoinvest.server.util.TradingDayUtils;
@@ -56,8 +55,8 @@ public class MomentumStrategy implements TradingStrategy {
 
         for (LocalDate rebalanceDate : rebalanceDates) {
             try {
-                Ranking ranking = rankingDao.get(rebalanceDate);
-                Collection<Fund> selection = getSelection(ranking.getM9(), acceptableFunds, params);
+                Ranking ranking = rankingDao.get(rebalanceDate, new RankingParams(9));
+                Collection<Fund> selection = getSelection(ranking.getSymbols(), acceptableFunds, params);
 
                 sellLosers(rebalanceDate, selection);
                 buyWinners(params, rebalanceDate, selection);

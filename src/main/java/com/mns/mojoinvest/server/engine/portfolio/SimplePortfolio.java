@@ -3,7 +3,7 @@ package com.mns.mojoinvest.server.engine.portfolio;
 import com.google.inject.Inject;
 import com.google.inject.assistedinject.Assisted;
 import com.mns.mojoinvest.server.engine.model.Fund;
-import com.mns.mojoinvest.server.engine.model.QuoteDao;
+import com.mns.mojoinvest.server.engine.model.dao.QuoteDao;
 import com.mns.mojoinvest.shared.params.PortfolioParams;
 import com.mns.mojoinvest.server.engine.transaction.BuyTransaction;
 import com.mns.mojoinvest.server.engine.transaction.SellTransaction;
@@ -34,7 +34,7 @@ import java.util.Set;
  * <p/>
  * Finally, the overall return is computed by converting the returns gain and cash out from each
  * of the securities from the security currency to the portfolio currency, then summing them to
- * get portfolio values. The total return is the calculated by:
+ * getRanking portfolio values. The total return is the calculated by:
  * <p/>
  * total return = returns gain / cash out
  */
@@ -189,7 +189,7 @@ public class SimplePortfolio implements Portfolio {
 
     /*
         Finally, the overall return is computed by converting the returns gain and cash out from each of the securities
-        from the security currency to the portfolio currency, then summing them to get portfolio values. The total
+        from the security currency to the portfolio currency, then summing them to getRanking portfolio values. The total
         return is the calculated by:
         overall return = returns gain / cash out
      */

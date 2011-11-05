@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.mns.mojoinvest.server.model;
+package com.mns.mojoinvest.server.engine.model.dao;
 
 import com.googlecode.objectify.Objectify;
 import com.googlecode.objectify.ObjectifyFactory;

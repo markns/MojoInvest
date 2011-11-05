@@ -20,14 +20,13 @@ public class DailyPipeline extends Job1<List<Quote>, LocalDate> {
         FutureValue<List<Fund>> funds = futureCall(new FundFetcherJob());
         futureCall(new FundUpdaterJob(), funds);
         FutureValue<List<Quote>> quotes = futureCall(new QuotesFetcherJob(), funds, immediate(date));
-        futureCall(new QuoteUpdaterJob(), quotes);
-
-        /*quotes.add( */futureCall(new QuoteRollerJob(), immediate(date), waitFor(quotes));
+        FutureValue<Boolean> done = futureCall(new QuoteUpdaterJob(), quotes);
 
         //for each of the parameter combinations (1M, 2M, 6M etc) call
-        futureCall(new RankerJob(), immediate(date), quotes);
-
-        return quotes;
+        futureCall(new RankerJob(), immediate(date), waitFor(done));
+//
+//        return quotes;
+        return null;
     }
 
 
