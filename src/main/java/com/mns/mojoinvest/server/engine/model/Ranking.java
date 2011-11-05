@@ -21,9 +21,6 @@ public class Ranking {
     @Unindexed
     private String symbols;
 
-    @Unindexed
-    private String values;
-
     @Transient
     private List<String> symbolsList;
 
@@ -31,21 +28,16 @@ public class Ranking {
         //no arg for objectify
     }
 
-    public Ranking(LocalDate date, RankingParams params, String symbols, String values) {
+    public Ranking(LocalDate date, RankingParams params, String symbols) {
         this.id = createId(date, params);
         this.symbols = symbols;
-        this.values = values;
     }
 
     public static String createId(LocalDate date, RankingParams params) {
         return forDatastore(date) + " " + params;
     }
 
-    public String getId() {
-        return id;
-    }
-
-    private static final Splitter SPLITTER = Splitter.on(',')
+    private static final Splitter SPLITTER = Splitter.on('|')
             .trimResults()
             .omitEmptyStrings();
 
@@ -56,8 +48,8 @@ public class Ranking {
         return symbolsList;
     }
 
-    public List<String> getValues() {
-        return toList(SPLITTER.split(values));
+    public String getSymbolsStr() {
+        return symbols;
     }
 
     private static <E> List<E> toList(Iterable<E> iterable) {
@@ -73,5 +65,4 @@ public class Ranking {
                 ", symbols='" + symbols + '\'' +
                 '}';
     }
-
 }

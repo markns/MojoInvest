@@ -2,14 +2,8 @@ package com.mns.mojoinvest.server.pipeline;
 
 import com.google.appengine.tools.pipeline.Job1;
 import com.google.appengine.tools.pipeline.Value;
-import com.google.common.base.Functions;
 import com.google.common.base.Joiner;
-import com.google.common.collect.ImmutableSortedMap;
-import com.google.common.collect.Ordering;
-import com.googlecode.objectify.ObjectifyFactory;
-import com.googlecode.objectify.ObjectifyService;
 import com.mns.mojoinvest.server.engine.model.Quote;
-import com.mns.mojoinvest.server.engine.model.dao.QuoteDao;
 import com.mns.mojoinvest.server.engine.model.Ranking;
 import org.joda.time.LocalDate;
 import org.joda.time.format.DateTimeFormat;
@@ -25,33 +19,6 @@ public class RankerJob extends Job1<Ranking, LocalDate> {
 
     @Override
     public Value<Ranking> run(LocalDate date) {
-
-        //TODO: Figure out how to inject and serialize DAOs
-        ObjectifyFactory factory = ObjectifyService.factory();
-        QuoteDao dao = new QuoteDao(factory);
-        dao.registerObjects(factory);
-        //
-
-        List<Quote> toQuotes = dao.query(date);
-        List<Quote> fromQuotes = dao.query(date.minusMonths(9));
-
-        Map<String, BigDecimal> ranker = buildRanker(toQuotes, fromQuotes);
-
-        if (ranker.size() > 0) {
-
-            Ordering<String> valueComparator = Ordering.natural()
-                    .reverse()
-                    .onResultOf(Functions.forMap(ranker))
-                    .compound(Ordering.natural());
-
-            SortedSet<String> rank = ImmutableSortedMap.copyOf(ranker, valueComparator).keySet();
-
-            String m9 = createRankString(rank);
-
-
-        }
-
-
         return null;
     }
 

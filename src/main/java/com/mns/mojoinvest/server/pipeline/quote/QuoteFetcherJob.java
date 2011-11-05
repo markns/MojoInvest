@@ -1,4 +1,4 @@
-package com.mns.mojoinvest.server.pipeline;
+package com.mns.mojoinvest.server.pipeline.quote;
 
 import com.google.appengine.tools.pipeline.Job2;
 import com.google.appengine.tools.pipeline.Value;

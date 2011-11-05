@@ -449,7 +449,7 @@ public class MapReduceServlet extends HttpServlet {
   /**
    * Refills quotas for all active shards based on the input processing rate.
    *
-   * @param context context to getRanking input processing rate from
+   * @param context context to get input processing rate from
    * @param mrState the MR state containing the last poll time
    * @param activeShardStates all active shard states
    */
@@ -980,7 +980,7 @@ public class MapReduceServlet extends HttpServlet {
 
     try {
       InputStream resourceStream = MapReduceServlet.class.getResourceAsStream(
-          "/com/google/appengine/tools/mapper/" + fileName);
+          "/com/google/appengine/tools/mapreduce/" + fileName);
       if (resourceStream == null) {
         resourceStream = MapReduceServlet.class.getResourceAsStream(
           "/third_party/java_src/appengine_mapreduce/" + fileName);

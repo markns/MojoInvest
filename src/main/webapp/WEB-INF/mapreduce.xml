@@ -47,6 +47,11 @@
         </property>
 
         <property>
+            <name human="Performance range (months)">mapreduce.mapper.performance.range</name>
+            <value template="optional">9</value>
+        </property>
+
+        <property>
             <name human="Number of shards to use">mapreduce.mapper.shardcount</name>
             <value template="optional">10</value>
         </property>

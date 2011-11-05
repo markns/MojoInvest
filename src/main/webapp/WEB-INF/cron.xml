@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <cronentries>
-    <cron>
-        <url>/fundloader</url>
-        <description>Updates the fund static</description>
-        <schedule>every 12 hours</schedule>
-        <target>crawler</target>
-        <!--<schedule>every 5 minutes</schedule>-->
-        <!--<timezone>America/New_York</timezone>-->
-    </cron>
+    <!--<cron>-->
+        <!--<url>/fundloader</url>-->
+        <!--<description>Updates the fund static</description>-->
+        <!--<schedule>every 12 hours</schedule>-->
+        <!--<target>crawler</target>-->
+        <!--&lt;!&ndash;<schedule>every 5 minutes</schedule>&ndash;&gt;-->
+        <!--&lt;!&ndash;<timezone>America/New_York</timezone>&ndash;&gt;-->
+    <!--</cron>-->
     <!--<cron>-->
         <!--<url>/historicquoteloader?range=1M</url>-->
         <!--<description>Load historic quotes</description>-->

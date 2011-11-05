@@ -45,6 +45,7 @@ public class YahooHistoricQuoteDownloader {
         List<FundLoaderServlet.FundLite> fundLites = fundLoader.scrapeFundList();
         List<Quote> quotes = new ArrayList<Quote>();
         for (FundLoaderServlet.FundLite fundLite : fundLites) {
+
             log.info("Retrieving quotes for " + fundLite.getSymbol());
             quotes.addAll(quoteLoader.getHistoricQuotes(fundLite.getSymbol(), new LocalDate(2011, 9, 17), new LocalDate()));
         }

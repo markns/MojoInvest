@@ -8,6 +8,10 @@ public class RankingParams {
         this.performanceRange = performanceRange;
     }
 
+    public int getPerformanceRange() {
+        return performanceRange;
+    }
+
     @Override
     public String toString() {
         return performanceRange + "";

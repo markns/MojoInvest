@@ -5,6 +5,10 @@ import com.google.appengine.tools.pipeline.Job1;
 import com.google.appengine.tools.pipeline.Value;
 import com.mns.mojoinvest.server.engine.model.Fund;
 import com.mns.mojoinvest.server.engine.model.Quote;
+import com.mns.mojoinvest.server.pipeline.fund.FundFetcherJob;
+import com.mns.mojoinvest.server.pipeline.fund.FundUpdaterJob;
+import com.mns.mojoinvest.server.pipeline.quote.QuoteUpdaterJob;
+import com.mns.mojoinvest.server.pipeline.quote.QuotesFetcherJob;
 import org.joda.time.LocalDate;
 
 import java.util.List;
