@@ -32,7 +32,7 @@ public class FundFetcherJob extends Job0<List<Fund>> {
         log.info("Attempting to retrieve details for " + symbols.size() + " funds");
         List<FutureValue<List<Fund>>> fundLists = new ArrayList<FutureValue<List<Fund>>>();
         List<String> batch = new ArrayList<String>(BATCH_SIZE);
-        int c = 0;
+//        int c = 0;
         for (String symbol : symbols) {
             batch.add(symbol);
             if (batch.size() == BATCH_SIZE) {
@@ -40,8 +40,8 @@ public class FundFetcherJob extends Job0<List<Fund>> {
                 fundLists.add(futureCall(new FundFetcherBatchJob(), immediate(clone)));
                 batch.clear();
 
-                if (++c == 2)
-                    break;
+//                if (++c == 2)
+//                    break;
             }
         }
         if (batch.size() > 0) {

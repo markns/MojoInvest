@@ -7,16 +7,14 @@ import com.mns.mojoinvest.server.data.FundSet;
 import com.mns.mojoinvest.server.data.QuoteSet;
 import com.mns.mojoinvest.server.engine.execution.Executor;
 import com.mns.mojoinvest.server.engine.execution.NextTradingDayExecutor;
-import com.mns.mojoinvest.server.engine.model.*;
+import com.mns.mojoinvest.server.engine.model.Fund;
+import com.mns.mojoinvest.server.engine.model.Quote;
 import com.mns.mojoinvest.server.engine.model.dao.FundDao;
 import com.mns.mojoinvest.server.engine.model.dao.QuoteDao;
 import com.mns.mojoinvest.server.engine.model.dao.RankingDao;
 import com.mns.mojoinvest.server.engine.portfolio.Portfolio;
 import com.mns.mojoinvest.server.engine.portfolio.PortfolioProvider;
 import com.mns.mojoinvest.server.engine.portfolio.SimplePortfolio;
-import com.mns.mojoinvest.server.engine.strategy.MomentumStrategy;
-import com.mns.mojoinvest.server.engine.strategy.SimpleRankingStrategy;
-import com.mns.mojoinvest.server.engine.strategy.StrategyException;
 import com.mns.mojoinvest.server.util.QuoteUtils;
 import com.mns.mojoinvest.shared.params.MomentumStrategyParams;
 import com.mns.mojoinvest.shared.params.PortfolioParams;
@@ -25,7 +23,6 @@ import com.mns.mojoinvest.shared.params.SimpleRankingStrategyParams;
 import org.joda.time.LocalDate;
 import org.junit.After;
 import org.junit.Before;
-import org.junit.Test;
 
 import java.math.BigDecimal;
 import java.util.Arrays;
@@ -86,16 +83,16 @@ public class MomentumStrategyTests {
         time = System.currentTimeMillis();
     }
 
-    @Test
-    public void testMomentumStrategy() throws StrategyException {
-        System.out.println("Starting run of testMomentumStrategy");
-        SimpleRankingStrategy rankingStrategy = new SimpleRankingStrategy(quoteDao);
-        MomentumStrategy tradingStrategy = new MomentumStrategy(rankingStrategy, executor, portfolioProvider,
-                rankingDao, fundDao);
-        time = System.currentTimeMillis();
-        tradingStrategy.execute(fromDate, toDate, funds, strategyParams);
-        System.out.println(System.currentTimeMillis() - time);
-    }
+//    @Test
+//    public void testMomentumStrategy() throws StrategyException {
+//        System.out.println("Starting run of testMomentumStrategy");
+//        SimpleRankingStrategy rankingStrategy = new SimpleRankingStrategy(quoteDao);
+//        MomentumStrategy tradingStrategy = new MomentumStrategy(rankingStrategy, executor, portfolioProvider,
+//                rankingDao, fundDao);
+//        time = System.currentTimeMillis();
+//        tradingStrategy.execute(fromDate, toDate, funds, strategyParams);
+//        System.out.println(System.currentTimeMillis() - time);
+//    }
 
     @After
     public void tearDown() {

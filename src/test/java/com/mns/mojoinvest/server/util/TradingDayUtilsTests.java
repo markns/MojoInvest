@@ -1,5 +1,6 @@
 package com.mns.mojoinvest.server.util;
 
+import org.joda.time.DateTimeConstants;
 import org.joda.time.LocalDate;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
@@ -116,6 +117,18 @@ public class TradingDayUtilsTests {
         }
 
     }
+
+    @Test
+    public void testMinusMonths() {
+        LocalDate date = new LocalDate("2011-11-01");
+        LocalDate date2 = date.minusMonths(1);
+        assertEquals(new LocalDate("2011-10-01"), date2);
+        assertEquals(DateTimeConstants.SATURDAY, date2.dayOfWeek().get());
+        date2 = TradingDayUtils.rollIfRequired(date2);
+        assertEquals(new LocalDate("2011-09-30"), date2);
+        assertEquals(DateTimeConstants.FRIDAY, date2.dayOfWeek().get());
+    }
+
 
     private List<LocalDate> loadAList(String[] someStrs) {
         List<LocalDate> newList = new ArrayList<LocalDate>();

@@ -5,10 +5,13 @@ import com.google.common.base.Functions;
 import com.google.common.base.Joiner;
 import com.google.common.collect.ImmutableSortedMap;
 import com.google.common.collect.Ordering;
+import com.googlecode.objectify.ObjectifyFactory;
+import com.googlecode.objectify.ObjectifyService;
 import com.mns.mojoinvest.server.engine.model.Quote;
 import com.mns.mojoinvest.server.engine.model.Ranking;
 import com.mns.mojoinvest.server.engine.model.RankingParams;
 import com.mns.mojoinvest.server.engine.model.dao.QuoteDao;
+import com.mns.mojoinvest.server.util.TradingDayUtils;
 import org.joda.time.LocalDate;
 
 import java.math.BigDecimal;
@@ -17,23 +20,28 @@ import java.util.*;
 
 public class RankingCalculator {
 
-    private final QuoteDao dao;
+    private QuoteDao dao;
 
     public RankingCalculator(QuoteDao dao) {
         this.dao = dao;
     }
 
-//    private QuoteDao getQuoteDao() {
-//        //TODO: Figure out how to inject and serialize DAOs
-//        ObjectifyFactory factory = ObjectifyService.factory();
-//        QuoteDao dao = new QuoteDao(factory);
-//        dao.registerObjects(factory);
-//        return dao;
-//    }
+    private QuoteDao getQuoteDao() {
+        //TODO: Figure out how to inject and serialize DAOs
+        ObjectifyFactory factory = ObjectifyService.factory();
+        QuoteDao dao = new QuoteDao(factory);
+        dao.registerObjects(factory);
+        return dao;
+    }
 
     public Ranking rank(LocalDate date, RankingParams params) {
+        if (dao == null) {
+            //TODO: this is a hack!!
+            dao = getQuoteDao();
+        }
         List<Quote> toQuotes = dao.query(date);
-        List<Quote> fromQuotes = dao.query(date.minusMonths(params.getPerformanceRange()));
+        LocalDate fromDate = TradingDayUtils.rollIfRequired(date.minusMonths(params.getPerformanceRange()));
+        List<Quote> fromQuotes = dao.query(fromDate);
         Map<String, BigDecimal> performances = calculatePerformances(fromQuotes, toQuotes);
         return buildRanking(date, params, performances);
     }
@@ -53,7 +61,6 @@ public class RankingCalculator {
         for (Quote quote : fromQuotes) {
             fromQuoteMap.put(quote.getSymbol(), quote);
         }
-
         Map<String, BigDecimal> ranker = new HashMap<String, BigDecimal>();
         for (Quote toQuote : toQuotes) {
             if (fromQuoteMap.containsKey(toQuote.getSymbol())) {
@@ -71,7 +78,6 @@ public class RankingCalculator {
         BigDecimal change = to.subtract(from);
         return change.divide(from, 5, RoundingMode.HALF_EVEN);
     }
-
 
     private String createJoinString(Collection coll) {
         Joiner joiner = Joiner.on("|");
