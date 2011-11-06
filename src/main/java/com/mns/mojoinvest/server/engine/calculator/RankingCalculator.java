@@ -5,8 +5,6 @@ import com.google.common.base.Functions;
 import com.google.common.base.Joiner;
 import com.google.common.collect.ImmutableSortedMap;
 import com.google.common.collect.Ordering;
-import com.googlecode.objectify.ObjectifyFactory;
-import com.googlecode.objectify.ObjectifyService;
 import com.mns.mojoinvest.server.engine.model.Quote;
 import com.mns.mojoinvest.server.engine.model.Ranking;
 import com.mns.mojoinvest.server.engine.model.RankingParams;
@@ -19,16 +17,21 @@ import java.util.*;
 
 public class RankingCalculator {
 
-    private QuoteDao getQuoteDao() {
-        //TODO: Figure out how to inject and serialize DAOs
-        ObjectifyFactory factory = ObjectifyService.factory();
-        QuoteDao dao = new QuoteDao(factory);
-        dao.registerObjects(factory);
-        return dao;
+    private final QuoteDao dao;
+
+    public RankingCalculator(QuoteDao dao) {
+        this.dao = dao;
     }
 
+//    private QuoteDao getQuoteDao() {
+//        //TODO: Figure out how to inject and serialize DAOs
+//        ObjectifyFactory factory = ObjectifyService.factory();
+//        QuoteDao dao = new QuoteDao(factory);
+//        dao.registerObjects(factory);
+//        return dao;
+//    }
+
     public Ranking rank(LocalDate date, RankingParams params) {
-        QuoteDao dao = getQuoteDao();
         List<Quote> toQuotes = dao.query(date);
         List<Quote> fromQuotes = dao.query(date.minusMonths(params.getPerformanceRange()));
         Map<String, BigDecimal> performances = calculatePerformances(fromQuotes, toQuotes);

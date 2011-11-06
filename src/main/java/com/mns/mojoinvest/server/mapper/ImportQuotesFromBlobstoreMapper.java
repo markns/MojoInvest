@@ -4,11 +4,12 @@ import com.google.appengine.api.datastore.Entity;
 import com.google.appengine.tools.mapreduce.AppEngineMapper;
 import com.google.appengine.tools.mapreduce.BlobstoreRecordKey;
 import com.google.appengine.tools.mapreduce.DatastoreMutationPool;
+import com.mns.mojoinvest.server.util.QuoteUtils;
 import org.apache.hadoop.io.NullWritable;
+import org.joda.time.LocalDate;
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.logging.Logger;
 
 public class ImportQuotesFromBlobstoreMapper extends
@@ -16,7 +17,7 @@ public class ImportQuotesFromBlobstoreMapper extends
 
     private static final Logger log = Logger.getLogger(ImportQuotesFromBlobstoreMapper.class.getName());
 
-    SimpleDateFormat fmt = new SimpleDateFormat("yyyy-MM-dd");
+    public static final DateTimeFormatter fmt = DateTimeFormat.forPattern("yyyy-MM-dd");
 
     @Override
     public void map(BlobstoreRecordKey key, byte[] segment, Context context) {
@@ -34,12 +35,7 @@ public class ImportQuotesFromBlobstoreMapper extends
         }
 
         String symbol = values[0];
-        Date date;
-        try {
-            date = fmt.parse(values[1]);
-        } catch (ParseException e) {
-            throw new IllegalArgumentException(e);
-        }
+        LocalDate date  = fmt.parseDateTime(values[1]).toLocalDate();
         String open = values[2];
         String high = values[3];
         String low = values[4];
@@ -49,9 +45,9 @@ public class ImportQuotesFromBlobstoreMapper extends
         boolean rolled = false;
 
         if (!symbol.isEmpty()) {
-            Entity quote = new Entity("Quote", fmt.format(date) + " " + symbol);
+            Entity quote = new Entity("Quote", QuoteUtils.quoteId(symbol, date));
             quote.setProperty("symbol", symbol);
-            quote.setProperty("date", date);
+            quote.setProperty("date", date.toDateMidnight().toDate());
             quote.setUnindexedProperty("open", open);
             quote.setUnindexedProperty("high", high);
             quote.setUnindexedProperty("low", low);

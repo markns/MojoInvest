@@ -34,7 +34,7 @@ public class Ranking {
     }
 
     public static String createId(LocalDate date, RankingParams params) {
-        return forDatastore(date) + " " + params;
+        return forDatastore(date) + "|" + params;
     }
 
     private static final Splitter SPLITTER = Splitter.on('|')

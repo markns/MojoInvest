@@ -11,7 +11,7 @@ import static com.mns.mojoinvest.server.util.DatastoreUtils.forDatastore;
 public class QuoteUtils {
 
     public static String quoteId(String symbol, LocalDate date) {
-        return forDatastore(date) + " " + symbol;
+        return forDatastore(date) + "|" + symbol;
     }
 
     //TODO : tidy this method up

@@ -1,7 +1,7 @@
 <configurations>
 
 
-    <configuration name="Import all data from the Blobstore">
+    <configuration name="Import quote data from the Blobstore">
 
         <property>
             <name>mapreduce.map.class</name>

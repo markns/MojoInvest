@@ -1,8 +1,10 @@
 package com.mns.mojoinvest.server.engine.calculator;
 
+import com.googlecode.objectify.ObjectifyService;
 import com.mns.mojoinvest.server.engine.model.Quote;
 import com.mns.mojoinvest.server.engine.model.Ranking;
 import com.mns.mojoinvest.server.engine.model.RankingParams;
+import com.mns.mojoinvest.server.engine.model.dao.QuoteDao;
 import org.joda.time.LocalDate;
 import org.junit.Test;
 
@@ -12,6 +14,8 @@ import java.util.*;
 import static junit.framework.Assert.assertEquals;
 
 public class RankingProcessorTests {
+
+    private final QuoteDao quoteDao = new QuoteDao(ObjectifyService.factory());
 
 
     @Test
@@ -42,7 +46,7 @@ public class RankingProcessorTests {
         performances.put("D", new BigDecimal("21.8"));
         performances.put("E", new BigDecimal("88.6"));
 
-        RankingCalculator rankingCalculator = new RankingCalculator();
+        RankingCalculator rankingCalculator = new RankingCalculator(quoteDao);
         Ranking ranking = rankingCalculator.buildRanking(new LocalDate(2011, 7, 7), new RankingParams(6),
                 performances);
 
