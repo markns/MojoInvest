@@ -3,7 +3,7 @@
     <cron>
         <url>/pipeline</url>
         <description>Daily processing pipeline</description>
-        <schedule>mon,tue,wed,thu,fri 16:15</schedule>
+        <schedule>every monday,tuesday,wednesday,thursday,friday 16:15</schedule>
         <target>crawler</target>
         <timezone>America/New_York</timezone>
     </cron>
