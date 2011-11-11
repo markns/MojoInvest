@@ -2,6 +2,7 @@ package com.mns.mojoinvest.server.servlet;
 
 import com.google.appengine.tools.pipeline.PipelineService;
 import com.google.appengine.tools.pipeline.PipelineServiceFactory;
+import com.google.inject.Singleton;
 import com.mns.mojoinvest.server.pipeline.DailyPipeline;
 import com.mns.mojoinvest.server.servlet.util.ParameterParser;
 import org.joda.time.LocalDate;
@@ -13,6 +14,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.logging.Logger;
 
+@Singleton
 public class PipelineServlet extends HttpServlet {
 
     private static final Logger log = Logger.getLogger(PipelineServlet.class.getName());

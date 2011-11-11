@@ -41,6 +41,8 @@ public class DispatchServletModule extends ServletModule {
         serve("/mapreduce/*").with(InjectingMapReduceServlet.class);
         bind(InjectingMapReduceServlet.class).in(Singleton.class);
 
+
+        serve("/pipeline").with(PipelineServlet.class);
         serve("/quoteviewer").with(QuoteViewerServlet.class);
         serve("/fundviewer").with(FundViewerServlet.class);
         serve("/fundloader").with(FundLoaderServlet.class);

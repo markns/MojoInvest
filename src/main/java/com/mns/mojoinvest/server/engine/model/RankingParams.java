@@ -1,6 +1,8 @@
 package com.mns.mojoinvest.server.engine.model;
 
-public class RankingParams {
+import java.io.Serializable;
+
+public class RankingParams implements Serializable {
 
     private int performanceRange;
 
