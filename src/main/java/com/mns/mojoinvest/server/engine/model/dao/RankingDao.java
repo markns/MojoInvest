@@ -27,7 +27,7 @@ public class RankingDao extends DAOBase {
     }
 
     @Override
-    protected void registerObjects(ObjectifyFactory ofyFactory) {
+    public void registerObjects(ObjectifyFactory ofyFactory) {
         objectsRegistered = true;
         ofyFactory.register(Ranking.class);
     }
