@@ -32,6 +32,7 @@ public class PerformanceRankingJob extends Job2<Ranking, LocalDate, RankingParam
 
         RankingCalculator calculator = new RankingCalculator(quoteDao);
         Ranking ranking = calculator.rank(date, params);
+        rankingDao.put(ranking);
 
         return immediate(ranking);
 
