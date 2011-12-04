@@ -1,0 +1,81 @@
+<!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
+<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
+	xmlns:g="urn:import:com.google.gwt.user.client.ui"
+	xmlns:w="urn:import:org.gwtgaebook.CultureShows.client.widget"
+>
+
+	<ui:with type="com.mns.mojoinvest.client.NameTokens" field="nameTokens" />
+	<ui:with field='res' type='com.mns.mojoinvest.client.resources.Resources' />
+
+	<ui:style>
+
+		.anchor {
+			text-decoration: underline;
+			cursor: pointer;
+		}
+
+		.topItem {
+			font-weight: bold;
+			cursor: pointer;
+		}
+
+
+		.headerMenu {
+		}
+
+	<!--  menu styling
+	http://comments.gmane.org/gmane.org.google.gwt/46577
+	 -->
+		@external gwt-MenuItem;
+		.headerMenu .gwt-MenuItem {
+			color: #000000;
+			background-color: #FF9C00;
+			font-size: 1.2em;
+		}
+
+		@external gwt-MenuItem-selected;
+		.headerMenu .gwt-MenuItem-selected {
+			background-color: #FFBE22;
+		}
+
+		@external gwt-MenuItem-selected;
+		.headerMenu-vertical .gwt-MenuItem-selected {
+			background-color: #FF9C00;
+		}
+
+<!--
+		TODO how to style the whole menu?
+
+		.gwt-MenuBar-horizontal {
+		  background: #e3e8f3 url(images/hborder.png) repeat-x 0px -2003px;
+		  border: 1px solid #BBBBBB;
+		}
+		.gwt-MenuBar-horizontal .gwt-MenuItem {
+		  padding: 0px 10px;
+		  vertical-align: bottom;
+		  color: #666666;
+		  font-weight: bold;
+		}
+-->
+
+	</ui:style>
+
+	<g:HTMLPanel>
+
+		<!-- by default, all widgets are hidden. View will enable them depending on userInfo -->
+	    <g:MenuBar ui:field="headerMenu" visible="false" stylePrimaryName="{style.headerMenu}" autoOpen="false">
+	    <!-- http://code.google.com/p/google-web-toolkit/issues/detail?id=5453 -->
+	        <g:MenuItem ui:field="accountItem" addStyleNames="{style.topItem}">
+			    <g:MenuBar vertical="true">
+			        <!-- <g:MenuItem ui:field="accountSettingsItem">Settings</g:MenuItem> -->
+			        <g:MenuItem ui:field="accountHelpItem">Help</g:MenuItem>
+			        <g:MenuItem ui:field="accountSignOutItem">Sign out</g:MenuItem>
+			    </g:MenuBar>
+
+
+	        </g:MenuItem>
+	    </g:MenuBar>
+
+	</g:HTMLPanel>
+
+</ui:UiBinder>

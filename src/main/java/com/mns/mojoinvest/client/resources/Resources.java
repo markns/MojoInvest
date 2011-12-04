@@ -34,10 +34,17 @@ public interface Resources extends ClientBundle {
     @Source("defines.css")
     Defines defines();
 
+    @Source("menuBarDownIcon.gif")
+    public ImageResource menuBarDownIcon();
+
     /**
      * @author Mark Nuttall-Smith
      */
     public interface Style extends CssResource {
+
+		// autogenerate, see
+		// http://code.google.com/p/google-web-toolkit/wiki/CssResource#Automatically_generating_interfaces
+
         String username();
 
         String formMargin();

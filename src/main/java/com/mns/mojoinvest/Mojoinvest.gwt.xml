@@ -38,7 +38,7 @@
 
 
     <!-- Specify the app entry point class.                         -->
-    <entry-point class='com.mns.mojoinvest.client.Mojoinvest'/>
+    <entry-point class='com.mns.mojoinvest.client.Main'/>
 
     <!-- French language, independent of country -->
     <!--<extend-property name="locale" values="fr"/>-->
@@ -51,6 +51,6 @@
     <source path='shared'/>
 
     <define-configuration-property name="gin.ginjector" is-multi-valued="false"/>
-    <set-configuration-property name="gin.ginjector" value="com.mns.mojoinvest.client.gin.ClientGinjector"/>
+    <set-configuration-property name="gin.ginjector" value="com.mns.mojoinvest.client.MainGinjector"/>
 
 </module>

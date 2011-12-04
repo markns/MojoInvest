@@ -14,36 +14,40 @@
  * limitations under the License.
  */
 
-package com.mns.mojoinvest.client.gin;
+package com.mns.mojoinvest.client;
 
 import com.google.gwt.event.shared.EventBus;
-import com.google.gwt.inject.client.AsyncProvider;
 import com.google.gwt.inject.client.GinModules;
 import com.google.gwt.inject.client.Ginjector;
 import com.google.inject.Provider;
 import com.gwtplatform.dispatch.client.gin.DispatchAsyncModule;
-import com.gwtplatform.dispatch.shared.DispatchAsync;
 import com.gwtplatform.mvp.client.proxy.PlaceManager;
-import com.mns.mojoinvest.client.presenter.BreadcrumbsPresenter;
-import com.mns.mojoinvest.client.presenter.HomePresenter;
-import com.mns.mojoinvest.client.presenter.ProductListPresenter;
+import com.mns.mojoinvest.client.landing.LandingModule;
+import com.mns.mojoinvest.client.landing.LandingPresenter;
+import com.mns.mojoinvest.client.resources.Resources;
+import com.mns.mojoinvest.client.resources.Translations;
 
-@GinModules({DispatchAsyncModule.class, ClientModule.class})
-public interface ClientGinjector extends Ginjector {
-
+@GinModules({DispatchAsyncModule.class, MainModule.class, LandingModule.class})
+public interface MainGinjector extends Ginjector {
     EventBus getEventBus();
-
-    AsyncProvider<HomePresenter> getHomePresenter();
-
-    Provider<BreadcrumbsPresenter> getBreadcrumbsPresenter();
 
     PlaceManager getPlaceManager();
 
-//    Resources getResources();
+//    ProxyFailureHandler getProxyFailureHandler();
 
-    AsyncProvider<ProductListPresenter> getProductListPresenter();
+    Resources getResources();
 
-    DispatchAsync getDispatcher();
+    Translations getTranslations();
+
+//    SignedInGatekeeper getSignedInGatekeeper();
+
+    Provider<MainPresenter> getMainPresenter();
+
+    Provider<LandingPresenter> getLandingPresenter();
+
+//    Provider<PagePresenter> getContentPresenter();
+
+
 
 //    Translations getTranslations();
 

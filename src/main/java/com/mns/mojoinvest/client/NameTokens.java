@@ -30,21 +30,27 @@ package com.mns.mojoinvest.client;
  */
 public class NameTokens {
 
-    public static final String homePage = "!homePage";
+    public static final String landing = "!landing";
 
-    public static final String product = "!product";
-
-    public static final String productList = "!productList";
-
-    public static String getHomePage() {
-        return homePage;
+    public static String getLanding() {
+        return landing;
     }
 
-    public static String getProductListPage() {
-        return productList;
+    public static final String signIn = "!signIn";
+
+    public static String getSignIn() {
+        return signIn;
     }
 
-    public static String getProductPage() {
-        return product;
+    public static final String signOut = "!signOut";
+
+    public static String getSignOut() {
+        return signOut;
+    }
+
+    public static final String guide = "!guide";
+
+    public static String getGuide() {
+        return guide;
     }
 }
