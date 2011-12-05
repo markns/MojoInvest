@@ -2,8 +2,8 @@
     <!--Change the refresh rate of the default queue to 1/s-->
     <queue>
         <name>default</name>
-        <rate>30/m</rate>
+        <rate>300/m</rate>
         <bucket-size>5</bucket-size>
-        <!--<max-concurrent-requests>10</max-concurrent-requests>-->
+        <max-concurrent-requests>10</max-concurrent-requests>
     </queue>
 </queue-entries>
