@@ -22,25 +22,25 @@ import com.google.gwt.i18n.client.Constants;
  * @author Mark Nuttall-Smith
  */
 public interface Translations extends Constants {
-    String codeLoadFailure();
-
-    String tabAccounts();
-
-    String tabGeneral();
-
-    String tabUsers();
-
-    String changeDetected();
-
-    String actionCallbackFailed();
-
-    String operationFailedRetry();
-
-    String undo();
-
-    String redo();
-
-    String settingsSaved();
-
-    String settingsUndone();
+//    String codeLoadFailure();
+//
+//    String tabAccounts();
+//
+//    String tabGeneral();
+//
+//    String tabUsers();
+//
+//    String changeDetected();
+//
+//    String actionCallbackFailed();
+//
+//    String operationFailedRetry();
+//
+//    String undo();
+//
+//    String redo();
+//
+//    String settingsSaved();
+//
+//    String settingsUndone();
 }

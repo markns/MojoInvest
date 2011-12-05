@@ -26,8 +26,12 @@ import com.mns.mojoinvest.client.landing.LandingModule;
 import com.mns.mojoinvest.client.landing.LandingPresenter;
 import com.mns.mojoinvest.client.resources.Resources;
 import com.mns.mojoinvest.client.resources.Translations;
+import com.mns.mojoinvest.client.widget.WidgetModule;
 
-@GinModules({DispatchAsyncModule.class, MainModule.class, LandingModule.class})
+@GinModules({DispatchAsyncModule.class,
+        MainModule.class,
+        WidgetModule.class,
+        LandingModule.class})
 public interface MainGinjector extends Ginjector {
     EventBus getEventBus();
 
@@ -46,7 +50,6 @@ public interface MainGinjector extends Ginjector {
     Provider<LandingPresenter> getLandingPresenter();
 
 //    Provider<PagePresenter> getContentPresenter();
-
 
 
 //    Translations getTranslations();
