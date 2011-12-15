@@ -73,11 +73,10 @@
     <g:HTMLPanel ui:field="container">
 
 	    <g:HTMLPanel addStyleNames="{style.specificContent}">
-		Schedule theater performances and other events, and easily embed them on your website, blog or plain HTML homepage. For free.
-
+        Multiple research papers show it is possible to apply momentum strategies to successfully rotate between equity styles (small cap value, large cap growth etc.). This approach gives investors an ability to exploit periods of strong performance of particular investment styles together with the possibility to move out of the style during periods of its underperfomance. And do you know what is the best news? It is simple. Various equity style portfolios are easily accessible via low cost ETFs. The practically zero correlation to broad equity market (in long-short version of this strategy) is an extra bonus which makes this strategy an easily accessible good portfolio diversifier.
 		<ul>
-			<li>real time updates: your website reflects any changes automatically</li>
-			<li>be independent from other persons: no need to ask somebody else to publish your updates</li>
+			<li>Backtest performance from momentum strategies</li>
+			<li>Filter ETFs by provider, sector, leverage etc</li>
 		</ul>
 	    </g:HTMLPanel>
 

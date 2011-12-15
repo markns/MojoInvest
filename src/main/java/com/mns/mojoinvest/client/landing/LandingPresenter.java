@@ -10,6 +10,7 @@ import com.gwtplatform.mvp.client.View;
 import com.gwtplatform.mvp.client.annotations.NameToken;
 import com.gwtplatform.mvp.client.annotations.ProxyStandard;
 import com.gwtplatform.mvp.client.proxy.PlaceManager;
+import com.gwtplatform.mvp.client.proxy.PlaceRequest;
 import com.gwtplatform.mvp.client.proxy.ProxyPlace;
 import com.gwtplatform.mvp.client.proxy.RevealContentEvent;
 import com.mns.mojoinvest.client.*;
@@ -53,7 +54,6 @@ public class LandingPresenter extends
         RevealContentEvent.fire(this, MainPresenter.TYPE_RevealPageContent,
                 this);
         Main.logger.info("Revealing Landing");
-
     }
 
     @Override
@@ -136,8 +136,8 @@ public class LandingPresenter extends
         UserInfoAvailableEvent.fire(this, clientState);
 
         if (clientState.userInfo.isSignedIn) {
-//            PlaceRequest myRequest = new PlaceRequest(NameTokens.performances);
-//            placeManager.revealPlace(myRequest);
+            PlaceRequest myRequest = new PlaceRequest(NameTokens.app);
+            placeManager.revealPlace(myRequest);
         } else {
             getView().setUserInfo(clientState.userInfo);
         }

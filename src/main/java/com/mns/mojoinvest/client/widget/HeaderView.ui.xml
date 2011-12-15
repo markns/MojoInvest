@@ -15,48 +15,49 @@
 		}
 
 		.topItem {
-			font-weight: bold;
+			/*font-weight: bold;*/
 			cursor: pointer;
 		}
 
 
 		.headerMenu {
+            padding-top: 30px;
 		}
 
 	<!--  menu styling
 	http://comments.gmane.org/gmane.org.google.gwt/46577
 	 -->
-		@external gwt-MenuItem;
-		.headerMenu .gwt-MenuItem {
-			color: #000000;
-			background-color: #FF9C00;
-			font-size: 1.2em;
-		}
+        @external gwt-MenuItem;
+        .headerMenu .gwt-MenuItem {
+            color: #000000;
+            background-color: #f2f2f2;
+            /*font-size: 1.2em;*/
+        }
 
-		@external gwt-MenuItem-selected;
-		.headerMenu .gwt-MenuItem-selected {
-			background-color: #FFBE22;
-		}
+        @external gwt-MenuItem-selected;
+        .headerMenu .gwt-MenuItem-selected {
+            background-color: #fafafa;
+        }
 
-		@external gwt-MenuItem-selected;
-		.headerMenu-vertical .gwt-MenuItem-selected {
-			background-color: #FF9C00;
-		}
+        @external gwt-MenuItem-selected;
+        .headerMenu-vertical .gwt-MenuItem-selected {
+            background-color: #f2f2f2;
+        }
 
-<!--
-		TODO how to style the whole menu?
+        <!--
+                TODO how to style the whole menu?
 
-		.gwt-MenuBar-horizontal {
-		  background: #e3e8f3 url(images/hborder.png) repeat-x 0px -2003px;
-		  border: 1px solid #BBBBBB;
-		}
-		.gwt-MenuBar-horizontal .gwt-MenuItem {
-		  padding: 0px 10px;
-		  vertical-align: bottom;
-		  color: #666666;
-		  font-weight: bold;
-		}
--->
+                .gwt-MenuBar-horizontal {
+                  background: #e3e8f3 url(images/hborder.png) repeat-x 0px -2003px;
+                  border: 1px solid #BBBBBB;
+                }
+                .gwt-MenuBar-horizontal .gwt-MenuItem {
+                  padding: 0px 10px;
+                  vertical-align: bottom;
+                  color: #666666;
+                  font-weight: bold;
+                }
+        -->
 
 	</ui:style>
 

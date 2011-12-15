@@ -16,7 +16,7 @@ public class QuotesFetcherJob extends Job2<List<Quote>, List<Fund>, LocalDate> {
 
     private static final Logger log = Logger.getLogger(QuotesFetcherJob.class.getName());
 
-    private static final int BATCH_SIZE = 100;
+    private static final int BATCH_SIZE = 50;
 
     @Override
     public Value<List<Quote>> run(List<Fund> funds, LocalDate date) {
@@ -28,12 +28,12 @@ public class QuotesFetcherJob extends Job2<List<Quote>, List<Fund>, LocalDate> {
             batch.add(fund);
             if (batch.size() == BATCH_SIZE) {
                 List<Fund> clone = new ArrayList<Fund>(batch);
-                quoteLists.add(futureCall(new QuoteBatchJob(), immediate(clone), immediate(date)));
+                quoteLists.add(futureCall(new QuoteFetcherBatchJob(), immediate(clone), immediate(date)));
                 batch.clear();
             }
         }
         if (batch.size() > 0) {
-            quoteLists.add(futureCall(new QuoteBatchJob(), immediate(batch), immediate(date)));
+            quoteLists.add(futureCall(new QuoteFetcherBatchJob(), immediate(batch), immediate(date)));
         }
 
         return futureCall(new MergeQuoteListJob(), futureList(quoteLists));

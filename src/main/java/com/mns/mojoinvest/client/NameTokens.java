@@ -53,4 +53,10 @@ public class NameTokens {
     public static String getGuide() {
         return guide;
     }
+
+    public static final String app = "!app";
+
+    public static String getApp() {
+        return app;
+    }
 }

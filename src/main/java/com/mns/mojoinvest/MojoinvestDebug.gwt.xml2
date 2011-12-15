@@ -14,8 +14,8 @@
    limitations under the License.
 -->
 
-<module rename-to='MojoinvestDebug'>
-    <inherits name="com.mns.mojoinvest.Mojoinvest"/>
-    <set-property name="user.agent" value="gecko1_8"/>
-    <set-property name="locale" value="default"/>
-</module>
+<!--<module rename-to='MojoinvestDebug'>-->
+    <!--<inherits name="com.mns.mojoinvest.Mojoinvest"/>-->
+    <!--<set-property name="user.agent" value="gecko1_8"/>-->
+    <!--<set-property name="locale" value="default"/>-->
+<!--</module>-->

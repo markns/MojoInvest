@@ -1,0 +1,53 @@
+<!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
+<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
+	xmlns:g="urn:import:com.google.gwt.user.client.ui"
+	xmlns:gcell="urn:import:com.google.gwt.user.cellview.client"
+	xmlns:gdp="urn:import:com.google.gwt.user.datepicker.client"
+	ui:generateFormat='com.google.gwt.i18n.rebind.format.PropertiesFormat'
+	ui:generateKeys="com.google.gwt.i18n.rebind.keygen.MD5KeyGenerator"
+	ui:generateLocales="default"
+	>
+
+	<ui:with type="com.mns.mojoinvest.client.NameTokens" field="nameTokens" />
+	<ui:with field='res' type='com.mns.mojoinvest.client.resources.Resources' />
+
+	<ui:style>
+
+
+
+	</ui:style>
+
+    <g:HTMLPanel ui:field="container" addStyleNames="{res.style.container}">
+		<h3>Performances / events</h3>
+		<p>
+		Schedule theater performances and other events, and easily embed them on your website, blog or plain HTML homepage. For free.
+		<g:InlineHyperlink ui:field="guide"
+				targetHistoryToken="{nameTokens.getGuide}">Learn how</g:InlineHyperlink>
+		</p>
+
+		<label class="{res.style.label} {res.style.required}"><span>Date and time</span>
+      		<gdp:DateBox ui:field="date" title="Date and time"></gdp:DateBox>
+		</label>
+
+		<label class="{res.style.label} {res.style.required}"><span>Show name</span>
+			<g:SuggestBox ui:field="show" title="Show name" />
+	    	<!-- <g:TextBox ui:field="show" title="Show name"></g:TextBox> -->
+		</label>
+
+		<label class="{res.style.label} {res.style.required}"><span>Location</span>
+			<g:SuggestBox ui:field="location" title="Location" />
+	    	<!-- <g:TextBox ui:field="location" title="Location"></g:TextBox> -->
+		</label>
+
+	    <g:Button ui:field="updatePerformance" visible="false" addStyleNames="{res.style.button} {res.style.blue} {res.style.small}">Update</g:Button>
+	    <g:Button ui:field="deletePerformance" visible="false" addStyleNames="{res.style.button} {res.style.blue} {res.style.small}">Delete</g:Button>
+
+		<g:HTMLPanel addStyleNames="{res.style.listing}">
+			<h4>Scheduled performances</h4>
+	    	<!--<gcell:CellList ui:field="performancesCL" />-->
+		</g:HTMLPanel>
+
+    </g:HTMLPanel>
+
+
+</ui:UiBinder>

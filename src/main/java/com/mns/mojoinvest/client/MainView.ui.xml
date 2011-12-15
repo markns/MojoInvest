@@ -20,9 +20,9 @@
             margin: 0;
             padding: 0;
             width: 100%;
-            height: 30px;
+            height: 91px;
             font-size: 0.8em;
-            background-color: #FF9C00;
+            background-color: #f2f2f2;
             color: #000000;
             /* green #7BB31A yellow #EEDB00  blue #8B88FF http://www.colorcombos.com/color-scheme-98.html */
         }
@@ -35,21 +35,23 @@
         }
 
         .pageContent {
-            margin-top: 30px;
+            margin-top: 91px;
             margin-left: auto;
             margin-right: auto;
             padding: 0;
             max-width: 900px;
+            background-color: #fafafa;
         }
 
         .logo {
             float: left;
-            padding: 0.5em;
+            /*padding: 0.5em;*/
         }
 
         .headerNav {
             float: right;
-            padding: 4px 20px 0px;
+            padding: 4px 40px 0px;
+            background-color: #f2f2f2;
         }
 
     </ui:style>

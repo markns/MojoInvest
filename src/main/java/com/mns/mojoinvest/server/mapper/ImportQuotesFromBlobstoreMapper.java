@@ -42,7 +42,7 @@ public class ImportQuotesFromBlobstoreMapper extends
         String close = values[5];
         String volume = values[6];
         String adjClose = values[7];
-        boolean rolled = false;
+        boolean rolled = Boolean.parseBoolean(values[8]);
 
         if (!symbol.isEmpty()) {
             Entity quote = new Entity("Quote", QuoteUtils.quoteId(symbol, date));

@@ -31,7 +31,7 @@ public class MainPlaceManager extends PlaceManagerImpl {
 
     @Override
     public void revealDefaultPlace() {
-        revealPlace(new PlaceRequest(NameTokens.landing));
+        revealPlace(new PlaceRequest(NameTokens.landing), false);
     }
 
 

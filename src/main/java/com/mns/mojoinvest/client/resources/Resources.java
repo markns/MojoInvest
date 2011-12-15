@@ -31,66 +31,41 @@ public interface Resources extends ClientBundle {
     @Source("Mojoinvest.css")
     Style style();
 
-    @Source("defines.css")
-    Defines defines();
-
     @Source("menuBarDownIcon.gif")
     public ImageResource menuBarDownIcon();
 
-    /**
-     * @author Mark Nuttall-Smith
-     */
     public interface Style extends CssResource {
+        // autogenerate, see
+        // http://code.google.com/p/google-web-toolkit/wiki/CssResource#Automatically_generating_interfaces
+        String anchor();
 
-		// autogenerate, see
-		// http://code.google.com/p/google-web-toolkit/wiki/CssResource#Automatically_generating_interfaces
+        String big();
 
-        String username();
-
-        String formMargin();
-
-        String errorText();
-
-        String round1();
-
-        String round2();
-
-        String round4();
-
-        String gray();
-
-        String black();
-
-        String yellow();
+        String block();
 
         String blue();
 
-        String transparent();
+        String button();
 
-        String vertex();
+        String container();
 
-        String edge();
+        String formButton();
 
-        String cell();
+        String green();
 
-        String selectedCell();
-    }
+        String label();
 
-    /**
-     * @author Mark Nuttall-Smith
-     */
-    public interface Defines extends CssResource {
-//        String darkPanelColor();
-//
-//        String lightPanelColor();
-//
-//        String titleFontWeight();
-//
-//        String titleFontSize();
-//
-//        String titleColor();
-//
-//        String formLineSpacing();
+        String listing();
+
+        String medium();
+
+        String orange();
+
+        String required();
+
+        String small();
+
     }
 
 }
+

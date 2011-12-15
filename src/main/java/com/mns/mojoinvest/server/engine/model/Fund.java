@@ -147,15 +147,18 @@ public class Fund implements Serializable, Comparable<Fund> {
         return symbol.compareTo(o.getSymbol());
     }
 
+
+
     @Override
     public String toString() {
-        return "Fund{" +
-                "symbol='" + symbol + '\'' +
-                ", name='" + name + '\'' +
-                ", category='" + category + '\'' +
-                ", provider='" + provider + '\'' +
-                ", inceptionDate=" + inceptionDate +
-                '}';
+        return symbol;
+//        return "Fund{" +
+//                "symbol='" + symbol + '\'' +
+//                ", name='" + name + '\'' +
+//                ", category='" + category + '\'' +
+//                ", provider='" + provider + '\'' +
+//                ", inceptionDate=" + inceptionDate +
+//                '}';
     }
 
 //    @Override

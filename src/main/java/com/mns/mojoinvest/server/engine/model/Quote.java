@@ -143,21 +143,21 @@ public class Quote implements Serializable {
         this.rolled = rolled;
     }
 
-
     @Override
     public String toString() {
-        return "Quote{" +
-                "id=" + id +
-                ", symbol='" + symbol + '\'' +
-                ", date='" + date + '\'' +
-                ", open=" + open +
-                ", high=" + high +
-                ", low=" + low +
-                ", close=" + close +
-                ", volume=" + volume +
-                ", adjClose=" + adjClose +
-                ", rolled=" + rolled +
-                '}';
+        return id;
+//        return "Quote{" +
+//                "id=" + id +
+//                ", symbol='" + symbol + '\'' +
+//                ", date='" + date + '\'' +
+//                ", open=" + open +
+//                ", high=" + high +
+//                ", low=" + low +
+//                ", close=" + close +
+//                ", volume=" + volume +
+//                ", adjClose=" + adjClose +
+//                ", rolled=" + rolled +
+//                '}';
     }
 
     @Override

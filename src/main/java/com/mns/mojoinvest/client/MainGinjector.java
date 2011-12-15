@@ -22,6 +22,8 @@ import com.google.gwt.inject.client.Ginjector;
 import com.google.inject.Provider;
 import com.gwtplatform.dispatch.client.gin.DispatchAsyncModule;
 import com.gwtplatform.mvp.client.proxy.PlaceManager;
+import com.mns.mojoinvest.client.app.AppModule;
+import com.mns.mojoinvest.client.app.AppPresenter;
 import com.mns.mojoinvest.client.landing.LandingModule;
 import com.mns.mojoinvest.client.landing.LandingPresenter;
 import com.mns.mojoinvest.client.resources.Resources;
@@ -31,7 +33,8 @@ import com.mns.mojoinvest.client.widget.WidgetModule;
 @GinModules({DispatchAsyncModule.class,
         MainModule.class,
         WidgetModule.class,
-        LandingModule.class})
+        LandingModule.class,
+        AppModule.class})
 public interface MainGinjector extends Ginjector {
     EventBus getEventBus();
 
@@ -43,13 +46,13 @@ public interface MainGinjector extends Ginjector {
 
     Translations getTranslations();
 
-//    SignedInGatekeeper getSignedInGatekeeper();
+    SignedInGatekeeper getSignedInGatekeeper();
 
     Provider<MainPresenter> getMainPresenter();
 
     Provider<LandingPresenter> getLandingPresenter();
 
-//    Provider<PagePresenter> getContentPresenter();
+    Provider<AppPresenter> getAppPresenter();
 
 
 //    Translations getTranslations();

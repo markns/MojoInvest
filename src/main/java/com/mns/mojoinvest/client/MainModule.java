@@ -39,17 +39,5 @@ public class MainModule extends AbstractPresenterModule {
         bindPresenter(MainPresenter.class, MainPresenter.MyView.class,
                 MainView.class, MainPresenter.MyProxy.class);
 
-
-        // Presenters
-//        bindPresenter(BreadcrumbsPresenter.class,
-//                BreadcrumbsPresenter.MyView.class, BreadcrumbsView.class,
-//                BreadcrumbsPresenter.MyProxy.class);
-//        bindPresenter(HomePresenter.class, HomePresenter.MyView.class,
-//                HomeView.class, HomePresenter.MyProxy.class);
-//        bindPresenter(ProductListPresenter.class,
-//                ProductListPresenter.MyView.class, ProductListView.class,
-//                ProductListPresenter.MyProxy.class);
-//    bindPresenter(ProductPresenter.class, ProductPresenter.MyView.class,
-//        ProductView.class, ProductPresenter.MyProxy.class);
     }
 }
