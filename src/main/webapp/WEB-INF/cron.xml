@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <cronentries>
-    <!--<cron>-->
-        <!--<url>/pipeline</url>-->
-        <!--<description>Daily processing pipeline</description>-->
-        <!--<schedule>every monday,tuesday,wednesday,thursday,friday 16:15</schedule>-->
-        <!--<target>crawler</target>-->
-        <!--<timezone>America/New_York</timezone>-->
-    <!--</cron>-->
+    <cron>
+        <url>/pipeline</url>
+        <description>Daily processing pipeline</description>
+        <schedule>every monday,tuesday,wednesday,thursday,friday 16:15</schedule>
+        <target>crawler</target>
+        <timezone>America/New_York</timezone>
+    </cron>
 </cronentries>
