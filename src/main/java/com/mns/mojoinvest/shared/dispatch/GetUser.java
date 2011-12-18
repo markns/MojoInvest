@@ -15,7 +15,7 @@ public class GetUser {
 	@Out(1)
 	String errorText; // empty if success
 
-	@Out(2)
+    @Out(2)
     UserInfo userInfo;
 
 //	@Out(3)

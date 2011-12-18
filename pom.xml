@@ -216,6 +216,11 @@
             <version>${gwt.version}</version>
             <scope>provided</scope>
         </dependency>
+        <dependency>
+            <groupId>com.google.gwt.visualization</groupId>
+            <artifactId>gwt-visualization</artifactId>
+            <version>1.1.2</version>
+        </dependency>
 
         <!-- Required for GWT RequestFactory -->
         <dependency>
@@ -402,7 +407,8 @@
                     <source>${target.jdk}</source>
                     <target>${target.jdk}</target>
                     <encoding>${project.encoding}</encoding>
-                    <generatedSourcesDirectory>${project.build.directory}/generated-sources/apt</generatedSourcesDirectory>
+                    <generatedSourcesDirectory>${project.build.directory}/generated-sources/apt
+                    </generatedSourcesDirectory>
                 </configuration>
             </plugin>
 
@@ -413,6 +419,7 @@
                 <executions>
                     <execution>
                         <id>add-source</id>
+                        <phase>generate-sources</phase>
                         <goals>
                             <goal>add-source</goal>
                         </goals>
@@ -544,7 +551,7 @@
                 </executions>
             </plugin>
 
-<!--            <plugin>
+            <!--            <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-install-plugin</artifactId>
                 <executions>

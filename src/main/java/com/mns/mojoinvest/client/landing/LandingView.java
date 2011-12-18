@@ -51,9 +51,9 @@ public class LandingView extends ViewWithUiHandlers<LandingUiHandlers>
 		Window.Location.replace(userInfo.signInURLs.get("Google"));
 	}
 
-	@UiHandler("yahooSignIn")
-	void onYahooSignInClicked(ClickEvent event) {
-		Window.Location.replace(userInfo.signInURLs.get("Yahoo"));
-	}
+//	@UiHandler("yahooSignIn")
+//	void onYahooSignInClicked(ClickEvent event) {
+//		Window.Location.replace(userInfo.signInURLs.get("Yahoo"));
+//	}
 
 }

@@ -84,7 +84,7 @@
 			<g:HTMLPanel addStyleNames="{style.center}">
 			<b>Sign in</b><br/>with your existing account
 				<g:Image ui:field="googleSignIn" altText="Google" addStyleNames="{style.provider}" resource="{google}" />
-				<g:Image ui:field="yahooSignIn" altText="Yahoo" addStyleNames="{style.provider}" resource="{yahoo}" />
+				<!--<g:Image ui:field="yahooSignIn" altText="Yahoo" addStyleNames="{style.provider}" resource="{yahoo}" />-->
 			</g:HTMLPanel>
 
 			<g:HTMLPanel addStyleNames="{style.center}">

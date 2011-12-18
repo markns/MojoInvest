@@ -18,11 +18,13 @@ package com.mns.mojoinvest.server.guice;
 
 import com.gwtplatform.dispatch.server.guice.HandlerModule;
 import com.mns.mojoinvest.server.UserInfoProvider;
+import com.mns.mojoinvest.server.handler.GetFundPerformanceHandler;
 import com.mns.mojoinvest.server.handler.GetProductListHandler;
 import com.mns.mojoinvest.server.handler.GetUserHandler;
 import com.mns.mojoinvest.server.handler.RunBackTestHandler;
 import com.mns.mojoinvest.shared.action.GetProductListAction;
 import com.mns.mojoinvest.shared.action.RunBackTestAction;
+import com.mns.mojoinvest.shared.dispatch.GetFundPerformanceAction;
 import com.mns.mojoinvest.shared.dispatch.GetUserAction;
 import com.mns.mojoinvest.shared.model.UserInfo;
 
@@ -42,5 +44,6 @@ public class ServerModule extends HandlerModule {
         bindHandler(GetProductListAction.class, GetProductListHandler.class);
 
         bindHandler(GetUserAction.class, GetUserHandler.class);
+        bindHandler(GetFundPerformanceAction.class, GetFundPerformanceHandler.class);
     }
 }

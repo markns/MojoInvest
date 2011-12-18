@@ -1,6 +1,7 @@
 package com.mns.mojoinvest.client.app;
 
 import com.google.gwt.event.shared.EventBus;
+import com.google.gwt.visualization.client.DataTable;
 import com.google.inject.Inject;
 import com.gwtplatform.dispatch.shared.DispatchAsync;
 import com.gwtplatform.mvp.client.HasUiHandlers;
@@ -13,22 +14,25 @@ import com.gwtplatform.mvp.client.proxy.PlaceManager;
 import com.gwtplatform.mvp.client.proxy.ProxyPlace;
 import com.gwtplatform.mvp.client.proxy.RevealContentEvent;
 import com.mns.mojoinvest.client.*;
+import com.mns.mojoinvest.shared.dispatch.GetFundPerformanceAction;
+import com.mns.mojoinvest.shared.dispatch.GetFundPerformanceResult;
+import com.mns.mojoinvest.shared.dto.DataTableDto;
 
 public class AppPresenter extends
         Presenter<AppPresenter.MyView, AppPresenter.MyProxy>
-		implements AppUiHandlers {
+        implements AppUiHandlers {
 
-	@ProxyStandard
-	@NameToken(NameTokens.app)
-	@UseGatekeeper(SignedInGatekeeper.class)
-	public interface MyProxy extends ProxyPlace<AppPresenter> {
-	}
+    @ProxyStandard
+    @NameToken(NameTokens.app)
+    @UseGatekeeper(SignedInGatekeeper.class)
+    public interface MyProxy extends ProxyPlace<AppPresenter> {
+    }
 
-	public interface MyView extends View, HasUiHandlers<AppUiHandlers> {
+    public interface MyView extends View, HasUiHandlers<AppUiHandlers> {
 
         public void resetAndFocus();
 
-		public void setDefaultValues();
+        public void setDefaultValues();
 
 //		public void loadPerformanceData(Integer start, Integer length,
 //                                        List<Performance> performances);
@@ -39,49 +43,49 @@ public class AppPresenter extends
 //
 //		public void setShowData(List<Show> shows);
 
-	}
+    }
 
-	private final PlaceManager placeManager;
-	private final DispatchAsync dispatcher;
-	private ClientState clientState;
+    private final PlaceManager placeManager;
+    private final DispatchAsync dispatcher;
+    private ClientState clientState;
 
-	@Inject
-	public AppPresenter(EventBus eventBus, MyView view, MyProxy proxy,
+    @Inject
+    public AppPresenter(EventBus eventBus, MyView view, MyProxy proxy,
                         PlaceManager placeManager, DispatchAsync dispatcher,
                         final ClientState clientState) {
-		super(eventBus, view, proxy);
-		this.placeManager = placeManager;
-		this.dispatcher = dispatcher;
-		this.clientState = clientState;
+        super(eventBus, view, proxy);
+        this.placeManager = placeManager;
+        this.dispatcher = dispatcher;
+        this.clientState = clientState;
 
-		getView().setUiHandlers(this);
+        getView().setUiHandlers(this);
 
-	}
+    }
 
-	@Override
-	protected void onReset() {
-		super.onReset();
-		getView().resetAndFocus();
+    @Override
+    protected void onReset() {
+        super.onReset();
+        getView().resetAndFocus();
 
-	}
+    }
 
-	@Override
-	protected void revealInParent() {
-		RevealContentEvent.fire(this, MainPresenter.TYPE_RevealPageContent,
+    @Override
+    protected void revealInParent() {
+        RevealContentEvent.fire(this, MainPresenter.TYPE_RevealPageContent,
                 this);
 //		requestPerformances();
 //
-//		dispatcher.execute(new ReadShowsAction(clientState.currentTheaterKey),
-//				new DispatchCallback<ReadShowsResult>() {
-//					@Override
-//					public void onSuccess(ReadShowsResult result) {
-//						Main.logger.info(result.toString());
-//						// TODO have just getLocations() instead of
-//						// getLocations().locations, by using piriti-restlet
-//						getView().setShowData(result.getShows().shows);
-//
-//					}
-//				});
+        dispatcher.execute(new GetFundPerformanceAction("SPY"),
+                new DispatchCallback<GetFundPerformanceResult>() {
+                    @Override
+                    public void onSuccess(GetFundPerformanceResult result) {
+                        Main.logger.info(result.toString());
+                        // TODO have just getLocations() instead of
+                        DataTableDto dto = result.getDataTableDto();
+                        DataTable dataTable = dto.getDataTable();
+                        Main.logger.info(dataTable.toString());
+                    }
+                });
 //
 //		dispatcher.execute(new ReadLocationsAction(
 //				clientState.currentTheaterKey),
@@ -97,7 +101,8 @@ public class AppPresenter extends
 //					}
 //				});
 //
-	}
+    }
+
 
 //	public void requestPerformances() {
 //		// Strings.isNullOrEmpty(clientState.currentTheaterKey)

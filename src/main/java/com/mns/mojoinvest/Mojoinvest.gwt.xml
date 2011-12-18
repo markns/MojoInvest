@@ -35,6 +35,7 @@
     <inherits name='com.gwtplatform.dispatch.Dispatch'/>
     <inherits name='com.gwtplatform.mvp.Mvp'/>
     <inherits name="com.googlecode.objectify.Objectify"/>
+    <inherits name="com.google.gwt.visualization.Visualization"/>
 
 
     <!-- Specify the app entry point class.                         -->
