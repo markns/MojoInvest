@@ -1,6 +1,7 @@
 package com.mns.mojoinvest.client.app;
 
 import com.google.gwt.event.shared.EventBus;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.visualization.client.DataTable;
 import com.google.inject.Inject;
 import com.gwtplatform.dispatch.shared.DispatchAsync;
@@ -16,7 +17,7 @@ import com.gwtplatform.mvp.client.proxy.RevealContentEvent;
 import com.mns.mojoinvest.client.*;
 import com.mns.mojoinvest.shared.dispatch.GetFundPerformanceAction;
 import com.mns.mojoinvest.shared.dispatch.GetFundPerformanceResult;
-import com.mns.mojoinvest.shared.dto.DataTableDto;
+import com.mns.mojoinvest.shared.dto.OptionsDto;
 
 public class AppPresenter extends
         Presenter<AppPresenter.MyView, AppPresenter.MyProxy>
@@ -26,6 +27,7 @@ public class AppPresenter extends
     @NameToken(NameTokens.app)
     @UseGatekeeper(SignedInGatekeeper.class)
     public interface MyProxy extends ProxyPlace<AppPresenter> {
+
     }
 
     public interface MyView extends View, HasUiHandlers<AppUiHandlers> {
@@ -34,19 +36,12 @@ public class AppPresenter extends
 
         public void setDefaultValues();
 
-//		public void loadPerformanceData(Integer start, Integer length,
-//                                        List<Performance> performances);
+        public void setChartData(DataTable dataTable, OptionsDto optionsDto);
 
-//		public void refreshPerformances();
-
-//		public void setLocationData(List<Location> locations);
-//
-//		public void setShowData(List<Show> shows);
-
-        public void setChartData(DataTable dataTable);
     }
 
     private final PlaceManager placeManager;
+
     private final DispatchAsync dispatcher;
     private ClientState clientState;
 
@@ -73,163 +68,27 @@ public class AppPresenter extends
     @Override
     protected void revealInParent() {
         RevealContentEvent.fire(this, MainPresenter.TYPE_RevealPageContent, this);
-//		requestPerformances();
-//
-        dispatcher.execute(new GetFundPerformanceAction("SPY"),
+//		getPerformance("ALD");
+    }
+
+    @Override
+    public void getPerformance(String symbol) {
+        Main.logger.info("Requested performance for " + symbol);
+
+        dispatcher.execute(new GetFundPerformanceAction(symbol),
                 new DispatchCallback<GetFundPerformanceResult>() {
                     @Override
                     public void onSuccess(GetFundPerformanceResult result) {
-                        Main.logger.info(result.toString());
-                        // TODO have just getLocations() instead of
-                        DataTableDto dto = result.getDataTableDto();
-                        DataTable dataTable = dto.getDataTable();
-                        Main.logger.info(dataTable.toString());
-                        getView().setChartData(dataTable);
+						if (!result.getErrorText().isEmpty()) {
+							Window.alert(result.getErrorText());
+							return;
+						}
+                        getView().setDefaultValues();
+                        getView().setChartData(result.getDataTableDto().getDataTable(),
+                                result.getOptionsDto());
                     }
                 });
-//
-//		dispatcher.execute(new ReadLocationsAction(
-//				clientState.currentTheaterKey),
-//				new DispatchCallback<ReadLocationsResult>() {
-//					@Override
-//					public void onSuccess(ReadLocationsResult result) {
-//						Main.logger.info(result.toString());
-//						// TODO have just getLocations() instead of
-//						// getLocations().locations, by using piriti-restlet
-//						getView().setLocationData(
-//								result.getLocations().locations);
-//
-//					}
-//				});
-//
+
     }
-
-
-//	public void requestPerformances() {
-//		// Strings.isNullOrEmpty(clientState.currentTheaterKey)
-//		if (!(null == clientState.currentTheaterKey || clientState.currentTheaterKey
-//				.isEmpty())) {
-//			dispatcher.execute(new GetPerformancesAction(
-//					clientState.currentTheaterKey),
-//					new DispatchCallback<GetPerformancesResult>() {
-//						@Override
-//						public void onSuccess(GetPerformancesResult result) {
-//							if (!result.getErrorText().isEmpty()) {
-//								// TODO have a general handler for this
-//								Window.alert(result.getErrorText());
-//								return;
-//							}
-//							// getView().setPerformances(result.getPerformances());
-//							// TODO result.getPageStart()
-//							getView().loadPerformanceData(
-//									Constants.visibleRangeStart,
-//									result.getPerformances().size(),
-//									result.getPerformances());
-//						}
-//					});
-//		}
-//
-//	}
-//
-//	@Override
-//	public void onRangeOrSizeChanged(Integer visibleRangeStart,
-//			Integer visibleRangeLength) {
-//		// usually, this should have requested a new set of data from server for
-//		// visible range. Not needed on upcoming performances, just fetch them
-//		// all
-//		requestPerformances();
-//	}
-
-//	public void onPerformanceSelected(Performance p) {
-//		Main.logger.info("Selected performance " + p.performanceKey
-//				+ " with show " + p.showName);
-//	}
-
-//	@Override
-//	public void createPerformance(Date date, String showName,
-//			String locationName) {
-//		Main.logger.info("Requested performance scheduling on "
-//				+ date.toString() + ": show " + showName + " at location "
-//				+ locationName + " for theater "
-//				+ clientState.currentTheaterKey);
-//		Performance p = new Performance();
-//		p.date = date;
-//		p.showName = showName;
-//		p.locationName = locationName;
-//
-//		dispatcher.execute(new ManagePerformanceAction(
-//				clientState.currentTheaterKey,
-//				Constants.ManageActionType.CREATE, p),
-//				new DispatchCallback<ManagePerformanceResult>() {
-//					@Override
-//					public void onSuccess(ManagePerformanceResult result) {
-//						if (!result.getErrorText().isEmpty()) {
-//							// TODO have a general handler for this
-//							Window.alert(result.getErrorText());
-//							return;
-//						}
-//						getView().setDefaultValues();
-//						getView().refreshPerformances();
-//					}
-//				});
-//
-//	}
-
-//	@Override
-//	public void updatePerformance(String performanceKey, Date date,
-//			String showName, String locationName) {
-//		Main.logger.info("Requested performance update for " + performanceKey
-//				+ " with date " + date.toString() + " the show " + showName
-//				+ " at location " + locationName + " for theater "
-//				+ clientState.currentTheaterKey);
-//
-//		Performance p = new Performance();
-//		p.performanceKey = performanceKey;
-//		p.date = date;
-//		p.showName = showName;
-//		p.locationName = locationName;
-//
-//		dispatcher.execute(new ManagePerformanceAction(
-//				clientState.currentTheaterKey,
-//				Constants.ManageActionType.UPDATE, p),
-//				new DispatchCallback<ManagePerformanceResult>() {
-//					@Override
-//					public void onSuccess(ManagePerformanceResult result) {
-//						if (!result.getErrorText().isEmpty()) {
-//							// TODO have a general handler for this
-//							Window.alert(result.getErrorText());
-//							return;
-//						}
-//						getView().setDefaultValues();
-//						getView().refreshPerformances();
-//					}
-//				});
-//
-//	}
-
-//	@Override
-//	public void deletePerformance(String performanceKey) {
-//		Main.logger.info("Requested performance update for " + performanceKey);
-//
-//		Performance p = new Performance();
-//		p.performanceKey = performanceKey;
-//
-//		dispatcher.execute(new ManagePerformanceAction(
-//				clientState.currentTheaterKey,
-//				Constants.ManageActionType.DELETE, p),
-//				new DispatchCallback<ManagePerformanceResult>() {
-//					@Override
-//					public void onSuccess(ManagePerformanceResult result) {
-//						if (!result.getErrorText().isEmpty()) {
-//							// TODO have a general handler for this
-//							Window.alert(result.getErrorText());
-//							return;
-//						}
-//						getView().setDefaultValues();
-//						getView().refreshPerformances();
-//					}
-//				});
-//
-//	}
 
 }

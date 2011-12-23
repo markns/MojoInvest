@@ -30,7 +30,7 @@ transformers:
   property_map:
 
     - property: __key__
-      import_template: "%(date)s %(symbol)s"
+      import_template: "%(date)s|%(symbol)s"
 
     - property: symbol
       external_name: symbol

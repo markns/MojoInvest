@@ -34,6 +34,19 @@ public class TradingDayUtils {
         return dates;
     }
 
+    public static List<LocalDate> getWeeklySeries(LocalDate fromDate, LocalDate toDate, int frequency, boolean forwards) {
+        List<LocalDate> dates = new ArrayList<LocalDate>();
+        while (toDate.isAfter(fromDate)) {
+            dates.add(rollIfRequired(toDate));
+            toDate = toDate.minusWeeks(frequency);
+        }
+        if (forwards) {
+            //Little bit back to front the logic here
+            Collections.reverse(dates);
+        }
+        return dates;
+    }
+
     public static List<LocalDate> getDailySeries(LocalDate fromDate, LocalDate toDate, boolean forwards) {
         List<LocalDate> dates = new ArrayList<LocalDate>();
         while (toDate.isAfter(fromDate) || toDate.isEqual(fromDate)) {

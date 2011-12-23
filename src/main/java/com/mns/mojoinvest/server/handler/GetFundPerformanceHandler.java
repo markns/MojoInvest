@@ -1,20 +1,55 @@
 package com.mns.mojoinvest.server.handler;
 
 import com.google.gwt.visualization.client.AbstractDataTable;
+import com.google.inject.Inject;
 import com.gwtplatform.dispatch.server.ExecutionContext;
 import com.gwtplatform.dispatch.server.actionhandler.ActionHandler;
 import com.gwtplatform.dispatch.shared.ActionException;
+import com.mns.mojoinvest.server.engine.model.Fund;
+import com.mns.mojoinvest.server.engine.model.Quote;
+import com.mns.mojoinvest.server.engine.model.dao.FundDao;
+import com.mns.mojoinvest.server.engine.model.dao.QuoteDao;
+import com.mns.mojoinvest.server.util.TradingDayUtils;
 import com.mns.mojoinvest.shared.dispatch.GetFundPerformanceAction;
 import com.mns.mojoinvest.shared.dispatch.GetFundPerformanceResult;
 import com.mns.mojoinvest.shared.dto.DataTableDto;
+import com.mns.mojoinvest.shared.dto.OptionsDto;
 import org.joda.time.LocalDate;
+
+import java.util.Collection;
+import java.util.List;
 
 public class GetFundPerformanceHandler implements
         ActionHandler<GetFundPerformanceAction, GetFundPerformanceResult> {
 
+    private final QuoteDao quoteDao;
+    private final FundDao fundDao;
+
+    @Inject
+    public GetFundPerformanceHandler(QuoteDao quoteDao, FundDao fundDao) {
+        this.quoteDao = quoteDao;
+        this.fundDao = fundDao;
+    }
+
+
     @Override
     public GetFundPerformanceResult execute(GetFundPerformanceAction action, ExecutionContext context) throws ActionException {
-        return new GetFundPerformanceResult("", createTable());
+        Fund fund = fundDao.get(action.getSymbol());
+
+        LocalDate inceptionDate = fund.getInceptionDate();
+        LocalDate today = new LocalDate();
+
+        List<LocalDate> dates;
+        if (today.isAfter(inceptionDate.plusYears(2))) {
+            dates = TradingDayUtils.getMonthlySeries(inceptionDate, today, 1, true);
+        } else if (today.isAfter(inceptionDate.plusMonths(6))) {
+            dates = TradingDayUtils.getWeeklySeries(inceptionDate, today, 1, true);
+        } else {
+            dates = TradingDayUtils.getDailySeries(inceptionDate, today, true);
+        }
+
+        Collection<Quote> quotes = quoteDao.get(fund, dates);
+        return new GetFundPerformanceResult("", createDataTableDto(quotes), new OptionsDto(fund.getName() + " (" + fund.getSymbol() + ")"));
     }
 
     @Override
@@ -26,22 +61,17 @@ public class GetFundPerformanceHandler implements
     public void undo(GetFundPerformanceAction action, GetFundPerformanceResult result, ExecutionContext context) throws ActionException {
     }
 
-    private DataTableDto createTable() {
+    private DataTableDto createDataTableDto(Collection<Quote> quotes) {
 
         DataTableDto dto = new DataTableDto();
         dto.addColumn(new DataTableDto.Column(AbstractDataTable.ColumnType.DATE, "Date", "date"));
         dto.addColumn(new DataTableDto.Column(AbstractDataTable.ColumnType.NUMBER, "Close", "close"));
 
-        dto.addRow(new DataTableDto.DateValue(new LocalDate("2011-01-01").toDateMidnight().toDate()), new DataTableDto.IntegerValue(102));
-        dto.addRow(new DataTableDto.DateValue(new LocalDate("2011-02-01").toDateMidnight().toDate()), new DataTableDto.IntegerValue(132));
-        dto.addRow(new DataTableDto.DateValue(new LocalDate("2011-03-01").toDateMidnight().toDate()), new DataTableDto.IntegerValue(143));
-        dto.addRow(new DataTableDto.DateValue(new LocalDate("2011-04-01").toDateMidnight().toDate()), new DataTableDto.IntegerValue(132));
-        dto.addRow(new DataTableDto.DateValue(new LocalDate("2011-05-01").toDateMidnight().toDate()), new DataTableDto.IntegerValue(154));
-        dto.addRow(new DataTableDto.DateValue(new LocalDate("2011-06-01").toDateMidnight().toDate()), new DataTableDto.IntegerValue(143));
-        dto.addRow(new DataTableDto.DateValue(new LocalDate("2011-07-01").toDateMidnight().toDate()), new DataTableDto.IntegerValue(165));
-        dto.addRow(new DataTableDto.DateValue(new LocalDate("2011-08-01").toDateMidnight().toDate()), new DataTableDto.IntegerValue(123));
-        dto.addRow(new DataTableDto.DateValue(new LocalDate("2011-09-01").toDateMidnight().toDate()), new DataTableDto.IntegerValue(176));
+        for (Quote quote : quotes) {
+            dto.addRow(new DataTableDto.DateValue(quote.getDate().toDateMidnight().toDate()),
+                    new DataTableDto.DoubleValue(quote.getClose().doubleValue()));
 
+        }
         return dto;
     }
 

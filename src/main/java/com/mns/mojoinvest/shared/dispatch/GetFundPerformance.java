@@ -4,6 +4,7 @@ import com.gwtplatform.dispatch.annotation.GenDispatch;
 import com.gwtplatform.dispatch.annotation.In;
 import com.gwtplatform.dispatch.annotation.Out;
 import com.mns.mojoinvest.shared.dto.DataTableDto;
+import com.mns.mojoinvest.shared.dto.OptionsDto;
 
 @GenDispatch(isSecure = false)
 public class GetFundPerformance {
@@ -16,5 +17,8 @@ public class GetFundPerformance {
 
 	@Out(2)
     DataTableDto dataTableDto;
+
+	@Out(3)
+    OptionsDto optionsDto;
 
 }

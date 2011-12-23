@@ -44,47 +44,24 @@
     </ui:style>
 
     <g:HTMLPanel ui:field="container" addStyleNames="{res.style.container}">
-        <h3>Performances / events</h3>
-        <p>
-            Schedule theater performances and other events, and easily embed them on your website, blog or plain HTML
-            homepage. For free.
-
-
-            <g:InlineHyperlink ui:field="guide"
-                               targetHistoryToken="{nameTokens.getGuide}">Learn how
-            </g:InlineHyperlink>
-        </p>
         <g:SimplePanel ui:field='chartContainer' addStyleNames='{style.visualization}'>
             <g:Label>Chart loading...</g:Label>
         </g:SimplePanel>
-        <label class="{res.style.label} {res.style.required}">
-            <span>Date and time</span>
-            <gdp:DateBox ui:field="date" title="Date and time"></gdp:DateBox>
-        </label>
 
         <label class="{res.style.label} {res.style.required}">
-            <span>Show name</span>
-            <g:SuggestBox ui:field="show" title="Show name"/>
-            <!-- <g:TextBox ui:field="show" title="Show name"></g:TextBox> -->
+            <span>Symbol</span>
+            <!--<g:SuggestBox ui:field="show" title="Show name"/>-->
+             <g:TextBox ui:field="symbol" title="Symbol"></g:TextBox>
         </label>
 
-        <label class="{res.style.label} {res.style.required}">
-            <span>Location</span>
-            <g:SuggestBox ui:field="location" title="Location"/>
-            <!-- <g:TextBox ui:field="location" title="Location"></g:TextBox> -->
-        </label>
+        <g:Button ui:field="getPerformance"
+                  addStyleNames="{res.style.button} {res.style.green} {res.style.small} {res.style.formButton}">Get performance</g:Button>
 
-        <g:Button ui:field="updatePerformance" visible="false"
-                  addStyleNames="{res.style.button} {res.style.blue} {res.style.small}">Update
-        </g:Button>
-        <g:Button ui:field="deletePerformance" visible="false"
-                  addStyleNames="{res.style.button} {res.style.blue} {res.style.small}">Delete
-        </g:Button>
 
-        <g:HTMLPanel addStyleNames="{res.style.listing}">
-            <h4>Scheduled performances</h4>
-            <!--<gcell:CellList ui:field="performancesCL" />-->
-        </g:HTMLPanel>
+        <!--<g:HTMLPanel addStyleNames="{res.style.listing}">-->
+            <!--<h4>Trades</h4>-->
+            <!--&lt;!&ndash;<gcell:CellList ui:field="performancesCL" />&ndash;&gt;-->
+        <!--</g:HTMLPanel>-->
 
     </g:HTMLPanel>
 

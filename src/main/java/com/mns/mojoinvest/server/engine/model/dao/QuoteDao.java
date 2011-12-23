@@ -91,6 +91,14 @@ public class QuoteDao extends DAOBase {
         return get(keys);
     }
 
+    public Collection<Quote> get(Fund fund, Collection<LocalDate> dates) {
+        List<Key<Quote>> keys = new ArrayList<Key<Quote>>();
+        for (LocalDate date : dates) {
+            keys.add(new Key<Quote>(Quote.class, QuoteUtils.quoteId(fund.getSymbol(), date)));
+        }
+        return get(keys);
+    }
+
     public Quote get(Fund fund, LocalDate date) {
         Key<Quote> key = new Key<Quote>(Quote.class, QuoteUtils.quoteId(fund.getSymbol(), date));
         return ofy().get(key);
