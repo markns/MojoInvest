@@ -53,6 +53,7 @@ public class MainPresenter extends
 
     @Override
     protected void revealInParent() {
+        //TODO: LayoutPanel http://code.google.com/p/gwt-platform/wiki/GettingStarted#Using_layout_panels
         RevealRootContentEvent.fire(this, this);
     }
 

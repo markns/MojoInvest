@@ -7,6 +7,11 @@ import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.cellview.client.CellList;
 import com.google.gwt.user.client.ui.*;
 import com.google.gwt.user.datepicker.client.DateBox;
+import com.google.gwt.visualization.client.AbstractDataTable;
+import com.google.gwt.visualization.client.DataTable;
+import com.google.gwt.visualization.client.VisualizationUtils;
+import com.google.gwt.visualization.client.visualizations.corechart.LineChart;
+import com.google.gwt.visualization.client.visualizations.corechart.Options;
 import com.gwtplatform.mvp.client.ViewWithUiHandlers;
 import com.mns.mojoinvest.shared.Constants;
 
@@ -18,50 +23,12 @@ public class AppView extends ViewWithUiHandlers<AppUiHandlers>
 
     private static AppViewUiBinder uiBinder = GWT.create(AppViewUiBinder.class);
 
-//	public class PerformanceCell extends AbstractCell<Performance> {
-//
-//		@Override
-//		public void render(Context context, Performance performance,
-//				SafeHtmlBuilder sb) {
-//
-//			if (null == performance) {
-//				return;
-//			}
-//
-//			DateTimeFormat dateFormat = DateTimeFormat
-//					.getFormat(Constants.defaultDateFormat);
-//
-//			sb.appendHtmlConstant("<span class='performanceDate'>");
-//			sb.appendEscaped(dateFormat.format(performance.date));
-//			sb.appendHtmlConstant("</span>");
-//			sb.appendHtmlConstant("<span class='showName'>");
-//			sb.appendEscaped(performance.showName);
-//			sb.appendHtmlConstant("</span>");
-//			sb.appendHtmlConstant("<span class='locationName'>");
-//			sb.appendEscaped(performance.locationName);
-//			sb.appendHtmlConstant("</span>");
-//		}
-//	}
-
-//	protected class PerformancesAsyncAdapter extends
-//            AsyncDataProvider<Performance> {
-//		@Override
-//		protected void onRangeChanged(HasData<Performance> display) {
-//			if (getUiHandlers() != null) {
-//				Range newRange = display.getVisibleRange();
-//				getUiHandlers().onRangeOrSizeChanged(newRange.getStart(),
-//						newRange.getLength());
-//			}
-//		}
-//	}
-
     interface PerformancesResources extends CellList.Resources {
         @Source(value = {CellList.Style.DEFAULT_CSS, "../resources/cell.css"})
         CellList.Style cellListStyle();
     }
 
     public final Widget widget;
-//	private final PerformancesAsyncAdapter performancesAsyncAdapter;
 
     @UiField
     DateBox date;
@@ -85,10 +52,15 @@ public class AppView extends ViewWithUiHandlers<AppUiHandlers>
     @UiField
     InlineHyperlink guide;
 
-//	@UiField
-//    CellList<Performance> performancesCL;
+    @UiField
+    SimplePanel chartContainer;
+
 
     MultiWordSuggestOracle showSO, locationSO;
+
+
+    // Google Visualization scatter plot and associated options.
+    private LineChart lineChart;
 
     public AppView() {
         showSO = new MultiWordSuggestOracle();
@@ -97,6 +69,17 @@ public class AppView extends ViewWithUiHandlers<AppUiHandlers>
         location = new SuggestBox(locationSO);
 
         widget = uiBinder.createAndBindUi(this);
+
+        VisualizationUtils.loadVisualizationApi(new Runnable() {
+            @Override
+            public void run() {
+                lineChart = new LineChart(createTable(), createOptions());
+                chartContainer.clear();
+                chartContainer.add(lineChart);
+
+            }
+        }, LineChart.PACKAGE);
+
 
         // fallback for browsers which don't support placeholder attribute
         // null == date.getElement().getAttribute("placeholder")
@@ -124,6 +107,7 @@ public class AppView extends ViewWithUiHandlers<AppUiHandlers>
 
     }
 
+
     // workaround for
     // http://code.google.com/p/google-web-toolkit/issues/detail?id=5541
     // private static native String placeholderSupport() /*-{
@@ -145,6 +129,32 @@ public class AppView extends ViewWithUiHandlers<AppUiHandlers>
         date.setValue(null);
         show.setValue("");
         location.setValue("");
+    }
+
+    @Override
+    public void setChartData(DataTable dataTable) {
+        new LineChart(dataTable, createOptions());
+    }
+
+    private AbstractDataTable createTable() {
+        DataTable data = DataTable.create();
+        data.addColumn(AbstractDataTable.ColumnType.STRING, "Task");
+        data.addColumn(AbstractDataTable.ColumnType.NUMBER, "Hours per Day");
+        data.addRows(2);
+        data.setValue(0, 0, "Work");
+        data.setValue(0, 1, 14);
+        data.setValue(1, 0, "Sleep");
+        data.setValue(1, 1, 10);
+        return data;
+    }
+
+
+    private Options createOptions() {
+        Options options = Options.create();
+        options.setWidth(400);
+        options.setHeight(240);
+        options.setTitle("My Daily Activities");
+        return options;
     }
 
     public void resetAndFocus() {

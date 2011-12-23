@@ -43,6 +43,7 @@ public class AppPresenter extends
 //
 //		public void setShowData(List<Show> shows);
 
+        public void setChartData(DataTable dataTable);
     }
 
     private final PlaceManager placeManager;
@@ -71,8 +72,7 @@ public class AppPresenter extends
 
     @Override
     protected void revealInParent() {
-        RevealContentEvent.fire(this, MainPresenter.TYPE_RevealPageContent,
-                this);
+        RevealContentEvent.fire(this, MainPresenter.TYPE_RevealPageContent, this);
 //		requestPerformances();
 //
         dispatcher.execute(new GetFundPerformanceAction("SPY"),
@@ -84,6 +84,7 @@ public class AppPresenter extends
                         DataTableDto dto = result.getDataTableDto();
                         DataTable dataTable = dto.getDataTable();
                         Main.logger.info(dataTable.toString());
+                        getView().setChartData(dataTable);
                     }
                 });
 //

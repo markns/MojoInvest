@@ -29,15 +29,12 @@ public class MainModule extends AbstractPresenterModule {
         // Default implementation of standard resources
         install(new DefaultModule(MainPlaceManager.class));
 
-
         bind(Resources.class).in(Singleton.class);
         bind(Translations.class).in(Singleton.class);
         bind(ClientState.class).in(Singleton.class);
         // bind(SignedInGatekeeper.class).in(Singleton.class);
 
-
         bindPresenter(MainPresenter.class, MainPresenter.MyView.class,
                 MainView.class, MainPresenter.MyProxy.class);
-
     }
 }
