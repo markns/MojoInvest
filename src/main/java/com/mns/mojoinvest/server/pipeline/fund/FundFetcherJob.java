@@ -33,16 +33,12 @@ public class FundFetcherJob extends Job0<List<Fund>> {
         List<FutureValue<List<Fund>>> fundLists = new ArrayList<FutureValue<List<Fund>>>();
         List<String> batch = new ArrayList<String>(BATCH_SIZE);
 
-//        int c = 0;
         for (String symbol : symbols) {
             batch.add(symbol);
             if (batch.size() == BATCH_SIZE) {
                 List<String> clone = new ArrayList<String>(batch);
                 fundLists.add(futureCall(new FundDetailFetcherBatchJob(), immediate(clone)));
                 batch.clear();
-
-//                if (++c == 2)
-//                    break;
             }
         }
         if (batch.size() > 0) {

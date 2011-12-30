@@ -32,6 +32,8 @@ public class DailyPipeline extends Job1<List<Quote>, LocalDate> {
 //            futureCall(new PerformanceRankingJob(), immediate(date), immediate(params), waitFor(quotesUpdated));
 //        }
 
+        //Send email for confirmation of success or failure
+
         return null;
     }
 

@@ -26,7 +26,10 @@ public class FundDetailFetcherBatchJob extends Job1<List<Fund>, List<String>> {
         List<Fund> funds = new ArrayList<Fund>();
         log.info("Attempting to retrieve details for batch: " + symbols);
         for (String symbol : symbols) {
-            funds.add(run(symbol));
+            Fund fund = run(symbol);
+            if (fund != null) {
+                funds.add(fund);
+            }
         }
         return immediate(funds);
     }
