@@ -34,6 +34,9 @@ public class MainModule extends AbstractPresenterModule {
         bind(ClientState.class).in(Singleton.class);
         // bind(SignedInGatekeeper.class).in(Singleton.class);
 
+        // Constants
+        bindConstant().annotatedWith(DefaultPlace.class).to(NameTokens.landing);
+
         bindPresenter(MainPresenter.class, MainPresenter.MyView.class,
                 MainView.class, MainPresenter.MyProxy.class);
     }

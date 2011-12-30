@@ -10,7 +10,6 @@ import com.gwtplatform.mvp.client.Presenter;
 import com.gwtplatform.mvp.client.View;
 import com.gwtplatform.mvp.client.annotations.NameToken;
 import com.gwtplatform.mvp.client.annotations.ProxyStandard;
-import com.gwtplatform.mvp.client.annotations.UseGatekeeper;
 import com.gwtplatform.mvp.client.proxy.PlaceManager;
 import com.gwtplatform.mvp.client.proxy.ProxyPlace;
 import com.gwtplatform.mvp.client.proxy.RevealContentEvent;
@@ -25,7 +24,7 @@ public class AppPresenter extends
 
     @ProxyStandard
     @NameToken(NameTokens.app)
-    @UseGatekeeper(SignedInGatekeeper.class)
+//    @UseGatekeeper(SignedInGatekeeper.class)
     public interface MyProxy extends ProxyPlace<AppPresenter> {
 
     }
