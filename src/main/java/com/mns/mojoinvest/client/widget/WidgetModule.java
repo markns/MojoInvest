@@ -10,5 +10,7 @@ public class WidgetModule extends AbstractPresenterModule {
 		bindPresenterWidget(HeaderPresenter.class,
 				HeaderPresenter.MyView.class, HeaderView.class);
 
+//        bindPresenterWidget(TopPanelPresenter.class,
+//                TopPanelPresenter.MyView.class, TopPanel.class);
 	}
 }

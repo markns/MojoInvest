@@ -21,8 +21,8 @@ public class HeaderView extends ViewWithUiHandlers<HeaderUiHandlers> implements
 	interface HeaderViewUiBinder extends UiBinder<Widget, HeaderView> {
 	}
 
-	private static HeaderViewUiBinder uiBinder = GWT
-			.create(HeaderViewUiBinder.class);
+	private static HeaderViewUiBinder uiBinder = GWT.create(HeaderViewUiBinder.class);
+
 	private final Widget widget;
 
 	private ClientState clientState;
