@@ -6,6 +6,7 @@ import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.gwtplatform.mvp.client.ViewWithUiHandlers;
+import com.mns.mojoinvest.client.widget.TopPanel;
 
 public class MainView extends ViewWithUiHandlers<MainUiHandlers> implements
 		MainPresenter.MyView {
@@ -18,15 +19,16 @@ public class MainView extends ViewWithUiHandlers<MainUiHandlers> implements
 
 	public final Widget widget;
 
-	@UiField
-    SimplePanel headerNav;
+    @UiField
+    TopPanel topPanel;
 
-	@UiField
+//	@UiField
+//    SimplePanel headerNav;
+    @UiField
     SimplePanel pageContent;
 
-	public MainView() {
+    public MainView() {
 		widget = uiBinder.createAndBindUi(this);
-
 	}
 
 	@Override
@@ -37,8 +39,9 @@ public class MainView extends ViewWithUiHandlers<MainUiHandlers> implements
 	@Override
 	public void setInSlot(Object slot, Widget content) {
 		if (slot == MainPresenter.TYPE_RevealHeaderContent) {
-			headerNav.clear();
-			headerNav.add(content);
+
+//			topPanel.clear();
+//			topPanel.add(content);
 		} else if (slot == MainPresenter.TYPE_RevealPageContent) {
 			pageContent.clear();
 			pageContent.add(content);

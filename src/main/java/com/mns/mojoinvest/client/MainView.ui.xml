@@ -4,6 +4,7 @@
              xmlns:gdp="urn:import:com.google.gwt.user.datepicker.client"
              ui:generateFormat='com.google.gwt.i18n.rebind.format.PropertiesFormat'
              ui:generateKeys="com.google.gwt.i18n.rebind.keygen.MD5KeyGenerator"
+             xmlns:widget='urn:import:com.mns.mojoinvest.client.widget'
              ui:generateLocales="default"
         >
 
@@ -56,20 +57,16 @@
 
     </ui:style>
 
-    <g:HTMLPanel>
-        <g:HTMLPanel addStyleNames="{style.headerContentOuter}">
-            <g:HTMLPanel addStyleNames="{style.headerContent}">
-                <g:HTMLPanel addStyleNames="{style.logo}">
-                    <g:Image resource='{res.logo}'/>
-                </g:HTMLPanel>
-                <g:SimplePanel ui:field="headerNav" addStyleNames="{style.headerNav}">
-                </g:SimplePanel>
-            </g:HTMLPanel>
-        </g:HTMLPanel>
+    <g:DockLayoutPanel unit='EM'>
+        <g:north size='5'>
+            <widget:TopPanel ui:field='topPanel'/>
+        </g:north>
 
-        <g:SimplePanel ui:field="pageContent" addStyleNames="{style.pageContent}">
-        </g:SimplePanel>
+        <g:center>
+            <g:SimplePanel ui:field="pageContent" addStyleNames="{style.pageContent}"/>
+        </g:center>
+    </g:DockLayoutPanel>
 
-    </g:HTMLPanel>
+
 
 </ui:UiBinder>

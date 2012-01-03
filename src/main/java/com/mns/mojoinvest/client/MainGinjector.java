@@ -36,6 +36,7 @@ import com.mns.mojoinvest.client.widget.WidgetModule;
         LandingModule.class,
         AppModule.class})
 public interface MainGinjector extends Ginjector {
+
     EventBus getEventBus();
 
     PlaceManager getPlaceManager();
