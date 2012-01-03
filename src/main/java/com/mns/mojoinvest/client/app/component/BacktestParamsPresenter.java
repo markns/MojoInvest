@@ -7,8 +7,7 @@ import com.gwtplatform.mvp.client.View;
 
 public class BacktestParamsPresenter extends PresenterWidget<BacktestParamsPresenter.MyView> {
 
-    public interface MyView extends View {
-    }
+    public interface MyView extends View { }
 
     @Inject
     public BacktestParamsPresenter(final EventBus eventBus, final BacktestParamsPresenter.MyView view) {

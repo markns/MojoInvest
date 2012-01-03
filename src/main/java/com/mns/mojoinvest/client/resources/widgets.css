@@ -1,0 +1,103 @@
+@external tire-calendarPopup, gwt-DatePicker, datePickerMonthSelector, datePickerDays, datePickerWeekdayLabel, datePickerWeekendLabel, datePickerDayIsToday, datePickerDayIsWeekend, datePickerDayIsFiller, datePickerDayIsValue, datePickerDayIsDisabled, datePickerDayIsHighlighted, datePickerDayIsValueAndHighlighted, datePickerMonthSelector, datePickerMonth, datePickerDay, datePickerPreviousButton, datePickerNextButton, gwt-PopupPanelGlass;
+.tire-calendarPopup {
+    box-shadow: #666 0px 4px 10px;
+    -moz-box-shadow: #666 0 px 4 px 10 px;
+    -webkit-box-shadow: #666 0 px 4 px 10 px;
+}
+
+.gwt-DatePicker {
+    border: 1px solid #3d3d3d;
+    color: #3d3d3d;
+    cursor: default;
+}
+
+.gwt-DatePicker td,.datePickerMonthSelector td:focus {
+    outline: none
+}
+
+.datePickerDays {
+    width: 100%;
+    background: white;
+}
+
+.datePickerDay,.datePickerWeekdayLabel,.datePickerWeekendLabel {
+    font-size: 90%;
+    text-align: center;
+    padding: 5px;
+    outline: none;
+}
+
+.datePickerWeekdayLabel,.datePickerWeekendLabel {
+    color: white;
+    background: #1b92a8;
+    padding: 5px;
+    cursor: default;
+}
+
+.datePickerDay {
+    padding: 5px;
+    cursor: hand;
+    cursor: pointer;
+}
+
+.datePickerDayIsToday {
+    border: 1px solid black;
+    padding: 4px;
+}
+
+.datePickerDayIsWeekend {
+    background: #dedede;
+}
+
+.datePickerDayIsFiller {
+    color: #62635e;
+}
+
+.datePickerDayIsValue {
+    color: white;
+    background: #68d6ea;
+}
+
+.datePickerDayIsDisabled {
+    color: #dedede;
+    font-style: italic;
+}
+
+.datePickerDayIsHighlighted {
+    background: #b8f5ff;
+}
+
+.datePickerDayIsValueAndHighlighted {
+    background: #3cc5de;
+}
+
+.datePickerMonthSelector {
+    background: #c3d9ff;
+    width: 100%;
+}
+
+td.datePickerMonth {
+    text-align: center;
+    vertical-align: center;
+    white-space: nowrap;
+    font-size: 90%;
+    color: white;
+    background: #1b92a8;
+}
+
+.datePickerPreviousButton,.datePickerNextButton {
+    font-size: 110%;
+    line-height: 1em;
+    color: white;
+    background: #1b92a8;
+    cursor: hand;
+    cursor: pointer;
+    padding: 0px 5px;
+}
+
+.gwt-PopupPanelGlass {
+    background-color: #333;
+    -moz-opacity: 0.5;
+    -khtml-opacity: 0.5;
+    opacity: 0.5;
+}

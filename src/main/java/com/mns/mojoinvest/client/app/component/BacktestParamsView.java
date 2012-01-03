@@ -12,8 +12,7 @@ import com.mns.mojoinvest.shared.params.BackTestParams;
 public class BacktestParamsView extends Composite
         implements BacktestParamsPresenter.MyView, Editor<BackTestParams> {
 
-    interface BacktestParamsViewUiBinder extends UiBinder<Widget, BacktestParamsView> {
-    }
+    interface BacktestParamsViewUiBinder extends UiBinder<Widget, BacktestParamsView> { }
 
     private static BacktestParamsViewUiBinder uiBinder = GWT.create(BacktestParamsViewUiBinder.class);
 

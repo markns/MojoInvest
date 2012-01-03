@@ -1,0 +1,77 @@
+<!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
+<ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
+             xmlns:g='urn:import:com.google.gwt.user.client.ui'>
+
+    <ui:with type="com.mns.mojoinvest.client.NameTokens" field="nameTokens"/>
+    <ui:with field='res' type='com.mns.mojoinvest.client.resources.Resources'/>
+
+    <!-- IE6 cannot handle transparent png, which is what ImageResource creates -->
+    <!--<ui:data field='logoIe6Data' src='logo_ie6.gif'/>-->
+
+    <ui:image field="header" repeatStyle="Horizontal" src="../resources/header.png"/>
+    <ui:style>
+        .logo {
+            position: absolute;
+        }
+
+        @sprite header {
+            color: white;
+            gwt-image: "header";
+            padding: 0px 30px;
+        }
+
+        header nav a, header nav a:visited {
+            font-size: 12px;
+            float: left;
+            color: white;
+            line-height: 30px;
+            padding: 0px 5px;
+            margin: 0px 5px;
+            letter-spacing: 0.1em;
+            cursor: pointer;
+        }
+
+        header nav a.right {
+            float: right;
+        }
+
+        header nav a.first {
+            margin-left: 0px;
+        }
+
+        header nav a.last {
+            margin-right: 0px;
+        }
+
+        header nav a:hover {
+            color: #62635e;
+            background-color: white;
+        }
+    </ui:style>
+
+    <g:HTMLPanel>
+        <header>
+            <nav>
+                <div class='{style.logo}'>
+                    <g:Image resource='{res.mojo_logo}'/>
+                </div>
+
+                <!-- rtl -->
+                <a class="{style.right} {style.last}" title="Logout" href="#">Logged in as Mark Nuttall-Smith</a>
+
+                <g:InlineHyperlink ui:field="guide" targetHistoryToken="{nameTokens.guide}"
+                                   addStyleNames="{style.right} {style.last}">Help
+                </g:InlineHyperlink>
+                <g:InlineHyperlink ui:field="app"
+                                   targetHistoryToken="{nameTokens.app}"
+                                   addStyleNames="{style.right}">App
+                </g:InlineHyperlink>
+                <g:InlineHyperlink ui:field="landing"
+                                   targetHistoryToken="{nameTokens.landing}"
+                                   addStyleNames="{style.right}">Home
+                </g:InlineHyperlink>
+            </nav>
+        </header>
+    </g:HTMLPanel>
+
+</ui:UiBinder>

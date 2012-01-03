@@ -32,31 +32,31 @@ public class NameTokens {
 
     public static final String landing = "!landing";
 
-    public static String getLanding() {
+    public static String landing() {
         return landing;
     }
 
     public static final String signIn = "!signIn";
 
-    public static String getSignIn() {
+    public static String signIn() {
         return signIn;
     }
 
     public static final String signOut = "!signOut";
 
-    public static String getSignOut() {
+    public static String signOut() {
         return signOut;
     }
 
     public static final String guide = "!guide";
 
-    public static String getGuide() {
+    public static String guide() {
         return guide;
     }
 
     public static final String app = "!app";
 
-    public static String getApp() {
+    public static String app() {
         return app;
     }
 }

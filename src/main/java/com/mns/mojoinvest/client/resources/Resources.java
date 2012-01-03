@@ -25,47 +25,38 @@ import com.google.gwt.resources.client.ImageResource;
  */
 public interface Resources extends ClientBundle {
 
-    @Source("mojo_logo.png")
-    ImageResource logo();
+    ImageResource selectedNavigation();
 
-    @Source("Mojoinvest.css")
-    Style style();
+    ImageResource mojo_logo();
 
-    @Source("menuBarDownIcon.gif")
-    public ImageResource menuBarDownIcon();
+    // -------------------------------------------------------------------- CSS
 
-    public interface Style extends CssResource {
-        // autogenerate, see
-        // http://code.google.com/p/google-web-toolkit/wiki/CssResource#Automatically_generating_interfaces
-        String anchor();
+    /**
+     * Global CSS rules
+     *
+     * @return
+     */
+    @Source("mojo.css")
+    CssResource mojo();
 
-        String big();
+    /**
+     * CSS classes to style GWT and custom widgets
+     *
+     * @return
+     */
+    @Source("widgets.css")
+    CssResource widgets();
 
-        String block();
 
-        String blue();
-
-        String button();
-
-        String container();
-
-        String formButton();
-
-        String green();
-
-        String label();
-
-        String listing();
-
-        String medium();
-
-        String orange();
-
-        String required();
-
-        String small();
-
+    public interface Navigation extends CssResource {
+        @ClassName("selectedNavigationEntry")
+        String selectedNavigationEntry();
+        @ClassName("selectedDate")
+        String selectedDate();
     }
+
+    @Source("navigation.css")
+    Navigation navigation();
 
 }
 

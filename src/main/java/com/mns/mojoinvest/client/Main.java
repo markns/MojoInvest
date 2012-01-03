@@ -22,7 +22,7 @@ public class Main implements EntryPoint {
         // This is required for Gwt-Platform proxy's generator.
         DelayedBindRegistry.bind(ginjector);
 
-        ginjector.getResources().style().ensureInjected();
+        ginjector.getResources().mojo().ensureInjected();
         ginjector.getPlaceManager().revealCurrentPlace();
     }
 

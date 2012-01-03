@@ -17,6 +17,7 @@
 package com.mns.mojoinvest.client;
 
 import com.google.gwt.event.shared.EventBus;
+import com.google.gwt.inject.client.AsyncProvider;
 import com.google.gwt.inject.client.GinModules;
 import com.google.gwt.inject.client.Ginjector;
 import com.google.inject.Provider;
@@ -37,11 +38,13 @@ import com.mns.mojoinvest.client.widget.WidgetModule;
         AppModule.class})
 public interface MainGinjector extends Ginjector {
 
+    // ------------------------------------------------------------- singletons
+
     EventBus getEventBus();
 
     PlaceManager getPlaceManager();
-
 //    ProxyFailureHandler getProxyFailureHandler();
+//    DispatchAsync getDispatcher();
 
     Resources getResources();
 
@@ -49,11 +52,13 @@ public interface MainGinjector extends Ginjector {
 
     SignedInGatekeeper getSignedInGatekeeper();
 
-    Provider<MainPresenter> getMainPresenter();
+    // ------------------------------------------------------------- presenters
 
     Provider<LandingPresenter> getLandingPresenter();
 
-    Provider<AppPresenter> getAppPresenter();
+    Provider<MainPresenter> getMainPresenter();
+
+    AsyncProvider<AppPresenter> getAppPresenter();
 
 
 //    Translations getTranslations();

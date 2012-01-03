@@ -3,51 +3,70 @@ package com.mns.mojoinvest.client;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
-import com.google.gwt.user.client.ui.SimplePanel;
+import com.google.gwt.user.client.ui.FlowPanel;
+import com.google.gwt.user.client.ui.Panel;
 import com.google.gwt.user.client.ui.Widget;
+import com.google.inject.Inject;
 import com.gwtplatform.mvp.client.ViewWithUiHandlers;
-import com.mns.mojoinvest.client.widget.TopPanel;
+import com.mns.mojoinvest.client.resources.Resources;
 
 public class MainView extends ViewWithUiHandlers<MainUiHandlers> implements
-		MainPresenter.MyView {
+        MainPresenter.MyView {
 
-	interface LandingViewUiBinder extends UiBinder<Widget, MainView> {
-	}
+    interface LandingViewUiBinder extends UiBinder<Widget, MainView> {
+    }
 
-	private static LandingViewUiBinder uiBinder = GWT
-			.create(LandingViewUiBinder.class);
+    private static LandingViewUiBinder uiBinder = GWT.create(LandingViewUiBinder.class);
 
-	public final Widget widget;
+    private final Resources resources;
 
     @UiField
-    TopPanel topPanel;
+    FlowPanel topPanel;
 
-//	@UiField
-//    SimplePanel headerNav;
     @UiField
-    SimplePanel pageContent;
+    FlowPanel pageContent;
 
-    public MainView() {
-		widget = uiBinder.createAndBindUi(this);
-	}
+    public final Widget widget;
 
-	@Override
-	public Widget asWidget() {
-		return widget;
-	}
+    @Inject
+    public MainView(Resources resources) {
+        // Inject the global CSS resources
+        this.resources = resources;
+        this.resources.mojo().ensureInjected();
+        this.resources.widgets().ensureInjected();
+        widget = uiBinder.createAndBindUi(this);
+    }
 
-	@Override
-	public void setInSlot(Object slot, Widget content) {
-		if (slot == MainPresenter.TYPE_RevealHeaderContent) {
+    @Override
+    public Widget asWidget() {
+        return widget;
+    }
 
-//			topPanel.clear();
-//			topPanel.add(content);
-		} else if (slot == MainPresenter.TYPE_RevealPageContent) {
-			pageContent.clear();
-			pageContent.add(content);
-		} else {
-			super.setInSlot(slot, content);
-		}
-	}
+    @Override
+    public void setInSlot(Object slot, Widget content) {
+        if (slot == MainPresenter.SLOT_Navigation) {
+            setContent(topPanel, content);
+        } else if (slot == MainPresenter.TYPE_RevealPageContent) {
+            setContent(pageContent, content);
+        } else {
+            super.setInSlot(slot, content);
+        }
+    }
+
+    /**
+     * Removes any content in the container and adds the specified widget if it
+     * is not <code>null</code>.
+     *
+     * @param container
+     * @param content
+     */
+    public static void setContent(Panel container, Widget content) {
+        if (container != null) {
+            container.clear();
+            if (content != null) {
+                container.add(content);
+            }
+        }
+    }
 
 }

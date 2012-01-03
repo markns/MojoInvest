@@ -3,16 +3,15 @@ package com.mns.mojoinvest.client;
 import com.google.gwt.event.shared.EventBus;
 import com.google.gwt.event.shared.GwtEvent.Type;
 import com.google.inject.Inject;
-import com.gwtplatform.dispatch.shared.DispatchAsync;
 import com.gwtplatform.mvp.client.HasUiHandlers;
 import com.gwtplatform.mvp.client.Presenter;
 import com.gwtplatform.mvp.client.View;
 import com.gwtplatform.mvp.client.annotations.ContentSlot;
 import com.gwtplatform.mvp.client.annotations.ProxyStandard;
-import com.gwtplatform.mvp.client.proxy.PlaceManager;
 import com.gwtplatform.mvp.client.proxy.Proxy;
 import com.gwtplatform.mvp.client.proxy.RevealContentHandler;
 import com.gwtplatform.mvp.client.proxy.RevealRootLayoutContentEvent;
+import com.mns.mojoinvest.client.widget.TopPanelPresenter;
 
 public class MainPresenter extends
         Presenter<MainPresenter.MyView, MainPresenter.MyProxy> implements
@@ -25,48 +24,64 @@ public class MainPresenter extends
     public interface MyView extends View, HasUiHandlers<MainUiHandlers> {
     }
 
-    public static final Object TYPE_RevealHeaderContent = new Object();
+    /**
+     * Constant for the static navigation slot.
+     */
+    public static final Object SLOT_Navigation = new Object();
 
+    /**
+     * Use this in leaf presenters, inside their {@link #revealInParent} method.
+     */
     @ContentSlot
     public static final Type<RevealContentHandler<?>> TYPE_RevealPageContent = new Type<RevealContentHandler<?>>();
 
-    private final PlaceManager placeManager;
-    private final DispatchAsync dispatcher;
-    private ClientState clientState;
-
-//    private final HeaderPresenter headerPresenter;
+    private final TopPanelPresenter topPanelPresenter;
 
     @Inject
-    public MainPresenter(final EventBus eventBus, final MyView view,
-                         final MyProxy proxy, final PlaceManager placeManager,
-                         final DispatchAsync dispatcher,
-//                         final HeaderPresenter headerPresenter,
-                         final ClientState clientState) {
+    public MainPresenter(final EventBus eventBus, final MyView view, final MyProxy proxy,
+                         final TopPanelPresenter topPanelPresenter) {
         super(eventBus, view, proxy);
-        this.placeManager = placeManager;
-        this.dispatcher = dispatcher;
-//        this.headerPresenter = headerPresenter;
-        this.clientState = clientState;
-
+        this.topPanelPresenter = topPanelPresenter;
         getView().setUiHandlers(this);
+    }
 
+    @Override
+    protected void onBind() {
+        super.onBind();
+        Main.logger.info("MainPresenter onBind");
     }
 
     @Override
     protected void revealInParent() {
-//        RevealRootContentEvent.fire(this, this);
-
-        //TODO: LayoutPanel http://code.google.com/p/gwt-platform/wiki/GettingStarted#Using_layout_panels
         RevealRootLayoutContentEvent.fire(this, this);
+        Main.logger.info("MainPresenter revealInParent");
+
     }
 
-
+    /**
+     * Sets {@link TopPanelPresenter} in {@link #SLOT_Navigation}
+     *
+     * @see com.gwtplatform.mvp.client.PresenterWidget#onReveal()
+     */
     @Override
     public void onReveal() {
         super.onReveal();
         Main.logger.info("MainPresenter onReveal");
 
-//        setInSlot(TYPE_RevealHeaderContent, headerPresenter);
+        setInSlot(SLOT_Navigation, topPanelPresenter);
     }
+
+    @Override
+    protected void onReset() {
+        super.onReset();
+        Main.logger.info("MainPresenter onReset");
+    }
+
+    @Override
+    protected void onHide() {
+        super.onHide();
+        Main.logger.info("MainPresenter onHide");
+    }
+
 
 }
