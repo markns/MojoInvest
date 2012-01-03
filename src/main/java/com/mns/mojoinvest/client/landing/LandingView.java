@@ -7,6 +7,7 @@ import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.HTMLPanel;
+import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Widget;
 import com.gwtplatform.mvp.client.ViewWithUiHandlers;
 import com.mns.mojoinvest.client.Main;
@@ -27,8 +28,12 @@ public class LandingView extends ViewWithUiHandlers<LandingUiHandlers>
 
 	@UiField
 	HTMLPanel signInContainer;
+    @UiField
+    Image googleSignIn;
+    @UiField
+    HTMLPanel container;
 
-	public LandingView() {
+    public LandingView() {
 		widget = uiBinder.createAndBindUi(this);
 
 	}
