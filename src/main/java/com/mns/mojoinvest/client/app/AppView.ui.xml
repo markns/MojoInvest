@@ -12,56 +12,41 @@
     <ui:with field='res' type='com.mns.mojoinvest.client.resources.Resources'/>
 
     <ui:style>
-
-        .visualization {
-            width: 800px;
-            height: 400px;
-            border: 1px solid #ccc;
-            -moz-box-shadow: 2px 2px 2px #ddd;
-            -webkit-box-shadow: 2px 2px 2px #ddd;
-            box-shadow: 2px 2px 2px #ddd;
-            margin: 0 1em;
-        }
     </ui:style>
 
-    <g:DockLayoutPanel unit='EM'>
-        <g:west size='192'>
-            <c:BacktestParamsView ui:field='backtest'/>
-        </g:west>
+    <!--<g:DockLayoutPanel unit='EM'>-->
+        <!--<g:north size='5'>-->
+            <!--<g:Label>Top</g:Label>-->
+        <!--</g:north>-->
+        <!--<g:center>-->
+            <!--<g:Label>Body</g:Label>-->
+        <!--</g:center>-->
+        <!--<g:west size='192'>-->
+            <!--<g:HTML>-->
+                <!--<ul>-->
+                    <!--<li>Sidebar</li>-->
+                    <!--<li>Sidebar</li>-->
+                    <!--<li>Sidebar</li>-->
+                <!--</ul>-->
+            <!--</g:HTML>-->
+        <!--</g:west>-->
+    <!--</g:DockLayoutPanel>-->
 
-        <g:north size='200'>
-            <c:ChartView ui:field='chart'/>
-        </g:north>
+    <g:DockLayoutPanel unit='EM'>
+
+        <g:west size='20'>
+            <g:SimplePanel ui:field='chart'/>
+        </g:west>
+        <g:south size='10'>
+            <g:FlowPanel ui:field='strategy'/>
+        </g:south>
 
         <g:center>
-            <c:StrategyParamsView ui:field='strategy'/>
+            <g:FlowPanel ui:field='backtest'/>
         </g:center>
+
+
     </g:DockLayoutPanel>
-
-
-    <!--<g:HTMLPanel ui:field="container" addStyleNames="{res.style.container}">-->
-        <!--<g:SimplePanel ui:field='chartContainer' addStyleNames='{style.visualization}'>-->
-            <!--<g:Label>Chart loading...</g:Label>-->
-        <!--</g:SimplePanel>-->
-
-        <!--<label class="{res.style.label} {res.style.required}">-->
-            <!--<span>Symbol</span>-->
-            <!--&lt;!&ndash;<g:SuggestBox ui:field="show" title="Show name"/>&ndash;&gt;-->
-            <!--<g:TextBox ui:field="symbol" title="Symbol"></g:TextBox>-->
-        <!--</label>-->
-
-        <!--<g:Button ui:field="getPerformance"-->
-                  <!--addStyleNames="{res.style.button} {res.style.green} {res.style.small} {res.style.formButton}">Get-->
-            <!--performance-->
-        <!--</g:Button>-->
-
-
-        <!--&lt;!&ndash;<g:HTMLPanel addStyleNames="{res.style.listing}">&ndash;&gt;-->
-        <!--&lt;!&ndash;<h4>Trades</h4>&ndash;&gt;-->
-        <!--&lt;!&ndash;&lt;!&ndash;<gcell:CellList ui:field="performancesCL" />&ndash;&gt;&ndash;&gt;-->
-        <!--&lt;!&ndash;</g:HTMLPanel>&ndash;&gt;-->
-
-    <!--</g:HTMLPanel>-->
 
 
 </ui:UiBinder>

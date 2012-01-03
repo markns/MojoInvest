@@ -1,16 +1,14 @@
 package com.mns.mojoinvest.client.app.component;
 
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.editor.client.Editor;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
-import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.Widget;
-import com.mns.mojoinvest.shared.params.StrategyParams;
+import com.gwtplatform.mvp.client.ViewImpl;
 
-public class StrategyParamsView extends Composite
-        implements StrategyParamsPresenter.MyView, Editor<StrategyParams> {
+public class StrategyParamsView extends ViewImpl
+        implements StrategyParamsPresenter.MyView {
 
     interface StrategyParamsViewUiBinder extends UiBinder<Widget, StrategyParamsView> {
     }
@@ -20,22 +18,14 @@ public class StrategyParamsView extends Composite
     @UiField
     HTMLPanel container;
 
+    public final Widget widget;
+
     public StrategyParamsView() {
-         initWidget(uiBinder.createAndBindUi(this));
+        widget = uiBinder.createAndBindUi(this);
     }
 
     @Override
-    public void addToSlot(Object slot, Widget content) {
-        //To change body of implemented methods use File | Settings | File Templates.
-    }
-
-    @Override
-    public void removeFromSlot(Object slot, Widget content) {
-        //To change body of implemented methods use File | Settings | File Templates.
-    }
-
-    @Override
-    public void setInSlot(Object slot, Widget content) {
-        //To change body of implemented methods use File | Settings | File Templates.
+    public Widget asWidget() {
+        return widget;
     }
 }

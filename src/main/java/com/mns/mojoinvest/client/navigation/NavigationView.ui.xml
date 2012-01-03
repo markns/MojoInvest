@@ -60,7 +60,7 @@
                 <a class="{style.right} {style.last}" title="Logout" href="#">Logged in as Mark Nuttall-Smith</a>
 
                 <g:InlineHyperlink ui:field="guide" targetHistoryToken="{nameTokens.guide}"
-                                   addStyleNames="{style.right} {style.last}">Help
+                                   addStyleNames="{style.right}">Help
                 </g:InlineHyperlink>
                 <g:InlineHyperlink ui:field="app"
                                    targetHistoryToken="{nameTokens.app}"

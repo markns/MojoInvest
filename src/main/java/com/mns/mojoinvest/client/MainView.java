@@ -9,6 +9,7 @@ import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 import com.gwtplatform.mvp.client.ViewWithUiHandlers;
 import com.mns.mojoinvest.client.resources.Resources;
+import com.mns.mojoinvest.client.util.UiUtils;
 
 public class MainView extends ViewWithUiHandlers<MainUiHandlers> implements
         MainPresenter.MyView {
@@ -45,9 +46,9 @@ public class MainView extends ViewWithUiHandlers<MainUiHandlers> implements
     @Override
     public void setInSlot(Object slot, Widget content) {
         if (slot == MainPresenter.SLOT_Navigation) {
-            setContent(topPanel, content);
+            UiUtils.setContent(topPanel, content);
         } else if (slot == MainPresenter.TYPE_RevealPageContent) {
-            setContent(pageContent, content);
+            UiUtils.setContent(pageContent, content);
         } else {
             super.setInSlot(slot, content);
         }

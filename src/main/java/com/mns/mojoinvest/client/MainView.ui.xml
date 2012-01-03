@@ -21,7 +21,7 @@
         }
 
         .mainPanel {
-            margin: 20px 2px 20px 30px;
+            margin: 20px 20px 20px 30px;
         }
 
         footer {
@@ -48,28 +48,6 @@
             <g:FlowPanel ui:field="topPanel"/>
         </g:north>
 
-        <!--<g:west size="16">-->
-            <!--<g:HTMLPanel>-->
-                <!--<h1>Title</h1>-->
-                <!--<footer>-->
-                    <!--Lorem ipsum dolor sit amet , consectetur adipiscing elit. Morbi arcu magna, elementum non gravida-->
-                    <!--sed, luctus-->
-                    <!--vitae dui.-->
-                    <!--Integer in gravida metus. Phasellus ac hendrerit tellus. Donec fermentum nisl id dui feugiat-->
-                    <!--ornare. Sed eget-->
-                    <!--neque nunc, et lacinia lorem . Morbi rhoncus pretium ipsum nec mollis. Maecenas auctor erat-->
-                    <!--commodo velit-->
-                    <!--lacinia et pellentesque turpis scelerisque. Cras tellus purus, tincidunt in pretium quis,-->
-                    <!--interdum sit amet-->
-                    <!--nisi. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas nibh turpis,-->
-                    <!--gravida sollicitudin-->
-                    <!--aliquet ac, porttitor ac felis. Nulla pretium metus justo, ut molestie enim. Mauris-->
-                    <!--suscipit feugiat quam sit-->
-                    <!--amet molestie.-->
-                <!--</footer>-->
-            <!--</g:HTMLPanel>-->
-        <!--</g:west>-->
-
         <g:center>
             <g:FlowPanel ui:field="pageContent"
                          addStyleNames="{style.mainPanel} {style.roundedWhiteBox}"/>
@@ -84,7 +62,6 @@
                 </footer>
             </g:HTMLPanel>
         </g:south>
-
 
     </g:DockLayoutPanel>
 

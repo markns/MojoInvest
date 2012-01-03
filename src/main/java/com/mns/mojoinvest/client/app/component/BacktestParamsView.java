@@ -1,16 +1,16 @@
 package com.mns.mojoinvest.client.app.component;
 
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.editor.client.Editor;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
-import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.Widget;
-import com.mns.mojoinvest.shared.params.BackTestParams;
+import com.gwtplatform.mvp.client.ViewImpl;
 
-public class BacktestParamsView extends Composite
-        implements BacktestParamsPresenter.MyView, Editor<BackTestParams> {
+public class BacktestParamsView extends ViewImpl
+        implements BacktestParamsPresenter.MyView
+//        , Editor<BackTestParams>
+{
 
     interface BacktestParamsViewUiBinder extends UiBinder<Widget, BacktestParamsView> { }
 
@@ -19,22 +19,14 @@ public class BacktestParamsView extends Composite
     @UiField
     HTMLPanel container;
 
+	public final Widget widget;
+
     public BacktestParamsView() {
-        initWidget(uiBinder.createAndBindUi(this));
+         widget = uiBinder.createAndBindUi(this);
     }
 
     @Override
-    public void addToSlot(Object slot, Widget content) {
-        //To change body of implemented methods use File | Settings | File Templates.
-    }
-
-    @Override
-    public void removeFromSlot(Object slot, Widget content) {
-        //To change body of implemented methods use File | Settings | File Templates.
-    }
-
-    @Override
-    public void setInSlot(Object slot, Widget content) {
-        //To change body of implemented methods use File | Settings | File Templates.
+    public Widget asWidget() {
+        return widget;
     }
 }

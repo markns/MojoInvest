@@ -12,20 +12,38 @@ import com.gwtplatform.mvp.client.proxy.RevealContentEvent;
 import com.mns.mojoinvest.client.Main;
 import com.mns.mojoinvest.client.MainPresenter;
 import com.mns.mojoinvest.client.NameTokens;
+import com.mns.mojoinvest.client.app.component.BacktestParamsPresenter;
+import com.mns.mojoinvest.client.app.component.ChartPresenter;
+import com.mns.mojoinvest.client.app.component.StrategyParamsPresenter;
 
 public class AppPresenter extends Presenter<AppPresenter.MyView, AppPresenter.MyProxy>
         implements AppUiHandlers {
 
+    @ProxyCodeSplit
+    @NameToken(NameTokens.app)
+    public interface MyProxy extends ProxyPlace<AppPresenter> {
+    }
+
     public interface MyView extends View, HasUiHandlers<AppUiHandlers> {
     }
 
-    @ProxyCodeSplit
-    @NameToken(NameTokens.app)
-    public interface MyProxy extends ProxyPlace<AppPresenter> { }
+    public static final Object SLOT_backtest = new Object();
+    public static final Object SLOT_strategy = new Object();
+    public static final Object SLOT_chart = new Object();
+
+    private final BacktestParamsPresenter backtestParamsPresenter;
+    private final StrategyParamsPresenter strategyParamsPresenter;
+    private final ChartPresenter chartPresenter;
 
     @Inject
-    public AppPresenter(EventBus eventBus, MyView view, MyProxy proxy) {
+    public AppPresenter(EventBus eventBus, MyView view, MyProxy proxy,
+                        BacktestParamsPresenter backtestParamsPresenter,
+                        StrategyParamsPresenter strategyParamsPresenter,
+                        ChartPresenter chartPresenter) {
         super(eventBus, view, proxy);
+        this.backtestParamsPresenter = backtestParamsPresenter;
+        this.strategyParamsPresenter = strategyParamsPresenter;
+        this.chartPresenter = chartPresenter;
         getView().setUiHandlers(this);
     }
 
@@ -45,6 +63,9 @@ public class AppPresenter extends Presenter<AppPresenter.MyView, AppPresenter.My
     protected void onReveal() {
         super.onReveal();
         Main.logger.info("AppPresenter onReveal");
+        setInSlot(SLOT_backtest, backtestParamsPresenter);
+        setInSlot(SLOT_strategy, strategyParamsPresenter);
+        setInSlot(SLOT_chart, chartPresenter);
     }
 
     @Override
@@ -58,25 +79,5 @@ public class AppPresenter extends Presenter<AppPresenter.MyView, AppPresenter.My
         super.onHide();
         Main.logger.info("AppPresenter onHide");
     }
-
-//    @Override
-//    public void getPerformance(String symbol) {
-//        Main.logger.info("Requested performance for " + symbol);
-//
-//        dispatcher.execute(new GetFundPerformanceAction(symbol),
-//                new DispatchCallback<GetFundPerformanceResult>() {
-//                    @Override
-//                    public void onSuccess(GetFundPerformanceResult result) {
-//						if (!result.getErrorText().isEmpty()) {
-//							Window.alert(result.getErrorText());
-//							return;
-//						}
-//                        getView().setDefaultValues();
-//                        getView().setChartData(result.getDataTableDto().getDataTable(),
-//                                result.getOptionsDto());
-//                    }
-//                });
-//
-//    }
 
 }

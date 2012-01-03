@@ -3,11 +3,11 @@ package com.mns.mojoinvest.client.app;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
+import com.google.gwt.user.client.ui.FlowPanel;
+import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.gwtplatform.mvp.client.ViewWithUiHandlers;
-import com.mns.mojoinvest.client.app.component.BacktestParamsView;
-import com.mns.mojoinvest.client.app.component.ChartView;
-import com.mns.mojoinvest.client.app.component.StrategyParamsView;
+import com.mns.mojoinvest.client.util.UiUtils;
 
 public class AppView extends ViewWithUiHandlers<AppUiHandlers>
         implements AppPresenter.MyView {
@@ -32,13 +32,13 @@ public class AppView extends ViewWithUiHandlers<AppUiHandlers>
 //    SimplePanel chartContainer;
 
     @UiField
-    BacktestParamsView backtest;
+    FlowPanel backtest;
 
     @UiField
-    ChartView chart;
+    SimplePanel chart;
 
     @UiField
-    StrategyParamsView strategy;
+    FlowPanel strategy;
 
 //    private LineChart lineChart;
 
@@ -62,6 +62,20 @@ public class AppView extends ViewWithUiHandlers<AppUiHandlers>
     public Widget asWidget() {
         return widget;
     }
+
+    @Override
+    public void setInSlot(Object slot, Widget content) {
+        if (slot == AppPresenter.SLOT_backtest) {
+            UiUtils.setContent(backtest, content);
+        } else if (slot == AppPresenter.SLOT_strategy) {
+            UiUtils.setContent(strategy, content);
+        } else if (slot == AppPresenter.SLOT_chart) {
+            UiUtils.setContent(chart, content);
+        } else {
+            super.setInSlot(slot, content);
+        }
+    }
+
 
 //    @Override
 //    public void setChartData(DataTable dataTable, OptionsDto optionsDto) {
