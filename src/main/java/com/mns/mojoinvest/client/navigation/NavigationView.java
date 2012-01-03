@@ -13,7 +13,7 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.mns.mojoinvest.client.widget;
+package com.mns.mojoinvest.client.navigation;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.uibinder.client.UiBinder;
@@ -27,9 +27,9 @@ import com.mns.mojoinvest.client.resources.Resources;
 /**
  * The top panel, which contains the 'welcome' message and various links.
  */
-public class TopPanelView extends ViewImpl implements TopPanelPresenter.MyView {
+public class NavigationView extends ViewImpl implements NavigationPresenter.MyView {
 
-    interface TopPanelBinder extends UiBinder<Widget, TopPanelView> {
+    interface TopPanelBinder extends UiBinder<Widget, NavigationView> {
     }
 
     private static final TopPanelBinder binder = GWT.create(TopPanelBinder.class);
@@ -47,7 +47,7 @@ public class TopPanelView extends ViewImpl implements TopPanelPresenter.MyView {
     private final Resources resources;
 
     @Inject
-    public TopPanelView(final Resources resources) {
+    public NavigationView(final Resources resources) {
         this.resources = resources;
         this.resources.navigation().ensureInjected();
         this.widget = binder.createAndBindUi(this);

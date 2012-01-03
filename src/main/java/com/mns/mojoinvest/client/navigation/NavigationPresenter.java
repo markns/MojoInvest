@@ -1,4 +1,4 @@
-package com.mns.mojoinvest.client.widget;
+package com.mns.mojoinvest.client.navigation;
 
 import com.google.gwt.event.shared.EventBus;
 import com.google.inject.Inject;
@@ -7,7 +7,7 @@ import com.gwtplatform.mvp.client.View;
 import com.gwtplatform.mvp.client.proxy.PlaceManager;
 import com.gwtplatform.mvp.client.proxy.PlaceRequest;
 
-public class TopPanelPresenter extends PresenterWidget<TopPanelPresenter.MyView> {
+public class NavigationPresenter extends PresenterWidget<NavigationPresenter.MyView> {
 
     public interface MyView extends View {
         void highlight(String token);
@@ -16,14 +16,14 @@ public class TopPanelPresenter extends PresenterWidget<TopPanelPresenter.MyView>
     private final PlaceManager placeManager;
 
     @Inject
-    public TopPanelPresenter(final EventBus eventBus, final MyView view, final PlaceManager placeManager) {
+    public NavigationPresenter(final EventBus eventBus, final MyView view, final PlaceManager placeManager) {
         super(eventBus, view);
         this.placeManager = placeManager;
     }
 
     /**
-     * {@linkplain TopPanelPresenter.MyView#highlight(String) Highlights} the
-     * current place in the {@linkplain TopPanelPresenter.MyView navigation
+     * {@linkplain NavigationPresenter.MyView#highlight(String) Highlights} the
+     * current place in the {@linkplain NavigationPresenter.MyView navigation
      * view}.
      *
      * @see com.gwtplatform.mvp.client.PresenterWidget#onReset()

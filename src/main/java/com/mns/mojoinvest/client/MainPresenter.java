@@ -11,7 +11,7 @@ import com.gwtplatform.mvp.client.annotations.ProxyStandard;
 import com.gwtplatform.mvp.client.proxy.Proxy;
 import com.gwtplatform.mvp.client.proxy.RevealContentHandler;
 import com.gwtplatform.mvp.client.proxy.RevealRootLayoutContentEvent;
-import com.mns.mojoinvest.client.widget.TopPanelPresenter;
+import com.mns.mojoinvest.client.navigation.NavigationPresenter;
 
 public class MainPresenter extends
         Presenter<MainPresenter.MyView, MainPresenter.MyProxy> implements
@@ -35,13 +35,13 @@ public class MainPresenter extends
     @ContentSlot
     public static final Type<RevealContentHandler<?>> TYPE_RevealPageContent = new Type<RevealContentHandler<?>>();
 
-    private final TopPanelPresenter topPanelPresenter;
+    private final NavigationPresenter navigationPresenter;
 
     @Inject
     public MainPresenter(final EventBus eventBus, final MyView view, final MyProxy proxy,
-                         final TopPanelPresenter topPanelPresenter) {
+                         final NavigationPresenter navigationPresenter) {
         super(eventBus, view, proxy);
-        this.topPanelPresenter = topPanelPresenter;
+        this.navigationPresenter = navigationPresenter;
         getView().setUiHandlers(this);
     }
 
@@ -59,7 +59,7 @@ public class MainPresenter extends
     }
 
     /**
-     * Sets {@link TopPanelPresenter} in {@link #SLOT_Navigation}
+     * Sets {@link com.mns.mojoinvest.client.navigation.NavigationPresenter} in {@link #SLOT_Navigation}
      *
      * @see com.gwtplatform.mvp.client.PresenterWidget#onReveal()
      */
@@ -68,7 +68,7 @@ public class MainPresenter extends
         super.onReveal();
         Main.logger.info("MainPresenter onReveal");
 
-        setInSlot(SLOT_Navigation, topPanelPresenter);
+        setInSlot(SLOT_Navigation, navigationPresenter);
     }
 
     @Override

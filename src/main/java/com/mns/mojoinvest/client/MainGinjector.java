@@ -29,11 +29,11 @@ import com.mns.mojoinvest.client.landing.LandingModule;
 import com.mns.mojoinvest.client.landing.LandingPresenter;
 import com.mns.mojoinvest.client.resources.Resources;
 import com.mns.mojoinvest.client.resources.Translations;
-import com.mns.mojoinvest.client.widget.WidgetModule;
+import com.mns.mojoinvest.client.navigation.NavigationModule;
 
 @GinModules({DispatchAsyncModule.class,
         MainModule.class,
-        WidgetModule.class,
+        NavigationModule.class,
         LandingModule.class,
         AppModule.class})
 public interface MainGinjector extends Ginjector {
