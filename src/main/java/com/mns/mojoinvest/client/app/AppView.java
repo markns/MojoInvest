@@ -27,8 +27,6 @@ public class AppView extends ViewWithUiHandlers<AppUiHandlers>
     @UiField
     FlowPanel params;
 
-//    private LineChart lineChart;
-
     public AppView() {
         widget = uiBinder.createAndBindUi(this);
 
