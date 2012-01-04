@@ -4,10 +4,7 @@ import com.google.inject.Inject;
 import com.googlecode.objectify.*;
 import com.mns.mojoinvest.server.engine.model.Fund;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class FundDao extends DAOBase {
 
@@ -70,5 +67,23 @@ public class FundDao extends DAOBase {
 
     public Map<Key<Fund>, Fund> put(Collection<Fund> funds) {
         return ofy().put(funds);
+    }
+
+    public List<String> getProviders() {
+        List<Fund> funds = list();
+        SortedSet<String> providers = new TreeSet<String>();
+        for (Fund fund : funds) {
+            providers.add(fund.getProvider());
+        }
+        return new ArrayList<String>(providers);
+    }
+
+    public List<String> getCategories() {
+        List<Fund> funds = list();
+        SortedSet<String> categories = new TreeSet<String>();
+        for (Fund fund : funds) {
+            categories.add(fund.getCategory());
+        }
+        return new ArrayList<String>(categories);
     }
 }

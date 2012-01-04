@@ -34,13 +34,10 @@
                            addStyleNames="{style.chart}"/>
         </g:north>
 
-
         <g:center>
             <g:FlowPanel ui:field='trades'
                          addStyleNames="{style.backtest}"/>
         </g:center>
-
-
     </g:SplitLayoutPanel>
 
 

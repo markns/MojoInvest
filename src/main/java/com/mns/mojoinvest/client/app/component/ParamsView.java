@@ -1,14 +1,19 @@
 package com.mns.mojoinvest.client.app.component;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.editor.client.Editor;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
-import com.google.gwt.user.client.ui.*;
+import com.google.gwt.user.client.ui.Button;
+import com.google.gwt.user.client.ui.HTMLPanel;
+import com.google.gwt.user.client.ui.TextBox;
+import com.google.gwt.user.client.ui.Widget;
 import com.google.gwt.user.datepicker.client.DateBox;
 import com.gwtplatform.mvp.client.ViewImpl;
+import com.mns.mojoinvest.shared.params.StrategyParams;
 
 public class ParamsView extends ViewImpl
-        implements ParamsPresenter.MyView {
+        implements ParamsPresenter.MyView, Editor<StrategyParams> {
 
     interface StrategyParamsViewUiBinder extends UiBinder<Widget, ParamsView> {
     }
@@ -35,6 +40,10 @@ public class ParamsView extends ViewImpl
     TextBox transactionCost;
     @UiField
     TextBox investmentAmount;
+    @UiField
+    TextBox categoryFilter;
+    @UiField
+    TextBox providerFilter;
 
     public final Widget widget;
 

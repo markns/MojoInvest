@@ -23,7 +23,6 @@
             margin: 10px;
         }
 
-
     </ui:style>
 
     <g:HTMLPanel ui:field="container">
@@ -79,11 +78,32 @@
                 </td>
             </tr>
             <tr>
+                <td colspan='2' align='left' class='{style.header}'>
+                    <ui:msg key='paramsFormFundFilterTitle'>Filters</ui:msg>
+                </td>
+            </tr>
+            <tr>
                 <td class='{style.label}'>
-                    <ui:msg key='paramsFormVolatilityFilter'>Volatility filter:</ui:msg>
+                    <ui:msg key='paramsFormVolatilityFilter'>Volatility:</ui:msg>
                 </td>
                 <td>
                     <g:TextBox ui:field='volatilityFilter'/>
+                </td>
+            </tr>
+            <tr>
+                <td class='{style.label}'>
+                    <ui:msg key='paramsFormProviderFilter'>Provider:</ui:msg>
+                </td>
+                <td>
+                    <g:TextBox ui:field='providerFilter'/>
+                </td>
+            </tr>
+            <tr>
+                <td class='{style.label}'>
+                    <ui:msg key='paramsFormCategoryFilter'>Category:</ui:msg>
+                </td>
+                <td>
+                    <g:TextBox ui:field='categoryFilter'/>
                 </td>
             </tr>
             <tr>
