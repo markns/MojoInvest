@@ -24,12 +24,12 @@
     </ui:style>
 
     <g:SplitLayoutPanel>
-        <g:west size='192'>
+        <g:west size='250'>
             <g:FlowPanel ui:field='params'
                          addStyleNames="{style.strategy}"/>
         </g:west>
 
-        <g:north size='200'>
+        <g:north size='350'>
             <g:FlowPanel ui:field='chart'
                            addStyleNames="{style.chart}"/>
         </g:north>

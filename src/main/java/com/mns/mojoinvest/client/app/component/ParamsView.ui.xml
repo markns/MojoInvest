@@ -1,6 +1,7 @@
 <!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
 <ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
              xmlns:g="urn:import:com.google.gwt.user.client.ui"
+             xmlns:d="urn:import:com.google.gwt.user.datepicker.client"
              ui:generateFormat='com.google.gwt.i18n.rebind.format.PropertiesFormat'
              ui:generateKeys="com.google.gwt.i18n.rebind.keygen.MD5KeyGenerator"
              ui:generateLocales="default">
@@ -8,91 +9,113 @@
     <ui:with type="com.mns.mojoinvest.client.NameTokens" field="nameTokens"/>
     <ui:with field='res' type='com.mns.mojoinvest.client.resources.Resources'/>
 
+
+    <ui:style>
+        .header {
+            font-size: 110%;
+            color: #555
+        }
+
+        .label {
+        }
+
+        .table {
+            margin: 10px;
+        }
+
+
+    </ui:style>
+
     <g:HTMLPanel ui:field="container">
-        <g:Label>Params</g:Label>
-        <p>
-            params
-            params
-            params
-            params
-            params
-            params
-            params
-            params
-            params
-            params
-            params
-            params
-            params
-            params
-            params
-            params
-            params
-            params
-            params
-            params
-            params
-            params
-            params
-            params
-            params
-            params
-            params
-            params
-            params
-            params
-            params
-            params
-            params
-            params
-            params
-            params
-            params
-            params
-            params
-            params
-            params
-            params
-            params
-            params
-            params
-            params
-            params
-            params
-            params
-            params
-            params
-            params
-            params
-            params
-            params
-            params
-            params
-            params
-            params
-            params
-            params
-            params
-            params
-            params
-            params
-            params
-            params
-            params
-            params
-            params
-            params
-            params
-            params
-            params
-            params
-            params
-            params
-            params
-            params
-            params
-            params
-        </p>
+        <table class="{style.table}">
+            <tr>
+                <td colspan='2' align='left' class='{style.header}'>
+                    <ui:msg key='paramsFormPortfolioTitle'>Portfolio</ui:msg>
+                </td>
+            </tr>
+            <tr>
+                <td class='{style.label}'>
+                    <ui:msg key='paramsFormInvestmentAmount'>Investment amount:</ui:msg>
+                </td>
+                <td>
+                    <g:TextBox ui:field='investmentAmount'/>
+                </td>
+            </tr>
+            <tr>
+                <td class='{style.label}'>
+                    <ui:msg key='paramsFormTransactioCost'>Transaction cost:</ui:msg>
+                </td>
+                <td>
+                    <g:TextBox ui:field='transactionCost'/>
+                </td>
+            </tr>
+            <tr>
+                <td colspan='2' align='left' class='{style.header}'>
+                    <ui:msg key='paramsFormStrategyTitle'>Strategy</ui:msg>
+                </td>
+            </tr>
+            <tr>
+                <td class='{style.label}'>
+                    <ui:msg key='paramsFormPerformanceRange'>Performance range:</ui:msg>
+                </td>
+                <td>
+                    <g:TextBox ui:field='performanceRange'/>
+                </td>
+            </tr>
+            <tr>
+                <td class='{style.label}'>
+                    <ui:msg key='paramsFormRebalanceFrequency'>Rebalance frequency:</ui:msg>
+                </td>
+                <td>
+                    <g:TextBox ui:field='rebalanceFrequency'/>
+                </td>
+            </tr>
+            <tr>
+                <td class='{style.label}'>
+                    <ui:msg key='paramsFormPortfolioSize'>Portfolio size:</ui:msg>
+                </td>
+                <td>
+                    <g:TextBox ui:field='portfolioSize'/>
+                </td>
+            </tr>
+            <tr>
+                <td class='{style.label}'>
+                    <ui:msg key='paramsFormVolatilityFilter'>Volatility filter:</ui:msg>
+                </td>
+                <td>
+                    <g:TextBox ui:field='volatilityFilter'/>
+                </td>
+            </tr>
+            <tr>
+                <td colspan='2' align='left' class='{style.header}'>
+                    <ui:msg key='paramsFormBacktestTitle'>Backtest</ui:msg>
+                </td>
+            </tr>
+            <tr>
+                <td class='{style.label}'>
+                    <ui:msg key='paramsFormFromDate'>From date:</ui:msg>
+                </td>
+                <td>
+                    <d:DateBox ui:field='FromDate'/>
+                </td>
+            </tr>
+            <tr>
+                <td class='{style.label}'>
+                    <ui:msg key='paramsFormToDate'>To date:</ui:msg>
+                </td>
+                <td>
+                    <d:DateBox ui:field='toDate'/>
+                </td>
+            </tr>
+
+            <tr>
+                <td colspan='2' align='right'>
+                    <g:Button ui:field='runStrategyButton'>
+                        <ui:msg key='paramsFormRunStrategyButton'>Run strategy</ui:msg>
+                    </g:Button>
+                </td>
+            </tr>
+        </table>
     </g:HTMLPanel>
 
 

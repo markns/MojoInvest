@@ -3,8 +3,8 @@ package com.mns.mojoinvest.client.app.component;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
-import com.google.gwt.user.client.ui.HTMLPanel;
-import com.google.gwt.user.client.ui.Widget;
+import com.google.gwt.user.client.ui.*;
+import com.google.gwt.user.datepicker.client.DateBox;
 import com.gwtplatform.mvp.client.ViewImpl;
 
 public class ParamsView extends ViewImpl
@@ -17,6 +17,24 @@ public class ParamsView extends ViewImpl
 
     @UiField
     HTMLPanel container;
+    @UiField
+    Button runStrategyButton;
+    @UiField
+    DateBox toDate;
+    @UiField
+    DateBox FromDate;
+    @UiField
+    TextBox volatilityFilter;
+    @UiField
+    TextBox portfolioSize;
+    @UiField
+    TextBox rebalanceFrequency;
+    @UiField
+    TextBox performanceRange;
+    @UiField
+    TextBox transactionCost;
+    @UiField
+    TextBox investmentAmount;
 
     public final Widget widget;
 
