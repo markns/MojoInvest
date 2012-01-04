@@ -11,11 +11,11 @@ public class AppModule extends AbstractPresenterModule {
 		bindPresenter(AppPresenter.class, AppPresenter.MyView.class,
 				AppView.class, AppPresenter.MyProxy.class);
 
-        bindPresenterWidget(BacktestParamsPresenter.class, BacktestParamsPresenter.MyView.class,
-                BacktestParamsView.class);
-        bindPresenterWidget(StrategyParamsPresenter.class, StrategyParamsPresenter.MyView.class,
-                StrategyParamsView.class);
+        bindPresenterWidget(ParamsPresenter.class, ParamsPresenter.MyView.class,
+                ParamsView.class);
         bindPresenterWidget(ChartPresenter.class, ChartPresenter.MyView.class,
                 ChartView.class);
-	}
+        bindPresenterWidget(TradesPresenter.class, TradesPresenter.MyView.class,
+                TradesView.class);
+    }
 }

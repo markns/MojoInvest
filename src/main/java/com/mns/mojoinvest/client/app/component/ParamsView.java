@@ -7,22 +7,21 @@ import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.gwtplatform.mvp.client.ViewImpl;
 
-public class BacktestParamsView extends ViewImpl
-        implements BacktestParamsPresenter.MyView
-//        , Editor<BackTestParams>
-{
+public class ParamsView extends ViewImpl
+        implements ParamsPresenter.MyView {
 
-    interface BacktestParamsViewUiBinder extends UiBinder<Widget, BacktestParamsView> { }
+    interface StrategyParamsViewUiBinder extends UiBinder<Widget, ParamsView> {
+    }
 
-    private static BacktestParamsViewUiBinder uiBinder = GWT.create(BacktestParamsViewUiBinder.class);
+    private static StrategyParamsViewUiBinder uiBinder = GWT.create(StrategyParamsViewUiBinder.class);
 
     @UiField
     HTMLPanel container;
 
-	public final Widget widget;
+    public final Widget widget;
 
-    public BacktestParamsView() {
-         widget = uiBinder.createAndBindUi(this);
+    public ParamsView() {
+        widget = uiBinder.createAndBindUi(this);
     }
 
     @Override

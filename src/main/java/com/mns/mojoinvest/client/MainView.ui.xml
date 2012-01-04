@@ -45,11 +45,11 @@
     <g:DockLayoutPanel unit='EM'>
 
         <g:north size="4">
-            <g:FlowPanel ui:field="topPanel"/>
+            <g:LayoutPanel ui:field="topPanel"/>
         </g:north>
 
         <g:center>
-            <g:FlowPanel ui:field="pageContent"
+            <g:LayoutPanel ui:field="pageContent"
                          addStyleNames="{style.mainPanel} {style.roundedWhiteBox}"/>
         </g:center>
 

@@ -5,12 +5,13 @@ import com.google.inject.Inject;
 import com.gwtplatform.mvp.client.PresenterWidget;
 import com.gwtplatform.mvp.client.View;
 
-public class BacktestParamsPresenter extends PresenterWidget<BacktestParamsPresenter.MyView> {
+public class ParamsPresenter extends PresenterWidget<ParamsPresenter.MyView> {
 
-    public interface MyView extends View { }
+    public interface MyView extends View {
+    }
 
     @Inject
-    public BacktestParamsPresenter(final EventBus eventBus, final BacktestParamsPresenter.MyView view) {
+    public ParamsPresenter(final EventBus eventBus, final ParamsPresenter.MyView view) {
         super(eventBus, view);
     }
 }

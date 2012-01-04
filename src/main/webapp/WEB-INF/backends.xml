@@ -1,9 +1,9 @@
 <backends>
-    <backend name="crawler">
-        <class>B1</class>
-        <options>
-            <public>true</public>
-            <dynamic>true</dynamic>
-        </options>
-    </backend>
+    <!--<backend name="crawler">-->
+        <!--<class>B1</class>-->
+        <!--<options>-->
+            <!--<public>true</public>-->
+            <!--<dynamic>true</dynamic>-->
+        <!--</options>-->
+    <!--</backend>-->
 </backends>

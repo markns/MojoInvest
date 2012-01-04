@@ -4,7 +4,6 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.FlowPanel;
-import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.gwtplatform.mvp.client.ViewWithUiHandlers;
 import com.mns.mojoinvest.client.util.UiUtils;
@@ -19,41 +18,20 @@ public class AppView extends ViewWithUiHandlers<AppUiHandlers>
 
     public final Widget widget;
 
-//    @UiField
-//    HTMLPanel container;
-//
-//    @UiField
-//    TextBox symbol;
-//
-//    @UiField
-//    Button getPerformance;
-//
-//    @UiField
-//    SimplePanel chartContainer;
+    @UiField
+    FlowPanel trades;
 
     @UiField
-    FlowPanel backtest;
+    FlowPanel chart;
 
     @UiField
-    SimplePanel chart;
-
-    @UiField
-    FlowPanel strategy;
+    FlowPanel params;
 
 //    private LineChart lineChart;
 
     public AppView() {
         widget = uiBinder.createAndBindUi(this);
 
-//        VisualizationUtils.loadVisualizationApi(new Runnable() {
-//            @Override
-//            public void run() {
-////                lineChart = new LineChart(createTable(), createOptions());
-////                chartContainer.clear();
-////                chartContainer.add(lineChart);
-//
-//            }
-//        }, LineChart.PACKAGE);
 
     }
 
@@ -65,10 +43,10 @@ public class AppView extends ViewWithUiHandlers<AppUiHandlers>
 
     @Override
     public void setInSlot(Object slot, Widget content) {
-        if (slot == AppPresenter.SLOT_backtest) {
-            UiUtils.setContent(backtest, content);
-        } else if (slot == AppPresenter.SLOT_strategy) {
-            UiUtils.setContent(strategy, content);
+        if (slot == AppPresenter.SLOT_trades) {
+            UiUtils.setContent(trades, content);
+        } else if (slot == AppPresenter.SLOT_params) {
+            UiUtils.setContent(params, content);
         } else if (slot == AppPresenter.SLOT_chart) {
             UiUtils.setContent(chart, content);
         } else {

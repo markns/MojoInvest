@@ -22,6 +22,16 @@ public class ChartView extends ViewImpl
 
     public ChartView() {
         widget = uiBinder.createAndBindUi(this);
+
+//        VisualizationUtils.loadVisualizationApi(new Runnable() {
+//            @Override
+//            public void run() {
+////                lineChart = new LineChart(createTable(), createOptions());
+////                chartContainer.clear();
+////                chartContainer.add(lineChart);
+//
+//            }
+//        }, LineChart.PACKAGE);
     }
 
     @Override

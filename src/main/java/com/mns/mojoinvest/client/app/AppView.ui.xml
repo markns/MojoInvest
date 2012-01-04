@@ -12,41 +12,39 @@
     <ui:with field='res' type='com.mns.mojoinvest.client.resources.Resources'/>
 
     <ui:style>
+
+        .backtest {
+            background-color: #ff7f50;
+        }
+
+        .strategy {
+            background-color: #f5f5dc;
+        }
+
+        .chart {
+            background-color: #ffc0cb;
+        }
     </ui:style>
 
-    <!--<g:DockLayoutPanel unit='EM'>-->
-        <!--<g:north size='5'>-->
-            <!--<g:Label>Top</g:Label>-->
-        <!--</g:north>-->
-        <!--<g:center>-->
-            <!--<g:Label>Body</g:Label>-->
-        <!--</g:center>-->
-        <!--<g:west size='192'>-->
-            <!--<g:HTML>-->
-                <!--<ul>-->
-                    <!--<li>Sidebar</li>-->
-                    <!--<li>Sidebar</li>-->
-                    <!--<li>Sidebar</li>-->
-                <!--</ul>-->
-            <!--</g:HTML>-->
-        <!--</g:west>-->
-    <!--</g:DockLayoutPanel>-->
-
-    <g:DockLayoutPanel unit='EM'>
-
-        <g:west size='20'>
-            <g:SimplePanel ui:field='chart'/>
+    <g:SplitLayoutPanel>
+        <g:west size='192'>
+            <g:FlowPanel ui:field='params'
+                         addStyleNames="{style.strategy}"/>
         </g:west>
-        <g:south size='10'>
-            <g:FlowPanel ui:field='strategy'/>
-        </g:south>
+
+        <g:north size='200'>
+            <g:FlowPanel ui:field='chart'
+                           addStyleNames="{style.chart}"/>
+        </g:north>
+
 
         <g:center>
-            <g:FlowPanel ui:field='backtest'/>
+            <g:FlowPanel ui:field='trades'
+                         addStyleNames="{style.backtest}"/>
         </g:center>
 
 
-    </g:DockLayoutPanel>
+    </g:SplitLayoutPanel>
 
 
 </ui:UiBinder>

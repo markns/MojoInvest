@@ -7,20 +7,20 @@ import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.gwtplatform.mvp.client.ViewImpl;
 
-public class StrategyParamsView extends ViewImpl
-        implements StrategyParamsPresenter.MyView {
+public class TradesView extends ViewImpl
+        implements TradesPresenter.MyView {
 
-    interface StrategyParamsViewUiBinder extends UiBinder<Widget, StrategyParamsView> {
+    interface BacktestParamsViewUiBinder extends UiBinder<Widget, TradesView> {
     }
 
-    private static StrategyParamsViewUiBinder uiBinder = GWT.create(StrategyParamsViewUiBinder.class);
+    private static BacktestParamsViewUiBinder uiBinder = GWT.create(BacktestParamsViewUiBinder.class);
 
     @UiField
     HTMLPanel container;
 
     public final Widget widget;
 
-    public StrategyParamsView() {
+    public TradesView() {
         widget = uiBinder.createAndBindUi(this);
     }
 
