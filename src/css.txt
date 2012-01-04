@@ -1,0 +1,123 @@
+ome > Articles > Programming > Web Services/ XML/ SOA/ WebSphere/ WCF
+The Amazing Em Unit and Other CSS Best Practices
+
+    By Hakon Wium Lie and Bert Bos
+    Jul 22, 2005
+
+    PrintPrint
+    Share ThisShare This
+    DiscussDiscuss
+
+Page 1 of 1
+This chapter is from the book
+Cascading Style Sheets: Designing for the Web, 3rd EditionCascading Style Sheets: Designing for the Web, 3rd Edition
+
+Learn MoreAdd To Cart
+This chapter is about writing style sheets with style. By showing you case studies and how they are constructed, we give you a sense of how CSS can encode the visual presentation you want to achieve. More importantly, if you follow the guidelines in this chapter, your documents will behave well on a wide range of Web devices.
+
+This chapter is about writing style sheets with style. By showing you case studies and how they are constructed, we give you a sense of how CSS can encode the visual presentation you want to achieve. More importantly, if you follow the guidelines in this chapter, your documents will behave well on a wide range of Web devices. For example, they will scale gracefully from one screen size to another.
+
+Use ems to make scalable style sheets!
+
+The foremost tool for writing scalable style sheets is the em unit, and it therefore goes on top of the list of guidelines that we compile throughout this chapter: Use ems to make scalable style sheets. Named after the letter "M," the em unit has a long-standing tradition in typography where it has been used to measure horizontal widths. For example, the long dash (Ñ) often found in American texts is known as an "em dash" because historically, it has had the same width as the letter "M." Its narrower cousin (Ð), often found in European texts, is similarly referred to as "en dash."
+
+The meaning of "em" has changed over the years. Not all fonts have the letter "M" in them (for example, Chinese), but all fonts have a height. The term has therefore come to mean the height of the font Ð not the width of the letter "M."
+
+In CSS, the em unit is a general unit for measuring lengths (for example, page margins and padding around elements). You can use it both horizontally and vertically, and this shocks traditional typographers who have always used the em exclusively for horizontal measurements. By extending the em unit to also work vertically, it has become a very powerful unit Ð so powerful that you seldom have to use other units of length.
+
+Let's look at a simple example where we use the em unit to set font sizes:
+
+<HTML>
+  <STYLE>
+    H1 { font-size: 2em }
+  </STYLE>
+  <BODY>
+    <H1>Movies</H1>
+  </BODY>
+</HTML>
+
+When used to specify font sizes, the em unit refers to the font size of the parent element. So, in the previous example, the font size of the H1 element is set to be twice the font size of the BODY element. To find what the font size of the H1 element will be, we need to know the font size of BODY. Because this isn't specified in the style sheet, the browser must find it from somewhere else Ð a good place to look is in the user's preferences. So, if the user sets the normal font size to 10 points, the size of the H1 element is 20 points. This makes document headlines stand out relative to the surrounding text. Therefore: Always use ems to set font sizes!
+
+Always use ems to set font sizes!
+
+Designers who come from a desktop-publishing background may be inclined to skip the indirection that em introduces and specify directly that the font size should be 20 points. This is possible in CSS (see the description of the font-size property in Chapter 5, "Fonts") but using em is a better solution. Say, for example, that a sight-impaired user sets his normal font size to 20pt (20 points). If the font size of H1 is 2em, as we recommend, H1 elements will scale accordingly and be displayed in 40 points. If, however, the style sheet sets the font size to be 20pt, there will be no scaling of fonts and the size of headlines will have the same size as the surrounding text.
+
+The usefulness of the em unit isn't limited to font sizes. Figure 3.1 shows a page design where all lengths Ð including the padding and margins around elements Ð are specified in ems.
+03fig01.jpg
+
+Figure 3.1 All lengths on this page are specified using ems.
+
+Let's first consider the padding. In CSS, padding is space around an element that is added to set the element apart from the rest of the content. The color of the padding is always the same as the background color of the element it surrounds. In Figure 3.1, the menu on the right has been given a padding with this rule:
+
+DIV.menu { padding: 1.5em }
+
+By specifying the padding width in ems, the width of the padding is relative to the font size of the DIV element. As a designer, you don't really care what the exact width of the padding is on the user's screen; what you care about is the proportions of the page you are composing. If the font size of an element increases, the padding around the element should also increase. This is shown in Figure 3.2 where the font size of the menu has increased while the proportions remain constant.
+03fig02.jpg
+
+Figure 3.2 Because margins and padding are specified in ems, they scale relative to the font size.
+
+Outside the menu's padding is the margin area. The margin area ensures that there is enough space around an element so that the page doesn't appear cramped. This rule sets the margin around the menu:
+
+DIV.menu { margin: 1.5em }
+
+Figure 3.2 identifies the margin area. Again, the use of ems ensures scalable designs.
+
+Another use of ems can be found in this book where the indent of the first line of most paragraphs is set to 1.8 em. The same value is used for the left margin of code examples, such as this:
+
+P { text-indent: 1.8em }
+PRE { margin-left: 1.8em }
+
+So, if ems are so great, why does CSS have other units as well? There are cases when it makes sense to use other units. For example, here is a case where percentages may work just as well, if not better: setting the margins of the BODY element. Remember that everything that is displayed in an HTML page is inside BODY, so setting the margins of that element sets the overall shape of the page. You could give the page nice wide margins on both sides with these two rules:
+
+BODY {
+  margin-left: 15%;
+  margin-right: 10%
+}
+
+This makes the text 75% of the total width, and the left margin a bit wider than the right one. Try it! Your page immediately looks more professional. Percentage values set on the BODY element are typically calculated with respect to the browser window. So, in the previous example, the text will cover 75% of the browser window.
+
+Use relative units for lengths!
+
+Both ems and percentages are relative units, which means that they are computed with respect to something. We can distill a general rule from this: Use relative units for lengths. But, how about the absolute units in CSS Ð inches, centimeters, points, and picas Ð why are they in there at all if you never recommend to use them?
+
+Cases may arise when you'll need to use absolute units. Say, for example, that you are creating your wedding invitations using XML and CSS. You have carefully crafted tags such as <BESTMAN> and <RSVP/>, and you plan to distribute the invitations through the Web. However, some parts of your families are not yet connected and require printed invitations Ð on handmade paper, of course, and with proper margins. And 12 point fonts, exactly. This is the time to pull out the obsolete absolute length units: Only use absolute length units when the physical characteristics of the output medium are known. In practice, this happens only when you hand-tailor a style sheet for a specific printer paper size. In all other cases, you are better off using relative length units.
+
+Only use absolute length units when the physical characteristics of the output medium are known!
+
+A common presentation on the Web is to move elements to the sides of the page. Typically, this is achieved by using a table for layout purposes. Although you can use CSS to describe table layout (see Appendix A, "HTML 4.0 quick reference"), there is a simpler way to "put stuff on the side." In HTML, images can float; i.e., they move over to the side while allowing text to "wrap around" them. In CSS, all elements Ð not just images Ð can float. The menu in Figures 3.1 and 3.2 is an example of a floating element that has been set to float to the right side of the page. To achieve this effect, you must complete two steps. First, the element must be declared to be floating using the float property. Second, the element must be given an appropriate width (in ems, of course). This is done through the width property. Here are the two rules needed:
+
+DIV.menu {
+  float: right;
+  width: 15em;
+}
+
+Use floating elements instead of tables!
+
+By using floating text elements instead of tables, your markup can remain simple while achieving many of the visual effects that are often accomplished with tables in HTML. Thus, we have another guideline: Use floating elements instead of tables. Simpler markup isn't the only reason why floating elements are good replacements for tables. Flexible layout schemes are another. By changing a few lines in the style sheet which generated the page shown in Figure 3.1, we can, for example, move the menu to the left side (see Figure 3.3). Also, many text-only browsers have problems displaying tables because content within the table doesn't come in its logical order.
+03fig03.jpg
+
+Figure 3.3 By changing a few lines in the style sheets, you can achieve a different design.
+
+Put content in its logical order!
+
+This brings us to the next guideline: Put content in its logical order. Although CSS allows you to move text around on the screen by means of floats and other ways of positioning, do not rely on that. By putting content in its logical order, you ensure that your document makes sense in browsers that don't support CSS. That includes browsers that work in text mode, such as Lynx, older browsers that date from before CSS, browsers whose users have turned off style sheets, or browsers that don't work visually at all, such as voice browsers and Braille browsers. Voice browsers may actually support CSS because CSS can also describe the style of spoken pages, but aural CSS (not described in this book) doesn't allow text to be spoken out of order.
+
+Make sure your documents are legible without style sheets!
+
+Even a browser that supports CSS may sometimes fail to load the style sheet because of a network error. Therefore, you should always make sure your documents are legible without style sheets. Documents must be legible to humans, but also to Web robots and other software that try to index, summarize, or translate your documents. Also, think of the future: Five years from now, the style sheet may be lost; in 50 years, there may not be a browser that knows CSS; and in 500 years...
+
+Test your documents on several browsers!
+
+A good way to make sure your documents are really legible is to test your documents on several browsers. Alas, not all browsers that claim to support CSS do so according to W3C's specification. How much effort you should put into testing your style sheets depends on the target audience of your documents. If you publish on a closed intranet where everyone uses the same browser, your testing job will be easy. If, on the other hand, your documents are openly available on the Web, testing can be a time-consuming task. One way to avoid doing all the testing yourself is to use one of the W3C Core Styles, which are freely available on the Web (see Chapter 14, "External style sheets").
+
+Realize that your document will end up on systems that have different fonts. CSS specifies five so-called generic fonts that are guaranteed to exist in all browsers: serif, sans-serif, monospace, cursive, and fantasy. When specifying a font family in CSS, you have the option of supplying a list to increase the chance of finding a specified font at the user's system. The last font family in the list should always be a generic font. So always specify a fallback generic font. This book, for example, has been set in Gill Sans. But, not everybody has a copy of that font, so we actually specified the font as
+
+Always specify a fallback generic font!
+
+BODY { font-family: Gill Sans, sans-serif }
+
+This code says that the font for the document's body is Gill Sans when available, or any other sans serif font when not. Depending on your browser and your machine's configuration, you may get Helvetica, Arial, or something similar. You can learn more about setting fonts in Chapter 5.
+
+Know when to stop!
+
+A word of warning at the end: Know when to stop. Be critical when designing your style sheet. Just because you can use 10 different fonts and 30 different colors on the same page doesn't mean you have to Ð or should. Simple style sheets often convey your message better than over-loaded ones. That single word of red in a page of black gets more attention than any of the words on a page with a dozen different fonts and colors. If you think a piece of your text deserves more attention, give it larger margins, maybe even on all four sides. A little extra space can do wonders.
