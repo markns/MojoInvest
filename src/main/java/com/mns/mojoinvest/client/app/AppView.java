@@ -29,8 +29,6 @@ public class AppView extends ViewWithUiHandlers<AppUiHandlers>
 
     public AppView() {
         widget = uiBinder.createAndBindUi(this);
-
-
     }
 
 

@@ -3,7 +3,9 @@ package com.mns.mojoinvest.client.app;
 import com.google.gwt.event.shared.EventBus;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
+import com.gwtplatform.dispatch.shared.Action;
 import com.gwtplatform.dispatch.shared.DispatchAsync;
+import com.gwtplatform.dispatch.shared.Result;
 import com.gwtplatform.mvp.client.HasUiHandlers;
 import com.gwtplatform.mvp.client.Presenter;
 import com.gwtplatform.mvp.client.View;
@@ -19,8 +21,15 @@ import com.mns.mojoinvest.client.NameTokens;
 import com.mns.mojoinvest.client.app.component.ChartPresenter;
 import com.mns.mojoinvest.client.app.component.ParamsPresenter;
 import com.mns.mojoinvest.client.app.component.TradesPresenter;
-import com.mns.mojoinvest.shared.dispatch.GetParamsStaticAndDefaultsAction;
-import com.mns.mojoinvest.shared.dispatch.GetParamsStaticAndDefaultsResult;
+import com.mns.mojoinvest.shared.action.BatchAction;
+import com.mns.mojoinvest.shared.action.BatchResult;
+import com.mns.mojoinvest.shared.dispatch.GetParamDefaultsAction;
+import com.mns.mojoinvest.shared.dispatch.GetParamDefaultsResult;
+import com.mns.mojoinvest.shared.dispatch.GetPerformanceRangesAvailableAction;
+import com.mns.mojoinvest.shared.dispatch.GetPerformanceRangesAvailableResult;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class AppPresenter extends Presenter<AppPresenter.MyView, AppPresenter.MyProxy>
         implements AppUiHandlers {
@@ -62,22 +71,57 @@ public class AppPresenter extends Presenter<AppPresenter.MyView, AppPresenter.My
         return true;
     }
 
+    private interface OnSuccessCallback<T extends Result> {
+        void onSuccess(T result);
+    }
+
     @Override
     public void prepareFromRequest(PlaceRequest request) {
         super.prepareFromRequest(request);
-        dispatcher.execute(new GetParamsStaticAndDefaultsAction(), ManualRevealCallback.create(this,
-                new AsyncCallback<GetParamsStaticAndDefaultsResult>() {
+
+        List<Action> actions = new ArrayList<Action>();
+        final List<OnSuccessCallback> successCallbacks = new ArrayList<OnSuccessCallback>();
+
+        actions.add(new GetParamDefaultsAction());
+        successCallbacks.add(new OnSuccessCallback<GetParamDefaultsResult>() {
+            @Override
+            public void onSuccess(GetParamDefaultsResult result) {
+                Main.logger.info(result.toString());
+            }
+        });
+
+        actions.add(new GetPerformanceRangesAvailableAction());
+        successCallbacks.add(new OnSuccessCallback<GetPerformanceRangesAvailableResult>() {
+            @Override
+            public void onSuccess(GetPerformanceRangesAvailableResult result) {
+                Main.logger.info(result.toString());
+                paramsPresenter.getView()
+                        .setPerformanceRangeAcceptable(result.getPerformanceRangesAvailable());
+            }
+        });
+
+        BatchAction batch = new BatchAction(BatchAction.OnException.ROLLBACK,
+                actions.toArray(new Action[actions.size()]));
+
+        dispatcher.execute(batch, ManualRevealCallback.create(this,
+                new AsyncCallback<BatchResult>() {
                     @Override
-                    public void onSuccess(GetParamsStaticAndDefaultsResult result) {
-                        result.getProviders();
+                    @SuppressWarnings("unchecked")
+                    public void onSuccess(BatchResult batchResult) {
+                        for (int i = 0; i < batchResult.getResults().size(); i++) {
+                            successCallbacks.get(i).onSuccess(batchResult.getResults().get(i));
+                        }
                     }
 
                     @Override
                     public void onFailure(Throwable caught) {
-                        //TODO: Display an error message
+                        Main.logger.severe(caught + " " + caught.getMessage());
+                        caught.printStackTrace();
                     }
-                }));
+                }
+        ));
     }
+
 
     @Override
     protected void onBind() {

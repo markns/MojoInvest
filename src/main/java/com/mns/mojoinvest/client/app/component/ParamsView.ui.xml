@@ -2,13 +2,14 @@
 <ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
              xmlns:g="urn:import:com.google.gwt.user.client.ui"
              xmlns:d="urn:import:com.google.gwt.user.datepicker.client"
+             xmlns:e='urn:import:com.google.gwt.editor.ui.client'
+             xmlns:c='urn:import:com.mns.mojoinvest.client.app.component'
              ui:generateFormat='com.google.gwt.i18n.rebind.format.PropertiesFormat'
              ui:generateKeys="com.google.gwt.i18n.rebind.keygen.MD5KeyGenerator"
              ui:generateLocales="default">
 
     <ui:with type="com.mns.mojoinvest.client.NameTokens" field="nameTokens"/>
     <ui:with field='res' type='com.mns.mojoinvest.client.resources.Resources'/>
-
 
     <ui:style>
         .header {
@@ -23,120 +24,175 @@
             margin: 10px;
         }
 
+        /* Common measurements used in the app. */
+        @def fieldWidth 30em;
+
+        .editField {
+            display: inline;
+            width: fieldWidth;
+        }
+
+        .rightAlign {
+            text-align: right;
+        }
+
     </ui:style>
 
-    <g:HTMLPanel ui:field="container">
-        <table class="{style.table}">
-            <tr>
-                <td colspan='2' align='left' class='{style.header}'>
-                    <ui:msg key='paramsFormPortfolioTitle'>Portfolio</ui:msg>
-                </td>
-            </tr>
-            <tr>
-                <td class='{style.label}'>
-                    <ui:msg key='paramsFormInvestmentAmount'>Investment amount:</ui:msg>
-                </td>
-                <td>
-                    <g:TextBox ui:field='investmentAmount'/>
-                </td>
-            </tr>
-            <tr>
-                <td class='{style.label}'>
-                    <ui:msg key='paramsFormTransactioCost'>Transaction cost:</ui:msg>
-                </td>
-                <td>
-                    <g:TextBox ui:field='transactionCost'/>
-                </td>
-            </tr>
-            <tr>
-                <td colspan='2' align='left' class='{style.header}'>
-                    <ui:msg key='paramsFormStrategyTitle'>Strategy</ui:msg>
-                </td>
-            </tr>
-            <tr>
-                <td class='{style.label}'>
-                    <ui:msg key='paramsFormPerformanceRange'>Performance range:</ui:msg>
-                </td>
-                <td>
-                    <g:TextBox ui:field='performanceRange'/>
-                </td>
-            </tr>
-            <tr>
-                <td class='{style.label}'>
-                    <ui:msg key='paramsFormRebalanceFrequency'>Rebalance frequency:</ui:msg>
-                </td>
-                <td>
-                    <g:TextBox ui:field='rebalanceFrequency'/>
-                </td>
-            </tr>
-            <tr>
-                <td class='{style.label}'>
-                    <ui:msg key='paramsFormPortfolioSize'>Portfolio size:</ui:msg>
-                </td>
-                <td>
-                    <g:TextBox ui:field='portfolioSize'/>
-                </td>
-            </tr>
-            <tr>
-                <td colspan='2' align='left' class='{style.header}'>
-                    <ui:msg key='paramsFormFundFilterTitle'>Filters</ui:msg>
-                </td>
-            </tr>
-            <tr>
-                <td class='{style.label}'>
-                    <ui:msg key='paramsFormVolatilityFilter'>Volatility:</ui:msg>
-                </td>
-                <td>
-                    <g:TextBox ui:field='volatilityFilter'/>
-                </td>
-            </tr>
-            <tr>
-                <td class='{style.label}'>
-                    <ui:msg key='paramsFormProviderFilter'>Provider:</ui:msg>
-                </td>
-                <td>
-                    <g:TextBox ui:field='providerFilter'/>
-                </td>
-            </tr>
-            <tr>
-                <td class='{style.label}'>
-                    <ui:msg key='paramsFormCategoryFilter'>Category:</ui:msg>
-                </td>
-                <td>
-                    <g:TextBox ui:field='categoryFilter'/>
-                </td>
-            </tr>
-            <tr>
-                <td colspan='2' align='left' class='{style.header}'>
-                    <ui:msg key='paramsFormBacktestTitle'>Backtest</ui:msg>
-                </td>
-            </tr>
-            <tr>
-                <td class='{style.label}'>
-                    <ui:msg key='paramsFormFromDate'>From date:</ui:msg>
-                </td>
-                <td>
-                    <d:DateBox ui:field='FromDate'/>
-                </td>
-            </tr>
-            <tr>
-                <td class='{style.label}'>
-                    <ui:msg key='paramsFormToDate'>To date:</ui:msg>
-                </td>
-                <td>
-                    <d:DateBox ui:field='toDate'/>
-                </td>
-            </tr>
+    <g:HTMLPanel>
+        <div class="{style.rightAlign}">
+            Name:
+            <e:ValueBoxEditorDecorator ui:field="name"
+                                       stylePrimaryName="{style.editField}">
+                <e:valuebox>
+                    <g:TextBox ui:field="nameBox" stylePrimaryName="{style.editField}"/>
+                </e:valuebox>
+            </e:ValueBoxEditorDecorator>
+            <br/>
+            Description:
+            <e:ValueBoxEditorDecorator ui:field="description"
+                                       stylePrimaryName="{style.editField}">
+                <e:valuebox>
+                    <g:TextBox stylePrimaryName="{style.editField}"/>
+                </e:valuebox>
+            </e:ValueBoxEditorDecorator>
+            <br/>
+            Note:
+            <e:ValueBoxEditorDecorator ui:field="note"
+                                       stylePrimaryName="{style.editField}">
+                <e:valuebox>
+                    <g:TextArea stylePrimaryName="{style.editField}"/>
+                </e:valuebox>
+            </e:ValueBoxEditorDecorator>
+            <br/>
+            Picker:
+            <g:ValueListBox ui:field="pets"
+                           stylePrimaryName="{style.editField}">
+            </g:ValueListBox>
+            <br/>
 
-            <tr>
-                <td colspan='2' align='right'>
-                    <g:Button ui:field='runStrategyButton'>
-                        <ui:msg key='paramsFormRunStrategyButton'>Run strategy</ui:msg>
-                    </g:Button>
-                </td>
-            </tr>
-        </table>
+        </div>
+        Address:
+        <c:AddressEditor ui:field="address" stylePrimaryName="{style.editField}"/>
+        <!--Mentor:-->
+        <!--<dt:MentorSelector ui:field="mentor" stylePrimaryName="{style.editField}"/>-->
+        <!--<br/>-->
+        <!--Schedule:-->
+        <!--<dt:ScheduleEditor ui:field="classSchedule" stylePrimaryName="{style.editField}"/>-->
     </g:HTMLPanel>
+
+
+    <!--<g:HTMLPanel ui:field="container">-->
+    <!--<table class="{style.table}">-->
+    <!--<tr>-->
+    <!--<td colspan='2' align='left' class='{style.header}'>-->
+    <!--<ui:msg key='paramsFormPortfolioTitle'>Portfolio</ui:msg>-->
+    <!--</td>-->
+    <!--</tr>-->
+    <!--<tr>-->
+    <!--<td class='{style.label}'>-->
+    <!--<ui:msg key='paramsFormInvestmentAmount'>Investment amount:</ui:msg>-->
+    <!--</td>-->
+    <!--<td>-->
+    <!--<g:TextBox ui:field='investmentAmount'/>-->
+    <!--</td>-->
+    <!--</tr>-->
+    <!--<tr>-->
+    <!--<td class='{style.label}'>-->
+    <!--<ui:msg key='paramsFormTransactioCost'>Transaction cost:</ui:msg>-->
+    <!--</td>-->
+    <!--<td>-->
+    <!--<g:TextBox ui:field='transactionCost'/>-->
+    <!--</td>-->
+    <!--</tr>-->
+    <!--<tr>-->
+    <!--<td colspan='2' align='left' class='{style.header}'>-->
+    <!--<ui:msg key='paramsFormStrategyTitle'>Strategy</ui:msg>-->
+    <!--</td>-->
+    <!--</tr>-->
+    <!--<tr>-->
+    <!--<td class='{style.label}'>-->
+    <!--<ui:msg key='paramsFormPerformanceRange'>Performance range:</ui:msg>-->
+    <!--</td>-->
+    <!--<td>-->
+    <!--<g:TextBox ui:field='performanceRange'/>-->
+    <!--</td>-->
+    <!--</tr>-->
+    <!--<tr>-->
+    <!--<td class='{style.label}'>-->
+    <!--<ui:msg key='paramsFormRebalanceFrequency'>Rebalance frequency:</ui:msg>-->
+    <!--</td>-->
+    <!--<td>-->
+    <!--<g:TextBox ui:field='rebalanceFrequency'/>-->
+    <!--</td>-->
+    <!--</tr>-->
+    <!--<tr>-->
+    <!--<td class='{style.label}'>-->
+    <!--<ui:msg key='paramsFormPortfolioSize'>Portfolio size:</ui:msg>-->
+    <!--</td>-->
+    <!--<td>-->
+    <!--<g:TextBox ui:field='portfolioSize'/>-->
+    <!--</td>-->
+    <!--</tr>-->
+    <!--<tr>-->
+    <!--<td colspan='2' align='left' class='{style.header}'>-->
+    <!--<ui:msg key='paramsFormFundFilterTitle'>Filters</ui:msg>-->
+    <!--</td>-->
+    <!--</tr>-->
+    <!--<tr>-->
+    <!--<td class='{style.label}'>-->
+    <!--<ui:msg key='paramsFormVolatilityFilter'>Volatility:</ui:msg>-->
+    <!--</td>-->
+    <!--<td>-->
+    <!--<g:TextBox ui:field='volatilityFilter'/>-->
+    <!--</td>-->
+    <!--</tr>-->
+    <!--<tr>-->
+    <!--<td class='{style.label}'>-->
+    <!--<ui:msg key='paramsFormProviderFilter'>Provider:</ui:msg>-->
+    <!--</td>-->
+    <!--<td>-->
+    <!--<g:TextBox ui:field='providerFilter'/>-->
+    <!--</td>-->
+    <!--</tr>-->
+    <!--<tr>-->
+    <!--<td class='{style.label}'>-->
+    <!--<ui:msg key='paramsFormCategoryFilter'>Category:</ui:msg>-->
+    <!--</td>-->
+    <!--<td>-->
+    <!--<g:TextBox ui:field='categoryFilter'/>-->
+    <!--</td>-->
+    <!--</tr>-->
+    <!--<tr>-->
+    <!--<td colspan='2' align='left' class='{style.header}'>-->
+    <!--<ui:msg key='paramsFormBacktestTitle'>Backtest</ui:msg>-->
+    <!--</td>-->
+    <!--</tr>-->
+    <!--<tr>-->
+    <!--<td class='{style.label}'>-->
+    <!--<ui:msg key='paramsFormFromDate'>From date:</ui:msg>-->
+    <!--</td>-->
+    <!--<td>-->
+    <!--<d:DateBox ui:field='FromDate'/>-->
+    <!--</td>-->
+    <!--</tr>-->
+    <!--<tr>-->
+    <!--<td class='{style.label}'>-->
+    <!--<ui:msg key='paramsFormToDate'>To date:</ui:msg>-->
+    <!--</td>-->
+    <!--<td>-->
+    <!--<d:DateBox ui:field='toDate'/>-->
+    <!--</td>-->
+    <!--</tr>-->
+
+    <!--<tr>-->
+    <!--<td colspan='2' align='right'>-->
+    <!--<g:Button ui:field='runStrategyButton'>-->
+    <!--<ui:msg key='paramsFormRunStrategyButton'>Run strategy</ui:msg>-->
+    <!--</g:Button>-->
+    <!--</td>-->
+    <!--</tr>-->
+    <!--</table>-->
+    <!--</g:HTMLPanel>-->
 
 
 </ui:UiBinder>

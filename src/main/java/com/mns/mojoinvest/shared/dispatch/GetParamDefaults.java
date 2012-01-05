@@ -5,10 +5,10 @@ import com.gwtplatform.dispatch.annotation.Out;
 
 import java.math.BigDecimal;
 import java.util.Date;
-import java.util.List;
+import java.util.HashMap;
 
 @GenDispatch(isSecure = false)
-public class GetParamsStaticAndDefaults {
+public class GetParamDefaults {
 
     @Out(1)
     String errorText; // empty if success
@@ -20,36 +20,27 @@ public class GetParamsStaticAndDefaults {
     BigDecimal transactionCostDefault;
 
     @Out(4)
-    List<Integer> performanceRangeAvailable;
-
-    @Out(5)
     Integer performanceRangeDefault;
 
-    @Out(6)
-    List<Integer> rebalanceFrequencyAvailable;
-
-    @Out(7)
+    @Out(5)
     Integer rebalanceFrequencyDefault;
 
-    @Out(8)
-    List<Integer> portfolioSizeAvailable;
-
-    @Out(9)
+    @Out(6)
     Integer portfolioSizeDefault;
 
-    @Out(10)
+    @Out(7)
     Integer volatilityFilterDefault;
 
-    @Out(11)
-    List<String> providers;
+    @Out(8)
+    HashMap<String, Boolean> providers;
 
-    @Out(12)
-    List<String> categories;
+    @Out(9)
+    HashMap<String, Boolean> categories;
 
-    @Out(13)
+    @Out(10)
     Date fromDate;
 
-    @Out(14)
+    @Out(11)
     Date toDate;
 
 }
