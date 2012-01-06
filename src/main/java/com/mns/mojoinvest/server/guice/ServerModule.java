@@ -17,11 +17,9 @@
 package com.mns.mojoinvest.server.guice;
 
 import com.gwtplatform.dispatch.server.guice.HandlerModule;
-import com.mns.mojoinvest.shared.action.BatchAction;
 import com.mns.mojoinvest.server.UserInfoProvider;
 import com.mns.mojoinvest.server.handler.*;
-import com.mns.mojoinvest.shared.action.GetProductListAction;
-import com.mns.mojoinvest.shared.action.RunBackTestAction;
+import com.mns.mojoinvest.shared.action.BatchAction;
 import com.mns.mojoinvest.shared.dispatch.*;
 import com.mns.mojoinvest.shared.model.UserInfo;
 
@@ -39,8 +37,7 @@ public class ServerModule extends HandlerModule {
 
         bindHandler(BatchAction.class, BatchActionHandler.class);
 
-        bindHandler(RunBackTestAction.class, RunBackTestHandler.class);
-        bindHandler(GetProductListAction.class, GetProductListHandler.class);
+        bindHandler(RunStrategyAction.class, RunStrategyHandler.class);
 
         bindHandler(GetUserAction.class, GetUserHandler.class);
         bindHandler(GetFundPerformanceAction.class, GetFundPerformanceHandler.class);

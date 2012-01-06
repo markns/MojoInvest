@@ -3,11 +3,11 @@ package com.mns.mojoinvest.shared.params;
 import com.google.gwt.user.client.rpc.IsSerializable;
 
 import java.util.Date;
-import java.util.Map;
+import java.util.List;
 
-public class BackTestParams implements IsSerializable{
+public class BacktestParams implements IsSerializable{
 
-//      ERROR: Errors in 'file:/Users/marknuttallsmith/Projects/Alpha-Position/src/main/java/com/mns/mojoinvest/shared/params/BackTestParams.java'.
+//      ERROR: Errors in 'file:/Users/marknuttallsmith/Projects/Alpha-Position/src/main/java/com/mns/mojoinvest/shared/params/BacktestParams.java'.
 //    ERROR: Line 10: No source code is available for type org.joda.time.LocalDate; did you forget to inherit a required module?.
 
 //probably best to only pass java.util.Date to and from client - can adapt on way in and out?
@@ -15,19 +15,20 @@ public class BackTestParams implements IsSerializable{
 
     private Date toDate;
 
-    private Map<String, String> fundsFilter;
+    private List<String> providers;
 
-    private StrategyParams strategyParams;
+    private List<String> categories;
 
-    public BackTestParams() {
-    }
 
-    public BackTestParams(Date fromDate, Date toDate,
-                          Map<String, String> fundsFilter, StrategyParams strategyParams) {
+    public BacktestParams(Date fromDate, Date toDate, List<String> providers, List<String> categories) {
         this.fromDate = fromDate;
         this.toDate = toDate;
-        this.fundsFilter = fundsFilter;
-        this.strategyParams = strategyParams;
+        this.providers = providers;
+        this.categories = categories;
+    }
+
+    public BacktestParams() {
+        //For serialization
     }
 
     public Date getFromDate() {
@@ -38,11 +39,11 @@ public class BackTestParams implements IsSerializable{
         return toDate;
     }
 
-    public Map<String, String> getFundsFilter() {
-        return fundsFilter;
+    public List<String> getProviders() {
+        return providers;
     }
 
-    public StrategyParams getStrategyParams() {
-        return strategyParams;
+    public List<String> getCategories() {
+        return categories;
     }
 }

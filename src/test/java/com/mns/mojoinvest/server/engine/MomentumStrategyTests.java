@@ -18,8 +18,6 @@ import com.mns.mojoinvest.server.engine.portfolio.SimplePortfolio;
 import com.mns.mojoinvest.server.util.QuoteUtils;
 import com.mns.mojoinvest.shared.params.MomentumStrategyParams;
 import com.mns.mojoinvest.shared.params.PortfolioParams;
-import com.mns.mojoinvest.shared.params.RankingStrategyParams;
-import com.mns.mojoinvest.shared.params.SimpleRankingStrategyParams;
 import org.joda.time.LocalDate;
 import org.junit.After;
 import org.junit.Before;
@@ -42,8 +40,8 @@ public class MomentumStrategyTests {
 
     private final Executor executor = new NextTradingDayExecutor(portfolioProvider, quoteDao);
 
-    private final RankingStrategyParams rankingStrategyParams = new SimpleRankingStrategyParams(10, 9);
-    private final MomentumStrategyParams strategyParams = new MomentumStrategyParams(1, rankingStrategyParams, 3);
+//    private final RankingStrategyParams rankingStrategyParams = new SimpleRankingStrategyParams(10, 9);
+    private final MomentumStrategyParams strategyParams = new MomentumStrategyParams(1, 0, 9, 3);
 
     private final LocalDate fromDate = new LocalDate(2005, 1, 1);
     private final LocalDate toDate = new LocalDate(2011, 1, 1);

@@ -10,12 +10,13 @@ public class PortfolioParams implements IsSerializable {
 
     private BigDecimal transactionCost;
 
-    public PortfolioParams() {
-    }
-
     public PortfolioParams(BigDecimal initialInvestment, BigDecimal transactionCost) {
         this.initialInvestment = initialInvestment;
         this.transactionCost = transactionCost;
+    }
+
+    public PortfolioParams() {
+        //For serialization
     }
 
     public BigDecimal getInitialInvestment() {
