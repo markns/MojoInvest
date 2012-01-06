@@ -133,7 +133,30 @@ public class ParamsView extends ViewWithUiHandlers<ParamsUiHandlers>
     }
 
     public Person flush() {
-        return driver.flush();
+        Person person = driver.flush();
+
+        flushProviders(person);
+        flushCategories(person);
+
+        return person;
+    }
+
+    private void flushProviders(Person person) {
+        person.getProviders().clear();
+        for (int i = 0; i < providers.getItemCount(); i++) {
+            if (providers.isItemSelected(i)) {
+                person.getProviders().add(providers.getItemText(i));
+            }
+        }
+    }
+    
+    private void flushCategories(Person person) {
+        person.getCategories().clear();
+        for (int i = 0; i < categories.getItemCount(); i++) {
+            if (categories.isItemSelected(i)) {
+                person.getCategories().add(categories.getItemText(i));
+            }
+        }
     }
 
 

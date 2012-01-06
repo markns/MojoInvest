@@ -15,6 +15,7 @@
  */
 package com.mns.mojoinvest.client.app.component;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -73,6 +74,8 @@ public class Person {
     private String note;
 
     private List<Boolean> daysFilters = ALL_DAYS;
+    private List<String> categories = new ArrayList<String>();
+    private List<String> providers = new ArrayList<String>();
 
     public Person() {
     }
@@ -196,9 +199,20 @@ public class Person {
         this.version = version;
     }
 
-    @Override
     public String toString() {
         return "Person [description=" + description + ", id=" + id + ", name="
-                + name + ", version=" + version + "]";
+                + name + ", version=" + version + ", categories=" + categories +
+                ", providers=" + providers +
+                "]";
     }
+
+    public List<String> getCategories() {
+        return categories;
+    }
+
+    public List<String> getProviders() {
+        return providers;
+    }
+
+    
 }

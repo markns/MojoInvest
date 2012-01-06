@@ -29,6 +29,8 @@ public class ParamsPresenter extends PresenterWidget<ParamsPresenter.MyView>
     @Override
     public void run() {
         Person person = getView().flush();
+//        getView().
+                //execute strategy here?
         Window.alert(person.toString());
     }
 }
