@@ -39,45 +39,61 @@
     </ui:style>
 
     <g:HTMLPanel>
-        <div class="{style.rightAlign}">
-            Name:
-            <e:ValueBoxEditorDecorator ui:field="name"
-                                       stylePrimaryName="{style.editField}">
-                <e:valuebox>
-                    <g:TextBox ui:field="nameBox" stylePrimaryName="{style.editField}"/>
-                </e:valuebox>
-            </e:ValueBoxEditorDecorator>
-            <br/>
-            Description:
-            <e:ValueBoxEditorDecorator ui:field="description"
-                                       stylePrimaryName="{style.editField}">
-                <e:valuebox>
-                    <g:TextBox stylePrimaryName="{style.editField}"/>
-                </e:valuebox>
-            </e:ValueBoxEditorDecorator>
-            <br/>
-            Note:
-            <e:ValueBoxEditorDecorator ui:field="note"
-                                       stylePrimaryName="{style.editField}">
-                <e:valuebox>
-                    <g:TextArea stylePrimaryName="{style.editField}"/>
-                </e:valuebox>
-            </e:ValueBoxEditorDecorator>
-            <br/>
-            Picker:
-            <g:ValueListBox ui:field="pets"
-                           stylePrimaryName="{style.editField}">
-            </g:ValueListBox>
-            <br/>
 
-        </div>
-        Address:
-        <c:AddressEditor ui:field="address" stylePrimaryName="{style.editField}"/>
-        <!--Mentor:-->
-        <!--<dt:MentorSelector ui:field="mentor" stylePrimaryName="{style.editField}"/>-->
-        <!--<br/>-->
-        <!--Schedule:-->
-        <!--<dt:ScheduleEditor ui:field="classSchedule" stylePrimaryName="{style.editField}"/>-->
+        <g:DisclosurePanel animationEnabled="true">
+            <g:header>Person</g:header>
+            <g:FlowPanel>
+                <e:ValueBoxEditorDecorator ui:field="name"
+                                           stylePrimaryName="{style.editField}">
+                    <e:valuebox>
+                        <g:TextBox ui:field="nameBox" stylePrimaryName="{style.editField}"/>
+                    </e:valuebox>
+                </e:ValueBoxEditorDecorator>
+                <e:ValueBoxEditorDecorator ui:field="description"
+                                           stylePrimaryName="{style.editField}">
+                    <e:valuebox>
+                        <g:TextBox stylePrimaryName="{style.editField}"/>
+                    </e:valuebox>
+                </e:ValueBoxEditorDecorator>
+                <e:ValueBoxEditorDecorator ui:field="note"
+                                           stylePrimaryName="{style.editField}">
+                    <e:valuebox>
+                        <g:TextArea stylePrimaryName="{style.editField}"/>
+                    </e:valuebox>
+                </e:ValueBoxEditorDecorator>
+                <g:ValueListBox ui:field="pets"
+                                stylePrimaryName="{style.editField}">
+                </g:ValueListBox>
+            </g:FlowPanel>
+        </g:DisclosurePanel>
+        <g:DisclosurePanel animationEnabled="true">
+            <g:header>Address</g:header>
+            <g:FlowPanel>
+                <c:AddressEditor ui:field="address" stylePrimaryName="{style.editField}"/>
+            </g:FlowPanel>
+            <!--Mentor:-->
+            <!--<dt:MentorSelector ui:field="mentor" stylePrimaryName="{style.editField}"/>-->
+            <!--<br/>-->
+            <!--Schedule:-->
+            <!--<dt:ScheduleEditor ui:field="classSchedule" stylePrimaryName="{style.editField}"/>-->
+        </g:DisclosurePanel>
+
+        <g:DisclosurePanel animationEnabled="true">
+            <g:header>Filters</g:header>
+            <g:HTMLPanel>
+                <g:ListBox ui:field="providers" stylePrimaryName="{style.editField}"
+                           visibleItemCount="5" multipleSelect="true">
+                </g:ListBox>
+                <g:ListBox ui:field="categories" stylePrimaryName="{style.editField}"
+                           visibleItemCount="5" multipleSelect="true">
+                </g:ListBox>
+            </g:HTMLPanel>
+        </g:DisclosurePanel>
+
+        <g:Button ui:field='runStrategyButton'>
+            <ui:msg key='paramsFormRunStrategyButton'>Run strategy</ui:msg>
+        </g:Button>
+
     </g:HTMLPanel>
 
 

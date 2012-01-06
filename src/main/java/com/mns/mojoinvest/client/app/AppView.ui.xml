@@ -10,33 +10,35 @@
 
     <ui:style>
 
-        .backtest {
-            background-color: #ff7f50;
-        }
-
-        .strategy {
-            background-color: #f5f5dc;
+        .params {
+            background-color: #f6f6cb;
         }
 
         .chart {
             background-color: #ffc0cb;
         }
+
+        .trades {
+            background-color: #ff7f50;
+        }
+
+
     </ui:style>
 
     <g:SplitLayoutPanel>
         <g:west size='250'>
             <g:FlowPanel ui:field='params'
-                         addStyleNames="{style.strategy}"/>
+                         addStyleNames="{style.params}"/>
         </g:west>
 
         <g:north size='350'>
             <g:FlowPanel ui:field='chart'
-                           addStyleNames="{style.chart}"/>
+                         addStyleNames="{style.chart}"/>
         </g:north>
 
         <g:center>
             <g:FlowPanel ui:field='trades'
-                         addStyleNames="{style.backtest}"/>
+                         addStyleNames="{style.trades}"/>
         </g:center>
     </g:SplitLayoutPanel>
 

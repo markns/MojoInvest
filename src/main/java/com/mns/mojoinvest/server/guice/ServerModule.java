@@ -22,10 +22,7 @@ import com.mns.mojoinvest.server.UserInfoProvider;
 import com.mns.mojoinvest.server.handler.*;
 import com.mns.mojoinvest.shared.action.GetProductListAction;
 import com.mns.mojoinvest.shared.action.RunBackTestAction;
-import com.mns.mojoinvest.shared.dispatch.GetFundPerformanceAction;
-import com.mns.mojoinvest.shared.dispatch.GetParamDefaultsAction;
-import com.mns.mojoinvest.shared.dispatch.GetPerformanceRangesAvailableAction;
-import com.mns.mojoinvest.shared.dispatch.GetUserAction;
+import com.mns.mojoinvest.shared.dispatch.*;
 import com.mns.mojoinvest.shared.model.UserInfo;
 
 /**
@@ -48,8 +45,11 @@ public class ServerModule extends HandlerModule {
         bindHandler(GetUserAction.class, GetUserHandler.class);
         bindHandler(GetFundPerformanceAction.class, GetFundPerformanceHandler.class);
 
-        bindHandler(GetParamDefaultsAction.class, GetParamDefaultHandler.class);
         bindHandler(GetPerformanceRangesAvailableAction.class, GetPerformanceRangesAvailableHandler.class);
+        bindHandler(GetProvidersAvailableAction.class, GetProvidersAvailableHandler.class);
+        bindHandler(GetCategoriesAvailableAction.class, GetCategoriesAvailableHandler.class);
+
+        bindHandler(GetParamDefaultsAction.class, GetParamDefaultHandler.class);
 
     }
 }

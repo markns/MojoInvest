@@ -23,6 +23,9 @@ import com.gwtplatform.dispatch.shared.Action;
  * sequence. If any fail, the rules for the {@link OnException} value provided
  * in the constructor determine the outcome.
  *
+ * Note: copied from original package because the no-arg constructor had only
+ * default package visibility, meaning the class couldn't be extended.
+ *
  * @author David Peterson
  */
 public class BatchAction implements Action<BatchResult> {
@@ -64,7 +67,7 @@ public class BatchAction implements Action<BatchResult> {
     /**
      * Used for serialization only.
      */
-    BatchAction() {
+    public BatchAction() {
     }
 
     /**

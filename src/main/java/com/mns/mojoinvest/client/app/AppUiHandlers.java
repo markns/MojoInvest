@@ -4,5 +4,7 @@ import com.gwtplatform.mvp.client.UiHandlers;
 
 public interface AppUiHandlers extends UiHandlers {
 
-//    public void getPerformance(String symbol);
+
+
+    public void getPerformance(String symbol);
 }

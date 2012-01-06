@@ -1,6 +1,7 @@
 package com.mns.mojoinvest.client.app;
 
 import com.google.gwt.event.shared.EventBus;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
 import com.gwtplatform.dispatch.shared.Action;
@@ -18,15 +19,10 @@ import com.gwtplatform.mvp.client.proxy.RevealContentEvent;
 import com.mns.mojoinvest.client.Main;
 import com.mns.mojoinvest.client.MainPresenter;
 import com.mns.mojoinvest.client.NameTokens;
-import com.mns.mojoinvest.client.app.component.ChartPresenter;
-import com.mns.mojoinvest.client.app.component.ParamsPresenter;
-import com.mns.mojoinvest.client.app.component.TradesPresenter;
+import com.mns.mojoinvest.client.app.component.*;
 import com.mns.mojoinvest.shared.action.BatchAction;
 import com.mns.mojoinvest.shared.action.BatchResult;
-import com.mns.mojoinvest.shared.dispatch.GetParamDefaultsAction;
-import com.mns.mojoinvest.shared.dispatch.GetParamDefaultsResult;
-import com.mns.mojoinvest.shared.dispatch.GetPerformanceRangesAvailableAction;
-import com.mns.mojoinvest.shared.dispatch.GetPerformanceRangesAvailableResult;
+import com.mns.mojoinvest.shared.dispatch.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -64,6 +60,7 @@ public class AppPresenter extends Presenter<AppPresenter.MyView, AppPresenter.My
         this.paramsPresenter = paramsPresenter;
         this.chartPresenter = chartPresenter;
         getView().setUiHandlers(this);
+
     }
 
     @Override
@@ -82,13 +79,9 @@ public class AppPresenter extends Presenter<AppPresenter.MyView, AppPresenter.My
         List<Action> actions = new ArrayList<Action>();
         final List<OnSuccessCallback> successCallbacks = new ArrayList<OnSuccessCallback>();
 
-        actions.add(new GetParamDefaultsAction());
-        successCallbacks.add(new OnSuccessCallback<GetParamDefaultsResult>() {
-            @Override
-            public void onSuccess(GetParamDefaultsResult result) {
-                Main.logger.info(result.toString());
-            }
-        });
+        //TODO: Move the collection of the actions to the presenter widgets
+        //paramsPresenter.getInitActions();
+        //TODO: add the child actions and onSuccessHandler directly to the BatchAction
 
         actions.add(new GetPerformanceRangesAvailableAction());
         successCallbacks.add(new OnSuccessCallback<GetPerformanceRangesAvailableResult>() {
@@ -96,9 +89,52 @@ public class AppPresenter extends Presenter<AppPresenter.MyView, AppPresenter.My
             public void onSuccess(GetPerformanceRangesAvailableResult result) {
                 Main.logger.info(result.toString());
                 paramsPresenter.getView()
-                        .setPerformanceRangeAcceptable(result.getPerformanceRangesAvailable());
+                        .setPerformanceRangesAvailable(result.getPerformanceRangesAvailable());
             }
         });
+
+        actions.add(new GetProvidersAvailableAction());
+        successCallbacks.add(new OnSuccessCallback<GetProvidersAvailableResult>() {
+            @Override
+            public void onSuccess(GetProvidersAvailableResult result) {
+                paramsPresenter.getView()
+                        .setProvidersAvailable(result.getProvidersAvailable());
+            }
+        });
+
+        actions.add(new GetCategoriesAvailableAction());
+        successCallbacks.add(new OnSuccessCallback<GetCategoriesAvailableResult>() {
+            @Override
+            public void onSuccess(GetCategoriesAvailableResult result) {
+                paramsPresenter.getView()
+                        .setCategoriesAvailable(result.getCategoriesAvailable());
+            }
+        });
+
+
+        actions.add(new GetParamDefaultsAction());
+        successCallbacks.add(new OnSuccessCallback<GetParamDefaultsResult>() {
+            @Override
+            public void onSuccess(GetParamDefaultsResult result) {
+                Main.logger.info(result.toString());
+
+                Person person = new Person();
+                person.setName("Suz");
+                person.setDescription("Baby");
+                person.setNote("Likes swimming");
+                person.setPets(9);
+
+                Address address = new Address();
+                address.setCity("Agonda");
+                address.setStreet("The beach");
+                address.setState("The sunshine state of Goa");
+
+                person.setAddress(address);
+
+                paramsPresenter.getView().edit(person);
+            }
+        });
+
 
         BatchAction batch = new BatchAction(BatchAction.OnException.ROLLBACK,
                 actions.toArray(new Action[actions.size()]));
@@ -115,18 +151,12 @@ public class AppPresenter extends Presenter<AppPresenter.MyView, AppPresenter.My
 
                     @Override
                     public void onFailure(Throwable caught) {
-                        Main.logger.severe(caught + " " + caught.getMessage());
+                        Window.alert(caught.toString());
+                        Main.logger.severe(caught.toString());
                         caught.printStackTrace();
                     }
                 }
         ));
-    }
-
-
-    @Override
-    protected void onBind() {
-        super.onBind();
-        Main.logger.info("AppPresenter onBind");
     }
 
     @Override
@@ -145,15 +175,22 @@ public class AppPresenter extends Presenter<AppPresenter.MyView, AppPresenter.My
     }
 
     @Override
-    protected void onReset() {
-        super.onReset();
-        Main.logger.info("AppPresenter onReset");
-    }
+    public void getPerformance(String symbol) {
+        Main.logger.info("Requested performance for " + symbol);
 
-    @Override
-    protected void onHide() {
-        super.onHide();
-        Main.logger.info("AppPresenter onHide");
-    }
+//        dispatcher.execute(new GetFundPerformanceAction(symbol),
+//                new DispatchCallback<GetFundPerformanceResult>() {
+//                    @Override
+//                    public void onSuccess(GetFundPerformanceResult result) {
+//                        if (!result.getErrorText().isEmpty()) {
+//                            Window.alert(result.getErrorText());
+//                            return;
+//                        }
+//                        getView().setDefaultValues();
+//                        getView().setChartData(result.getDataTableDto().getDataTable(),
+//                                result.getOptionsDto());
+//                    }
+//                });
 
+    }
 }
