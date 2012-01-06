@@ -9,6 +9,7 @@ import com.mns.mojoinvest.server.engine.model.RankingParams;
 import com.mns.mojoinvest.server.engine.model.dao.FundDao;
 import com.mns.mojoinvest.server.engine.model.dao.RankingDao;
 import com.mns.mojoinvest.server.engine.portfolio.Portfolio;
+import com.mns.mojoinvest.server.engine.portfolio.Position;
 import com.mns.mojoinvest.server.util.TradingDayUtils;
 import com.mns.mojoinvest.shared.params.MomentumStrategyParams;
 import org.joda.time.LocalDate;
@@ -48,31 +49,29 @@ public class MomentumStrategy {
 
         for (LocalDate rebalanceDate : rebalanceDates) {
             try {
-                Ranking ranking = rankingDao.get(rebalanceDate, new RankingParams(9));
-                Collection<Fund> selection = getSelection(ranking.getSymbols(), acceptableFunds, params);
+                Ranking ranking = rankingDao.get(rebalanceDate,
+                        new RankingParams(params.getPerformanceRange()));
+                Collection<Fund> selection = getSelection(ranking.getSymbols(),
+                        acceptableFunds, params);
 
                 sellLosers(portfolio, rebalanceDate, selection);
                 buyWinners(portfolio, params, rebalanceDate, selection);
             } catch (NotFoundException e) {
+                //TODO: How should we handle exceptions here -
+                // what type of exceptions are they?
                 log.info(rebalanceDate + " " + e.getMessage());
             } catch (StrategyException e) {
                 log.info(rebalanceDate + " " + e.getMessage());
             }
 
-//            for (Position position : portfolio().getActivePositions().values()) {
-//                log.info(position.getFund()
-//                        + " shares: " + position.shares()
-//                        + ", marketValue: " + position.marketValue(rebalanceDate)
-//                        + ", returnsGain: " + position.totalReturn(rebalanceDate)
-//                        + ", gain%: " + position.gainPercentage(rebalanceDate));
-//
-//            }
-            log.info(rebalanceDate + " portfolio value: " + portfolio.marketValue(rebalanceDate) + ", holdings: " +
+            logPortfolio(portfolio, rebalanceDate);
+
+            log.info(rebalanceDate + " portfolio value: " +
+                    portfolio.marketValue(rebalanceDate) + ", holdings: " +
                     portfolio.getActiveHoldings());
         }
         log.info(toDate + " portfolio value: " + portfolio.marketValue(toDate));
     }
-
 
     private Collection<Fund> getSelection(List<String> ranked, Set<Fund> acceptableFunds,
                                           MomentumStrategyParams params) throws StrategyException {
@@ -90,6 +89,7 @@ public class MomentumStrategy {
         return selection;
     }
 
+
     private void sellLosers(Portfolio portfolio, LocalDate rebalanceDate, Collection<Fund> selection) {
         for (Fund fund : portfolio.getActiveHoldings()) {
             if (!selection.contains(fund)) {
@@ -98,7 +98,8 @@ public class MomentumStrategy {
         }
     }
 
-    private void buyWinners(Portfolio portfolio, MomentumStrategyParams params, LocalDate rebalanceDate, Collection<Fund> selection) {
+    private void buyWinners(Portfolio portfolio, MomentumStrategyParams params, LocalDate rebalanceDate,
+                            Collection<Fund> selection) {
 
         BigDecimal numEmpty = new BigDecimal(params.getPortfolioSize() - portfolio.numberOfActivePositions());
         BigDecimal availableCash = portfolio.getCash().
@@ -116,6 +117,17 @@ public class MomentumStrategy {
 
     private List<LocalDate> getRebalanceDates(LocalDate fromDate, LocalDate toDate, MomentumStrategyParams params) {
         return TradingDayUtils.getMonthlySeries(fromDate, toDate, params.getRebalanceFrequency(), true);
+    }
+
+    private void logPortfolio(Portfolio portfolio, LocalDate rebalanceDate) {
+        for (Position position : portfolio.getActivePositions().values()) {
+            log.info(position.getFund()
+                    + " shares: " + position.shares()
+                    + ", marketValue: " + position.marketValue(rebalanceDate)
+                    + ", returnsGain: " + position.totalReturn(rebalanceDate)
+                    + ", gain%: " + position.gainPercentage(rebalanceDate));
+
+        }
     }
 
 
