@@ -3,7 +3,7 @@
              xmlns:g="urn:import:com.google.gwt.user.client.ui"
              xmlns:d="urn:import:com.google.gwt.user.datepicker.client"
              xmlns:e='urn:import:com.google.gwt.editor.ui.client'
-             xmlns:c='urn:import:com.mns.mojoinvest.client.app.component'
+             xmlns:c='urn:import:com.mns.mojoinvest.client.app.params'
              ui:generateFormat='com.google.gwt.i18n.rebind.format.PropertiesFormat'
              ui:generateKeys="com.google.gwt.i18n.rebind.keygen.MD5KeyGenerator"
              ui:generateLocales="default">
