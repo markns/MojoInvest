@@ -32,7 +32,6 @@ public class Constants {
     public static final String serverTimeZone = "GMT";
 
     public static final String anonymousUserPrefix = "anonymous-";
-    public static final String defaultTheaterName = "My Theater";
 
     public static final Integer visibleRangeStart = 0;
     public static final Integer visibleRangeLength = 50;
