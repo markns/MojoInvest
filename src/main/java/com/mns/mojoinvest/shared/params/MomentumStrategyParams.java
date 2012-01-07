@@ -4,18 +4,15 @@ import com.google.gwt.user.client.rpc.IsSerializable;
 
 public class MomentumStrategyParams implements IsSerializable {
 
-    private int rebalanceFrequency;
+    private int formationPeriod;
 
-    private int averagingRange;
-
-    private int performanceRange;
+    private int holdingPeriod;
 
     private int portfolioSize;
 
-    public MomentumStrategyParams(int rebalanceFrequency, int averagingRange, int performanceRange, int portfolioSize) {
-        this.rebalanceFrequency = rebalanceFrequency;
-        this.averagingRange = averagingRange;
-        this.performanceRange = performanceRange;
+    public MomentumStrategyParams(int formationPeriod, int holdingPeriod, int portfolioSize) {
+        this.formationPeriod = formationPeriod;
+        this.holdingPeriod = holdingPeriod;
         this.portfolioSize = portfolioSize;
     }
 
@@ -23,16 +20,12 @@ public class MomentumStrategyParams implements IsSerializable {
         //Serialization
     }
 
-    public int getRebalanceFrequency() {
-        return rebalanceFrequency;
+    public int getFormationPeriod() {
+        return formationPeriod;
     }
 
-    public int getAveragingRange() {
-        return averagingRange;
-    }
-
-    public int getPerformanceRange() {
-        return performanceRange;
+    public int getHoldingPeriod() {
+        return holdingPeriod;
     }
 
     public int getPortfolioSize() {

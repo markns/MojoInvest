@@ -41,7 +41,7 @@ public class MomentumStrategyTests {
     private final Executor executor = new NextTradingDayExecutor(portfolioProvider, quoteDao);
 
 //    private final RankingStrategyParams rankingStrategyParams = new SimpleRankingStrategyParams(10, 9);
-    private final MomentumStrategyParams strategyParams = new MomentumStrategyParams(1, 0, 9, 3);
+    private final MomentumStrategyParams strategyParams = new MomentumStrategyParams(9, 1, 3);
 
     private final LocalDate fromDate = new LocalDate(2005, 1, 1);
     private final LocalDate toDate = new LocalDate(2011, 1, 1);

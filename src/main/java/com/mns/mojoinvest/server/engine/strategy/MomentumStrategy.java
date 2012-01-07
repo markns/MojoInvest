@@ -50,7 +50,7 @@ public class MomentumStrategy {
         for (LocalDate rebalanceDate : rebalanceDates) {
             try {
                 Ranking ranking = rankingDao.get(rebalanceDate,
-                        new RankingParams(params.getPerformanceRange()));
+                        new RankingParams(params.getFormationPeriod()));
                 Collection<Fund> selection = getSelection(ranking.getSymbols(),
                         acceptableFunds, params);
 
@@ -116,7 +116,7 @@ public class MomentumStrategy {
     }
 
     private List<LocalDate> getRebalanceDates(LocalDate fromDate, LocalDate toDate, MomentumStrategyParams params) {
-        return TradingDayUtils.getMonthlySeries(fromDate, toDate, params.getRebalanceFrequency(), true);
+        return TradingDayUtils.getMonthlySeries(fromDate, toDate, params.getHoldingPeriod(), true);
     }
 
     private void logPortfolio(Portfolio portfolio, LocalDate rebalanceDate) {
