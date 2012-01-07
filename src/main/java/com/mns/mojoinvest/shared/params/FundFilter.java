@@ -27,4 +27,12 @@ public class FundFilter implements IsSerializable {
     public List<String> getCategories() {
         return categories;
     }
+
+    @Override
+    public String toString() {
+        return "FundFilter{" +
+                "providers=" + providers.size() +
+                ", categories=" + categories.size() +
+                '}';
+    }
 }

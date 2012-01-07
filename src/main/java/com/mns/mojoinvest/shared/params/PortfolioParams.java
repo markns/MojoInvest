@@ -24,4 +24,12 @@ public class PortfolioParams implements IsSerializable {
     public Double getTransactionCost() {
         return transactionCost;
     }
+
+    @Override
+    public String toString() {
+        return "PortfolioParams{" +
+                "initialInvestment=" + initialInvestment +
+                ", transactionCost=" + transactionCost +
+                '}';
+    }
 }

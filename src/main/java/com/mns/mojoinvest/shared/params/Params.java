@@ -35,4 +35,14 @@ public class Params implements IsSerializable {
     public FundFilter getFundFilter() {
         return fundFilter;
     }
+
+    @Override
+    public String toString() {
+        return "Params{" +
+                "backtestParams=" + backtestParams +
+                ", strategyParams=" + strategyParams +
+                ", portfolioParams=" + portfolioParams +
+                ", fundFilter=" + fundFilter +
+                '}';
+    }
 }

@@ -31,4 +31,13 @@ public class MomentumStrategyParams implements IsSerializable {
     public int getPortfolioSize() {
         return portfolioSize;
     }
+
+    @Override
+    public String toString() {
+        return "MomentumStrategyParams{" +
+                "formationPeriod=" + formationPeriod +
+                ", holdingPeriod=" + holdingPeriod +
+                ", portfolioSize=" + portfolioSize +
+                '}';
+    }
 }
