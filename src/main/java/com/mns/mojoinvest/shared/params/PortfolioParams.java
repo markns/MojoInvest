@@ -2,15 +2,13 @@ package com.mns.mojoinvest.shared.params;
 
 import com.google.gwt.user.client.rpc.IsSerializable;
 
-import java.math.BigDecimal;
-
 public class PortfolioParams implements IsSerializable {
 
-    private BigDecimal initialInvestment;
+    private Double initialInvestment;
 
-    private BigDecimal transactionCost;
+    private Double transactionCost;
 
-    public PortfolioParams(BigDecimal initialInvestment, BigDecimal transactionCost) {
+    public PortfolioParams(Double initialInvestment, Double transactionCost) {
         this.initialInvestment = initialInvestment;
         this.transactionCost = transactionCost;
     }
@@ -19,11 +17,11 @@ public class PortfolioParams implements IsSerializable {
         //For serialization
     }
 
-    public BigDecimal getInitialInvestment() {
+    public Double getInitialInvestment() {
         return initialInvestment;
     }
 
-    public BigDecimal getTransactionCost() {
+    public Double getTransactionCost() {
         return transactionCost;
     }
 }

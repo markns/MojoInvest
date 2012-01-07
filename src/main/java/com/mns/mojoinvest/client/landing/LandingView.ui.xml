@@ -22,12 +22,8 @@
             broad equity market (in long-short version of this strategy) is an extra bonus which makes this strategy an
             easily accessible good portfolio diversifier.
         </p>
-        <p>
-            <ol>
-                <li>Backtest performance from momentum strategies</li>
-                <li>Filter ETFs by provider, sector, leverage etc</li>
-            </ol>
-        </p>
+        <p>Backtest performance from momentum strategies</p>
+        <p>Filter ETFs by provider, sector, leverage etc</p>
     </g:HTML>
 
 </ui:UiBinder>

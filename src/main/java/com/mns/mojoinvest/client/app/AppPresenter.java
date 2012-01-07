@@ -20,9 +20,7 @@ import com.mns.mojoinvest.client.Main;
 import com.mns.mojoinvest.client.MainPresenter;
 import com.mns.mojoinvest.client.NameTokens;
 import com.mns.mojoinvest.client.app.chart.ChartPresenter;
-import com.mns.mojoinvest.client.app.params.Address;
 import com.mns.mojoinvest.client.app.params.ParamsPresenter;
-import com.mns.mojoinvest.client.app.params.Person;
 import com.mns.mojoinvest.client.app.trades.TradesPresenter;
 import com.mns.mojoinvest.shared.action.BatchAction;
 import com.mns.mojoinvest.shared.action.BatchResult;
@@ -93,7 +91,7 @@ public class AppPresenter extends Presenter<AppPresenter.MyView, AppPresenter.My
             public void onSuccess(GetPerformanceRangesAvailableResult result) {
                 Main.logger.info(result.toString());
                 paramsPresenter.getView()
-                        .setPerformanceRangesAvailable(result.getPerformanceRangesAvailable());
+                        .setFormationPeriodsAvailable(result.getPerformanceRangesAvailable());
             }
         });
 
@@ -121,21 +119,7 @@ public class AppPresenter extends Presenter<AppPresenter.MyView, AppPresenter.My
             @Override
             public void onSuccess(GetParamDefaultsResult result) {
                 Main.logger.info(result.toString());
-
-                Person person = new Person();
-                person.setName("Suz");
-                person.setDescription("Baby");
-                person.setNote("Likes swimming");
-                person.setPets(9);
-
-                Address address = new Address();
-                address.setCity("Agonda");
-                address.setStreet("The beach");
-                address.setState("The sunshine state of Goa");
-
-                person.setAddress(address);
-
-                paramsPresenter.getView().edit(person);
+                paramsPresenter.getView().edit(result.getParams());
             }
         });
 

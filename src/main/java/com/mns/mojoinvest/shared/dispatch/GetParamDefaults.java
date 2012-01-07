@@ -2,9 +2,7 @@ package com.mns.mojoinvest.shared.dispatch;
 
 import com.gwtplatform.dispatch.annotation.GenDispatch;
 import com.gwtplatform.dispatch.annotation.Out;
-import com.mns.mojoinvest.shared.params.BacktestParams;
-import com.mns.mojoinvest.shared.params.MomentumStrategyParams;
-import com.mns.mojoinvest.shared.params.PortfolioParams;
+import com.mns.mojoinvest.shared.params.Params;
 
 @GenDispatch(isSecure = false)
 public class GetParamDefaults {
@@ -43,13 +41,16 @@ public class GetParamDefaults {
 //    Date toDate;
 
     @Out(2)
-    PortfolioParams portfolioParams;
+    Params params;
 
-    @Out(3)
-    BacktestParams backtestParams;
-
-    @Out(4)
-    MomentumStrategyParams strategyParams;
+//    @Out(2)
+//    PortfolioParams portfolioParams;
+//
+//    @Out(3)
+//    BacktestParams backtestParams;
+//
+//    @Out(4)
+//    MomentumStrategyParams strategyParams;
 
 
 

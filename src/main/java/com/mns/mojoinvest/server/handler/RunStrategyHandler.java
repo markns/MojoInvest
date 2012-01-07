@@ -12,6 +12,7 @@ import com.mns.mojoinvest.server.engine.strategy.MomentumStrategy;
 import com.mns.mojoinvest.server.engine.strategy.StrategyException;
 import com.mns.mojoinvest.shared.dispatch.RunStrategyAction;
 import com.mns.mojoinvest.shared.dispatch.RunStrategyResult;
+import com.mns.mojoinvest.shared.params.Params;
 import org.joda.time.LocalDate;
 
 import java.util.HashMap;
@@ -41,20 +42,22 @@ public class RunStrategyHandler implements
     public RunStrategyResult execute(final RunStrategyAction action,
                                      final ExecutionContext context) throws ActionException {
 
+        Params params = action.getParams();
+
         //TODO: Does the portfolioFactory need to be synchronised?
-        Portfolio portfolio = portfolioFactory.create(action.getPortfolioParams());
+        Portfolio portfolio = portfolioFactory.create(params.getPortfolioParams());
 
         Map<String, Object> filter = new HashMap<String, Object>(2);
-        filter.put("provider in", action.getBacktestParams().getProviders());
-        filter.put("category in", action.getBacktestParams().getCategories());
+        filter.put("provider in", params.getFundFilter().getProviders());
+        filter.put("category in", params.getFundFilter().getCategories());
         Set<Fund> funds = new HashSet<Fund>(fundDao.query(filter));
 
         try {
             strategy.execute(portfolio,
-                    new LocalDate(action.getBacktestParams().getFromDate()),
-                    new LocalDate(action.getBacktestParams().getToDate()),
+                    new LocalDate(params.getBacktestParams().getFromDate()),
+                    new LocalDate(params.getBacktestParams().getToDate()),
                     funds,
-                    action.getStrategyParams());
+                    params.getStrategyParams());
         } catch (StrategyException e) {
             throw new ActionException(e);
         }

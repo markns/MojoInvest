@@ -22,7 +22,6 @@ import org.joda.time.LocalDate;
 import org.junit.After;
 import org.junit.Before;
 
-import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.List;
 
@@ -33,7 +32,7 @@ public class MomentumStrategyTests {
     private final FundDao fundDao = new FundDao(ObjectifyService.factory());
 
     private final PortfolioParams portfolioParams =
-            new PortfolioParams(new BigDecimal("10000"), new BigDecimal("12.95"));
+            new PortfolioParams(Double.valueOf("10000"), Double.valueOf("12.95"));
 
     private final PortfolioProvider portfolioProvider = new PortfolioProvider();
     private final Portfolio portfolio = new SimplePortfolio(quoteDao, portfolioParams);

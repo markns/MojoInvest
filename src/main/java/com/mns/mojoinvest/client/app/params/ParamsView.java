@@ -3,89 +3,40 @@ package com.mns.mojoinvest.client.app.params;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.editor.client.Editor;
 import com.google.gwt.editor.client.SimpleBeanEditorDriver;
-import com.google.gwt.editor.ui.client.ValueBoxEditorDecorator;
 import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.text.shared.AbstractRenderer;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
-import com.google.gwt.user.client.ui.*;
+import com.google.gwt.user.client.ui.Button;
+import com.google.gwt.user.client.ui.Widget;
 import com.gwtplatform.mvp.client.ViewWithUiHandlers;
+import com.mns.mojoinvest.shared.params.Params;
 
 import java.util.List;
 
 public class ParamsView extends ViewWithUiHandlers<ParamsUiHandlers>
-        implements ParamsPresenter.MyView, Editor<Person> {
+        implements ParamsPresenter.MyView, Editor<Params> {
 
     interface StrategyParamsViewUiBinder extends UiBinder<Widget, ParamsView> {
     }
 
     private static StrategyParamsViewUiBinder uiBinder = GWT.create(StrategyParamsViewUiBinder.class);
 
-    interface Driver extends SimpleBeanEditorDriver<Person, ParamsView> {
+    interface Driver extends SimpleBeanEditorDriver<Params, ParamsView> {
     }
 
     private static Driver driver = GWT.create(Driver.class);
 
-//    @UiField
-//    HTMLPanel container;
-//    @UiField
-//    Button runStrategyButton;
-//    @UiField
-//    DateBox toDate;
-//    @UiField
-//    DateBox FromDate;
-//    @UiField
-//    TextBox volatilityFilter;
-//    @UiField
-//    TextBox portfolioSize;
-//    @UiField
-//    TextBox rebalanceFrequency;
-//    @UiField
-//    TextBox performanceRange;
-//    @UiField
-//    TextBox transactionCost;
-//    @UiField
-//    TextBox investmentAmount;
-//    @UiField
-//    TextBox categoryFilter;
-//    @UiField
-//    TextBox providerFilter;
-
-
-    //--- Test
     @UiField
-    AddressEditor address;
-
+    PortfolioParamsEditor portfolioParams;
     @UiField
-    ValueBoxEditorDecorator<String> description;
-
+    MomentumStrategyParamsEditor strategyParams;
     @UiField
-    ValueBoxEditorDecorator<String> name;
-
+    FundFilterEditor fundFilter;
     @UiField
-    ValueBoxEditorDecorator<String> note;
-
-    @UiField
-    Focusable nameBox;
-
-    @UiField(provided = true)
-    ValueListBox<Integer> pets = new ValueListBox<Integer>(
-            new AbstractRenderer<Integer>() {
-                @Override
-                public String render(Integer integer) {
-                    return integer.toString();
-                }
-            });
-
+    BacktestParamsEditor backtestParams;
     @UiField
     Button runStrategyButton;
-
-    @UiField
-    ListBox providers;
-
-    @UiField
-    ListBox categories;
 
     public final Widget widget;
 
@@ -99,30 +50,30 @@ public class ParamsView extends ViewWithUiHandlers<ParamsUiHandlers>
     }
 
     @Override
-    public void setPerformanceRangesAvailable(List<Integer> performanceRangeAcceptable) {
-        pets.setValue(performanceRangeAcceptable.get(0));
-        pets.setAcceptableValues(performanceRangeAcceptable);
+    public void setFormationPeriodsAvailable(List<Integer> performanceRangeAcceptable) {
+        strategyParams.formationPeriod.setValue(performanceRangeAcceptable.get(0));
+        strategyParams.formationPeriod.setAcceptableValues(performanceRangeAcceptable);
     }
 
     @Override
     public void setProvidersAvailable(List<String> providersAvailable) {
-        providers.clear();
+        fundFilter.providers.clear();
         for (String provider : providersAvailable) {
-            providers.addItem(provider);
+            fundFilter.providers.addItem(provider);
         }
     }
 
     @Override
     public void setCategoriesAvailable(List<String> categoriesAvailable) {
-        categories.clear();
+        fundFilter.categories.clear();
         for (String category : categoriesAvailable) {
-            categories.addItem(category);
+            fundFilter.categories.addItem(category);
         }
     }
 
-    public void edit(Person person) {
+    public void edit(Params params) {
         driver.initialize(this);
-        driver.edit(person);
+        driver.edit(params);
     }
 
     @UiHandler("runStrategyButton")
@@ -132,29 +83,31 @@ public class ParamsView extends ViewWithUiHandlers<ParamsUiHandlers>
         }
     }
 
-    public Person flush() {
-        Person person = driver.flush();
+    public Params flush() {
+        Params params = driver.flush();
 
-        flushProviders(person);
-        flushCategories(person);
+        flushProviders(params);
+        flushCategories(params);
 
-        return person;
+        return params;
     }
 
-    private void flushProviders(Person person) {
-        person.getProviders().clear();
-        for (int i = 0; i < providers.getItemCount(); i++) {
-            if (providers.isItemSelected(i)) {
-                person.getProviders().add(providers.getItemText(i));
+    private void flushProviders(Params params) {
+        params.getFundFilter().getProviders().clear();
+        for (int i = 0; i < fundFilter.providers.getItemCount(); i++) {
+            if (fundFilter.providers.isItemSelected(i)) {
+                params.getFundFilter().getProviders()
+                        .add(fundFilter.providers.getItemText(i));
             }
         }
     }
     
-    private void flushCategories(Person person) {
-        person.getCategories().clear();
-        for (int i = 0; i < categories.getItemCount(); i++) {
-            if (categories.isItemSelected(i)) {
-                person.getCategories().add(categories.getItemText(i));
+    private void flushCategories(Params params) {
+        params.getFundFilter().getCategories().clear();
+        for (int i = 0; i < fundFilter.categories.getItemCount(); i++) {
+            if (fundFilter.categories.isItemSelected(i)) {
+                params.getFundFilter().getCategories()
+                        .add(fundFilter.categories.getItemText(i));
             }
         }
     }

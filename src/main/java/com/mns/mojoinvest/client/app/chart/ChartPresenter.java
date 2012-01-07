@@ -4,6 +4,7 @@ import com.google.gwt.event.shared.EventBus;
 import com.google.inject.Inject;
 import com.gwtplatform.mvp.client.PresenterWidget;
 import com.gwtplatform.mvp.client.View;
+import com.mns.mojoinvest.client.event.RunStrategySuccessEvent;
 
 public class ChartPresenter extends PresenterWidget<ChartPresenter.MyView> {
 
@@ -13,5 +14,22 @@ public class ChartPresenter extends PresenterWidget<ChartPresenter.MyView> {
     @Inject
     public ChartPresenter(final EventBus eventBus, final ChartPresenter.MyView view) {
         super(eventBus, view);
+    }
+
+    @Override
+    protected void onBind() {
+        super.onBind();
+        //TODO:listen for onRunStrategyComplete
+
+
+        addRegisteredHandler(RunStrategySuccessEvent.getType(),
+                new RunStrategySuccessEvent.RunStrategySuccessHandler() {
+
+                    @Override
+                    public void onRunStrategySuccess(RunStrategySuccessEvent event) {
+
+                    }
+                }
+        );
     }
 }

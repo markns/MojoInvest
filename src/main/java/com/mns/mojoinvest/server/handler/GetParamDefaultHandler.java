@@ -7,12 +7,10 @@ import com.gwtplatform.dispatch.shared.ActionException;
 import com.mns.mojoinvest.server.engine.model.dao.FundDao;
 import com.mns.mojoinvest.shared.dispatch.GetParamDefaultsAction;
 import com.mns.mojoinvest.shared.dispatch.GetParamDefaultsResult;
-import com.mns.mojoinvest.shared.params.BacktestParams;
-import com.mns.mojoinvest.shared.params.MomentumStrategyParams;
-import com.mns.mojoinvest.shared.params.PortfolioParams;
+import com.mns.mojoinvest.shared.params.*;
 
-import java.math.BigDecimal;
-import java.util.*;
+import java.util.Date;
+import java.util.List;
 
 public class GetParamDefaultHandler implements
         ActionHandler<GetParamDefaultsAction, GetParamDefaultsResult> {
@@ -28,8 +26,8 @@ public class GetParamDefaultHandler implements
     public GetParamDefaultsResult execute(GetParamDefaultsAction action, ExecutionContext context)
             throws ActionException {
 
-        BigDecimal investmentAmountDefault = new BigDecimal("10000");
-        BigDecimal transactionCostDefault = new BigDecimal("12.95");
+        Double investmentAmountDefault = Double.valueOf("10000");
+        Double transactionCostDefault = Double.valueOf("12.95");
         PortfolioParams portfolioParams = new PortfolioParams(investmentAmountDefault, transactionCostDefault);
 
         Integer formationPeriodDefault = 9;
@@ -38,13 +36,17 @@ public class GetParamDefaultHandler implements
         MomentumStrategyParams strategyParams = new MomentumStrategyParams(formationPeriodDefault,
                 holdingPeriodDefault, portfolioSizeDefault);
 
-        List<String> providers = fundDao.getProviders();
-        List<String> categories = fundDao.getCategories();
         Date fromDate = new Date(2000, 1, 1); //TODO: retrieve earliest date from database
         Date toDate = new Date();
-        BacktestParams backtestParams = new BacktestParams(fromDate, toDate, providers, categories);
+        BacktestParams backtestParams = new BacktestParams(fromDate, toDate);
 
-        return new GetParamDefaultsResult("", portfolioParams, backtestParams, strategyParams);
+        List<String> providers = fundDao.getProviders();
+        List<String> categories = fundDao.getCategories();
+        FundFilter fundFilter = new FundFilter(providers, categories);
+
+        Params params = new Params(backtestParams, strategyParams, portfolioParams, fundFilter);
+
+        return new GetParamDefaultsResult("", params);
     }
 
     @Override

@@ -1,0 +1,29 @@
+<ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
+             xmlns:g='urn:import:com.google.gwt.user.client.ui'
+             xmlns:d='urn:import:com.google.gwt.user.datepicker.client'>
+    <ui:style>
+
+        /* Common measurements used in the app. */
+        @def fieldWidth 15em;
+
+        .editField {
+            display: inline;
+            width: fieldWidth;
+        }
+
+        .rightAlign {
+            text-align: right;
+        }
+
+    </ui:style>
+
+    <g:HTMLPanel>
+        <div class="{style.rightAlign}">
+            From date:
+            <d:DateBox ui:field='fromDate' stylePrimaryName="{style.editField}"/>
+            <br/>
+            To date:
+            <d:DateBox ui:field='toDate' stylePrimaryName="{style.editField}"/>
+        </div>
+    </g:HTMLPanel>
+</ui:UiBinder>

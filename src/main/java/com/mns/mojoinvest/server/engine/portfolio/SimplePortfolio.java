@@ -52,8 +52,8 @@ public class SimplePortfolio implements Portfolio {
     public SimplePortfolio(QuoteDao quoteDao, @Assisted PortfolioParams params) {
         this.quoteDao = quoteDao;
         this.positions = new HashMap<Fund, Position>();
-        this.cash = params.getInitialInvestment();
-        this.transactionCost = params.getTransactionCost();
+        this.cash = BigDecimal.valueOf(params.getInitialInvestment());
+        this.transactionCost = BigDecimal.valueOf(params.getTransactionCost());
     }
 
     @Override

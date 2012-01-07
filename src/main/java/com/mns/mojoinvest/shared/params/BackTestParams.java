@@ -3,7 +3,6 @@ package com.mns.mojoinvest.shared.params;
 import com.google.gwt.user.client.rpc.IsSerializable;
 
 import java.util.Date;
-import java.util.List;
 
 public class BacktestParams implements IsSerializable{
 
@@ -15,15 +14,10 @@ public class BacktestParams implements IsSerializable{
 
     private Date toDate;
 
-    private List<String> providers;
 
-    private List<String> categories;
-
-    public BacktestParams(Date fromDate, Date toDate, List<String> providers, List<String> categories) {
+    public BacktestParams(Date fromDate, Date toDate) {
         this.fromDate = fromDate;
         this.toDate = toDate;
-        this.providers = providers;
-        this.categories = categories;
     }
 
     public BacktestParams() {
@@ -38,11 +32,4 @@ public class BacktestParams implements IsSerializable{
         return toDate;
     }
 
-    public List<String> getProviders() {
-        return providers;
-    }
-
-    public List<String> getCategories() {
-        return categories;
-    }
 }

@@ -1,0 +1,44 @@
+<ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
+             xmlns:g='urn:import:com.google.gwt.user.client.ui'
+             xmlns:e='urn:import:com.google.gwt.editor.ui.client'>
+    <ui:style>
+
+        /* Common measurements used in the app. */
+        @def fieldWidth 15em;
+
+        .editField {
+            display: inline;
+            width: fieldWidth;
+        }
+
+        .rightAlign {
+            text-align: right;
+        }
+
+    </ui:style>
+
+    <g:HTMLPanel>
+
+        <!--private int formationPeriod;-->
+        <!--private int holdingPeriod;-->
+        <!--private int portfolioSize;-->
+
+        <div class="{style.rightAlign}">
+            Formation period:
+            <g:ValueListBox ui:field="formationPeriod"
+                            stylePrimaryName="{style.editField}">
+            </g:ValueListBox>
+            <br/>
+            Holding period:
+            <g:ValueListBox ui:field="holdingPeriod"
+                            stylePrimaryName="{style.editField}">
+            </g:ValueListBox>
+            <br/>
+            Portfolio size:
+            <g:ValueListBox ui:field="portfolioSize"
+                            stylePrimaryName="{style.editField}">
+            </g:ValueListBox>
+            <br/>
+        </div>
+    </g:HTMLPanel>
+</ui:UiBinder>
