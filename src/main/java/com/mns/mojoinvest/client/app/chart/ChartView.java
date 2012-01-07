@@ -1,4 +1,4 @@
-package com.mns.mojoinvest.client.app.component;
+package com.mns.mojoinvest.client.app.chart;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.uibinder.client.UiBinder;

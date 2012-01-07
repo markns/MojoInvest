@@ -1,4 +1,4 @@
-package com.mns.mojoinvest.client.app.component;
+package com.mns.mojoinvest.client.app.params;
 
 import com.google.gwt.event.shared.EventBus;
 import com.google.gwt.user.client.Window;
