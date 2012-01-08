@@ -41,6 +41,8 @@ public class NavigationView extends ViewImpl implements NavigationPresenter.MyVi
     InlineHyperlink app;
     @UiField
     InlineHyperlink landing;
+    @UiField
+    InlineHyperlink tools;
     private final InlineHyperlink[] navigationLinks;
 
     private final Widget widget;

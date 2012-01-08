@@ -62,6 +62,9 @@
                 <g:InlineHyperlink ui:field="guide" targetHistoryToken="{nameTokens.guide}"
                                    addStyleNames="{style.right}">Help
                 </g:InlineHyperlink>
+                <g:InlineHyperlink ui:field="tools" targetHistoryToken="{nameTokens.guide}"
+                                   addStyleNames="{style.right}">Tools
+                </g:InlineHyperlink>
                 <g:InlineHyperlink ui:field="app"
                                    targetHistoryToken="{nameTokens.app}"
                                    addStyleNames="{style.right}">App
