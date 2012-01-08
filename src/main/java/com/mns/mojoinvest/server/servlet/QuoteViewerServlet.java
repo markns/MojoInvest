@@ -4,6 +4,8 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.mns.mojoinvest.server.engine.model.Quote;
 import com.mns.mojoinvest.server.engine.model.dao.QuoteDao;
+import com.mns.mojoinvest.server.servlet.util.ParameterNotFoundException;
+import com.mns.mojoinvest.server.servlet.util.ParameterParser;
 
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -25,18 +27,20 @@ public class QuoteViewerServlet extends HttpServlet {
     public void doGet(HttpServletRequest req, HttpServletResponse resp)
             throws IOException {
 
-        long t = System.currentTimeMillis();
+        ParameterParser parser = new ParameterParser(req);
 
-        List<Quote> quotes = dao.list();
-
+        List<Quote> quotes;
+        try {
+            String symbol = parser.getStringParameter("symbol");
+             quotes = dao.query(symbol);
+        } catch (ParameterNotFoundException e) {
+            quotes = dao.list();
+        }
 
         resp.setContentType("text/html");
-
-        resp.getWriter().println("Time taken for query: " + (System.currentTimeMillis() - t));
-
         resp.getWriter().println("<ul>");
         for (Quote quote : quotes) {
-            resp.getWriter().println("<li>" + quote + "</li>");
+            resp.getWriter().println("<li>" + quote + ", rolled=" + quote.isRolled() + "</li>");
         }
         resp.getWriter().println("</ul>");
     }
