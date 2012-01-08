@@ -40,6 +40,28 @@ public class QuoteUtilsTests {
         assertEquals(expected, actual);
     }
 
+    @Test
+    public void testRollMissing() {
+
+        List<Quote> quotes = new ArrayList<Quote>();
+
+        quotes.add(new Quote("EWA", new LocalDate(2011, 7, 7), new BigDecimal("1"), new BigDecimal("1"), new BigDecimal("1"), new BigDecimal("1"), null, null, new BigDecimal("1"), new BigDecimal("1"), false));
+        quotes.add(new Quote("EWA", new LocalDate(2011, 7, 11), new BigDecimal("2"), new BigDecimal("1"), new BigDecimal("1"), new BigDecimal("1"), null, null, new BigDecimal("1"), new BigDecimal("1"), false));
+        quotes.add(new Quote("EWA", new LocalDate(2011, 7, 13), new BigDecimal("3"), new BigDecimal("1"), new BigDecimal("1"), new BigDecimal("1"), null, null, new BigDecimal("1"), new BigDecimal("1"), false));
+        quotes.add(new Quote("EWA", new LocalDate(2011, 7, 14), new BigDecimal("4"), new BigDecimal("1"), new BigDecimal("1"), new BigDecimal("1"), null, null, new BigDecimal("1"), new BigDecimal("1"), false));
+        quotes.add(new Quote("EWA", new LocalDate(2011, 7, 18), new BigDecimal("5"), new BigDecimal("1"), new BigDecimal("1"), new BigDecimal("1"), null, null, new BigDecimal("1"), new BigDecimal("1"), false));
+
+        List<Quote> expected = new ArrayList<Quote>();
+
+        expected.add(new Quote("EWA", new LocalDate(2011, 7, 8), new BigDecimal("1"), new BigDecimal("1"), new BigDecimal("1"), new BigDecimal("1"), null, null, new BigDecimal("1"), new BigDecimal("1"), true));
+        expected.add(new Quote("EWA", new LocalDate(2011, 7, 12), new BigDecimal("2"), new BigDecimal("1"), new BigDecimal("1"), new BigDecimal("1"), null, null, new BigDecimal("1"), new BigDecimal("1"), true));
+        expected.add(new Quote("EWA", new LocalDate(2011, 7, 15), new BigDecimal("4"), new BigDecimal("1"), new BigDecimal("1"), new BigDecimal("1"), null, null, new BigDecimal("1"), new BigDecimal("1"), true));
+
+        List<Quote> actual = QuoteUtils.rollMissingQuotes(quotes);
+
+        assertEquals(expected, actual);
+    }
+
 
     @Test
     public void testFill2() {
