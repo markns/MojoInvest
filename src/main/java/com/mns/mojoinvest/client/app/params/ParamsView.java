@@ -64,10 +64,33 @@ public class ParamsView extends ViewWithUiHandlers<ParamsUiHandlers>
     }
 
     @Override
+    public void setProvidersSelected(List<String> providersSelected) {
+        //TODO: Optimise with a different data structure?
+        for (int i = 0; i < fundFilter.providers.getItemCount(); i++) {
+            if (providersSelected.contains(fundFilter.providers.getItemText(i))) {
+                fundFilter.providers.setItemSelected(i, true);
+            } else {
+                fundFilter.providers.setItemSelected(i, false);
+            }
+        }
+    }
+
+    @Override
     public void setCategoriesAvailable(List<String> categoriesAvailable) {
         fundFilter.categories.clear();
         for (String category : categoriesAvailable) {
             fundFilter.categories.addItem(category);
+        }
+    }
+
+    @Override
+    public void setCategoriesSelected(List<String> categoriesSelected) {
+        for (int i = 0; i < fundFilter.categories.getItemCount(); i++) {
+            if (categoriesSelected.contains(fundFilter.categories.getItemText(i))) {
+                fundFilter.categories.setItemSelected(i, true);
+            } else {
+                fundFilter.categories.setItemSelected(i, false);
+            }
         }
     }
 
@@ -79,7 +102,7 @@ public class ParamsView extends ViewWithUiHandlers<ParamsUiHandlers>
     @UiHandler("runStrategyButton")
     void onSaveButtonClicked(ClickEvent event) {
         if (getUiHandlers() != null) {
-            getUiHandlers().run();
+            getUiHandlers().runStrategy();
         }
     }
 
@@ -101,7 +124,7 @@ public class ParamsView extends ViewWithUiHandlers<ParamsUiHandlers>
             }
         }
     }
-    
+
     private void flushCategories(Params params) {
         params.getFundFilter().getCategories().clear();
         for (int i = 0; i < fundFilter.categories.getItemCount(); i++) {

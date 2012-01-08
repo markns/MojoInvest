@@ -32,4 +32,11 @@ public class BacktestParams implements IsSerializable{
         return toDate;
     }
 
+    @Override
+    public String toString() {
+        return "BacktestParams{" +
+                "fromDate=" + fromDate +
+                ", toDate=" + toDate +
+                '}';
+    }
 }

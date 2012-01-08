@@ -20,13 +20,11 @@ public class ParamsPresenter extends PresenterWidget<ParamsPresenter.MyView>
 
     public interface MyView extends View, HasUiHandlers<ParamsUiHandlers> {
         void setFormationPeriodsAvailable(List<Integer> performanceRangeAcceptable);
-
         void setProvidersAvailable(List<String> providersAvailable);
-
+        void setProvidersSelected(List<String> providers);
         void setCategoriesAvailable(List<String> categoriesAvailable);
-
+        void setCategoriesSelected(List<String> categories);
         void edit(Params params);
-
         Params flush();
     }
 
@@ -41,7 +39,8 @@ public class ParamsPresenter extends PresenterWidget<ParamsPresenter.MyView>
     }
 
     @Override
-    public void run() {
+    public void runStrategy() {
+
         Params params = getView().flush();
 
         Window.alert(params.toString());
@@ -52,10 +51,10 @@ public class ParamsPresenter extends PresenterWidget<ParamsPresenter.MyView>
                 //TODO: Not sure about the ParamsPresenter.this reference
                 RunStrategySuccessEvent.fire(ParamsPresenter.this, result, true);
             }
-
             @Override
             public void onFailure(Throwable caught) {
-
+                Window.alert("Strategy failed to execute successfully: " + caught);
+                //TODO: Broadcast run strategy failure event
             }
         });
     }

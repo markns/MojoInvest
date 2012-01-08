@@ -25,6 +25,7 @@ import com.mns.mojoinvest.client.app.trades.TradesPresenter;
 import com.mns.mojoinvest.shared.action.BatchAction;
 import com.mns.mojoinvest.shared.action.BatchResult;
 import com.mns.mojoinvest.shared.dispatch.*;
+import com.mns.mojoinvest.shared.params.Params;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -119,7 +120,12 @@ public class AppPresenter extends Presenter<AppPresenter.MyView, AppPresenter.My
             @Override
             public void onSuccess(GetParamDefaultsResult result) {
                 Main.logger.info(result.toString());
-                paramsPresenter.getView().edit(result.getParams());
+                Params params = result.getParams();
+                paramsPresenter.getView().edit(params);
+                paramsPresenter.getView()
+                        .setCategoriesSelected(params.getFundFilter().getCategories());
+                paramsPresenter.getView()
+                        .setProvidersSelected(params.getFundFilter().getProviders());
             }
         });
 

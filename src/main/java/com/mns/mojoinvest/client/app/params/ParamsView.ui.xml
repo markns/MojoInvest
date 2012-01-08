@@ -39,22 +39,22 @@
 
     <g:HTMLPanel>
 
-        <g:DisclosurePanel animationEnabled="true">
+        <g:DisclosurePanel animationEnabled="true" open="true">
             <g:header>Portfolio</g:header>
             <p:PortfolioParamsEditor ui:field="portfolioParams"/>
         </g:DisclosurePanel>
 
-        <g:DisclosurePanel animationEnabled="true">
+        <g:DisclosurePanel animationEnabled="true" open="true">
             <g:header>Strategy</g:header>
             <p:MomentumStrategyParamsEditor ui:field="strategyParams"/>
         </g:DisclosurePanel>
 
-        <g:DisclosurePanel animationEnabled="true">
+        <g:DisclosurePanel animationEnabled="true" open="true">
             <g:header>Filters</g:header>
             <p:FundFilterEditor ui:field="fundFilter"/>
         </g:DisclosurePanel>
 
-        <g:DisclosurePanel animationEnabled="true">
+        <g:DisclosurePanel animationEnabled="true" open="true">
             <g:header>Backtest</g:header>
             <p:BacktestParamsEditor ui:field="backtestParams"/>
         </g:DisclosurePanel>
