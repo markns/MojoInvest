@@ -21,8 +21,16 @@ public class PortfolioParams implements IsSerializable {
         return initialInvestment;
     }
 
+    public void setInitialInvestment(Double initialInvestment) {
+        this.initialInvestment = initialInvestment;
+    }
+
     public Double getTransactionCost() {
         return transactionCost;
+    }
+
+    public void setTransactionCost(Double transactionCost) {
+        this.transactionCost = transactionCost;
     }
 
     @Override

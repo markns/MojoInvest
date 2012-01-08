@@ -24,12 +24,24 @@ public class MomentumStrategyParams implements IsSerializable {
         return formationPeriod;
     }
 
+    public void setFormationPeriod(int formationPeriod) {
+        this.formationPeriod = formationPeriod;
+    }
+
     public int getHoldingPeriod() {
         return holdingPeriod;
     }
 
+    public void setHoldingPeriod(int holdingPeriod) {
+        this.holdingPeriod = holdingPeriod;
+    }
+
     public int getPortfolioSize() {
         return portfolioSize;
+    }
+
+    public void setPortfolioSize(int portfolioSize) {
+        this.portfolioSize = portfolioSize;
     }
 
     @Override
