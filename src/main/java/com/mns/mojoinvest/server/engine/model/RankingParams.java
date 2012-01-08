@@ -4,18 +4,18 @@ import java.io.Serializable;
 
 public class RankingParams implements Serializable {
 
-    private int performanceRange;
+    private int formationPeriod;
 
-    public RankingParams(int performanceRange) {
-        this.performanceRange = performanceRange;
+    public RankingParams(int formationPeriod) {
+        this.formationPeriod = formationPeriod;
     }
 
-    public int getPerformanceRange() {
-        return performanceRange;
+    public int getFormationPeriod() {
+        return formationPeriod;
     }
 
     @Override
     public String toString() {
-        return performanceRange + "";
+        return formationPeriod + "";
     }
 }

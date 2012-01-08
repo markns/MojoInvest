@@ -45,6 +45,9 @@ public class MomentumStrategy {
                         Set<Fund> acceptableFunds,
                         MomentumStrategyParams params) throws StrategyException {
 
+        if (fromDate.isAfter(toDate))
+            throw new StrategyException("From date cannot be after to date");
+
         List<LocalDate> rebalanceDates = getRebalanceDates(fromDate, toDate, params);
 
         for (LocalDate rebalanceDate : rebalanceDates) {
@@ -75,6 +78,8 @@ public class MomentumStrategy {
 
     private Collection<Fund> getSelection(List<String> ranked, Set<Fund> acceptableFunds,
                                           MomentumStrategyParams params) throws StrategyException {
+
+        //TODO: This check should only take into account the number of funds in the acceptable set
         if (ranked.size() <= params.getPortfolioSize() * 2)
             throw new StrategyException("Not enough funds in population to make selection");
         Collection<Fund> funds = fundDao.get(ranked);
@@ -93,7 +98,7 @@ public class MomentumStrategy {
     private void sellLosers(Portfolio portfolio, LocalDate rebalanceDate, Collection<Fund> selection) {
         for (Fund fund : portfolio.getActiveHoldings()) {
             if (!selection.contains(fund)) {
-                executor.sellAll(fund, rebalanceDate);
+                executor.sellAll(portfolio, fund, rebalanceDate);
             }
         }
     }
@@ -103,14 +108,14 @@ public class MomentumStrategy {
 
         BigDecimal numEmpty = new BigDecimal(params.getPortfolioSize() - portfolio.numberOfActivePositions());
         BigDecimal availableCash = portfolio.getCash().
-                subtract(executor.getTransactionCost().
+                subtract(portfolio.getTransactionCost().
                         multiply(numEmpty));
 //        log.info("Available cash: " + availableCash);
         for (Fund fund : selection) {
             if (!portfolio.contains(fund)) {
                 BigDecimal allocation = availableCash
                         .divide(numEmpty, RoundingMode.HALF_DOWN);
-                executor.buy(fund, rebalanceDate, allocation);
+                executor.buy(portfolio, fund, rebalanceDate, allocation);
             }
         }
     }

@@ -40,7 +40,7 @@ public class RankingCalculator {
             dao = getQuoteDao();
         }
         List<Quote> toQuotes = dao.query(date);
-        LocalDate fromDate = TradingDayUtils.rollIfRequired(date.minusMonths(params.getPerformanceRange()));
+        LocalDate fromDate = TradingDayUtils.rollIfRequired(date.minusMonths(params.getFormationPeriod()));
         List<Quote> fromQuotes = dao.query(fromDate);
         Map<String, BigDecimal> performances = calculatePerformances(fromQuotes, toQuotes);
         return buildRanking(date, params, performances);

@@ -37,7 +37,7 @@ public class MomentumStrategyTests {
     private final PortfolioProvider portfolioProvider = new PortfolioProvider();
     private final Portfolio portfolio = new SimplePortfolio(quoteDao, portfolioParams);
 
-    private final Executor executor = new NextTradingDayExecutor(portfolioProvider, quoteDao);
+    private final Executor executor = new NextTradingDayExecutor(quoteDao);
 
 //    private final RankingStrategyParams rankingStrategyParams = new SimpleRankingStrategyParams(10, 9);
     private final MomentumStrategyParams strategyParams = new MomentumStrategyParams(9, 1, 3);

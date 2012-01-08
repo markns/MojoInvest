@@ -8,6 +8,7 @@ import com.mns.mojoinvest.server.engine.model.dao.FundDao;
 import com.mns.mojoinvest.shared.dispatch.GetParamDefaultsAction;
 import com.mns.mojoinvest.shared.dispatch.GetParamDefaultsResult;
 import com.mns.mojoinvest.shared.params.*;
+import org.joda.time.LocalDate;
 
 import java.util.Date;
 import java.util.List;
@@ -26,6 +27,8 @@ public class GetParamDefaultHandler implements
     public GetParamDefaultsResult execute(GetParamDefaultsAction action, ExecutionContext context)
             throws ActionException {
 
+        //TODO: When user login is enabled, this method should retrieve user defaults if available
+
         Double investmentAmountDefault = Double.valueOf("10000");
         Double transactionCostDefault = Double.valueOf("12.95");
         PortfolioParams portfolioParams = new PortfolioParams(investmentAmountDefault, transactionCostDefault);
@@ -36,8 +39,9 @@ public class GetParamDefaultHandler implements
         MomentumStrategyParams strategyParams = new MomentumStrategyParams(formationPeriodDefault,
                 holdingPeriodDefault, portfolioSizeDefault);
 
-        Date fromDate = new Date(2000, 1, 1); //TODO: retrieve earliest date from database
-        Date toDate = new Date();
+        //TODO: retrieve earliest date from database
+        Date fromDate = new LocalDate("2007-01-01").toDateMidnight().toDate();
+        Date toDate = new LocalDate("2010-09-01").toDateMidnight().toDate();
         BacktestParams backtestParams = new BacktestParams(fromDate, toDate);
 
         List<String> providers = fundDao.getProviders();
@@ -55,7 +59,8 @@ public class GetParamDefaultHandler implements
     }
 
     @Override
-    public void undo(GetParamDefaultsAction action, GetParamDefaultsResult result, ExecutionContext context) throws ActionException {
+    public void undo(GetParamDefaultsAction action, GetParamDefaultsResult result, ExecutionContext context)
+            throws ActionException {
         throw new UnsupportedOperationException();
     }
 }
