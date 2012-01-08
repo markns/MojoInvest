@@ -4,7 +4,7 @@ import com.google.gwt.user.client.rpc.IsSerializable;
 
 import java.util.Date;
 
-public class BacktestParams implements IsSerializable{
+public class BacktestParams implements IsSerializable {
 
 //      ERROR: Errors in 'file:/Users/marknuttallsmith/Projects/Alpha-Position/src/main/java/com/mns/mojoinvest/shared/params/BacktestParams.java'.
 //    ERROR: Line 10: No source code is available for type org.joda.time.LocalDate; did you forget to inherit a required module?.
