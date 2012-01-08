@@ -11,10 +11,10 @@ import com.gwtplatform.mvp.client.ViewImpl;
 public class TradesView extends ViewImpl
         implements TradesPresenter.MyView {
 
-    interface BacktestParamsViewUiBinder extends UiBinder<Widget, TradesView> {
+    interface TradesViewUiBinder extends UiBinder<Widget, TradesView> {
     }
 
-    private static BacktestParamsViewUiBinder uiBinder = GWT.create(BacktestParamsViewUiBinder.class);
+    private static TradesViewUiBinder uiBinder = GWT.create(TradesViewUiBinder.class);
 
     @UiField
     HTMLPanel container;
