@@ -11,15 +11,15 @@
     <ui:style>
 
         .params {
-            background-color: #f6f6cb;
+            background-color: #ccccff;
         }
 
         .chart {
-            background-color: #ffc0cb;
+            background-color: #ccccff;
         }
 
         .trades {
-            background-color: #ff7f50;
+            background-color: #ccccff;
         }
 
 

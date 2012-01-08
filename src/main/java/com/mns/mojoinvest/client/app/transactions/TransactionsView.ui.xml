@@ -11,6 +11,11 @@
 
 
     <ui:style>
+
+        .displayInline {
+            display: inline;
+        }
+
         .table {
             width: 100%;
             table-layout: fixed;
@@ -19,7 +24,13 @@
 
     <g:HTMLPanel ui:field="container">
         <g:Label>Transactions</g:Label>
-        <cv:CellTable ui:field="table" stylePrimaryName="{style.table}"/>
+
+        <!--<cv:SimplePager ui:field="pager" stylePrimaryName="{style.displayInline}"-->
+          <!--display="{table}" />-->
+
+        <cv:CellTable ui:field="table" stylePrimaryName="{style.table}"
+                      title="Transactions">
+        </cv:CellTable>
     </g:HTMLPanel>
 
 </ui:UiBinder>
