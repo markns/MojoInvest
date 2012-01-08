@@ -6,6 +6,7 @@ import java.util.Date;
 
 public class TransactionDto implements IsSerializable {
 
+    private String buySell;
     private String symbol;
     private String fundName;
     private Date date;
@@ -13,8 +14,9 @@ public class TransactionDto implements IsSerializable {
     private Double price;
     private Double commission;
 
-    public TransactionDto(String symbol, String fundName, Date date,
+    public TransactionDto(String buySell, String symbol, String fundName, Date date,
                           Double units, Double price, Double commission) {
+        this.buySell = buySell;
         this.symbol = symbol;
         this.fundName = fundName;
         this.date = date;
@@ -25,6 +27,10 @@ public class TransactionDto implements IsSerializable {
 
     public TransactionDto() {
         //For serialization
+    }
+
+    public String getBuySell() {
+        return buySell;
     }
 
     public String getSymbol() {

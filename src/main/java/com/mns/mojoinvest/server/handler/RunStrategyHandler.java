@@ -12,6 +12,8 @@ import com.mns.mojoinvest.server.engine.portfolio.PortfolioFactory;
 import com.mns.mojoinvest.server.engine.portfolio.Position;
 import com.mns.mojoinvest.server.engine.strategy.MomentumStrategy;
 import com.mns.mojoinvest.server.engine.strategy.StrategyException;
+import com.mns.mojoinvest.server.engine.transaction.BuyTransaction;
+import com.mns.mojoinvest.server.engine.transaction.SellTransaction;
 import com.mns.mojoinvest.server.engine.transaction.Transaction;
 import com.mns.mojoinvest.shared.dispatch.RunStrategyAction;
 import com.mns.mojoinvest.shared.dispatch.RunStrategyResult;
@@ -80,9 +82,15 @@ public class RunStrategyHandler implements
 
         List<TransactionDto> transactionDtos = new ArrayList<TransactionDto>();
         for (Transaction transaction : transactions) {
-            transactionDtos.add(new TransactionDto(transaction.getFund().getSymbol(), transaction.getFund().getName(),
-                    transaction.getDate().toDateMidnight().toDate(), transaction.getQuantity().doubleValue(),
-                    transaction.getPrice().doubleValue(), transaction.getCommission().doubleValue()));
+            if (transaction instanceof BuyTransaction) {
+                transactionDtos.add(new TransactionDto("Buy", transaction.getFund().getSymbol(), transaction.getFund().getName(),
+                        transaction.getDate().toDateMidnight().toDate(), transaction.getQuantity().doubleValue(),
+                        transaction.getPrice().doubleValue(), transaction.getCommission().doubleValue()));
+            } else if (transaction instanceof SellTransaction) {
+                transactionDtos.add(new TransactionDto("Sell", transaction.getFund().getSymbol(), transaction.getFund().getName(),
+                        transaction.getDate().toDateMidnight().toDate(), transaction.getQuantity().doubleValue(),
+                        transaction.getPrice().doubleValue(), transaction.getCommission().doubleValue()));
+            }
         }
 
         return new StrategyResult(transactionDtos);
