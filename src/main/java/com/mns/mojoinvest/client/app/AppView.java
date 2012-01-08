@@ -39,7 +39,7 @@ public class AppView extends ViewWithUiHandlers<AppUiHandlers>
 
     @Override
     public void setInSlot(Object slot, Widget content) {
-        if (slot == AppPresenter.SLOT_trades) {
+        if (slot == AppPresenter.SLOT_transactions) {
             UiUtils.setContent(trades, content);
         } else if (slot == AppPresenter.SLOT_params) {
             UiUtils.setContent(params, content);

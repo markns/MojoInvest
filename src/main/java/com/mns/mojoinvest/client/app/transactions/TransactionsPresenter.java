@@ -1,16 +1,16 @@
-package com.mns.mojoinvest.client.app.trades;
+package com.mns.mojoinvest.client.app.transactions;
 
 import com.google.gwt.event.shared.EventBus;
 import com.google.inject.Inject;
 import com.gwtplatform.mvp.client.PresenterWidget;
 import com.gwtplatform.mvp.client.View;
 
-public class TradesPresenter extends PresenterWidget<TradesPresenter.MyView> {
+public class TransactionsPresenter extends PresenterWidget<TransactionsPresenter.MyView> {
 
     public interface MyView extends View { }
 
     @Inject
-    public TradesPresenter(final EventBus eventBus, final TradesPresenter.MyView view) {
+    public TransactionsPresenter(final EventBus eventBus, final TransactionsPresenter.MyView view) {
         super(eventBus, view);
     }
 }

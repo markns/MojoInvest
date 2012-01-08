@@ -21,7 +21,7 @@ import com.mns.mojoinvest.client.MainPresenter;
 import com.mns.mojoinvest.client.NameTokens;
 import com.mns.mojoinvest.client.app.chart.ChartPresenter;
 import com.mns.mojoinvest.client.app.params.ParamsPresenter;
-import com.mns.mojoinvest.client.app.trades.TradesPresenter;
+import com.mns.mojoinvest.client.app.transactions.TransactionsPresenter;
 import com.mns.mojoinvest.shared.action.BatchAction;
 import com.mns.mojoinvest.shared.action.BatchResult;
 import com.mns.mojoinvest.shared.dispatch.*;
@@ -41,25 +41,25 @@ public class AppPresenter extends Presenter<AppPresenter.MyView, AppPresenter.My
     public interface MyView extends View, HasUiHandlers<AppUiHandlers> {
     }
 
-    public static final Object SLOT_trades = new Object();
+    public static final Object SLOT_transactions = new Object();
     public static final Object SLOT_params = new Object();
     public static final Object SLOT_chart = new Object();
 
     private final DispatchAsync dispatcher;
 
-    private final TradesPresenter tradesPresenter;
+    private final TransactionsPresenter transactionsPresenter;
     private final ParamsPresenter paramsPresenter;
     private final ChartPresenter chartPresenter;
 
     @Inject
     public AppPresenter(EventBus eventBus, MyView view, MyProxy proxy,
                         DispatchAsync dispatcher,
-                        TradesPresenter tradesPresenter,
+                        TransactionsPresenter transactionsPresenter,
                         ParamsPresenter paramsPresenter,
                         ChartPresenter chartPresenter) {
         super(eventBus, view, proxy);
         this.dispatcher = dispatcher;
-        this.tradesPresenter = tradesPresenter;
+        this.transactionsPresenter = transactionsPresenter;
         this.paramsPresenter = paramsPresenter;
         this.chartPresenter = chartPresenter;
         getView().setUiHandlers(this);
@@ -163,7 +163,7 @@ public class AppPresenter extends Presenter<AppPresenter.MyView, AppPresenter.My
     protected void onReveal() {
         super.onReveal();
         Main.logger.info("AppPresenter onReveal");
-        setInSlot(SLOT_trades, tradesPresenter);
+        setInSlot(SLOT_transactions, transactionsPresenter);
         setInSlot(SLOT_params, paramsPresenter);
         setInSlot(SLOT_chart, chartPresenter);
     }

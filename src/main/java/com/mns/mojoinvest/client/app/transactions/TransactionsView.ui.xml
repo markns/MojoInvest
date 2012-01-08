@@ -18,7 +18,7 @@
     </ui:style>
 
     <g:HTMLPanel ui:field="container">
-        <g:Label>Trades</g:Label>
+        <g:Label>Transactions</g:Label>
         <cv:CellTable ui:field="table" stylePrimaryName="{style.table}"/>
     </g:HTMLPanel>
 

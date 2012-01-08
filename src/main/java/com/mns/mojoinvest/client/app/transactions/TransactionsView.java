@@ -1,4 +1,4 @@
-package com.mns.mojoinvest.client.app.trades;
+package com.mns.mojoinvest.client.app.transactions;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.uibinder.client.UiBinder;
@@ -8,13 +8,13 @@ import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.gwtplatform.mvp.client.ViewImpl;
 
-public class TradesView extends ViewImpl
-        implements TradesPresenter.MyView {
+public class TransactionsView extends ViewImpl
+        implements TransactionsPresenter.MyView {
 
-    interface TradesViewUiBinder extends UiBinder<Widget, TradesView> {
+    interface TransactionsViewUiBinder extends UiBinder<Widget, TransactionsView> {
     }
 
-    private static TradesViewUiBinder uiBinder = GWT.create(TradesViewUiBinder.class);
+    private static TransactionsViewUiBinder uiBinder = GWT.create(TransactionsViewUiBinder.class);
 
     @UiField
     HTMLPanel container;
@@ -23,7 +23,7 @@ public class TradesView extends ViewImpl
 
     public final Widget widget;
 
-    public TradesView() {
+    public TransactionsView() {
         widget = uiBinder.createAndBindUi(this);
     }
 

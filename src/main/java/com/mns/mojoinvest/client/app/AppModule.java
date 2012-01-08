@@ -5,8 +5,8 @@ import com.mns.mojoinvest.client.app.chart.ChartPresenter;
 import com.mns.mojoinvest.client.app.chart.ChartView;
 import com.mns.mojoinvest.client.app.params.ParamsPresenter;
 import com.mns.mojoinvest.client.app.params.ParamsView;
-import com.mns.mojoinvest.client.app.trades.TradesPresenter;
-import com.mns.mojoinvest.client.app.trades.TradesView;
+import com.mns.mojoinvest.client.app.transactions.TransactionsPresenter;
+import com.mns.mojoinvest.client.app.transactions.TransactionsView;
 
 public class AppModule extends AbstractPresenterModule {
 
@@ -20,7 +20,7 @@ public class AppModule extends AbstractPresenterModule {
                 ParamsView.class);
         bindPresenterWidget(ChartPresenter.class, ChartPresenter.MyView.class,
                 ChartView.class);
-        bindPresenterWidget(TradesPresenter.class, TradesPresenter.MyView.class,
-                TradesView.class);
+        bindPresenterWidget(TransactionsPresenter.class, TransactionsPresenter.MyView.class,
+                TransactionsView.class);
     }
 }
