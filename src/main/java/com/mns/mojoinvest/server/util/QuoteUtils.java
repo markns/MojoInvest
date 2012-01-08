@@ -14,6 +14,45 @@ public class QuoteUtils {
         return forDatastore(date) + "|" + symbol;
     }
 
+    public static List<Quote> rollMissingQuotes(List<Quote> quotes) {
+
+        sortByDate(quotes);
+        List<LocalDate> dates = TradingDayUtils.getDailySeries(quotes.get(0).getDate(),
+                quotes.get(quotes.size() - 1).getDate(), true);
+
+        List<Quote> missingQuotes = new ArrayList<Quote>();
+
+        Iterator<Quote> quoteIter = quotes.iterator();
+        Quote quote = quoteIter.next();
+        Quote previousQuote = null;
+
+        for (LocalDate date : dates) {
+            while (date.isAfter(quote.getDate())) {
+                previousQuote = quote;
+                if (quoteIter.hasNext()) {
+                    quote = quoteIter.next();
+                } else {
+                    break;
+                }
+            }
+
+            if (date.equals(quote.getDate())) {
+//                System.out.println("equals");
+                previousQuote = quote;
+                if (quoteIter.hasNext()) {
+                    quote = quoteIter.next();
+                }
+            } else {
+//                System.out.println("added missing " + previousQuote);
+                missingQuotes.add(rollQuote(previousQuote, date));
+            }
+
+        }
+        return missingQuotes;
+
+
+    }
+
     //TODO : tidy this method up
     public static List<Quote> getMissingQuotes(LocalDate fromDate, LocalDate toDate, List<Quote> quotes) {
 

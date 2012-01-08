@@ -11,6 +11,7 @@ import com.mns.mojoinvest.server.engine.model.dao.RankingDao;
 import com.mns.mojoinvest.server.engine.portfolio.Portfolio;
 import com.mns.mojoinvest.server.engine.portfolio.Position;
 import com.mns.mojoinvest.server.util.TradingDayUtils;
+import com.mns.mojoinvest.shared.params.BacktestParams;
 import com.mns.mojoinvest.shared.params.MomentumStrategyParams;
 import org.joda.time.LocalDate;
 
@@ -27,7 +28,6 @@ public class MomentumStrategy {
     private static final Logger log = Logger.getLogger(MomentumStrategy.class.getName());
 
     private final Executor executor;
-
     private final RankingDao rankingDao;
     private final FundDao fundDao;
 
@@ -40,25 +40,28 @@ public class MomentumStrategy {
         this.fundDao = fundDao;
     }
 
-    public void execute(Portfolio portfolio,
-                        LocalDate fromDate, LocalDate toDate,
-                        Set<Fund> acceptableFunds,
-                        MomentumStrategyParams params) throws StrategyException {
+    public void execute(Portfolio portfolio, BacktestParams backtestParams,
+                        Set<Fund> acceptableFunds, MomentumStrategyParams strategyParams)
+            throws StrategyException {
+
+        //TODO: create a transient getFromLocalDate
+        LocalDate fromDate = new LocalDate(backtestParams.getFromDate());
+        LocalDate toDate = new LocalDate(backtestParams.getToDate());
 
         if (fromDate.isAfter(toDate))
             throw new StrategyException("From date cannot be after to date");
 
-        List<LocalDate> rebalanceDates = getRebalanceDates(fromDate, toDate, params);
+        List<LocalDate> rebalanceDates = getRebalanceDates(fromDate, toDate, strategyParams);
 
         for (LocalDate rebalanceDate : rebalanceDates) {
             try {
                 Ranking ranking = rankingDao.get(rebalanceDate,
-                        new RankingParams(params.getFormationPeriod()));
+                        new RankingParams(strategyParams.getFormationPeriod()));
                 Collection<Fund> selection = getSelection(ranking.getSymbols(),
-                        acceptableFunds, params);
+                        acceptableFunds, strategyParams);
 
                 sellLosers(portfolio, rebalanceDate, selection);
-                buyWinners(portfolio, params, rebalanceDate, selection);
+                buyWinners(portfolio, strategyParams, rebalanceDate, selection);
             } catch (NotFoundException e) {
                 //TODO: How should we handle exceptions here -
                 // what type of exceptions are they?

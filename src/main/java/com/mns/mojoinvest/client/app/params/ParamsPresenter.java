@@ -43,7 +43,7 @@ public class ParamsPresenter extends PresenterWidget<ParamsPresenter.MyView>
 
         Params params = getView().flush();
 
-        Window.alert(params.toString());
+//        Window.alert(params.toString());
 
         dispatcher.execute(new RunStrategyAction(params), new AsyncCallback<RunStrategyResult>() {
             @Override

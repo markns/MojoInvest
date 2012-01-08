@@ -4,13 +4,14 @@ import com.google.inject.Inject;
 import com.google.inject.assistedinject.Assisted;
 import com.mns.mojoinvest.server.engine.model.Fund;
 import com.mns.mojoinvest.server.engine.model.dao.QuoteDao;
-import com.mns.mojoinvest.shared.params.PortfolioParams;
 import com.mns.mojoinvest.server.engine.transaction.BuyTransaction;
 import com.mns.mojoinvest.server.engine.transaction.SellTransaction;
+import com.mns.mojoinvest.shared.params.PortfolioParams;
 import org.joda.time.LocalDate;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
@@ -104,6 +105,10 @@ public class SimplePortfolio implements Portfolio {
             }
         }
         return numberOfActivePostions;
+    }
+
+    public Collection<Position> getPositions() {
+        return positions.values();
     }
 
     @Override

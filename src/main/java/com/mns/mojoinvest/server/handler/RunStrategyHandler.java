@@ -6,20 +6,21 @@ import com.gwtplatform.dispatch.server.actionhandler.ActionHandler;
 import com.gwtplatform.dispatch.shared.ActionException;
 import com.mns.mojoinvest.server.engine.model.Fund;
 import com.mns.mojoinvest.server.engine.model.dao.FundDao;
+import com.mns.mojoinvest.server.engine.portfolio.Lot;
 import com.mns.mojoinvest.server.engine.portfolio.Portfolio;
 import com.mns.mojoinvest.server.engine.portfolio.PortfolioFactory;
+import com.mns.mojoinvest.server.engine.portfolio.Position;
 import com.mns.mojoinvest.server.engine.strategy.MomentumStrategy;
 import com.mns.mojoinvest.server.engine.strategy.StrategyException;
+import com.mns.mojoinvest.server.engine.transaction.Transaction;
 import com.mns.mojoinvest.shared.dispatch.RunStrategyAction;
 import com.mns.mojoinvest.shared.dispatch.RunStrategyResult;
+import com.mns.mojoinvest.shared.dto.StrategyResult;
+import com.mns.mojoinvest.shared.dto.TransactionDto;
 import com.mns.mojoinvest.shared.params.FundFilter;
 import com.mns.mojoinvest.shared.params.Params;
-import org.joda.time.LocalDate;
 
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 public class RunStrategyHandler implements
         ActionHandler<RunStrategyAction, RunStrategyResult> {
@@ -48,20 +49,52 @@ public class RunStrategyHandler implements
         //TODO: Does the portfolioFactory need to be synchronised?
         Portfolio portfolio = portfolioFactory.create(params.getPortfolioParams());
 
+        //TODO: Abstract the getAcceptableFunds call to a separate class
         Set<Fund> funds = getAcceptableFunds(params.getFundFilter());
 
+        StrategyResult result;
         try {
-            strategy.execute(portfolio,
-                    new LocalDate(params.getBacktestParams().getFromDate()),
-                    new LocalDate(params.getBacktestParams().getToDate()),
-                    funds,
-                    params.getStrategyParams());
+            strategy.execute(portfolio, params.getBacktestParams(),
+                    funds, params.getStrategyParams());
+
+            //TODO: Abstract the createPortfolioResults to a separate class
+            result = createStrategyResults(portfolio);
         } catch (StrategyException e) {
             e.printStackTrace();
             throw new ActionException(e);
         }
 
-        return new RunStrategyResult("");
+        return new RunStrategyResult("", result);
+    }
+
+    private StrategyResult createStrategyResults(Portfolio portfolio) {
+
+        List<Transaction> transactions = new ArrayList<Transaction>();
+        for (Position position : portfolio.getPositions()) {
+            for (Lot lot : position.getLots()) {
+                transactions.add(lot.getOpeningTransaction());
+                transactions.addAll(lot.getClosingTransactions());
+            }
+        }
+        sortByDate(transactions);
+
+        List<TransactionDto> transactionDtos = new ArrayList<TransactionDto>();
+        for (Transaction transaction : transactions) {
+            transactionDtos.add(new TransactionDto(transaction.getFund().getSymbol(), transaction.getFund().getName(),
+                    transaction.getDate().toDateMidnight().toDate(), transaction.getQuantity().doubleValue(),
+                    transaction.getPrice().doubleValue(), transaction.getCommission().doubleValue()));
+        }
+
+        return new StrategyResult(transactionDtos);
+    }
+
+    public static void sortByDate(List<Transaction> transactions) {
+        Collections.sort(transactions, new Comparator<Transaction>() {
+            @Override
+            public int compare(Transaction q1, Transaction q2) {
+                return q1.getDate().compareTo(q2.getDate());
+            }
+        });
     }
 
     private Set<Fund> getAcceptableFunds(FundFilter fundFilter) {

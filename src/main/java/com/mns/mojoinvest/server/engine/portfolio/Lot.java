@@ -141,4 +141,11 @@ public class Lot {
         return gain(sharePrice).divide(costBasis(), RoundingMode.HALF_EVEN);
     }
 
+    public BuyTransaction getOpeningTransaction() {
+        return openingTransaction;
+    }
+
+    public List<SellTransaction> getClosingTransactions() {
+        return closingTransactions;
+    }
 }

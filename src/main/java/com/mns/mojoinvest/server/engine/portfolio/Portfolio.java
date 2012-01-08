@@ -6,6 +6,7 @@ import com.mns.mojoinvest.server.engine.transaction.SellTransaction;
 import org.joda.time.LocalDate;
 
 import java.math.BigDecimal;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Set;
 
@@ -23,6 +24,8 @@ public interface Portfolio {
     void add(SellTransaction transaction) throws PositionException;
 
     int numberOfActivePositions();
+
+    Collection<Position> getPositions();
 
     HashMap<Fund, Position> getActivePositions();
 

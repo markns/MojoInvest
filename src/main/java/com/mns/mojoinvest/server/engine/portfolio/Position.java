@@ -207,4 +207,8 @@ public class Position {
         }
         return cashOut;
     }
+
+    public List<Lot> getLots() {
+        return lots;
+    }
 }
