@@ -99,6 +99,15 @@ public class TransactionsView extends ViewImpl
         };
         table.addColumn(priceColumn, "Price");
 
+        NumberCell cashValueCell = new NumberCell(NumberFormat.getCurrencyFormat());
+        Column<TransactionDto, Number> cashValueColumn = new Column<TransactionDto, Number>(cashValueCell) {
+            @Override
+            public Number getValue(TransactionDto transaction) {
+                return Double.NaN;
+            }
+        };
+        table.addColumn(cashValueColumn, "Cash value");
+
         NumberCell commissionCell = new NumberCell(NumberFormat.getCurrencyFormat());
         Column<TransactionDto, Number> commissionColumn = new Column<TransactionDto, Number>(commissionCell) {
             @Override
