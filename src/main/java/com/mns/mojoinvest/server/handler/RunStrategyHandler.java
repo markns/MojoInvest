@@ -4,21 +4,17 @@ import com.google.inject.Inject;
 import com.gwtplatform.dispatch.server.ExecutionContext;
 import com.gwtplatform.dispatch.server.actionhandler.ActionHandler;
 import com.gwtplatform.dispatch.shared.ActionException;
+import com.mns.mojoinvest.server.engine.result.StrategyResultBuilder;
+import com.mns.mojoinvest.server.engine.result.StrategyResultBuilderFactory;
 import com.mns.mojoinvest.server.engine.model.Fund;
 import com.mns.mojoinvest.server.engine.model.dao.FundDao;
-import com.mns.mojoinvest.server.engine.portfolio.Lot;
 import com.mns.mojoinvest.server.engine.portfolio.Portfolio;
 import com.mns.mojoinvest.server.engine.portfolio.PortfolioFactory;
-import com.mns.mojoinvest.server.engine.portfolio.Position;
 import com.mns.mojoinvest.server.engine.strategy.MomentumStrategy;
 import com.mns.mojoinvest.server.engine.strategy.StrategyException;
-import com.mns.mojoinvest.server.engine.transaction.BuyTransaction;
-import com.mns.mojoinvest.server.engine.transaction.SellTransaction;
-import com.mns.mojoinvest.server.engine.transaction.Transaction;
 import com.mns.mojoinvest.shared.dispatch.RunStrategyAction;
 import com.mns.mojoinvest.shared.dispatch.RunStrategyResult;
 import com.mns.mojoinvest.shared.dto.StrategyResult;
-import com.mns.mojoinvest.shared.dto.TransactionDto;
 import com.mns.mojoinvest.shared.params.FundFilter;
 import com.mns.mojoinvest.shared.params.Params;
 
@@ -31,14 +27,18 @@ public class RunStrategyHandler implements
 
     private final PortfolioFactory portfolioFactory;
 
+    private final StrategyResultBuilderFactory strategyResultBuilderFactory;
+
     private final FundDao fundDao;
 
     @Inject
     public RunStrategyHandler(MomentumStrategy strategy,
                               PortfolioFactory portfolioFactory,
+                              StrategyResultBuilderFactory strategyResultBuilderFactory,
                               FundDao fundDao) {
         this.strategy = strategy;
         this.portfolioFactory = portfolioFactory;
+        this.strategyResultBuilderFactory = strategyResultBuilderFactory;
         this.fundDao = fundDao;
     }
 
@@ -58,9 +58,7 @@ public class RunStrategyHandler implements
         try {
             strategy.execute(portfolio, params.getBacktestParams(),
                     funds, params.getStrategyParams());
-
-            //TODO: Abstract the createPortfolioResults to a separate class
-            result = createStrategyResults(portfolio);
+            result = buildStrategyResults(portfolio);
         } catch (StrategyException e) {
             e.printStackTrace();
             throw new ActionException(e);
@@ -69,40 +67,9 @@ public class RunStrategyHandler implements
         return new RunStrategyResult("", result);
     }
 
-    private StrategyResult createStrategyResults(Portfolio portfolio) {
-
-        List<Transaction> transactions = new ArrayList<Transaction>();
-        for (Position position : portfolio.getPositions()) {
-            for (Lot lot : position.getLots()) {
-                transactions.add(lot.getOpeningTransaction());
-                transactions.addAll(lot.getClosingTransactions());
-            }
-        }
-        sortByDate(transactions);
-
-        List<TransactionDto> transactionDtos = new ArrayList<TransactionDto>();
-        for (Transaction transaction : transactions) {
-            if (transaction instanceof BuyTransaction) {
-                transactionDtos.add(new TransactionDto("Buy", transaction.getFund().getSymbol(), transaction.getFund().getName(),
-                        transaction.getDate().toDateMidnight().toDate(), transaction.getQuantity().doubleValue(),
-                        transaction.getPrice().doubleValue(), transaction.getCommission().doubleValue()));
-            } else if (transaction instanceof SellTransaction) {
-                transactionDtos.add(new TransactionDto("Sell", transaction.getFund().getSymbol(), transaction.getFund().getName(),
-                        transaction.getDate().toDateMidnight().toDate(), transaction.getQuantity().doubleValue(),
-                        transaction.getPrice().doubleValue(), transaction.getCommission().doubleValue()));
-            }
-        }
-
-        return new StrategyResult(transactionDtos);
-    }
-
-    public static void sortByDate(List<Transaction> transactions) {
-        Collections.sort(transactions, new Comparator<Transaction>() {
-            @Override
-            public int compare(Transaction q1, Transaction q2) {
-                return q1.getDate().compareTo(q2.getDate());
-            }
-        });
+    private StrategyResult buildStrategyResults(Portfolio portfolio) {
+        StrategyResultBuilder builder = strategyResultBuilderFactory.create(portfolio);
+        return builder.build();
     }
 
     private Set<Fund> getAcceptableFunds(FundFilter fundFilter) {

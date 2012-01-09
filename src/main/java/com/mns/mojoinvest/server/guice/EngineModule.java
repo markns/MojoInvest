@@ -7,6 +7,9 @@ import com.mns.mojoinvest.server.engine.execution.NextTradingDayExecutor;
 import com.mns.mojoinvest.server.engine.portfolio.Portfolio;
 import com.mns.mojoinvest.server.engine.portfolio.PortfolioFactory;
 import com.mns.mojoinvest.server.engine.portfolio.SimplePortfolio;
+import com.mns.mojoinvest.server.engine.result.StrategyResultBuilder;
+import com.mns.mojoinvest.server.engine.result.StrategyResultBuilderFactory;
+import com.mns.mojoinvest.server.engine.result.StrategyResultBuilderImpl;
 
 public class EngineModule extends AbstractModule {
 
@@ -25,6 +28,10 @@ public class EngineModule extends AbstractModule {
         install(new FactoryModuleBuilder()
                 .implement(Portfolio.class, SimplePortfolio.class)
                 .build(PortfolioFactory.class));
+
+        install(new FactoryModuleBuilder()
+                .implement(StrategyResultBuilder.class, StrategyResultBuilderImpl.class)
+                .build(StrategyResultBuilderFactory.class));
 
     }
 }
