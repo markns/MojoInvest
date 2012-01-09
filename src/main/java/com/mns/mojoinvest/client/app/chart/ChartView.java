@@ -5,6 +5,10 @@ import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.Widget;
+import com.google.gwt.visualization.client.DataTable;
+import com.google.gwt.visualization.client.VisualizationUtils;
+import com.google.gwt.visualization.client.visualizations.corechart.LineChart;
+import com.google.gwt.visualization.client.visualizations.corechart.Options;
 import com.gwtplatform.mvp.client.ViewImpl;
 
 public class ChartView extends ViewImpl
@@ -18,20 +22,24 @@ public class ChartView extends ViewImpl
     @UiField
     HTMLPanel container;
 
+    private LineChart lineChart;
+
     public final Widget widget;
 
     public ChartView() {
         widget = uiBinder.createAndBindUi(this);
+        VisualizationUtils.loadVisualizationApi(new Runnable() {
+            @Override
+            public void run() {
+            }
+        }, LineChart.PACKAGE);
+    }
 
-//        VisualizationUtils.loadVisualizationApi(new Runnable() {
-//            @Override
-//            public void run() {
-////                lineChart = new LineChart(createTable(), createOptions());
-////                chartContainer.clear();
-////                chartContainer.add(lineChart);
-//
-//            }
-//        }, LineChart.PACKAGE);
+    @Override
+    public void createChart(DataTable dataTable, Options options) {
+        lineChart = new LineChart(dataTable, options);
+        container.clear();
+        container.add(lineChart);
     }
 
     @Override
