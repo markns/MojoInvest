@@ -36,7 +36,7 @@ public class RankingCalculator {
 
     public Ranking rank(LocalDate date, RankingParams params) {
         if (dao == null) {
-            //TODO: this is a hack!!
+            //TODO: Figure out how to inject and serialize DAOs
             dao = getQuoteDao();
         }
         List<Quote> toQuotes = dao.query(date);
