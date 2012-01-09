@@ -3,6 +3,7 @@ package com.mns.mojoinvest.server.engine.portfolio;
 import com.mns.mojoinvest.server.engine.transaction.BuyTransaction;
 import com.mns.mojoinvest.server.engine.transaction.SellTransaction;
 import com.mns.mojoinvest.server.engine.transaction.Transaction;
+import org.joda.time.LocalDate;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -56,6 +57,15 @@ public class Lot {
         BigDecimal closingQuantity = BigDecimal.ZERO;
         for (SellTransaction closingTransaction : closingTransactions) {
             closingQuantity = closingQuantity.add(closingTransaction.getQuantity());
+        }
+        return getInitialQuantity().subtract(closingQuantity);
+    }
+
+    public BigDecimal getRemainingQuantity(LocalDate date) {
+        BigDecimal closingQuantity = BigDecimal.ZERO;
+        for (SellTransaction closingTransaction : closingTransactions) {
+            if (!closingTransaction.getDate().isAfter(date))
+                closingQuantity = closingQuantity.add(closingTransaction.getQuantity());
         }
         return getInitialQuantity().subtract(closingQuantity);
     }
@@ -118,6 +128,10 @@ public class Lot {
         return getRemainingQuantity().multiply(sharePrice);
     }
 
+    public BigDecimal marketValue(LocalDate date, BigDecimal sharePrice) {
+        return getRemainingQuantity(date).multiply(sharePrice);
+    }
+
     public BigDecimal returnsGain(BigDecimal sharePrice) {
         //returns gain = market_value + cash in - cash out.
         return marketValue(sharePrice).add(cashIn()).add(cashOut()); //cashOut is cash value of opening transaction: it is negative
@@ -125,7 +139,7 @@ public class Lot {
 
     public BigDecimal overallReturn(BigDecimal sharePrice) {
         //Overall return = returns gain / cash out
-                                                        //Should we negate here or in the cashValue of opening transaction?
+        //Should we negate here or in the cashValue of opening transaction?
         return returnsGain(sharePrice).divide(cashOut().negate(), RoundingMode.HALF_EVEN);
     }
 

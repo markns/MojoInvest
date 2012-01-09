@@ -11,14 +11,13 @@ import com.mns.mojoinvest.server.engine.portfolio.Position;
 import com.mns.mojoinvest.server.engine.transaction.BuyTransaction;
 import com.mns.mojoinvest.server.engine.transaction.SellTransaction;
 import com.mns.mojoinvest.server.engine.transaction.Transaction;
+import com.mns.mojoinvest.server.util.TradingDayUtils;
 import com.mns.mojoinvest.shared.dto.DataTableDto;
 import com.mns.mojoinvest.shared.dto.StrategyResult;
 import com.mns.mojoinvest.shared.dto.TransactionDto;
+import org.joda.time.LocalDate;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
+import java.util.*;
 
 public class StrategyResultBuilderImpl implements StrategyResultBuilder {
 
@@ -36,25 +35,27 @@ public class StrategyResultBuilderImpl implements StrategyResultBuilder {
 
     @Override
     public StrategyResult build() {
-        DataTableDto dataTableDto = createDataTableDto(portfolio);
         List<TransactionDto> transactionDtos = getTransactionHistory(portfolio);
+        DataTableDto dataTableDto = createDataTableDto(portfolio, transactionDtos.get(0).getDate(),
+                transactionDtos.get(transactionDtos.size() - 1).getDate());
 
         return new StrategyResult(dataTableDto, transactionDtos);
     }
 
 
-    private DataTableDto createDataTableDto(Portfolio portfolio) {
+    //TODO: Tidy up the handling of dates here
+    private DataTableDto createDataTableDto(Portfolio portfolio, Date fromDate, Date toDate) {
 
         DataTableDto dto = new DataTableDto();
         dto.addColumn(new DataTableDto.Column(AbstractDataTable.ColumnType.DATE, "Date", "date"));
         dto.addColumn(new DataTableDto.Column(AbstractDataTable.ColumnType.NUMBER, "Portfolio value", "portfolio"));
 
+        List<LocalDate> dates = TradingDayUtils.getWeeklySeries(new LocalDate(fromDate), new LocalDate(toDate), 1, true);
+        for (LocalDate date : dates) {
+            dto.addRow(new DataTableDto.DateValue(date.toDateMidnight().toDate()),
+                    new DataTableDto.DoubleValue(portfolio.marketValue(date).doubleValue()));
+        }
 
-//        for (Quote quote : quotes) {
-//            dto.addRow(new DataTableDto.DateValue(quote.getDate().toDateMidnight().toDate()),
-//                    new DataTableDto.DoubleValue(quote.getClose().doubleValue()));
-//
-//        }
         return dto;
     }
 

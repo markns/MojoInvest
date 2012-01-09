@@ -144,10 +144,12 @@ public class Position {
     }
 
     public BigDecimal marketValue(LocalDate date) {
-        Quote quote = getQuote(date);
         BigDecimal marketValue = BigDecimal.ZERO;
         for (Lot lot : lots) {
-            marketValue = marketValue.add(lot.marketValue(quote.getClose()));
+            if (!lot.getOpeningTransaction().getDate().isAfter(date)) {
+                Quote quote = getQuote(date);
+                marketValue = marketValue.add(lot.marketValue(quote.getClose()));
+            }
         }
         return marketValue;
     }
