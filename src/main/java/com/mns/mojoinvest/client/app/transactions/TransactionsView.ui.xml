@@ -24,7 +24,7 @@
 
     <g:HTMLPanel ui:field="container">
         <cv:SimplePager ui:field="pager" stylePrimaryName="{style.displayInline}"
-          display="{table}"  location="CENTER"/>
+                        display="{table}" location="RIGHT"/>
 
         <cv:CellTable ui:field="table" stylePrimaryName="{style.table}"
                       title="Transactions">

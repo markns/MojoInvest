@@ -80,6 +80,8 @@ public class TransactionsView extends ViewImpl
             }
         };
         table.addColumn(dateColumn, "Date");
+        table.setColumnWidth(dateColumn, "25ex");
+
 
         NumberCell sharesCell = new NumberCell(); //TODO: Formatting
         Column<TransactionDto, Number> unitsColumn = new Column<TransactionDto, Number>(sharesCell) {

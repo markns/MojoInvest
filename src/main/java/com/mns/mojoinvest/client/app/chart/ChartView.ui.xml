@@ -9,8 +9,7 @@
     <ui:with field='res' type='com.mns.mojoinvest.client.resources.Resources'/>
 
 
-    <g:HTMLPanel ui:field="container">
-    </g:HTMLPanel>
+    <g:HTMLPanel ui:field="container"/>
 
 
 </ui:UiBinder>

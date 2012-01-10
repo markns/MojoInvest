@@ -37,6 +37,8 @@ public class ChartView extends ViewImpl
 
     @Override
     public void createChart(DataTable dataTable, Options options) {
+        options.setHeight(container.getOffsetHeight());
+        options.setWidth(container.getOffsetWidth());
         lineChart = new LineChart(dataTable, options);
         container.clear();
         container.add(lineChart);

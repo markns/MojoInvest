@@ -35,7 +35,6 @@ public class ChartPresenter extends PresenterWidget<ChartPresenter.MyView> {
 
     private Options createOptions() {
         Options options = Options.create();
-        options.setTitle("Portfolio performance");
         options.setWidth(800);
         options.setHeight(400);
         return options;
