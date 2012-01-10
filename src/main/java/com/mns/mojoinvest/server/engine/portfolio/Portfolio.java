@@ -19,9 +19,9 @@ public interface Portfolio {
 
     Position get(Fund fund);
 
-    void add(BuyTransaction transaction) throws PositionException;
+    void add(BuyTransaction transaction) throws PortfolioException;
 
-    void add(SellTransaction transaction) throws PositionException;
+    void add(SellTransaction transaction) throws PortfolioException;
 
     int numberOfActivePositions();
 

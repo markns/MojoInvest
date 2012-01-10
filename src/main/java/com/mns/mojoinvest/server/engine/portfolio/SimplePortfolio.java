@@ -77,7 +77,7 @@ public class SimplePortfolio implements Portfolio {
     }
 
     @Override
-    public void add(BuyTransaction transaction) throws PositionException {
+    public void add(BuyTransaction transaction) throws PortfolioException {
         Fund fund = transaction.getFund();
         if (!positions.containsKey(fund)) {
             positions.put(fund, new Position(quoteDao, fund));
@@ -87,10 +87,10 @@ public class SimplePortfolio implements Portfolio {
     }
 
     @Override
-    public void add(SellTransaction transaction) throws PositionException {
+    public void add(SellTransaction transaction) throws PortfolioException {
         Fund fund = transaction.getFund();
         if (!positions.containsKey(fund)) {
-            throw new PositionException("Cannot sell a fund that is not held");
+            throw new PortfolioException("Cannot sell a fund that is not held");
         }
         positions.get(fund).add(transaction);
         cash = cash.add(transaction.getCashValue());

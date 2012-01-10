@@ -2,6 +2,7 @@ package com.mns.mojoinvest.server.engine.model;
 
 import java.io.Serializable;
 
+//TODO: Should this class be moved to the shared params package?
 public class RankingParams implements Serializable {
 
     private int formationPeriod;

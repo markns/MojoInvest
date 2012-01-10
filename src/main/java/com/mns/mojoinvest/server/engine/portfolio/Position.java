@@ -1,11 +1,11 @@
 package com.mns.mojoinvest.server.engine.portfolio;
 
+import com.mns.mojoinvest.server.engine.model.Fund;
+import com.mns.mojoinvest.server.engine.model.Quote;
 import com.mns.mojoinvest.server.engine.model.dao.QuoteDao;
 import com.mns.mojoinvest.server.engine.transaction.BuyTransaction;
 import com.mns.mojoinvest.server.engine.transaction.SellTransaction;
 import com.mns.mojoinvest.server.engine.transaction.Transaction;
-import com.mns.mojoinvest.server.engine.model.Fund;
-import com.mns.mojoinvest.server.engine.model.Quote;
 import org.joda.time.LocalDate;
 
 import java.math.BigDecimal;
@@ -58,21 +58,21 @@ public class Position {
         return quoteDao.get(fund, date);
     }
 
-    public void add(BuyTransaction transaction) throws PositionException {
+    public void add(BuyTransaction transaction) throws PortfolioException {
         if (!fund.equals(transaction.getFund())) {
-            throw new PositionException("Attempt to add a " + transaction.getFund() +
+            throw new PortfolioException("Attempt to add a " + transaction.getFund() +
                     " transaction to a " + fund + " position");
         }
         lots.add(new Lot(transaction));
     }
 
-    public void add(SellTransaction transaction) throws PositionException {
+    public void add(SellTransaction transaction) throws PortfolioException {
         if (!fund.equals(transaction.getFund())) {
-            throw new PositionException("Attempt to add a " + transaction.getFund() +
+            throw new PortfolioException("Attempt to add a " + transaction.getFund() +
                     " transaction to a " + fund + " position");
         }
         if (!saleIsValid(transaction)) {
-            throw new PositionException(this + " is not large enough to be able " +
+            throw new PortfolioException(this + " is not large enough to be able " +
                     "to meet sale " + transaction);
         }
         updateLots(transaction);
@@ -86,7 +86,8 @@ public class Position {
         return openPosition.compareTo(transaction.getQuantity()) != -1;
     }
 
-    private boolean updateLots(SellTransaction tx) {
+    private boolean updateLots(SellTransaction tx)
+            throws PortfolioException {
 
         for (Lot lot : lots) {
             if (!lot.closed()) {
@@ -116,7 +117,7 @@ public class Position {
                 }
             }
         }
-        throw new PositionException("Updating lots didn't end correctly");
+        throw new PortfolioException("Updating lots didn't end correctly");
 
     }
 
@@ -148,7 +149,7 @@ public class Position {
         for (Lot lot : lots) {
             if (!lot.getOpeningTransaction().getDate().isAfter(date)) {
                 Quote quote = getQuote(date);
-                marketValue = marketValue.add(lot.marketValue(quote.getClose()));
+                marketValue = marketValue.add(lot.marketValue(date, quote.getClose()));
             }
         }
         return marketValue;

@@ -9,6 +9,7 @@ import com.mns.mojoinvest.server.engine.model.RankingParams;
 import com.mns.mojoinvest.server.engine.model.dao.FundDao;
 import com.mns.mojoinvest.server.engine.model.dao.RankingDao;
 import com.mns.mojoinvest.server.engine.portfolio.Portfolio;
+import com.mns.mojoinvest.server.engine.portfolio.PortfolioException;
 import com.mns.mojoinvest.server.engine.portfolio.Position;
 import com.mns.mojoinvest.server.util.TradingDayUtils;
 import com.mns.mojoinvest.shared.params.BacktestParams;
@@ -98,16 +99,21 @@ public class MomentumStrategy {
     }
 
 
-    private void sellLosers(Portfolio portfolio, LocalDate rebalanceDate, Collection<Fund> selection) {
+    private void sellLosers(Portfolio portfolio, LocalDate rebalanceDate, Collection<Fund> selection)
+            throws StrategyException {
         for (Fund fund : portfolio.getActiveHoldings()) {
             if (!selection.contains(fund)) {
-                executor.sellAll(portfolio, fund, rebalanceDate);
+                try {
+                    executor.sellAll(portfolio, fund, rebalanceDate);
+                } catch (PortfolioException e) {
+                    throw new StrategyException("Unable to sell losers", e);
+                }
             }
         }
     }
 
     private void buyWinners(Portfolio portfolio, MomentumStrategyParams params, LocalDate rebalanceDate,
-                            Collection<Fund> selection) {
+                            Collection<Fund> selection) throws StrategyException {
 
         BigDecimal numEmpty = new BigDecimal(params.getPortfolioSize() - portfolio.numberOfActivePositions());
         BigDecimal availableCash = portfolio.getCash().
@@ -118,7 +124,11 @@ public class MomentumStrategy {
             if (!portfolio.contains(fund)) {
                 BigDecimal allocation = availableCash
                         .divide(numEmpty, RoundingMode.HALF_DOWN);
-                executor.buy(portfolio, fund, rebalanceDate, allocation);
+                try {
+                    executor.buy(portfolio, fund, rebalanceDate, allocation);
+                } catch (PortfolioException e) {
+                    throw new StrategyException("Unable to buy winners", e);
+                }
             }
         }
     }

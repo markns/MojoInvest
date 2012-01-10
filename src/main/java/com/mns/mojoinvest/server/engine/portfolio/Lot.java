@@ -48,9 +48,29 @@ public class Lot {
         this.closingTransactions = new ArrayList<SellTransaction>();
     }
 
-
-    public boolean addClosingTransaction(SellTransaction transaction) {
+    public boolean addClosingTransaction(SellTransaction transaction)
+            throws PortfolioException {
+        //TODO: Need to confirm that we're not adding a sell transaction with a date before other sell transactions
+        if (!saleIsValid(transaction))
+            throw new PortfolioException("Lot is not large enough to be able to meet sale " + transaction);
         return closingTransactions.add(transaction);
+    }
+
+    private boolean saleIsValid(Transaction transaction) {
+        return getRemainingQuantity().compareTo(transaction.getQuantity()) < 0;
+    }
+
+    public BigDecimal getInitialInvestment() {
+        return openingTransaction.getInitialInvestment()
+                .add(openingTransaction.getCommission());
+    }
+
+    public BigDecimal getInitialQuantity() {
+        return openingTransaction.getQuantity();
+    }
+
+    public boolean closed() {
+        return getRemainingQuantity().compareTo(BigDecimal.ZERO) == 0;
     }
 
     public BigDecimal getRemainingQuantity() {
@@ -68,23 +88,6 @@ public class Lot {
                 closingQuantity = closingQuantity.add(closingTransaction.getQuantity());
         }
         return getInitialQuantity().subtract(closingQuantity);
-    }
-
-//    public void setRemainingQuantity(BigDecimal remainingQuantity) {
-//        this.remainingQuantity = remainingQuantity;
-//    }
-
-    public boolean closed() {
-        return getRemainingQuantity().compareTo(BigDecimal.ZERO) == 0;
-    }
-
-    public BigDecimal getInitialInvestment() {
-        return openingTransaction.getInitialInvestment()
-                .add(openingTransaction.getCommission());
-    }
-
-    public BigDecimal getInitialQuantity() {
-        return openingTransaction.getQuantity();
     }
 
     /*   Cost Basis
