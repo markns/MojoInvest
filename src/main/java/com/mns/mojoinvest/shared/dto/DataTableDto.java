@@ -60,7 +60,7 @@ public class DataTableDto implements IsSerializable {
                 AbstractValue value = rows.get(i).get(j);
                 if (value instanceof DateValue) {
                     data.setValue(i, j, (Date) value.value);
-                } else  if (value instanceof DoubleValue) {
+                } else if (value instanceof DoubleValue) {
                     data.setValue(i, j, (Double) value.value);
                 } else if (value instanceof IntegerValue) {
                     data.setValue(i, j, (Integer) value.value);
@@ -135,6 +135,7 @@ public class DataTableDto implements IsSerializable {
         public DoubleValue(Double number, String formattedValue) {
             super(number, formattedValue);
         }
+
         public DoubleValue(Double number) {
             super(number);
         }
@@ -148,6 +149,7 @@ public class DataTableDto implements IsSerializable {
         public IntegerValue(Integer number, String formattedValue) {
             super(number, formattedValue);
         }
+
         public IntegerValue(Integer number) {
             super(number);
         }
