@@ -10,7 +10,7 @@ import com.mns.mojoinvest.shared.params.PortfolioParams;
 import org.joda.time.LocalDate;
 
 import java.math.BigDecimal;
-import java.math.RoundingMode;
+import java.math.MathContext;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -189,7 +189,7 @@ public class SimplePortfolio implements Portfolio {
 
     @Override
     public BigDecimal gainPercentage(LocalDate date) {
-        return gain(date).divide(costBasis(), RoundingMode.HALF_EVEN);
+        return gain(date).divide(costBasis(), MathContext.DECIMAL32);
     }
 
     /*
@@ -204,7 +204,7 @@ public class SimplePortfolio implements Portfolio {
         if (positions.size() == 0)
             return BigDecimal.ZERO;
 
-        return returnsGain(date).divide(cashOut(), RoundingMode.HALF_EVEN)
+        return returnsGain(date).divide(cashOut(), MathContext.DECIMAL32)
                 .multiply(BigDecimal.TEN.multiply(BigDecimal.TEN));
     }
 

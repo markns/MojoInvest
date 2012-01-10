@@ -10,7 +10,6 @@ import org.joda.time.LocalDate;
 
 import java.math.BigDecimal;
 import java.math.MathContext;
-import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -58,6 +57,8 @@ public class Position {
         return quoteDao.get(fund, date);
     }
 
+    //TODO: Maintain list of original transactions for display in transactionsview. Sell transactions can be split across lots
+
     public void add(BuyTransaction transaction) throws PortfolioException {
         if (!fund.equals(transaction.getFund())) {
             throw new PortfolioException("Attempt to add a " + transaction.getFund() +
@@ -96,14 +97,16 @@ public class Position {
 
                 if (remainder.compareTo(BigDecimal.ZERO) < 0) {
 
-                    //TODO: What do we do with the commission - should it be split?
+                    //Commission is split between the virtual transactions
+                    BigDecimal commission = tx.getCommission().divide(new BigDecimal("2"));
+
                     SellTransaction closingTransaction = new SellTransaction(tx.getFund(),
                             tx.getDate(), lot.getRemainingQuantity(), tx.getPrice(),
-                            tx.getCommission());
+                            commission);
 
                     SellTransaction overflowTransaction = new SellTransaction(tx.getFund(),
                             tx.getDate(), remainder.negate(), tx.getPrice(),
-                            tx.getCommission());
+                            commission);
 
                     lot.addClosingTransaction(closingTransaction);
 
@@ -178,7 +181,7 @@ public class Position {
      *  gain percentage = gain / cost basis
      */
     public BigDecimal gainPercentage(LocalDate date) {
-        return gain(date).divide(costBasis(), RoundingMode.HALF_EVEN)
+        return gain(date).divide(costBasis(), MathContext.DECIMAL32)
                 //multiply by 100 for percentage
                 .multiply(BigDecimal.TEN.multiply(BigDecimal.TEN));
     }

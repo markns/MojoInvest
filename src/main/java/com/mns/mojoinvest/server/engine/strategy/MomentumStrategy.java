@@ -17,7 +17,7 @@ import com.mns.mojoinvest.shared.params.MomentumStrategyParams;
 import org.joda.time.LocalDate;
 
 import java.math.BigDecimal;
-import java.math.RoundingMode;
+import java.math.MathContext;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -123,7 +123,7 @@ public class MomentumStrategy {
         for (Fund fund : selection) {
             if (!portfolio.contains(fund)) {
                 BigDecimal allocation = availableCash
-                        .divide(numEmpty, RoundingMode.HALF_DOWN);
+                        .divide(numEmpty, MathContext.DECIMAL32);
                 try {
                     executor.buy(portfolio, fund, rebalanceDate, allocation);
                 } catch (PortfolioException e) {

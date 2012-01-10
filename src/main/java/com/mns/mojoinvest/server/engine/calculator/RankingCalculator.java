@@ -15,7 +15,7 @@ import com.mns.mojoinvest.server.util.TradingDayUtils;
 import org.joda.time.LocalDate;
 
 import java.math.BigDecimal;
-import java.math.RoundingMode;
+import java.math.MathContext;
 import java.util.*;
 
 public class RankingCalculator {
@@ -76,7 +76,7 @@ public class RankingCalculator {
 
     private static BigDecimal percentageChange(BigDecimal from, BigDecimal to) {
         BigDecimal change = to.subtract(from);
-        return change.divide(from, 5, RoundingMode.HALF_EVEN);
+        return change.divide(from, MathContext.DECIMAL32);
     }
 
     private String createJoinString(Collection coll) {
