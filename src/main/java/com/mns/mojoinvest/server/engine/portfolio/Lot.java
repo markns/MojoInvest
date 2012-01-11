@@ -110,14 +110,20 @@ public class Lot {
     }
 
     /**
-     * @return initial investment: This is the negative of the cash value of the transaction that opened the lot,
-     *         because the cash value is the effect on your bank account, but the initial investment is the opposite:
-     *         it is the value that has been "put into" the stock. So, for example, the cash value of a purchase of
-     *         10 shares of GOOG at $350 is -$3500, and the initial investment is $3500.
+     * This is the negative of the cash value of the transaction that opened the lot,
+     * because the cash value is the effect on your bank account, but the initial investment is the opposite:
+     * it is the value that has been "put into" the stock. So, for example, the cash value of a purchase of
+     * 10 shares of GOOG at $350 is -$3500, and the initial investment is $3500.
+     *
+     * @return initial investment
      */
     public BigDecimal getInitialInvestment() {
         return openingTransaction.getInitialInvestment()
                 .add(openingTransaction.getCommission());
+    }
+
+    public boolean openedAfter(LocalDate date) {
+        return getOpeningTransaction().getDate().isAfter(date);
     }
 
     public boolean closed(LocalDate date) {
@@ -125,23 +131,25 @@ public class Lot {
     }
 
     /**
+     * We should linger on Cost basis for a moment. When Google Finance presents summary statistics for your portfolio,
+     * it computes those numbers based on the number of shares you still own. So, if you bought 100 shares of GOOG,
+     * then sold them all, your cost basis will be reported as 0, as will your market value, gain, etc. If you only
+     * sold 25 shares, then all of your statistics will be based on the 75 shares that you still own. Notice that since
+     * this ratio is applied to your entire initial investment, which includes commission costs, only the portion of
+     * your commission costs that applied to the stocks you still own will be considered.
+     * <p/>
+     * Some examples:
+     * Suppose you buy 100 shares of GOOG on April 1, 2008:
+     * Transaction: 4/1/2008 BUY GOOG 100 @ $471.09 ($15 commission) -> the cost basis is 100 * 471.09 + 15 = $47.124.00
+     * Now Suppose you buy 100 shares of GOOG on April 1, 2008, but sell 50 on 5/5/2008:
+     * Transaction: 4/1/2008 BUY GOOG 100 @ $471.09 ($15 commission) -> At this point you own 100 shares.
+     * Transaction: 5/5/2008 SELL GOOG 50 @ $573.20 ($15 commission) -> Now you own 50 shares. The cost basis is 50 * 471.09 + 7.50 = $23,562.
+     * (Remember that commission costs are apportioned across all the shares you bought originally.)
+     * <p/>
+     * cost basis: cost basis = initial investment * (remaining quantity / initial quantity)
+     *
+     * @param date
      * @return Cost Basis
-     *         We should linger on Cost basis for a moment. When Google Finance presents summary statistics for your portfolio,
-     *         it computes those numbers based on the number of shares you still own. So, if you bought 100 shares of GOOG,
-     *         then sold them all, your cost basis will be reported as 0, as will your market value, gain, etc. If you only
-     *         sold 25 shares, then all of your statistics will be based on the 75 shares that you still own. Notice that since
-     *         this ratio is applied to your entire initial investment, which includes commission costs, only the portion of
-     *         your commission costs that applied to the stocks you still own will be considered.
-     *         <p/>
-     *         Some examples:
-     *         Suppose you buy 100 shares of GOOG on April 1, 2008:
-     *         Transaction: 4/1/2008 BUY GOOG 100 @ $471.09 ($15 commission) -> the cost basis is 100 * 471.09 + 15 = $47.124.00
-     *         Now Suppose you buy 100 shares of GOOG on April 1, 2008, but sell 50 on 5/5/2008:
-     *         Transaction: 4/1/2008 BUY GOOG 100 @ $471.09 ($15 commission) -> At this point you own 100 shares.
-     *         Transaction: 5/5/2008 SELL GOOG 50 @ $573.20 ($15 commission) -> Now you own 50 shares. The cost basis is 50 * 471.09 + 7.50 = $23,562.
-     *         (Remember that commission costs are apportioned across all the shares you bought originally.)
-     *         <p/>
-     *         cost basis: cost basis = initial investment * (remaining quantity / initial quantity)
      */
     public BigDecimal costBasis(LocalDate date) {
         return getInitialInvestment().multiply(getRemainingQuantity(date)
@@ -196,6 +204,7 @@ public class Lot {
     /**
      * todays's gain: today's gain = remaining quantity * price change
      *
+     * @param date
      * @param priceChange today's change in the share price
      * @return today's value gain
      */
@@ -206,6 +215,7 @@ public class Lot {
     /**
      * gain percentage: gain percentage = gain / cost basis
      *
+     * @param date
      * @param sharePrice share price
      * @return gain expressed as percentage
      */
@@ -223,6 +233,7 @@ public class Lot {
      * <p/>
      * returns gain = market_value + cash in - cash out.
      *
+     * @param date
      * @param sharePrice share price
      * @return change in market value considering all shares in the lot
      */
@@ -234,6 +245,7 @@ public class Lot {
      * The overall return rate is just the returns gain divided by the amount you paid
      * to establish the lot
      *
+     * @param date
      * @param sharePrice share price
      * @return
      */

@@ -37,8 +37,6 @@ public interface Portfolio {
 
     BigDecimal gain(LocalDate date);
 
-    BigDecimal todaysGain(LocalDate date, BigDecimal priceChange);
-
     BigDecimal gainPercentage(LocalDate date);
 
     BigDecimal overallReturn(LocalDate date);

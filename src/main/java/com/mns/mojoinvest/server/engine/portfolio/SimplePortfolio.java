@@ -175,16 +175,6 @@ public class SimplePortfolio implements Portfolio {
         return gain;
     }
 
-    @Override
-    public BigDecimal todaysGain(LocalDate date, BigDecimal priceChange) {
-        BigDecimal todaysGain = BigDecimal.ZERO;
-        for (Position position : positions.values()) {
-            //adjust for currency
-            todaysGain = todaysGain.add(position.todaysGain(date, priceChange));
-        }
-        return todaysGain;
-    }
-
     /*
         Then gain percentage is computed in the by-now familiar way:
         gain percentage = gain / cost basis

@@ -150,9 +150,6 @@ public class Position {
         return shares(date).compareTo(BigDecimal.ZERO) > 0;
     }
 
-//    overallReturn
-
-
     /*
     The lot calculations are by far the trickiest part of entire process. Once that step is done, the summary values
     for each security are calculated. These are the values that appear in each row under the Performance tab. First,
@@ -163,7 +160,7 @@ public class Position {
     public BigDecimal costBasis(LocalDate date) {
         BigDecimal costBasis = BigDecimal.ZERO;
         for (Lot lot : lots) {
-            if (!lot.getOpeningTransaction().getDate().isAfter(date)) {
+            if (!lot.openedAfter(date)) {
                 costBasis = costBasis.add(lot.costBasis(date));
             }
         }
@@ -173,8 +170,9 @@ public class Position {
     public BigDecimal cashOut(LocalDate date) {
         BigDecimal cashOut = BigDecimal.ZERO;
         for (Lot lot : lots) {
-            if (!lot.getOpeningTransaction().getDate().isAfter(date))
+            if (!lot.openedAfter(date)) {
                 cashOut = cashOut.add(lot.cashOut());
+            }
         }
         return cashOut;
     }
@@ -188,10 +186,10 @@ public class Position {
     }
 
     public BigDecimal marketValue(LocalDate date) {
+        Quote quote = getQuote(date);
         BigDecimal marketValue = BigDecimal.ZERO;
         for (Lot lot : lots) {
-            if (!lot.getOpeningTransaction().getDate().isAfter(date)) {
-                Quote quote = getQuote(date);
+            if (!lot.openedAfter(date)) {
                 marketValue = marketValue.add(lot.marketValue(date, quote.getClose()));
             }
         }
@@ -202,17 +200,11 @@ public class Position {
         Quote quote = getQuote(date);
         BigDecimal gain = BigDecimal.ZERO;
         for (Lot lot : lots) {
-            gain = gain.add(lot.gain(date, quote.getClose()));
+            if (!lot.openedAfter(date)) {
+                gain = gain.add(lot.gain(date, quote.getClose()));
+            }
         }
         return gain;
-    }
-
-    public BigDecimal todaysGain(LocalDate date, BigDecimal priceChange) {
-        BigDecimal todaysGain = BigDecimal.ZERO;
-        for (Lot lot : lots) {
-            todaysGain = todaysGain.add(lot.todaysGain(date, priceChange));
-        }
-        return todaysGain;
     }
 
     /*
@@ -230,7 +222,9 @@ public class Position {
         Quote quote = getQuote(date);
         BigDecimal returnsGain = BigDecimal.ZERO;
         for (Lot lot : lots) {
-            returnsGain = returnsGain.add(lot.returnsGain(date, quote.getClose()));
+            if (!lot.openedAfter(date)) {
+                returnsGain = returnsGain.add(lot.returnsGain(date, quote.getClose()));
+            }
         }
         return returnsGain;
     }
