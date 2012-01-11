@@ -3,6 +3,7 @@ package com.mns.mojoinvest.server.data;
 import au.com.bytecode.opencsv.CSVReader;
 import com.mns.mojoinvest.server.engine.model.Quote;
 import com.mns.mojoinvest.server.util.QuoteUtils;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.io.BufferedReader;
@@ -44,9 +45,7 @@ public class QuoteSet {
         return quotes;
     }
 
-
-
-
+    @Ignore
     @Test
     public void testGetQuotesByProvider() {
         List<Quote> quotes = getQuotesByProvider(Arrays.asList("Van Eck"));

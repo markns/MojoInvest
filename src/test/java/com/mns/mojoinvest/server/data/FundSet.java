@@ -3,6 +3,7 @@ package com.mns.mojoinvest.server.data;
 import au.com.bytecode.opencsv.CSVReader;
 import com.mns.mojoinvest.server.engine.model.Fund;
 import org.joda.time.LocalDate;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.io.BufferedReader;
@@ -69,11 +70,13 @@ public class FundSet {
         return new BigDecimal(str);
     }
 
+    @Ignore
     @Test
     public void testGetFundsByProvider() {
         List<Fund> quotes = getFundsByProvider(Arrays.asList("iShares"));
     }
 
+    @Ignore
     @Test
     public void testGetFundsByCategory() {
         List<Fund> quotes = getFundsByCategory(Arrays.asList("Equity Energy", "Financial"));
