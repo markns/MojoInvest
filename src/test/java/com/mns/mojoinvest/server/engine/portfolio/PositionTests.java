@@ -75,17 +75,16 @@ public class PositionTests {
         position.add(sell200);
         position.add(sell200);
     }
-//  @Test public  void test()  throws PortfolioException { }
+
+    @Test
+    public void test() throws PortfolioException {
+    }
 //  @Test public  void test()  throws PortfolioException { }
 //  @Test public  void test()  throws PortfolioException { }
 //  @Test public  void test()  throws PortfolioException { }
 //  @Test public  void test()  throws PortfolioException { }
 
 //Position
-//getFund
-//add
-//add
-//shares
 //costBasis
 //marketValue
 //gain
@@ -94,7 +93,6 @@ public class PositionTests {
 //totalReturn
 //returnsGain
 //cashOut
-//getLots
 
 
 }

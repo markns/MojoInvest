@@ -57,6 +57,10 @@ public class Position {
         return quoteDao.get(fund, date);
     }
 
+    public List<Lot> getLots() {
+        return lots;
+    }
+
     //TODO: Maintain list of original transactions for display in transactionsview. Sell transactions can be split across lots
 
     public void add(Transaction transaction) throws PortfolioException {
@@ -97,6 +101,7 @@ public class Position {
         return openPosition.compareTo(transaction.getQuantity()) != -1;
     }
 
+
     public void updateLots(SellTransaction transaction)
             throws PortfolioException {
 
@@ -124,7 +129,6 @@ public class Position {
         }
     }
 
-
     public BigDecimal shares() {
         BigDecimal shares = BigDecimal.ZERO;
         for (Lot lot : lots) {
@@ -138,6 +142,8 @@ public class Position {
         return shares().compareTo(BigDecimal.ZERO) > 0;
     }
 
+//    overallReturn
+
     /*
     The lot calculations are by far the trickiest part of entire process. Once that step is done, the summary values
     for each security are calculated. These are the values that appear in each row under the Performance tab. First,
@@ -145,12 +151,29 @@ public class Position {
     lots for a security.
     */
 
+
     public BigDecimal costBasis() {
         BigDecimal costBasis = BigDecimal.ZERO;
         for (Lot lot : lots) {
             costBasis = costBasis.add(lot.costBasis());
         }
         return costBasis;
+    }
+
+    public BigDecimal cashOut() {
+        BigDecimal cashOut = BigDecimal.ZERO;
+        for (Lot lot : lots) {
+            cashOut = cashOut.add(lot.cashOut());
+        }
+        return cashOut;
+    }
+
+    public BigDecimal cashIn() {
+        BigDecimal cashIn = BigDecimal.ZERO;
+        for (Lot lot : lots) {
+            cashIn = cashIn.add(lot.cashIn());
+        }
+        return cashIn;
     }
 
     public BigDecimal marketValue(LocalDate date) {
@@ -163,7 +186,6 @@ public class Position {
         }
         return marketValue;
     }
-
 
     public BigDecimal gain(LocalDate date) {
         Quote quote = getQuote(date);
@@ -192,17 +214,6 @@ public class Position {
                 .multiply(BigDecimal.TEN.multiply(BigDecimal.TEN));
     }
 
-    /*
-     * The total return for each security is calculated similarly: Returns gain and cash out are summed over all the
-     * lots for the security, then the total return is calculated by:
-     *  total return = returns gain / cash out
-     */
-    public BigDecimal totalReturn(LocalDate date) {
-        return returnsGain(date).divide(cashOut().negate(), MathContext.DECIMAL32)
-                //multiply by 100 for percentage
-                .multiply(BigDecimal.TEN.multiply(BigDecimal.TEN));
-    }
-
     public BigDecimal returnsGain(LocalDate date) {
         Quote quote = getQuote(date);
         BigDecimal returnsGain = BigDecimal.ZERO;
@@ -212,15 +223,15 @@ public class Position {
         return returnsGain;
     }
 
-    public BigDecimal cashOut() {
-        BigDecimal cashOut = BigDecimal.ZERO;
-        for (Lot lot : lots) {
-            cashOut = cashOut.add(lot.cashOut());
-        }
-        return cashOut;
-    }
 
-    public List<Lot> getLots() {
-        return lots;
+    /*
+     * The total return for each security is calculated similarly: Returns gain and cash out are summed over all the
+     * lots for the security, then the total return is calculated by:
+     *  total return = returns gain / cash out
+     */
+    public BigDecimal totalReturn(LocalDate date) {
+        return returnsGain(date).divide(cashOut().negate(), MathContext.DECIMAL32)
+                //multiply by 100 for percentage
+                .multiply(BigDecimal.TEN.multiply(BigDecimal.TEN));
     }
 }
