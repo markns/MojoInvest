@@ -8,7 +8,9 @@ import org.joda.time.LocalDate;
 import java.math.BigDecimal;
 import java.math.MathContext;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
+import java.util.logging.Logger;
 
 /**
  * Long Lot Computations
@@ -38,32 +40,50 @@ import java.util.List;
 
 public class Lot {
 
+    private static final Logger log = Logger.getLogger(Lot.class.getName());
+
     private final BuyTransaction openingTransaction;
 
     private final List<SellTransaction> closingTransactions;
 
+//    private final SortedMap<LocalDate, SellTransaction> closingTransactionsMap;
+
     public Lot(BuyTransaction openingTransaction) {
+        log.fine("Creating new lot from " + openingTransaction);
         this.openingTransaction = openingTransaction;
         this.closingTransactions = new ArrayList<SellTransaction>();
+//        this.closingTransactionsMap = new TreeMap<LocalDate, SellTransaction>();
     }
 
     public BuyTransaction getOpeningTransaction() {
         return openingTransaction;
     }
 
-    public List<SellTransaction> getClosingTransactions() {
-        return closingTransactions;
+    public Collection<SellTransaction> getClosingTransactions(LocalDate date) {
+        //TODO: Change this to be a TreeMap<LocalDate, SellTransaction> implementation
+        List<SellTransaction> transactions = new ArrayList<SellTransaction>();
+        for (SellTransaction closingTransaction : closingTransactions) {
+            if (!closingTransaction.getDate().isAfter(date))
+                transactions.add(closingTransaction);
+        }
+//        if (closingTransactionsMap.size() > 0)
+//            return closingTransactionsMap.subMap(closingTransactions.get(0).getDate(),
+//                    date).values();
+//        return new ArrayList<SellTransaction>();
+        return transactions;
     }
 
-    public boolean addClosingTransaction(SellTransaction transaction)
+    public void addClosingTransaction(SellTransaction transaction)
             throws PortfolioException {
         if (!saleIsValid(transaction))
             throw new PortfolioException("Lot is not large enough to be able to meet sale " + transaction);
-        return closingTransactions.add(transaction);
+        closingTransactions.add(transaction);
+//        closingTransactionsMap.put(transaction.getDate(), transaction);
     }
 
     private boolean saleIsValid(Transaction transaction) {
-        return getRemainingQuantity().compareTo(transaction.getQuantity()) >= 0;
+        //TODO: throw exception if any transactions exist after transaction.getDate
+        return getRemainingQuantity(transaction.getDate()).compareTo(transaction.getQuantity()) >= 0;
     }
 
     /**
@@ -78,21 +98,13 @@ public class Lot {
     /**
      * This is the number of shares that have not been matched with subsequent sell transactions.
      *
+     * @param date
      * @return remaining quantity
      */
-    public BigDecimal getRemainingQuantity() {
-        BigDecimal closingQuantity = BigDecimal.ZERO;
-        for (SellTransaction closingTransaction : closingTransactions) {
-            closingQuantity = closingQuantity.add(closingTransaction.getQuantity());
-        }
-        return getInitialQuantity().subtract(closingQuantity);
-    }
-
     public BigDecimal getRemainingQuantity(LocalDate date) {
         BigDecimal closingQuantity = BigDecimal.ZERO;
-        for (SellTransaction closingTransaction : closingTransactions) {
-            if (!closingTransaction.getDate().isAfter(date))
-                closingQuantity = closingQuantity.add(closingTransaction.getQuantity());
+        for (SellTransaction closingTransaction : getClosingTransactions(date)) {
+            closingQuantity = closingQuantity.add(closingTransaction.getQuantity());
         }
         return getInitialQuantity().subtract(closingQuantity);
     }
@@ -108,8 +120,8 @@ public class Lot {
                 .add(openingTransaction.getCommission());
     }
 
-    public boolean closed() {
-        return getRemainingQuantity().compareTo(BigDecimal.ZERO) == 0;
+    public boolean closed(LocalDate date) {
+        return getRemainingQuantity(date).compareTo(BigDecimal.ZERO) == 0;
     }
 
     /**
@@ -131,11 +143,6 @@ public class Lot {
      *         <p/>
      *         cost basis: cost basis = initial investment * (remaining quantity / initial quantity)
      */
-    public BigDecimal costBasis() {
-        return getInitialInvestment().multiply(getRemainingQuantity()
-                .divide(getInitialQuantity(), MathContext.DECIMAL32));
-    }
-
     public BigDecimal costBasis(LocalDate date) {
         return getInitialInvestment().multiply(getRemainingQuantity(date)
                 .divide(getInitialQuantity(), MathContext.DECIMAL32));
@@ -153,24 +160,15 @@ public class Lot {
     /**
      * Cash value of all the closing transactions
      *
+     * @param date
      * @return cashIn
      */
-    public BigDecimal cashIn() {
+    public BigDecimal cashIn(LocalDate date) {
         BigDecimal cashIn = BigDecimal.ZERO;
-        for (Transaction transaction : closingTransactions) {
+        for (Transaction transaction : getClosingTransactions(date)) {
             cashIn = cashIn.add(transaction.getCashValue());
         }
         return cashIn;
-    }
-
-    /**
-     * Calculate the market value of the lot including all transactions
-     *
-     * @param sharePrice share price
-     * @return marketValue
-     */
-    public BigDecimal marketValue(BigDecimal sharePrice) {
-        return getRemainingQuantity().multiply(sharePrice);
     }
 
     /**
@@ -187,11 +185,12 @@ public class Lot {
     /**
      * gain: gain = market value - cost basis [Note that this might be negative!]
      *
+     * @param date
      * @param sharePrice share price
      * @return change in market value for the remaining shares
      */
-    public BigDecimal gain(BigDecimal sharePrice) {
-        return marketValue(sharePrice).subtract(costBasis());
+    public BigDecimal gain(LocalDate date, BigDecimal sharePrice) {
+        return marketValue(date, sharePrice).subtract(costBasis(date));
     }
 
     /**
@@ -200,8 +199,8 @@ public class Lot {
      * @param priceChange today's change in the share price
      * @return today's value gain
      */
-    public BigDecimal todaysGain(BigDecimal priceChange) {
-        return getRemainingQuantity().multiply(priceChange);
+    public BigDecimal todaysGain(LocalDate date, BigDecimal priceChange) {
+        return getRemainingQuantity(date).multiply(priceChange);
     }
 
     /**
@@ -210,12 +209,12 @@ public class Lot {
      * @param sharePrice share price
      * @return gain expressed as percentage
      */
-    public BigDecimal gainPercentage(BigDecimal sharePrice) {
-        BigDecimal gain = gain(sharePrice);
+    public BigDecimal gainPercentage(LocalDate date, BigDecimal sharePrice) {
+        BigDecimal gain = gain(date, sharePrice);
         if (gain.compareTo(BigDecimal.ZERO) == 0) {
             return BigDecimal.ZERO;
         }
-        return gain(sharePrice).divide(costBasis(), MathContext.DECIMAL32);
+        return gain(date, sharePrice).divide(costBasis(date), MathContext.DECIMAL32);
     }
 
     /**
@@ -227,8 +226,8 @@ public class Lot {
      * @param sharePrice share price
      * @return change in market value considering all shares in the lot
      */
-    public BigDecimal returnsGain(BigDecimal sharePrice) {
-        return marketValue(sharePrice).add(cashIn()).add(cashOut()); //cashOut is cash value of opening transaction: it is negative
+    public BigDecimal returnsGain(LocalDate date, BigDecimal sharePrice) {
+        return marketValue(date, sharePrice).add(cashIn(date)).add(cashOut()); //cashOut is cash value of opening transaction: it is negative
     }
 
     /**
@@ -238,10 +237,10 @@ public class Lot {
      * @param sharePrice share price
      * @return
      */
-    public BigDecimal overallReturn(BigDecimal sharePrice) {
+    public BigDecimal overallReturn(LocalDate date, BigDecimal sharePrice) {
         //Overall return = returns gain / cash out
         //Should we negate here or in the cashValue of opening transaction?
-        return returnsGain(sharePrice).divide(cashOut().negate(), MathContext.DECIMAL32);
+        return returnsGain(date, sharePrice).divide(cashOut().negate(), MathContext.DECIMAL32);
     }
 
 

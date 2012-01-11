@@ -5,7 +5,6 @@ import com.google.inject.Inject;
 import com.google.inject.assistedinject.Assisted;
 import com.mns.mojoinvest.server.engine.model.dao.FundDao;
 import com.mns.mojoinvest.server.engine.model.dao.QuoteDao;
-import com.mns.mojoinvest.server.engine.portfolio.Lot;
 import com.mns.mojoinvest.server.engine.portfolio.Portfolio;
 import com.mns.mojoinvest.server.engine.portfolio.Position;
 import com.mns.mojoinvest.server.engine.transaction.BuyTransaction;
@@ -68,10 +67,7 @@ public class StrategyResultBuilderImpl implements StrategyResultBuilder {
     private List<TransactionDto> getTransactionHistory(Portfolio portfolio) {
         List<Transaction> transactions = new ArrayList<Transaction>();
         for (Position position : portfolio.getPositions()) {
-            for (Lot lot : position.getLots()) {
-                transactions.add(lot.getOpeningTransaction());
-                transactions.addAll(lot.getClosingTransactions());
-            }
+            transactions.addAll(position.getTransactions());
         }
         sortByDate(transactions);
 

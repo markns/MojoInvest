@@ -75,7 +75,7 @@ public class MomentumStrategy {
 
             log.info(rebalanceDate + " portfolio value: " +
                     portfolio.marketValue(rebalanceDate) + ", holdings: " +
-                    portfolio.getActiveHoldings());
+                    portfolio.getActiveHoldings(rebalanceDate));
         }
         log.info(toDate + " portfolio value: " + portfolio.marketValue(toDate));
     }
@@ -101,7 +101,7 @@ public class MomentumStrategy {
 
     private void sellLosers(Portfolio portfolio, LocalDate rebalanceDate, Collection<Fund> selection)
             throws StrategyException {
-        for (Fund fund : portfolio.getActiveHoldings()) {
+        for (Fund fund : portfolio.getActiveHoldings(rebalanceDate)) {
             if (!selection.contains(fund)) {
                 try {
                     executor.sellAll(portfolio, fund, rebalanceDate);
@@ -115,13 +115,13 @@ public class MomentumStrategy {
     private void buyWinners(Portfolio portfolio, MomentumStrategyParams params, LocalDate rebalanceDate,
                             Collection<Fund> selection) throws StrategyException {
 
-        BigDecimal numEmpty = new BigDecimal(params.getPortfolioSize() - portfolio.numberOfActivePositions());
+        BigDecimal numEmpty = new BigDecimal(params.getPortfolioSize() - portfolio.numberOfActivePositions(rebalanceDate));
         BigDecimal availableCash = portfolio.getCash().
                 subtract(portfolio.getTransactionCost().
                         multiply(numEmpty));
 //        log.info("Available cash: " + availableCash);
         for (Fund fund : selection) {
-            if (!portfolio.contains(fund)) {
+            if (!portfolio.contains(fund, rebalanceDate)) {
                 BigDecimal allocation = availableCash
                         .divide(numEmpty, MathContext.DECIMAL32);
                 try {
@@ -138,9 +138,9 @@ public class MomentumStrategy {
     }
 
     private void logPortfolio(Portfolio portfolio, LocalDate rebalanceDate) {
-        for (Position position : portfolio.getActivePositions().values()) {
+        for (Position position : portfolio.getActivePositions(rebalanceDate).values()) {
             log.info(position.getFund()
-                    + " shares: " + position.shares()
+                    + " shares: " + position.shares(rebalanceDate)
                     + ", marketValue: " + position.marketValue(rebalanceDate)
                     + ", returnsGain: " + position.totalReturn(rebalanceDate)
                     + ", gain%: " + position.gainPercentage(rebalanceDate));

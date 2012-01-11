@@ -48,4 +48,14 @@ public abstract class AbstractTransaction implements Transaction {
         return commission;
     }
 
+    @Override
+    public String toString() {
+        return this.getClass().getSimpleName() +
+                "{fund=" + fund.getSymbol() +
+                ", date=" + date +
+                ", units=" + units +
+                ", price=" + price +
+                ", commission=" + commission +
+                '}';
+    }
 }

@@ -46,7 +46,7 @@ public class NextTradingDayExecutor implements Executor {
         Position position = portfolio.get(fund);
 //        log.info("Selling " + fund + " price: " + executionQuote.getClose() +
 //                ", gain%: " + position.gainPercentage(date));
-        SellTransaction tx = new SellTransaction(fund, date, position.shares(),
+        SellTransaction tx = new SellTransaction(fund, date, position.shares(date),
                 executionQuote.getClose(), portfolio.getTransactionCost());
         portfolio.add(tx);
     }

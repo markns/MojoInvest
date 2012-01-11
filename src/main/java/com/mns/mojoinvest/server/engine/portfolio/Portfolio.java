@@ -15,7 +15,7 @@ public interface Portfolio {
 
     BigDecimal getTransactionCost();
 
-    boolean contains(Fund fund);
+    boolean contains(Fund fund, LocalDate date);
 
     Position get(Fund fund);
 
@@ -23,21 +23,21 @@ public interface Portfolio {
 
     void add(SellTransaction transaction) throws PortfolioException;
 
-    int numberOfActivePositions();
+    int numberOfActivePositions(LocalDate date);
 
     Collection<Position> getPositions();
 
-    HashMap<Fund, Position> getActivePositions();
+    HashMap<Fund, Position> getActivePositions(LocalDate date);
 
-    Set<Fund> getActiveHoldings();
+    Set<Fund> getActiveHoldings(LocalDate date);
 
-    BigDecimal costBasis();
+    BigDecimal costBasis(LocalDate date);
 
     BigDecimal marketValue(LocalDate date);
 
     BigDecimal gain(LocalDate date);
 
-    BigDecimal todaysGain(BigDecimal priceChange);
+    BigDecimal todaysGain(LocalDate date, BigDecimal priceChange);
 
     BigDecimal gainPercentage(LocalDate date);
 
@@ -45,5 +45,5 @@ public interface Portfolio {
 
     BigDecimal returnsGain(LocalDate date);
 
-    BigDecimal cashOut();
+    BigDecimal cashOut(LocalDate date);
 }

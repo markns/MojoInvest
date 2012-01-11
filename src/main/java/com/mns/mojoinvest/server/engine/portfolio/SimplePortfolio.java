@@ -67,8 +67,8 @@ public class SimplePortfolio implements Portfolio {
     }
 
     @Override
-    public boolean contains(Fund fund) {
-        return getActivePositions().containsKey(fund);
+    public boolean contains(Fund fund, LocalDate date) {
+        return getActivePositions(date).containsKey(fund);
     }
 
     @Override
@@ -98,10 +98,10 @@ public class SimplePortfolio implements Portfolio {
 
     //TODO: refactor to use position.open
     @Override
-    public int numberOfActivePositions() {
+    public int numberOfActivePositions(LocalDate date) {
         int numberOfActivePostions = 0;
         for (Position position : positions.values()) {
-            if (position.shares().compareTo(BigDecimal.ZERO) > 0) {
+            if (position.shares(date).compareTo(BigDecimal.ZERO) > 0) {
                 numberOfActivePostions++;
             }
         }
@@ -114,10 +114,10 @@ public class SimplePortfolio implements Portfolio {
 
     //TODO: refactor to use position.open
     @Override
-    public HashMap<Fund, Position> getActivePositions() {
+    public HashMap<Fund, Position> getActivePositions(LocalDate date) {
         HashMap<Fund, Position> currentPositions = new HashMap<Fund, Position>();
         for (Position position : positions.values()) {
-            if (position.shares().compareTo(BigDecimal.ZERO) > 0) {
+            if (position.shares(date).compareTo(BigDecimal.ZERO) > 0) {
                 currentPositions.put(position.getFund(), position);
             }
         }
@@ -126,10 +126,10 @@ public class SimplePortfolio implements Portfolio {
 
     //TODO: refactor to use position.open
     @Override
-    public Set<Fund> getActiveHoldings() {
+    public Set<Fund> getActiveHoldings(LocalDate date) {
         Set<Fund> activeHoldings = new HashSet<Fund>();
         for (Position position : positions.values()) {
-            if (position.shares().compareTo(BigDecimal.ZERO) > 0) {
+            if (position.shares(date).compareTo(BigDecimal.ZERO) > 0) {
                 activeHoldings.add(position.getFund());
             }
         }
@@ -146,11 +146,11 @@ public class SimplePortfolio implements Portfolio {
      */
 
     @Override
-    public BigDecimal costBasis() {
+    public BigDecimal costBasis(LocalDate date) {
         BigDecimal costBasis = BigDecimal.ZERO;
         for (Position position : positions.values()) {
             //adjust for currency
-            costBasis = costBasis.add(position.costBasis());
+            costBasis = costBasis.add(position.costBasis(date));
         }
         return costBasis;
     }
@@ -176,11 +176,11 @@ public class SimplePortfolio implements Portfolio {
     }
 
     @Override
-    public BigDecimal todaysGain(BigDecimal priceChange) {
+    public BigDecimal todaysGain(LocalDate date, BigDecimal priceChange) {
         BigDecimal todaysGain = BigDecimal.ZERO;
         for (Position position : positions.values()) {
             //adjust for currency
-            todaysGain = todaysGain.add(position.todaysGain(priceChange));
+            todaysGain = todaysGain.add(position.todaysGain(date, priceChange));
         }
         return todaysGain;
     }
@@ -192,7 +192,7 @@ public class SimplePortfolio implements Portfolio {
 
     @Override
     public BigDecimal gainPercentage(LocalDate date) {
-        return gain(date).divide(costBasis(), MathContext.DECIMAL32);
+        return gain(date).divide(costBasis(date), MathContext.DECIMAL32);
     }
 
     /*
@@ -207,7 +207,7 @@ public class SimplePortfolio implements Portfolio {
         if (positions.size() == 0)
             return BigDecimal.ZERO;
 
-        return returnsGain(date).divide(cashOut(), MathContext.DECIMAL32)
+        return returnsGain(date).divide(cashOut(date), MathContext.DECIMAL32)
                 .multiply(BigDecimal.TEN.multiply(BigDecimal.TEN));
     }
 
@@ -222,11 +222,11 @@ public class SimplePortfolio implements Portfolio {
     }
 
     @Override
-    public BigDecimal cashOut() {
+    public BigDecimal cashOut(LocalDate date) {
         BigDecimal cashOut = BigDecimal.ZERO;
         for (Position position : positions.values()) {
             //adjust for currency
-            cashOut = cashOut.add(position.cashOut());
+            cashOut = cashOut.add(position.cashOut(date));
         }
         return cashOut;
     }
