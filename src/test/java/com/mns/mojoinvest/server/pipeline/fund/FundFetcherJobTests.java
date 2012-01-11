@@ -1,6 +1,7 @@
 package com.mns.mojoinvest.server.pipeline.fund;
 
 import org.apache.commons.io.FileUtils;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.io.File;
@@ -12,6 +13,7 @@ import static junit.framework.Assert.assertEquals;
 
 public class FundFetcherJobTests {
 
+    @Ignore
     @Test
     public void testListScrape() throws IOException {
         URL url = ClassLoader.getSystemResource("etfperformancetracker.html");

@@ -106,7 +106,6 @@ public class TradingDayUtilsTests {
         assertEquals(dates, sl);
     }
 
-    @Test
     public void outputDates() {
 
         List<LocalDate> dates = TradingDayUtils
