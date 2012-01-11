@@ -96,6 +96,7 @@ public class SimplePortfolio implements Portfolio {
         cash = cash.add(transaction.getCashValue());
     }
 
+    //TODO: refactor to use position.open
     @Override
     public int numberOfActivePositions() {
         int numberOfActivePostions = 0;
@@ -111,6 +112,7 @@ public class SimplePortfolio implements Portfolio {
         return positions.values();
     }
 
+    //TODO: refactor to use position.open
     @Override
     public HashMap<Fund, Position> getActivePositions() {
         HashMap<Fund, Position> currentPositions = new HashMap<Fund, Position>();
@@ -122,6 +124,7 @@ public class SimplePortfolio implements Portfolio {
         return currentPositions;
     }
 
+    //TODO: refactor to use position.open
     @Override
     public Set<Fund> getActiveHoldings() {
         Set<Fund> activeHoldings = new HashSet<Fund>();

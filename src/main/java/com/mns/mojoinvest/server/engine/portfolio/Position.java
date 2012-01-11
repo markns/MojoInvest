@@ -59,6 +59,16 @@ public class Position {
 
     //TODO: Maintain list of original transactions for display in transactionsview. Sell transactions can be split across lots
 
+    public void add(Transaction transaction) throws PortfolioException {
+        if (transaction instanceof BuyTransaction) {
+            add((BuyTransaction) transaction);
+        } else if (transaction instanceof SellTransaction) {
+            add((SellTransaction) transaction);
+        } else {
+            throw new PortfolioException("Unrecognised transaction type");
+        }
+    }
+
     public void add(BuyTransaction transaction) throws PortfolioException {
         if (!fund.equals(transaction.getFund())) {
             throw new PortfolioException("Attempt to add a " + transaction.getFund() +
@@ -87,42 +97,33 @@ public class Position {
         return openPosition.compareTo(transaction.getQuantity()) != -1;
     }
 
-    private boolean updateLots(SellTransaction tx)
+    public void updateLots(SellTransaction transaction)
             throws PortfolioException {
 
         for (Lot lot : lots) {
-            if (!lot.closed()) {
+            BigDecimal remainder = lot.getRemainingQuantity()
+                    .subtract(transaction.getQuantity());
+            if (remainder.compareTo(BigDecimal.ZERO) < 0) {
 
-                BigDecimal remainder = lot.getRemainingQuantity().subtract(tx.getQuantity());
+                //Commission is split between the virtual transactions
+                BigDecimal commission = transaction.getCommission().divide(new BigDecimal("2"));
 
-                if (remainder.compareTo(BigDecimal.ZERO) < 0) {
+                SellTransaction closingTransaction = new SellTransaction(transaction.getFund(),
+                        transaction.getDate(), lot.getRemainingQuantity(), transaction.getPrice(),
+                        commission);
 
-                    //Commission is split between the virtual transactions
-                    BigDecimal commission = tx.getCommission().divide(new BigDecimal("2"));
+                lot.addClosingTransaction(closingTransaction);
 
-                    SellTransaction closingTransaction = new SellTransaction(tx.getFund(),
-                            tx.getDate(), lot.getRemainingQuantity(), tx.getPrice(),
-                            commission);
+                transaction = new SellTransaction(transaction.getFund(),
+                        transaction.getDate(), remainder.negate(), transaction.getPrice(),
+                        commission);
 
-                    SellTransaction overflowTransaction = new SellTransaction(tx.getFund(),
-                            tx.getDate(), remainder.negate(), tx.getPrice(),
-                            commission);
-
-                    lot.addClosingTransaction(closingTransaction);
-
-                    if (updateLots(overflowTransaction)) {
-                        break;
-                    }
-
-                } else {
-                    lot.addClosingTransaction(tx);
-                    return true;
-                }
+            } else {
+                lot.addClosingTransaction(transaction);
             }
         }
-        throw new PortfolioException("Updating lots didn't end correctly");
-
     }
+
 
     public BigDecimal shares() {
         BigDecimal shares = BigDecimal.ZERO;
@@ -132,12 +133,17 @@ public class Position {
         return shares;
     }
 
+    //TODO: Should we invert logic to match lot.closed()?
+    public boolean open() {
+        return shares().compareTo(BigDecimal.ZERO) > 0;
+    }
+
     /*
-     The lot calculations are by far the trickiest part of entire process. Once that step is done, the summary values
-     for each security are calculated. These are the values that appear in each row under the Performance tab. First,
-     cost basis, market value, gain, and todays gain are all computed as the sum of the corresponding values of all the
-     lots for a security.
-     */
+    The lot calculations are by far the trickiest part of entire process. Once that step is done, the summary values
+    for each security are calculated. These are the values that appear in each row under the Performance tab. First,
+    cost basis, market value, gain, and todays gain are all computed as the sum of the corresponding values of all the
+    lots for a security.
+    */
 
     public BigDecimal costBasis() {
         BigDecimal costBasis = BigDecimal.ZERO;

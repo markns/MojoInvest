@@ -12,18 +12,14 @@ import static junit.framework.Assert.*;
 
 public class LotTests {
 
-    public static final BigDecimal ONE_HUNDRED = BigDecimal.TEN.multiply(BigDecimal.TEN);
-    public static final BigDecimal TWO_HUNDRED = BigDecimal.TEN.multiply(BigDecimal.TEN).multiply(new BigDecimal("2"));
-    public static final BigDecimal FIFTY = BigDecimal.TEN.multiply(new BigDecimal("5"));
-    public static final BigDecimal TWO = BigDecimal.ONE.add(BigDecimal.ONE);
     public static final BigDecimal COMMISSION = new BigDecimal("15");
 
-    Fund fund = new Fund("TEST", "Test fund", "Category", "Provider", true,
+    private final Fund fund = new Fund("TEST", "Test fund", "Category", "Provider", true,
             "US", "Index", "Blah blah", new LocalDate("2011-01-01"));
-    BuyTransaction buy = new BuyTransaction(fund, new LocalDate("2011-02-01"), ONE_HUNDRED, new BigDecimal("471.09"), COMMISSION);
-    SellTransaction sell1 = new SellTransaction(fund, new LocalDate("2011-03-01"), FIFTY, new BigDecimal("573.20"), COMMISSION);
-    SellTransaction sell2 = new SellTransaction(fund, new LocalDate("2011-04-01"), FIFTY, new BigDecimal("498.30"), COMMISSION);
-    SellTransaction sellTooLarge = new SellTransaction(fund, new LocalDate("2011-03-01"), TWO_HUNDRED, TWO, COMMISSION);
+    private final BuyTransaction buy = new BuyTransaction(fund, new LocalDate("2011-02-01"), new BigDecimal("100"), new BigDecimal("471.09"), COMMISSION);
+    private final SellTransaction sell1 = new SellTransaction(fund, new LocalDate("2011-03-01"), new BigDecimal("50"), new BigDecimal("573.20"), COMMISSION);
+    private final SellTransaction sell2 = new SellTransaction(fund, new LocalDate("2011-04-01"), new BigDecimal("50"), new BigDecimal("498.30"), COMMISSION);
+    private final SellTransaction sellTooLarge = new SellTransaction(fund, new LocalDate("2011-03-01"), new BigDecimal("200"), new BigDecimal("2"), COMMISSION);
 
     @Test
     public void testCreateNewLot() {
@@ -71,7 +67,7 @@ public class LotTests {
     public void testRemainingQuantity() throws PortfolioException {
         Lot lot = new Lot(buy);
         lot.addClosingTransaction(sell1);
-        assertEquals(FIFTY, lot.getRemainingQuantity());
+        assertEquals(new BigDecimal("50"), lot.getRemainingQuantity());
         lot.addClosingTransaction(sell2);
         assertEquals(BigDecimal.ZERO, lot.getRemainingQuantity());
     }
