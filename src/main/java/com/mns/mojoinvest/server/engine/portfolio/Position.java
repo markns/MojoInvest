@@ -186,22 +186,20 @@ public class Position {
     }
 
     public BigDecimal marketValue(LocalDate date) {
-        Quote quote = getQuote(date);
         BigDecimal marketValue = BigDecimal.ZERO;
         for (Lot lot : lots) {
             if (!lot.openedAfter(date)) {
-                marketValue = marketValue.add(lot.marketValue(date, quote.getClose()));
+                marketValue = marketValue.add(lot.marketValue(date, getQuote(date).getClose()));
             }
         }
         return marketValue;
     }
 
     public BigDecimal gain(LocalDate date) {
-        Quote quote = getQuote(date);
         BigDecimal gain = BigDecimal.ZERO;
         for (Lot lot : lots) {
             if (!lot.openedAfter(date)) {
-                gain = gain.add(lot.gain(date, quote.getClose()));
+                gain = gain.add(lot.gain(date, getQuote(date).getClose()));
             }
         }
         return gain;
@@ -219,11 +217,10 @@ public class Position {
 
 
     public BigDecimal returnsGain(LocalDate date) {
-        Quote quote = getQuote(date);
         BigDecimal returnsGain = BigDecimal.ZERO;
         for (Lot lot : lots) {
             if (!lot.openedAfter(date)) {
-                returnsGain = returnsGain.add(lot.returnsGain(date, quote.getClose()));
+                returnsGain = returnsGain.add(lot.returnsGain(date, getQuote(date).getClose()));
             }
         }
         return returnsGain;
