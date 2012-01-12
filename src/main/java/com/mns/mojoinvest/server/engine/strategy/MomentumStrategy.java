@@ -116,7 +116,7 @@ public class MomentumStrategy {
                             Collection<Fund> selection) throws StrategyException {
 
         BigDecimal numEmpty = new BigDecimal(params.getPortfolioSize() - portfolio.openPositionCount(rebalanceDate));
-        BigDecimal availableCash = portfolio.getCash().
+        BigDecimal availableCash = portfolio.getCash(rebalanceDate).
                 subtract(portfolio.getTransactionCost().
                         multiply(numEmpty));
 //        log.info("Available cash: " + availableCash);

@@ -4,12 +4,12 @@ import com.google.inject.Inject;
 import com.gwtplatform.dispatch.server.ExecutionContext;
 import com.gwtplatform.dispatch.server.actionhandler.ActionHandler;
 import com.gwtplatform.dispatch.shared.ActionException;
-import com.mns.mojoinvest.server.engine.result.StrategyResultBuilder;
-import com.mns.mojoinvest.server.engine.result.StrategyResultBuilderFactory;
 import com.mns.mojoinvest.server.engine.model.Fund;
 import com.mns.mojoinvest.server.engine.model.dao.FundDao;
 import com.mns.mojoinvest.server.engine.portfolio.Portfolio;
 import com.mns.mojoinvest.server.engine.portfolio.PortfolioFactory;
+import com.mns.mojoinvest.server.engine.result.StrategyResultBuilder;
+import com.mns.mojoinvest.server.engine.result.StrategyResultBuilderFactory;
 import com.mns.mojoinvest.server.engine.strategy.MomentumStrategy;
 import com.mns.mojoinvest.server.engine.strategy.StrategyException;
 import com.mns.mojoinvest.shared.dispatch.RunStrategyAction;
@@ -18,7 +18,10 @@ import com.mns.mojoinvest.shared.dto.StrategyResult;
 import com.mns.mojoinvest.shared.params.FundFilter;
 import com.mns.mojoinvest.shared.params.Params;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 
 public class RunStrategyHandler implements
         ActionHandler<RunStrategyAction, RunStrategyResult> {
@@ -47,6 +50,9 @@ public class RunStrategyHandler implements
                                      final ExecutionContext context) throws ActionException {
 
         Params params = action.getParams();
+
+        //TODO: Total hack - sort this out
+        params.getPortfolioParams().setCreationDate(params.getBacktestParams().getFromDate());
 
         //TODO: Does the portfolioFactory need to be synchronised?
         Portfolio portfolio = portfolioFactory.create(params.getPortfolioParams());

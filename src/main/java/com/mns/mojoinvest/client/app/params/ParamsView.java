@@ -108,7 +108,6 @@ public class ParamsView extends ViewWithUiHandlers<ParamsUiHandlers>
 
     public Params flush() {
         Params params = driver.flush();
-
         flushProviders(params);
         flushCategories(params);
 

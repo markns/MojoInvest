@@ -10,7 +10,7 @@ import java.util.Collection;
 import java.util.Map;
 
 public interface Portfolio {
-    BigDecimal getCash();
+    BigDecimal getCash(LocalDate date);
 
     BigDecimal getTransactionCost();
 

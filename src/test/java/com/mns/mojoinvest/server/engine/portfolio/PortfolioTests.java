@@ -16,13 +16,15 @@ import org.junit.Test;
 import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.List;
+import java.util.SortedMap;
+import java.util.TreeMap;
 
 import static junit.framework.Assert.*;
 
 public class PortfolioTests {
 
-    private final PortfolioParams params = new PortfolioParams(50000.00d, 15.00d);
-    private final PortfolioParams loadsofcash = new PortfolioParams(10000000d, 15.0d);
+    private final PortfolioParams params = new PortfolioParams(50000.00d, 15.00d, new LocalDate("2011-01-01"));
+    private final PortfolioParams loadsofcash = new PortfolioParams(10000000d, 15.0d, new LocalDate("2011-01-01"));
 
     private final QuoteDao quoteDao = new QuoteDao(ObjectifyService.factory());
     private final Fund ABC = new Fund("ABC", "ABC fund", "Category", "Provider", true,
@@ -60,11 +62,27 @@ public class PortfolioTests {
     private final LocalServiceTestHelper helper = new LocalServiceTestHelper(config);
 
     public static final List<Quote> quotes = Arrays.asList(
-            new Quote("TEST", buy100Date, BigDecimal.ZERO, BigDecimal.ZERO, BigDecimal.ZERO, new BigDecimal("400"), BigDecimal.ZERO, BigDecimal.ZERO, BigDecimal.ZERO, BigDecimal.ZERO, false),
-            new Quote("TEST", buy200Date, BigDecimal.ZERO, BigDecimal.ZERO, BigDecimal.ZERO, new BigDecimal("500"), BigDecimal.ZERO, BigDecimal.ZERO, BigDecimal.ZERO, BigDecimal.ZERO, false),
-            new Quote("TEST", sell50Date, BigDecimal.ZERO, BigDecimal.ZERO, BigDecimal.ZERO, new BigDecimal("550"), BigDecimal.ZERO, BigDecimal.ZERO, BigDecimal.ZERO, BigDecimal.ZERO, false),
-            new Quote("TEST", sell100Date, BigDecimal.ZERO, BigDecimal.ZERO, BigDecimal.ZERO, new BigDecimal("490"), BigDecimal.ZERO, BigDecimal.ZERO, BigDecimal.ZERO, BigDecimal.ZERO, false),
-            new Quote("TEST", sell200Date, BigDecimal.ZERO, BigDecimal.ZERO, BigDecimal.ZERO, new BigDecimal("510"), BigDecimal.ZERO, BigDecimal.ZERO, BigDecimal.ZERO, BigDecimal.ZERO, false)
+            new Quote("ABC", buy100Date, BigDecimal.ZERO, BigDecimal.ZERO, BigDecimal.ZERO,
+                    new BigDecimal("400"), BigDecimal.ZERO, BigDecimal.ZERO, BigDecimal.ZERO, BigDecimal.ZERO, false),
+            new Quote("ABC", buy200Date, BigDecimal.ZERO, BigDecimal.ZERO, BigDecimal.ZERO,
+                    new BigDecimal("500"), BigDecimal.ZERO, BigDecimal.ZERO, BigDecimal.ZERO, BigDecimal.ZERO, false),
+            new Quote("ABC", sell50Date, BigDecimal.ZERO, BigDecimal.ZERO, BigDecimal.ZERO,
+                    new BigDecimal("550"), BigDecimal.ZERO, BigDecimal.ZERO, BigDecimal.ZERO, BigDecimal.ZERO, false),
+            new Quote("ABC", sell100Date, BigDecimal.ZERO, BigDecimal.ZERO, BigDecimal.ZERO,
+                    new BigDecimal("490"), BigDecimal.ZERO, BigDecimal.ZERO, BigDecimal.ZERO, BigDecimal.ZERO, false),
+            new Quote("ABC", sell200Date, BigDecimal.ZERO, BigDecimal.ZERO, BigDecimal.ZERO,
+                    new BigDecimal("510"), BigDecimal.ZERO, BigDecimal.ZERO, BigDecimal.ZERO, BigDecimal.ZERO, false),
+
+            new Quote("DEF", buy100Date, BigDecimal.ZERO, BigDecimal.ZERO, BigDecimal.ZERO,
+                    new BigDecimal("400"), BigDecimal.ZERO, BigDecimal.ZERO, BigDecimal.ZERO, BigDecimal.ZERO, false),
+            new Quote("DEF", buy200Date, BigDecimal.ZERO, BigDecimal.ZERO, BigDecimal.ZERO,
+                    new BigDecimal("500"), BigDecimal.ZERO, BigDecimal.ZERO, BigDecimal.ZERO, BigDecimal.ZERO, false),
+            new Quote("DEF", sell50Date, BigDecimal.ZERO, BigDecimal.ZERO, BigDecimal.ZERO,
+                    new BigDecimal("550"), BigDecimal.ZERO, BigDecimal.ZERO, BigDecimal.ZERO, BigDecimal.ZERO, false),
+            new Quote("DEF", sell100Date, BigDecimal.ZERO, BigDecimal.ZERO, BigDecimal.ZERO,
+                    new BigDecimal("490"), BigDecimal.ZERO, BigDecimal.ZERO, BigDecimal.ZERO, BigDecimal.ZERO, false),
+            new Quote("DEF", sell200Date, BigDecimal.ZERO, BigDecimal.ZERO, BigDecimal.ZERO,
+                    new BigDecimal("510"), BigDecimal.ZERO, BigDecimal.ZERO, BigDecimal.ZERO, BigDecimal.ZERO, false)
     );
 
     @Before
@@ -76,7 +94,7 @@ public class PortfolioTests {
     @Test
     public void testCreatePortfolio() {
         Portfolio portfolio = new SimplePortfolio(quoteDao, params);
-        assertEquals(new BigDecimal("50000.0"), portfolio.getCash());
+        assertEquals(new BigDecimal("50000.0"), portfolio.getCash(buy100Date.minusDays(1)));
         assertEquals(new BigDecimal("15.0"), portfolio.getTransactionCost());
         assertEquals(0, portfolio.getPositions().size());
     }
@@ -173,8 +191,31 @@ public class PortfolioTests {
         assertEquals(new BigDecimal("-141357.00"), portfolio.cashOut(sell50Date));
     }
 
+    @Test
+    public void testMarketValue() throws PortfolioException {
+        Portfolio portfolio = new SimplePortfolio(quoteDao, loadsofcash);
+        portfolio.add(buyABC100);
+        assertEquals(new BigDecimal("9992876.00"), portfolio.marketValue(buy100Date));
+        assertEquals(new BigDecimal("10000000"), portfolio.marketValue(buy100Date.minusDays(1)));
+        portfolio.add(buyDEF200);
+        assertEquals(new BigDecimal("9992876.00"), portfolio.marketValue(buy100Date));
+        assertEquals(new BigDecimal("10008643.00"), portfolio.marketValue(buy200Date));
+        portfolio.add(sellABC50);
+        assertEquals(new BigDecimal("10008643.00"), portfolio.marketValue(buy200Date));
+        assertEquals(new BigDecimal("10024788.00"), portfolio.marketValue(sell50Date));
+    }
+
+    @Test
+    public void headMapTest() {
+        SortedMap<LocalDate, BigDecimal> map = new TreeMap<LocalDate, BigDecimal>();
+        map.put(new LocalDate("2011-01-01"), BigDecimal.ZERO);
+        map.put(new LocalDate("2011-02-01"), BigDecimal.ZERO);
+        map.put(new LocalDate("2011-03-01"), BigDecimal.ZERO);
+        map.put(new LocalDate("2011-04-01"), BigDecimal.ZERO);
+        System.out.println(map.headMap(new LocalDate("2011-02-15")));
+    }
+
 //SimplePortfolio
-//marketValue
 //gain
 //gainPercentage
 //returnsGain

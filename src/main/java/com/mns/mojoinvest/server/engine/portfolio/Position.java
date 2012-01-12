@@ -88,6 +88,7 @@ public class Position {
     }
 
     public void add(SellTransaction transaction) throws PortfolioException {
+        //TODO: Check if a later transaction has already been added
         if (!fund.equals(transaction.getFund())) {
             throw new PortfolioException("Attempt to add a " + transaction.getFund() +
                     " transaction to a " + fund + " position");

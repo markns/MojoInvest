@@ -66,6 +66,9 @@ public class Lot {
             if (!closingTransaction.getDate().isAfter(date))
                 transactions.add(closingTransaction);
         }
+//        closingTransactionsMap.headMap()
+
+
 //        if (closingTransactionsMap.size() > 0)
 //            return closingTransactionsMap.subMap(closingTransactions.get(0).getDate(),
 //                    date).values();
@@ -118,8 +121,7 @@ public class Lot {
      * @return initial investment
      */
     public BigDecimal getInitialInvestment() {
-        return openingTransaction.getInitialInvestment()
-                .add(openingTransaction.getCommission());
+        return openingTransaction.getInitialInvestment();
     }
 
     public boolean openedAfter(LocalDate date) {

@@ -13,13 +13,12 @@ public class BuyTransaction extends AbstractTransaction {
     }
 
     public BigDecimal getInitialInvestment() {
-        return units.multiply(price); 
+        return units.multiply(price).add(commission);
     }
 
     public BigDecimal getCashValue() {
-        return units.multiply(price).add(commission).negate();
+        return getInitialInvestment().negate();
     }
-
 
 
 }

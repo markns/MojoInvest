@@ -11,9 +11,7 @@ import org.joda.time.LocalDate;
 
 import java.math.BigDecimal;
 import java.math.MathContext;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 /**
  * A portfolio is a collection of positions that the user holds in various securities, plus metadata.
@@ -44,7 +42,7 @@ public class SimplePortfolio implements Portfolio {
 
     private QuoteDao quoteDao;
 
-    private BigDecimal cash;
+    private NavigableMap<LocalDate, BigDecimal> cashFlows;
 
     private BigDecimal transactionCost;
 
@@ -52,12 +50,17 @@ public class SimplePortfolio implements Portfolio {
     public SimplePortfolio(QuoteDao quoteDao, @Assisted PortfolioParams params) {
         this.quoteDao = quoteDao;
         this.positions = new HashMap<Fund, Position>();
-        this.cash = BigDecimal.valueOf(params.getInitialInvestment());
+        this.cashFlows = new TreeMap<LocalDate, BigDecimal>();
+        this.cashFlows.put(params.getCreationDate(), BigDecimal.valueOf(params.getInitialInvestment()));
         this.transactionCost = BigDecimal.valueOf(params.getTransactionCost());
     }
 
     @Override
-    public BigDecimal getCash() {
+    public BigDecimal getCash(LocalDate date) {
+        BigDecimal cash = BigDecimal.ZERO;
+        for (BigDecimal cashFlow : cashFlows.headMap(date, true).values()) {
+            cash = cash.add(cashFlow);
+        }
         return cash;
     }
 
@@ -77,7 +80,8 @@ public class SimplePortfolio implements Portfolio {
 
     @Override
     public void add(BuyTransaction transaction) throws PortfolioException {
-        if (transaction.getInitialInvestment().compareTo(cash) > 0)
+        if (transaction.getInitialInvestment()
+                .compareTo(getCash(transaction.getDate())) > 0)
             throw new PortfolioException("Not enough cash in portfolio to buy "
                     + transaction);
 
@@ -85,7 +89,7 @@ public class SimplePortfolio implements Portfolio {
         if (!positions.containsKey(fund)) {
             positions.put(fund, new Position(quoteDao, fund));
         }
-        cash = cash.subtract(transaction.getInitialInvestment());
+        cashFlows.put(transaction.getDate(), transaction.getCashValue());
         positions.get(fund).add(transaction);
     }
 
@@ -96,7 +100,7 @@ public class SimplePortfolio implements Portfolio {
             throw new PortfolioException("Cannot sell a fund that is not held");
         }
         positions.get(fund).add(transaction);
-        cash = cash.add(transaction.getCashValue());
+        cashFlows.put(transaction.getDate(), transaction.getCashValue());
     }
 
     public Collection<Position> getPositions() {
@@ -159,7 +163,7 @@ public class SimplePortfolio implements Portfolio {
             //adjust for currency
             marketValue = marketValue.add(position.marketValue(date));
         }
-        return marketValue.add(cash);
+        return marketValue.add(getCash(date));
     }
 
     @Override
