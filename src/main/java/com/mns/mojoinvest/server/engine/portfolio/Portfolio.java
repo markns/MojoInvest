@@ -32,6 +32,8 @@ public interface Portfolio {
 
     BigDecimal costBasis(LocalDate date);
 
+    BigDecimal cashOut(LocalDate date);
+
     BigDecimal marketValue(LocalDate date);
 
     BigDecimal gain(LocalDate date);
@@ -41,6 +43,4 @@ public interface Portfolio {
     BigDecimal overallReturn(LocalDate date);
 
     BigDecimal returnsGain(LocalDate date);
-
-    BigDecimal cashOut(LocalDate date);
 }

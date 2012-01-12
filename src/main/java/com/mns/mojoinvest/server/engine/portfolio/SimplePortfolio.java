@@ -143,6 +143,16 @@ public class SimplePortfolio implements Portfolio {
     }
 
     @Override
+    public BigDecimal cashOut(LocalDate date) {
+        BigDecimal cashOut = BigDecimal.ZERO;
+        for (Position position : positions.values()) {
+            //adjust for currency
+            cashOut = cashOut.add(position.cashOut(date));
+        }
+        return cashOut;
+    }
+
+    @Override
     public BigDecimal marketValue(LocalDate date) {
         BigDecimal marketValue = BigDecimal.ZERO;
         for (Position position : positions.values()) {
@@ -180,15 +190,6 @@ public class SimplePortfolio implements Portfolio {
      */
 
     @Override
-    public BigDecimal overallReturn(LocalDate date) {
-        if (positions.size() == 0)
-            return BigDecimal.ZERO;
-
-        return returnsGain(date).divide(cashOut(date), MathContext.DECIMAL32)
-                .multiply(BigDecimal.TEN.multiply(BigDecimal.TEN));
-    }
-
-    @Override
     public BigDecimal returnsGain(LocalDate date) {
         BigDecimal returnsGain = BigDecimal.ZERO;
         for (Position position : positions.values()) {
@@ -199,13 +200,12 @@ public class SimplePortfolio implements Portfolio {
     }
 
     @Override
-    public BigDecimal cashOut(LocalDate date) {
-        BigDecimal cashOut = BigDecimal.ZERO;
-        for (Position position : positions.values()) {
-            //adjust for currency
-            cashOut = cashOut.add(position.cashOut(date));
-        }
-        return cashOut;
+    public BigDecimal overallReturn(LocalDate date) {
+        if (positions.size() == 0)
+            return BigDecimal.ZERO;
+
+        return returnsGain(date).divide(cashOut(date), MathContext.DECIMAL32)
+                .multiply(BigDecimal.TEN.multiply(BigDecimal.TEN));
     }
 
 
