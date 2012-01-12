@@ -43,6 +43,7 @@ public class PositionTests {
     private final SellTransaction sell50_2 = new SellTransaction(fund, sell50_2Date, new BigDecimal("50"), new BigDecimal("498.30"), COMMISSION);
     private final SellTransaction sell100 = new SellTransaction(fund, sell100Date, new BigDecimal("100"), new BigDecimal("480.00"), COMMISSION);
     private final SellTransaction sell200 = new SellTransaction(fund, sell200Date, new BigDecimal("200"), new BigDecimal("520.00"), COMMISSION);
+    private final BuyTransaction buyWrongFund = new BuyTransaction(wrongfund, buy200Date, new BigDecimal("200"), new BigDecimal("520.00"), COMMISSION);
 
     private final LocalDatastoreServiceTestConfig config = new LocalDatastoreServiceTestConfig();
     private final LocalServiceTestHelper helper = new LocalServiceTestHelper(config);
@@ -108,6 +109,12 @@ public class PositionTests {
         position.add(buy200);
         position.add(sell200);
         position.add(sell200);
+    }
+
+    @Test(expected = PortfolioException.class)
+    public void testAddWrongFundFails() throws PortfolioException {
+        Position position = new Position(quoteDao, fund);
+        position.add(buyWrongFund);
     }
 
     @Test
