@@ -171,6 +171,7 @@ public class SimplePortfolio implements Portfolio {
         BigDecimal gain = BigDecimal.ZERO;
         for (Position position : positions.values()) {
             //adjust for currency
+            System.out.println(position + " " + position.gain(date));
             gain = gain.add(position.gain(date));
         }
         return gain;
@@ -183,16 +184,22 @@ public class SimplePortfolio implements Portfolio {
 
     @Override
     public BigDecimal gainPercentage(LocalDate date) {
-        return gain(date).divide(costBasis(date), MathContext.DECIMAL32);
+        System.out.println(gain(date) + " " + costBasis(date));
+        BigDecimal costBasis = costBasis(date);
+        if (costBasis.compareTo(BigDecimal.ZERO) == 0)
+            return BigDecimal.ZERO;
+        return gain(date).divide(costBasis, MathContext.DECIMAL32)
+                //multiply by 100 for percentage
+                .multiply(BigDecimal.TEN.multiply(BigDecimal.TEN));
     }
 
-    /*
-        Finally, the overall return is computed by converting the returns gain and cash out from each of the securities
-        from the security currency to the portfolio currency, then summing them to getRanking portfolio values. The total
-        return is the calculated by:
-        overall return = returns gain / cash out
-     */
 
+    /**
+     * returns gain = market_value + cash in - cash out
+     *
+     * @param date
+     * @return
+     */
     @Override
     public BigDecimal returnsGain(LocalDate date) {
         BigDecimal returnsGain = BigDecimal.ZERO;
@@ -203,12 +210,22 @@ public class SimplePortfolio implements Portfolio {
         return returnsGain;
     }
 
+    /**
+     * Finally, the overall return is computed by converting the returns gain
+     * and cash out from each of the securities from the security currency to
+     * the portfolio currency, then summing them to get portfolio values.
+     * The total return is calculated by:
+     * overall return = returns gain / cash out
+     *
+     * @param date
+     * @return
+     */
     @Override
     public BigDecimal overallReturn(LocalDate date) {
-        if (positions.size() == 0)
+        if (openPositionCount(date) == 0)
             return BigDecimal.ZERO;
-
-        return returnsGain(date).divide(cashOut(date), MathContext.DECIMAL32)
+        //negate cashOut in division to maintain direction of gain
+        return returnsGain(date).divide(cashOut(date).negate(), MathContext.DECIMAL32)
                 .multiply(BigDecimal.TEN.multiply(BigDecimal.TEN));
     }
 

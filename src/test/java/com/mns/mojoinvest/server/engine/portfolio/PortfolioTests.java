@@ -16,8 +16,6 @@ import org.junit.Test;
 import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.List;
-import java.util.SortedMap;
-import java.util.TreeMap;
 
 import static junit.framework.Assert.*;
 
@@ -169,7 +167,6 @@ public class PortfolioTests {
         portfolio.add(buyABC100);
         assertEquals(new BigDecimal("47124.00"), portfolio.costBasis(buy100Date));
         portfolio.add(buyDEF200);
-        //                                 94233
         assertEquals(new BigDecimal("47124.00"), portfolio.costBasis(buy100Date));
         assertEquals(new BigDecimal("141357.00"), portfolio.costBasis(buy200Date));
         portfolio.add(sellABC50);
@@ -206,141 +203,59 @@ public class PortfolioTests {
     }
 
     @Test
-    public void headMapTest() {
-        SortedMap<LocalDate, BigDecimal> map = new TreeMap<LocalDate, BigDecimal>();
-        map.put(new LocalDate("2011-01-01"), BigDecimal.ZERO);
-        map.put(new LocalDate("2011-02-01"), BigDecimal.ZERO);
-        map.put(new LocalDate("2011-03-01"), BigDecimal.ZERO);
-        map.put(new LocalDate("2011-04-01"), BigDecimal.ZERO);
-        System.out.println(map.headMap(new LocalDate("2011-02-15")));
+    public void testGain() throws PortfolioException {
+        Portfolio portfolio = new SimplePortfolio(quoteDao, loadsofcash);
+        portfolio.add(buyABC100);
+        assertEquals(new BigDecimal("-7124.00"), portfolio.gain(buy100Date));
+        assertEquals(new BigDecimal("0"), portfolio.gain(buy100Date.minusDays(1)));
+        portfolio.add(buyDEF200);
+        assertEquals(new BigDecimal("-7124.00"), portfolio.gain(buy100Date));
+        assertEquals(new BigDecimal("8643.00"), portfolio.gain(buy200Date));
+        portfolio.add(sellABC50);
+        assertEquals(new BigDecimal("8643.00"), portfolio.gain(buy200Date));
+        assertEquals(new BigDecimal("19705.000"), portfolio.gain(sell50Date));
     }
 
-//SimplePortfolio
-//gain
-//gainPercentage
-//returnsGain
-//overallReturn
+    @Test
+    public void testGainPercentage() throws PortfolioException {
+        Portfolio portfolio = new SimplePortfolio(quoteDao, loadsofcash);
+        portfolio.add(buyABC100);
+        assertEquals(new BigDecimal("-15.1175600"), portfolio.gainPercentage(buy100Date));
+        assertEquals(new BigDecimal("0"), portfolio.gainPercentage(buy100Date.minusDays(1)));
+        portfolio.add(buyDEF200);
+        assertEquals(new BigDecimal("-15.1175600"), portfolio.gainPercentage(buy100Date));
+        assertEquals(new BigDecimal("6.11430600"), portfolio.gainPercentage(buy200Date));
+        portfolio.add(sellABC50);
+        assertEquals(new BigDecimal("6.11430600"), portfolio.gainPercentage(buy200Date));
+        assertEquals(new BigDecimal("16.7282100"), portfolio.gainPercentage(sell50Date));
+    }
 
-//    @Test
-//      public void testCostBasis() throws PortfolioException {
-//          Position position = new Position(quoteDao, fund);
-//          position.add(buy100);
-//          assertEquals(new BigDecimal("47124.00"), position.costBasis(buy100Date));
-//          position.add(buy200);
-//          assertEquals(new BigDecimal("47124.00"), position.costBasis(buy100Date));
-//          assertEquals(new BigDecimal("141357.00"), position.costBasis(buy200Date));
-//          position.add(sell50);
-//          assertEquals(new BigDecimal("117795.000"), position.costBasis(sell50Date));
-//          position.add(sell100);
-//          assertEquals(new BigDecimal("117795.000"), position.costBasis(sell50Date));
-//          assertEquals(new BigDecimal("70674.7500"), position.costBasis(sell100Date));
-//      }
-//
-//      @Test
-//      public void testCashOut() throws PortfolioException {
-//          Position position = new Position(quoteDao, fund);
-//          position.add(buy100);
-//          assertEquals(new BigDecimal("-47124.00"), position.cashOut(buy100Date));
-//          position.add(buy200);
-//          assertEquals(new BigDecimal("-47124.00"), position.cashOut(buy100Date));
-//          assertEquals(new BigDecimal("-141357.00"), position.cashOut(buy200Date));
-//          position.add(sell50);
-//          assertEquals(new BigDecimal("-47124.00"), position.cashOut(buy100Date));
-//          assertEquals(new BigDecimal("-141357.00"), position.cashOut(sell50Date));
-//          position.add(sell100);
-//          assertEquals(new BigDecimal("-141357.00"), position.cashOut(sell100Date));
-//      }
-//
-//      @Test
-//      public void testCashIn() throws PortfolioException {
-//          Position position = new Position(quoteDao, fund);
-//          position.add(buy100);
-//          assertEquals(new BigDecimal("0"), position.cashIn(buy100Date));
-//          position.add(buy200);
-//          assertEquals(new BigDecimal("0"), position.cashIn(buy100Date));
-//          assertEquals(new BigDecimal("0"), position.cashIn(buy200Date));
-//          position.add(sell50);
-//          assertEquals(new BigDecimal("0"), position.cashIn(buy100Date));
-//          assertEquals(new BigDecimal("28645.00"), position.cashIn(sell50Date));
-//          position.add(sell100);
-//          assertEquals(new BigDecimal("76630.00"), position.cashIn(sell100Date));
-//      }
-//
-//      @Test
-//      public void testMarketValue() throws PortfolioException {
-//          Position position = new Position(quoteDao, fund);
-//          position.add(buy100);
-//          assertEquals(new BigDecimal("40000"), position.marketValue(buy100Date));
-//          position.add(buy200);
-//          assertEquals(new BigDecimal("40000"), position.marketValue(buy100Date));
-//          assertEquals(new BigDecimal("150000"), position.marketValue(buy200Date));
-//          position.add(sell50);
-//          assertEquals(new BigDecimal("137500"), position.marketValue(sell50Date));
-//          position.add(sell100);
-//          assertEquals(new BigDecimal("137500"), position.marketValue(sell50Date));
-//          assertEquals(new BigDecimal("76500"), position.marketValue(sell200Date));
-//      }
-//
-//      @Test
-//      public void testGain() throws PortfolioException {
-//          Position position = new Position(quoteDao, fund);
-//          position.add(buy100);
-//          assertEquals(new BigDecimal("-7124.00"), position.gain(buy100Date));
-//          position.add(buy200);
-//          assertEquals(new BigDecimal("-7124.00"), position.gain(buy100Date));
-//          assertEquals(new BigDecimal("8643.00"), position.gain(buy200Date));
-//          position.add(sell50);
-//          assertEquals(new BigDecimal("19705.000"), position.gain(sell50Date));
-//          position.add(sell100);
-//          assertEquals(new BigDecimal("19705.000"), position.gain(sell50Date));
-//          assertEquals(new BigDecimal("5825.2500"), position.gain(sell200Date));
-//      }
-//
-//      @Test
-//      public void testGainPercentage() throws PortfolioException {
-//          Position position = new Position(quoteDao, fund);
-//          position.add(buy100);
-//          assertEquals(new BigDecimal("-15.1175600"), position.gainPercentage(buy100Date));
-//          position.add(buy200);
-//          assertEquals(new BigDecimal("-15.1175600"), position.gainPercentage(buy100Date));
-//          assertEquals(new BigDecimal("6.11430600"), position.gainPercentage(buy200Date));
-//          position.add(sell50);
-//          assertEquals(new BigDecimal("16.7282100"), position.gainPercentage(sell50Date));
-//          position.add(sell100);
-//          assertEquals(new BigDecimal("16.7282100"), position.gainPercentage(sell50Date));
-//          assertEquals(new BigDecimal("8.24233500"), position.gainPercentage(sell200Date));
-//      }
-//
-//      //    returns gain = market_value + cash in - cash out
-//      @Test
-//      public void testReturnsGain() throws PortfolioException {
-//          Position position = new Position(quoteDao, fund);
-//          position.add(buy100);
-//          assertEquals(new BigDecimal("-7124.00"), position.returnsGain(buy100Date));
-//          position.add(buy200);
-//          assertEquals(new BigDecimal("-7124.00"), position.returnsGain(buy100Date));
-//          assertEquals(new BigDecimal("8643.00"), position.returnsGain(buy200Date));
-//          position.add(sell50);
-//          assertEquals(new BigDecimal("24788.00"), position.returnsGain(sell50Date));
-//          position.add(sell100);
-//          assertEquals(new BigDecimal("24788.00"), position.returnsGain(sell50Date));
-//          assertEquals(new BigDecimal("11773.00"), position.returnsGain(sell200Date));
-//      }
-//
-//      @Test
-//      public void testTotalReturn() throws PortfolioException {
-//          Position position = new Position(quoteDao, fund);
-//          position.add(buy100);
-//          assertEquals(new BigDecimal("-15.1175600"), position.totalReturn(buy100Date));
-//          position.add(buy200);
-//          assertEquals(new BigDecimal("-15.1175600"), position.totalReturn(buy100Date));
-//          assertEquals(new BigDecimal("6.11430600"), position.totalReturn(buy200Date));
-//          position.add(sell50);
-//          assertEquals(new BigDecimal("17.5357400"), position.totalReturn(sell50Date));
-//          position.add(sell100);
-//          assertEquals(new BigDecimal("17.5357400"), position.totalReturn(sell50Date));
-//          assertEquals(new BigDecimal("8.32855800"), position.totalReturn(sell200Date));
-//      }
+    @Test
+    public void testReturnsGain() throws PortfolioException {
+        Portfolio portfolio = new SimplePortfolio(quoteDao, loadsofcash);
+        portfolio.add(buyABC100);
+        assertEquals(new BigDecimal("-7124.00"), portfolio.returnsGain(buy100Date));
+        assertEquals(new BigDecimal("0"), portfolio.returnsGain(buy100Date.minusDays(1)));
+        portfolio.add(buyDEF200);
+        assertEquals(new BigDecimal("-7124.00"), portfolio.returnsGain(buy100Date));
+        assertEquals(new BigDecimal("8643.00"), portfolio.returnsGain(buy200Date));
+        portfolio.add(sellABC50);
+        assertEquals(new BigDecimal("8643.00"), portfolio.returnsGain(buy200Date));
+        assertEquals(new BigDecimal("24788.00"), portfolio.returnsGain(sell50Date));
+    }
 
+    @Test
+    public void testOverallReturn() throws PortfolioException {
+        Portfolio portfolio = new SimplePortfolio(quoteDao, loadsofcash);
+        portfolio.add(buyABC100);
+        assertEquals(new BigDecimal("-15.1175600"), portfolio.overallReturn(buy100Date));
+        assertEquals(new BigDecimal("0"), portfolio.overallReturn(buy100Date.minusDays(1)));
+        portfolio.add(buyDEF200);
+        assertEquals(new BigDecimal("-15.1175600"), portfolio.overallReturn(buy100Date));
+        assertEquals(new BigDecimal("6.11430600"), portfolio.overallReturn(buy200Date));
+        portfolio.add(sellABC50);
+        assertEquals(new BigDecimal("6.11430600"), portfolio.overallReturn(buy200Date));
+        assertEquals(new BigDecimal("17.5357400"), portfolio.overallReturn(sell50Date));
+    }
 
 }

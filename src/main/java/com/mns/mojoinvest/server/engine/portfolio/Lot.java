@@ -7,9 +7,7 @@ import org.joda.time.LocalDate;
 
 import java.math.BigDecimal;
 import java.math.MathContext;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
+import java.util.*;
 import java.util.logging.Logger;
 
 /**
@@ -44,15 +42,15 @@ public class Lot {
 
     private final BuyTransaction openingTransaction;
 
-    private final List<SellTransaction> closingTransactions;
+//    private final List<SellTransaction> closingTransactions;
 
-//    private final SortedMap<LocalDate, SellTransaction> closingTransactionsMap;
+    private final NavigableMap<LocalDate, SellTransaction> closingTransactionsMap;
 
     public Lot(BuyTransaction openingTransaction) {
         log.fine("Creating new lot from " + openingTransaction);
         this.openingTransaction = openingTransaction;
-        this.closingTransactions = new ArrayList<SellTransaction>();
-//        this.closingTransactionsMap = new TreeMap<LocalDate, SellTransaction>();
+//        this.closingTransactions = new ArrayList<SellTransaction>();
+        this.closingTransactionsMap = new TreeMap<LocalDate, SellTransaction>();
     }
 
     public BuyTransaction getOpeningTransaction() {
@@ -62,9 +60,12 @@ public class Lot {
     public Collection<SellTransaction> getClosingTransactions(LocalDate date) {
         //TODO: Change this to be a TreeMap<LocalDate, SellTransaction> implementation
         List<SellTransaction> transactions = new ArrayList<SellTransaction>();
-        for (SellTransaction closingTransaction : closingTransactions) {
-            if (!closingTransaction.getDate().isAfter(date))
-                transactions.add(closingTransaction);
+//        for (SellTransaction closingTransaction : closingTransactions) {
+//            if (!closingTransaction.getDate().isAfter(date))
+//                transactions.add(closingTransaction);
+//        }
+        for (SellTransaction transaction : closingTransactionsMap.headMap(date, true).values()) {
+            transactions.add(transaction);
         }
 //        closingTransactionsMap.headMap()
 
@@ -80,8 +81,8 @@ public class Lot {
             throws PortfolioException {
         if (!saleIsValid(transaction))
             throw new PortfolioException("Lot is not large enough to be able to meet sale " + transaction);
-        closingTransactions.add(transaction);
-//        closingTransactionsMap.put(transaction.getDate(), transaction);
+//        closingTransactions.add(transaction);
+        closingTransactionsMap.put(transaction.getDate(), transaction);
     }
 
     private boolean saleIsValid(Transaction transaction) {
