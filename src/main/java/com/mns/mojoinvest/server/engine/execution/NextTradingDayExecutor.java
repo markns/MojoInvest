@@ -43,7 +43,7 @@ public class NextTradingDayExecutor implements Executor {
             throws PortfolioException {
         //TODO: getRanking execution price should be mid between open and close
         Quote executionQuote = quoteDao.get(fund, date);
-        Position position = portfolio.get(fund);
+        Position position = portfolio.getPosition(fund);
 //        log.info("Selling " + fund + " price: " + executionQuote.getClose() +
 //                ", gain%: " + position.gainPercentage(date));
         SellTransaction tx = new SellTransaction(fund, date, position.shares(date),

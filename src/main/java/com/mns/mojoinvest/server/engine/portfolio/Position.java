@@ -140,7 +140,9 @@ public class Position {
     public BigDecimal shares(LocalDate date) {
         BigDecimal shares = BigDecimal.ZERO;
         for (Lot lot : lots) {
-            shares = shares.add(lot.getRemainingQuantity(date));
+            if (!lot.openedAfter(date)) {
+                shares = shares.add(lot.getRemainingQuantity(date));
+            }
         }
         return shares;
     }

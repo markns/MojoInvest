@@ -13,8 +13,7 @@ import java.math.BigDecimal;
 import java.math.MathContext;
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.Map;
 
 /**
  * A portfolio is a collection of positions that the user holds in various securities, plus metadata.
@@ -41,7 +40,7 @@ import java.util.Set;
  */
 public class SimplePortfolio implements Portfolio {
 
-    private HashMap<Fund, Position> positions;
+    private Map<Fund, Position> positions;
 
     private QuoteDao quoteDao;
 
@@ -68,22 +67,26 @@ public class SimplePortfolio implements Portfolio {
 
     @Override
     public boolean contains(Fund fund, LocalDate date) {
-        return getActivePositions(date).containsKey(fund);
+        return getOpenPositions(date).containsKey(fund);
     }
 
     @Override
-    public Position get(Fund fund) {
+    public Position getPosition(Fund fund) {
         return positions.get(fund);
     }
 
     @Override
     public void add(BuyTransaction transaction) throws PortfolioException {
+        if (transaction.getInitialInvestment().compareTo(cash) > 0)
+            throw new PortfolioException("Not enough cash in portfolio to buy "
+                    + transaction);
+
         Fund fund = transaction.getFund();
         if (!positions.containsKey(fund)) {
             positions.put(fund, new Position(quoteDao, fund));
         }
+        cash = cash.subtract(transaction.getInitialInvestment());
         positions.get(fund).add(transaction);
-        cash = cash.add(transaction.getCashValue());
     }
 
     @Override
@@ -96,46 +99,30 @@ public class SimplePortfolio implements Portfolio {
         cash = cash.add(transaction.getCashValue());
     }
 
-    //TODO: refactor to use position.open
-    @Override
-    public int numberOfActivePositions(LocalDate date) {
-        int numberOfActivePostions = 0;
-        for (Position position : positions.values()) {
-            if (position.shares(date).compareTo(BigDecimal.ZERO) > 0) {
-                numberOfActivePostions++;
-            }
-        }
-        return numberOfActivePostions;
-    }
-
     public Collection<Position> getPositions() {
         return positions.values();
     }
 
-    //TODO: refactor to use position.open
     @Override
-    public HashMap<Fund, Position> getActivePositions(LocalDate date) {
-        HashMap<Fund, Position> currentPositions = new HashMap<Fund, Position>();
+    public Map<Fund, Position> getOpenPositions(LocalDate date) {
+        Map<Fund, Position> currentPositions = new HashMap<Fund, Position>();
         for (Position position : positions.values()) {
-            if (position.shares(date).compareTo(BigDecimal.ZERO) > 0) {
+            if (position.open(date)) {
                 currentPositions.put(position.getFund(), position);
             }
         }
         return currentPositions;
     }
 
-    //TODO: refactor to use position.open
     @Override
-    public Set<Fund> getActiveHoldings(LocalDate date) {
-        Set<Fund> activeHoldings = new HashSet<Fund>();
-        for (Position position : positions.values()) {
-            if (position.shares(date).compareTo(BigDecimal.ZERO) > 0) {
-                activeHoldings.add(position.getFund());
-            }
-        }
-        return activeHoldings;
+    public int openPositionCount(LocalDate date) {
+        return getOpenPositions(date).size();
     }
 
+    @Override
+    public Collection<Fund> getActiveFunds(LocalDate date) {
+        return getOpenPositions(date).keySet();
+    }
 
     /*
      Next, the summary values for the portfolio are calculated. These are the values that appear along the final row in

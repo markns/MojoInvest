@@ -7,8 +7,7 @@ import org.joda.time.LocalDate;
 
 import java.math.BigDecimal;
 import java.util.Collection;
-import java.util.HashMap;
-import java.util.Set;
+import java.util.Map;
 
 public interface Portfolio {
     BigDecimal getCash();
@@ -17,19 +16,19 @@ public interface Portfolio {
 
     boolean contains(Fund fund, LocalDate date);
 
-    Position get(Fund fund);
+    Position getPosition(Fund fund);
 
     void add(BuyTransaction transaction) throws PortfolioException;
 
     void add(SellTransaction transaction) throws PortfolioException;
 
-    int numberOfActivePositions(LocalDate date);
-
     Collection<Position> getPositions();
 
-    HashMap<Fund, Position> getActivePositions(LocalDate date);
+    Map<Fund, Position> getOpenPositions(LocalDate date);
 
-    Set<Fund> getActiveHoldings(LocalDate date);
+    int openPositionCount(LocalDate date);
+
+    Collection<Fund> getActiveFunds(LocalDate date);
 
     BigDecimal costBasis(LocalDate date);
 

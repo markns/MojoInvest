@@ -75,7 +75,7 @@ public class MomentumStrategy {
 
             log.info(rebalanceDate + " portfolio value: " +
                     portfolio.marketValue(rebalanceDate) + ", holdings: " +
-                    portfolio.getActiveHoldings(rebalanceDate));
+                    portfolio.getActiveFunds(rebalanceDate));
         }
         log.info(toDate + " portfolio value: " + portfolio.marketValue(toDate));
     }
@@ -101,7 +101,7 @@ public class MomentumStrategy {
 
     private void sellLosers(Portfolio portfolio, LocalDate rebalanceDate, Collection<Fund> selection)
             throws StrategyException {
-        for (Fund fund : portfolio.getActiveHoldings(rebalanceDate)) {
+        for (Fund fund : portfolio.getActiveFunds(rebalanceDate)) {
             if (!selection.contains(fund)) {
                 try {
                     executor.sellAll(portfolio, fund, rebalanceDate);
@@ -115,7 +115,7 @@ public class MomentumStrategy {
     private void buyWinners(Portfolio portfolio, MomentumStrategyParams params, LocalDate rebalanceDate,
                             Collection<Fund> selection) throws StrategyException {
 
-        BigDecimal numEmpty = new BigDecimal(params.getPortfolioSize() - portfolio.numberOfActivePositions(rebalanceDate));
+        BigDecimal numEmpty = new BigDecimal(params.getPortfolioSize() - portfolio.openPositionCount(rebalanceDate));
         BigDecimal availableCash = portfolio.getCash().
                 subtract(portfolio.getTransactionCost().
                         multiply(numEmpty));
@@ -138,7 +138,7 @@ public class MomentumStrategy {
     }
 
     private void logPortfolio(Portfolio portfolio, LocalDate rebalanceDate) {
-        for (Position position : portfolio.getActivePositions(rebalanceDate).values()) {
+        for (Position position : portfolio.getOpenPositions(rebalanceDate).values()) {
             log.info(position.getFund()
                     + " shares: " + position.shares(rebalanceDate)
                     + ", marketValue: " + position.marketValue(rebalanceDate)

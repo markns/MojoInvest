@@ -62,7 +62,6 @@ public class PositionTests {
         quoteDao.put(quotes);
     }
 
-
     @Test
     public void testCreatePosition() throws PortfolioException {
         Position position = new Position(quoteDao, fund);
@@ -115,6 +114,14 @@ public class PositionTests {
     public void testAddWrongFundFails() throws PortfolioException {
         Position position = new Position(quoteDao, fund);
         position.add(buyWrongFund);
+    }
+
+    @Test
+    public void testShares() throws PortfolioException {
+        Position position = new Position(quoteDao, fund);
+        position.add(buy100);
+        assertEquals(new BigDecimal("100"), position.shares(buy100Date));
+        assertEquals(new BigDecimal("0"), position.shares(buy100Date.minusDays(1)));
     }
 
     @Test
