@@ -51,7 +51,8 @@ public class SimplePortfolio implements Portfolio {
         this.quoteDao = quoteDao;
         this.positions = new HashMap<Fund, Position>();
         this.cashFlows = new TreeMap<LocalDate, BigDecimal>();
-        this.cashFlows.put(params.getCreationDate(), BigDecimal.valueOf(params.getInitialInvestment()));
+        this.cashFlows.put(new LocalDate(params.getCreationDate()),
+                BigDecimal.valueOf(params.getInitialInvestment()));
         this.transactionCost = BigDecimal.valueOf(params.getTransactionCost());
     }
 
@@ -62,6 +63,12 @@ public class SimplePortfolio implements Portfolio {
             cash = cash.add(cashFlow);
         }
         return cash;
+    }
+
+    private void addCashFlow(LocalDate date, BigDecimal amount) {
+        if (!cashFlows.containsKey(date))
+            cashFlows.put(date, BigDecimal.ZERO);
+        cashFlows.put(date, cashFlows.get(date).add(amount));
     }
 
     public BigDecimal getTransactionCost() {
@@ -89,7 +96,7 @@ public class SimplePortfolio implements Portfolio {
         if (!positions.containsKey(fund)) {
             positions.put(fund, new Position(quoteDao, fund));
         }
-        cashFlows.put(transaction.getDate(), transaction.getCashValue());
+        addCashFlow(transaction.getDate(), transaction.getCashValue());
         positions.get(fund).add(transaction);
     }
 
@@ -99,8 +106,8 @@ public class SimplePortfolio implements Portfolio {
         if (!positions.containsKey(fund)) {
             throw new PortfolioException("Cannot sell a fund that is not held");
         }
+        addCashFlow(transaction.getDate(), transaction.getCashValue());
         positions.get(fund).add(transaction);
-        cashFlows.put(transaction.getDate(), transaction.getCashValue());
     }
 
     public Collection<Position> getPositions() {

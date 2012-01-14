@@ -45,7 +45,6 @@ public class MomentumStrategy {
                         Set<Fund> acceptableFunds, MomentumStrategyParams strategyParams)
             throws StrategyException {
 
-        //TODO: create a transient getFromLocalDate
         LocalDate fromDate = new LocalDate(backtestParams.getFromDate());
         LocalDate toDate = new LocalDate(backtestParams.getToDate());
 
@@ -64,20 +63,12 @@ public class MomentumStrategy {
                 sellLosers(portfolio, rebalanceDate, selection);
                 buyWinners(portfolio, strategyParams, rebalanceDate, selection);
             } catch (NotFoundException e) {
-                //TODO: How should we handle exceptions here -
-                // what type of exceptions are they?
+                //TODO: How should we handle exceptions here - what type of exceptions are they?
                 log.info(rebalanceDate + " " + e.getMessage());
             } catch (StrategyException e) {
                 log.info(rebalanceDate + " " + e.getMessage());
             }
-
-            logPortfolio(portfolio, rebalanceDate);
-
-            log.info(rebalanceDate + " portfolio value: " +
-                    portfolio.marketValue(rebalanceDate) + ", holdings: " +
-                    portfolio.getActiveFunds(rebalanceDate));
         }
-        log.info(toDate + " portfolio value: " + portfolio.marketValue(toDate));
     }
 
     private Collection<Fund> getSelection(List<String> ranked, Set<Fund> acceptableFunds,

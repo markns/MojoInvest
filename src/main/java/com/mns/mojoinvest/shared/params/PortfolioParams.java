@@ -1,13 +1,12 @@
 package com.mns.mojoinvest.shared.params;
 
 import com.google.gwt.user.client.rpc.IsSerializable;
-import org.joda.time.LocalDate;
 
 import java.util.Date;
 
 public class PortfolioParams implements IsSerializable {
 
-    private LocalDate creationDate;
+    private Date creationDate;
     private Double initialInvestment;
     private Double transactionCost;
 
@@ -16,7 +15,7 @@ public class PortfolioParams implements IsSerializable {
         this.transactionCost = transactionCost;
     }
 
-    public PortfolioParams(Double initialInvestment, Double transactionCost, LocalDate creationDate) {
+    public PortfolioParams(Double initialInvestment, Double transactionCost, Date creationDate) {
         this.initialInvestment = initialInvestment;
         this.transactionCost = transactionCost;
         this.creationDate = creationDate;
@@ -30,11 +29,11 @@ public class PortfolioParams implements IsSerializable {
         return initialInvestment;
     }
 
-    public void setCreationDate(Date fromDate) {
-        this.creationDate = new LocalDate(fromDate);
+    public void setCreationDate(Date creationDate) {
+        this.creationDate = creationDate;
     }
 
-    public LocalDate getCreationDate() {
+    public Date getCreationDate() {
         return creationDate;
     }
 

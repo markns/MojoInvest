@@ -21,8 +21,8 @@ import static junit.framework.Assert.*;
 
 public class PortfolioTests {
 
-    private final PortfolioParams params = new PortfolioParams(50000.00d, 15.00d, new LocalDate("2011-01-01"));
-    private final PortfolioParams loadsofcash = new PortfolioParams(10000000d, 15.0d, new LocalDate("2011-01-01"));
+    private final PortfolioParams params = new PortfolioParams(50000.00d, 15.00d, new LocalDate("2011-01-01").toDateMidnight().toDate());
+    private final PortfolioParams loadsofcash = new PortfolioParams(10000000d, 15.0d, new LocalDate("2011-01-01").toDateMidnight().toDate());
 
     private final QuoteDao quoteDao = new QuoteDao(ObjectifyService.factory());
     private final Fund ABC = new Fund("ABC", "ABC fund", "Category", "Provider", true,
