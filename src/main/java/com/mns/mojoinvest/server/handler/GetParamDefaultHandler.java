@@ -40,8 +40,8 @@ public class GetParamDefaultHandler implements
                 holdingPeriodDefault, portfolioSizeDefault);
 
         //TODO: retrieve earliest date from database
-        Date fromDate = new LocalDate("2007-01-01").toDateMidnight().toDate();
-        Date toDate = new LocalDate("2010-09-01").toDateMidnight().toDate();
+        Date fromDate = new LocalDate("2007-01-15").toDateMidnight().toDate();
+        Date toDate = new LocalDate("2010-09-15").toDateMidnight().toDate();
         BacktestParams backtestParams = new BacktestParams(fromDate, toDate);
 
         List<String> providers = fundDao.getProviders();

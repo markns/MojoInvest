@@ -16,7 +16,6 @@ import com.mns.mojoinvest.shared.dto.StrategyResult;
 import com.mns.mojoinvest.shared.dto.TransactionDto;
 import org.joda.time.LocalDate;
 
-import java.math.BigDecimal;
 import java.util.*;
 import java.util.logging.Logger;
 
@@ -55,8 +54,8 @@ public class StrategyResultBuilderImpl implements StrategyResultBuilder {
 
         List<LocalDate> dates = TradingDayUtils.getWeeklySeries(new LocalDate(fromDate), new LocalDate(toDate), 1, true);
         for (LocalDate date : dates) {
-            BigDecimal marketValue = portfolio.marketValue(date);
-            log.info(date + " " + marketValue);
+//            BigDecimal marketValue = portfolio.marketValue(date);
+//            log.info(date + " " + marketValue);
             dto.addRow(new DataTableDto.DateValue(date.toDateMidnight().toDate()),
                     new DataTableDto.DoubleValue(portfolio.marketValue(date).doubleValue()));
         }
