@@ -26,6 +26,9 @@ public class ChartView extends ViewImpl
 
     public final Widget widget;
 
+    //TODO: Visualization Charts should implement RequireResize interface
+    // http://code.google.com/p/gwt-google-apis/issues/detail?id=486
+
     public ChartView() {
         widget = uiBinder.createAndBindUi(this);
         VisualizationUtils.loadVisualizationApi(new Runnable() {

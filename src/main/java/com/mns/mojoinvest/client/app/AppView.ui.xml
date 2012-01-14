@@ -31,7 +31,7 @@
                          addStyleNames="{style.params}"/>
         </g:west>
 
-        <g:north size='350'>
+        <g:north size='280'>
             <g:FlowPanel ui:field='chart'
                          addStyleNames="{style.chart}"/>
         </g:north>
