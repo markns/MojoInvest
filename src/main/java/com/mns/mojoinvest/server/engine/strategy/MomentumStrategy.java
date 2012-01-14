@@ -59,7 +59,6 @@ public class MomentumStrategy {
                         new RankingParams(strategyParams.getFormationPeriod()));
                 Collection<Fund> selection = getSelection(ranking.getSymbols(),
                         acceptableFunds, strategyParams);
-
                 sellLosers(portfolio, rebalanceDate, selection);
                 buyWinners(portfolio, strategyParams, rebalanceDate, selection);
             } catch (NotFoundException e) {
@@ -74,19 +73,14 @@ public class MomentumStrategy {
     private Collection<Fund> getSelection(List<String> ranked, Set<Fund> acceptableFunds,
                                           MomentumStrategyParams params) throws StrategyException {
 
-        //TODO: This check should only take into account the number of funds in the acceptable set
+        List<String> acceptableSymbols = new ArrayList<String>(acceptableFunds.size());
+        for (Fund fund : acceptableFunds) {
+            acceptableSymbols.add(fund.getSymbol());
+        }
+        ranked.retainAll(acceptableSymbols);
         if (ranked.size() <= params.getPortfolioSize() * 2)
             throw new StrategyException("Not enough funds in population to make selection");
-        Collection<Fund> funds = fundDao.get(ranked);
-        Collection<Fund> selection = new ArrayList<Fund>(params.getPortfolioSize());
-        for (Fund fund : funds) {
-            if (acceptableFunds.contains(fund))
-                selection.add(fund);
-            if (selection.size() == params.getPortfolioSize()) {
-                break;
-            }
-        }
-        return selection;
+        return fundDao.get(ranked.subList(0, params.getPortfolioSize()));
     }
 
 
@@ -110,7 +104,6 @@ public class MomentumStrategy {
         BigDecimal availableCash = portfolio.getCash(rebalanceDate).
                 subtract(portfolio.getTransactionCost().
                         multiply(numEmpty));
-//        log.info("Available cash: " + availableCash);
         for (Fund fund : selection) {
             if (!portfolio.contains(fund, rebalanceDate)) {
                 BigDecimal allocation = availableCash
