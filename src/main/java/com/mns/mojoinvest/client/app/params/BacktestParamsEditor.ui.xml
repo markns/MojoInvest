@@ -4,7 +4,7 @@
     <ui:style>
 
         /* Common measurements used in the app. */
-        @def fieldWidth 15em;
+        @def fieldWidth 10em;
 
         .editField {
             display: inline;
@@ -20,7 +20,8 @@
     <g:HTMLPanel>
         <div class="{style.rightAlign}">
             From date:
-            <d:DateBox ui:field='fromDate' stylePrimaryName="{style.editField}"/>
+            <d:DateBox ui:field='fromDate' stylePrimaryName="{style.editField}"
+                    />
             <br/>
             To date:
             <d:DateBox ui:field='toDate' stylePrimaryName="{style.editField}"/>

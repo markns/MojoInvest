@@ -4,7 +4,7 @@
     <ui:style>
 
         /* Common measurements used in the app. */
-        @def fieldWidth 15em;
+        @def fieldWidth 5em;
 
         .editField {
             display: inline;
