@@ -2,7 +2,7 @@ package com.mns.mojoinvest.server.engine.portfolio;
 
 import com.mns.mojoinvest.server.engine.model.Fund;
 import com.mns.mojoinvest.server.engine.model.Quote;
-import com.mns.mojoinvest.server.engine.model.dao.QuoteDao;
+import com.mns.mojoinvest.server.engine.model.dao.QuoteDaoImpl;
 import com.mns.mojoinvest.server.engine.transaction.BuyTransaction;
 import com.mns.mojoinvest.server.engine.transaction.SellTransaction;
 import com.mns.mojoinvest.server.engine.transaction.Transaction;
@@ -35,7 +35,7 @@ import java.util.List;
  */
 public class Position {
 
-    private QuoteDao quoteDao;
+    private QuoteDaoImpl quoteDao;
 
     private Fund fund;
 
@@ -43,7 +43,7 @@ public class Position {
 
     private final List<Transaction> transactions;
 
-    public Position(QuoteDao quoteDao, Fund fund) {
+    public Position(QuoteDaoImpl quoteDao, Fund fund) {
         this.quoteDao = quoteDao;
         this.fund = fund;
         this.lots = new ArrayList<Lot>();

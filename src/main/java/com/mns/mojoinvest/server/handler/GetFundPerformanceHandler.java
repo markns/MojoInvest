@@ -8,7 +8,7 @@ import com.gwtplatform.dispatch.shared.ActionException;
 import com.mns.mojoinvest.server.engine.model.Fund;
 import com.mns.mojoinvest.server.engine.model.Quote;
 import com.mns.mojoinvest.server.engine.model.dao.FundDao;
-import com.mns.mojoinvest.server.engine.model.dao.QuoteDao;
+import com.mns.mojoinvest.server.engine.model.dao.QuoteDaoImpl;
 import com.mns.mojoinvest.server.util.TradingDayUtils;
 import com.mns.mojoinvest.shared.dispatch.GetFundPerformanceAction;
 import com.mns.mojoinvest.shared.dispatch.GetFundPerformanceResult;
@@ -22,11 +22,11 @@ import java.util.List;
 public class GetFundPerformanceHandler implements
         ActionHandler<GetFundPerformanceAction, GetFundPerformanceResult> {
 
-    private final QuoteDao quoteDao;
+    private final QuoteDaoImpl quoteDao;
     private final FundDao fundDao;
 
     @Inject
-    public GetFundPerformanceHandler(QuoteDao quoteDao, FundDao fundDao) {
+    public GetFundPerformanceHandler(QuoteDaoImpl quoteDao, FundDao fundDao) {
         this.quoteDao = quoteDao;
         this.fundDao = fundDao;
     }

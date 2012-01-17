@@ -3,7 +3,10 @@ package com.mns.mojoinvest.server.engine.calculator;
 import au.com.bytecode.opencsv.CSVReader;
 import com.mns.mojoinvest.server.engine.model.Quote;
 import com.mns.mojoinvest.server.util.QuoteUtils;
+import com.thoughtworks.xstream.XStream;
 import org.apache.commons.lang.StringUtils;
+import org.apache.commons.math.linear.BlockRealMatrix;
+import org.apache.commons.math.linear.RealMatrix;
 import org.apache.commons.math.stat.correlation.PearsonsCorrelation;
 
 import java.io.BufferedReader;
@@ -22,6 +25,7 @@ public class CorrelationCalculator {
             {6, 17, 54},
             {4, 12, 9}
     };
+
 
     public static void main(String[] args) throws IOException {
 
@@ -53,6 +57,16 @@ public class CorrelationCalculator {
 
         NumberFormat format = NumberFormat.getNumberInstance();
 
+        System.out.println(k);
+//        System.out.println(c.getCorrelationMatrix());
+
+
+        XStream xstream = new XStream();
+        String xml = xstream.toXML(c.getCorrelationMatrix()); // serialize to XML
+        System.out.println(xml);
+        Object myObject2 = xstream.fromXML(xml); // de
+        RealMatrix m = (BlockRealMatrix) myObject2;
+        System.out.println(m);
 
         System.out.print("          ");
         for (String s : k) {

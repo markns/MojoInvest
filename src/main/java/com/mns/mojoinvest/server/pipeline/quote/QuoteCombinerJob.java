@@ -6,7 +6,7 @@ import com.googlecode.objectify.Key;
 import com.googlecode.objectify.ObjectifyFactory;
 import com.googlecode.objectify.ObjectifyService;
 import com.mns.mojoinvest.server.engine.model.Quote;
-import com.mns.mojoinvest.server.engine.model.dao.QuoteDao;
+import com.mns.mojoinvest.server.engine.model.dao.QuoteDaoImpl;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -20,7 +20,7 @@ public class QuoteCombinerJob extends Job1<Collection<Quote>, List<Quote>> {
     public Value<Collection<Quote>> run(List<Quote> futureQuotes) {
 
         ObjectifyFactory factory = ObjectifyService.factory();
-        QuoteDao quoteDao = new QuoteDao(factory);
+        QuoteDaoImpl quoteDao = new QuoteDaoImpl(factory);
         quoteDao.registerObjects(factory);
 
         List<Quote> quotes = new ArrayList<Quote>();

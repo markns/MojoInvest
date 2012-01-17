@@ -4,7 +4,7 @@ import com.googlecode.objectify.ObjectifyService;
 import com.mns.mojoinvest.server.engine.model.Quote;
 import com.mns.mojoinvest.server.engine.model.Ranking;
 import com.mns.mojoinvest.server.engine.model.RankingParams;
-import com.mns.mojoinvest.server.engine.model.dao.QuoteDao;
+import com.mns.mojoinvest.server.engine.model.dao.QuoteDaoImpl;
 import org.joda.time.LocalDate;
 import org.junit.Test;
 
@@ -15,7 +15,7 @@ import static junit.framework.Assert.assertEquals;
 
 public class RankingProcessorTests {
 
-    private final QuoteDao quoteDao = new QuoteDao(ObjectifyService.factory());
+    private final QuoteDaoImpl quoteDao = new QuoteDaoImpl(ObjectifyService.factory());
 
 
     @Test

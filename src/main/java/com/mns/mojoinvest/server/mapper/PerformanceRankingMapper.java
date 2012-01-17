@@ -10,7 +10,7 @@ import com.google.inject.Inject;
 import com.mns.mojoinvest.server.engine.calculator.RankingCalculator;
 import com.mns.mojoinvest.server.engine.model.Ranking;
 import com.mns.mojoinvest.server.engine.model.RankingParams;
-import com.mns.mojoinvest.server.engine.model.dao.QuoteDao;
+import com.mns.mojoinvest.server.engine.model.dao.QuoteDaoImpl;
 import org.apache.hadoop.io.NullWritable;
 import org.joda.time.LocalDate;
 import org.joda.time.format.DateTimeFormat;
@@ -26,7 +26,7 @@ public class PerformanceRankingMapper extends
     private static final Logger log = Logger.getLogger(PerformanceRankingMapper.class.getName());
 
     @Inject
-    private QuoteDao dao;
+    private QuoteDaoImpl dao;
 
     @Override
     public void map(BlobstoreRecordKey key, byte[] segment, Context context) {
