@@ -5,7 +5,7 @@ import com.google.appengine.tools.development.testing.LocalServiceTestHelper;
 import com.googlecode.objectify.ObjectifyService;
 import com.mns.mojoinvest.server.engine.model.Fund;
 import com.mns.mojoinvest.server.engine.model.Quote;
-import com.mns.mojoinvest.server.engine.model.dao.QuoteDaoImpl;
+import com.mns.mojoinvest.server.engine.model.dao.QuoteDao;
 import com.mns.mojoinvest.server.engine.transaction.BuyTransaction;
 import com.mns.mojoinvest.server.engine.transaction.SellTransaction;
 import com.mns.mojoinvest.shared.params.PortfolioParams;
@@ -24,7 +24,7 @@ public class PortfolioTests {
     private final PortfolioParams params = new PortfolioParams(50000.00d, 15.00d, new LocalDate("2011-01-01").toDateMidnight().toDate());
     private final PortfolioParams loadsofcash = new PortfolioParams(10000000d, 15.0d, new LocalDate("2011-01-01").toDateMidnight().toDate());
 
-    private final QuoteDaoImpl quoteDao = new QuoteDaoImpl(ObjectifyService.factory());
+    private final QuoteDao quoteDao = new QuoteDao(ObjectifyService.factory());
     private final Fund ABC = new Fund("ABC", "ABC fund", "Category", "Provider", true,
             "US", "Index", "Blah blah", new LocalDate("2011-01-01"));
     private final Fund DEF = new Fund("DEF", "DEF fund", "Category", "Provider", true,

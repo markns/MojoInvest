@@ -5,7 +5,7 @@ import com.google.appengine.tools.pipeline.Value;
 import com.googlecode.objectify.ObjectifyFactory;
 import com.googlecode.objectify.ObjectifyService;
 import com.mns.mojoinvest.server.engine.model.Quote;
-import com.mns.mojoinvest.server.engine.model.dao.QuoteDaoImpl;
+import com.mns.mojoinvest.server.engine.model.dao.QuoteDao;
 
 import java.util.List;
 import java.util.logging.Logger;
@@ -19,7 +19,7 @@ public class QuoteUpdaterJob extends Job1<Boolean, List<Quote>> {
 
         //TODO: Figure out how to inject and serialize DAOs
         ObjectifyFactory factory = ObjectifyService.factory();
-        QuoteDaoImpl dao = new QuoteDaoImpl(factory);
+        QuoteDao dao = new QuoteDao(factory);
         dao.registerObjects(factory);
         //
 

@@ -5,7 +5,7 @@ import com.google.appengine.tools.development.testing.LocalServiceTestHelper;
 import com.googlecode.objectify.ObjectifyService;
 import com.mns.mojoinvest.server.engine.model.Fund;
 import com.mns.mojoinvest.server.engine.model.Quote;
-import com.mns.mojoinvest.server.engine.model.dao.QuoteDaoImpl;
+import com.mns.mojoinvest.server.engine.model.dao.QuoteDao;
 import com.mns.mojoinvest.server.engine.transaction.BuyTransaction;
 import com.mns.mojoinvest.server.engine.transaction.SellTransaction;
 import org.joda.time.LocalDate;
@@ -20,7 +20,7 @@ import static junit.framework.Assert.*;
 
 public class PositionTests {
 
-    private final QuoteDaoImpl quoteDao = new QuoteDaoImpl(ObjectifyService.factory());
+    private final QuoteDao quoteDao = new QuoteDao(ObjectifyService.factory());
     private final Fund fund = new Fund("TEST", "Test fund", "Category", "Provider", true,
             "US", "Index", "Blah blah", new LocalDate("2011-01-01"));
 

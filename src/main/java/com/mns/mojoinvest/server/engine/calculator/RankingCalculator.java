@@ -11,7 +11,7 @@ import com.googlecode.objectify.ObjectifyService;
 import com.mns.mojoinvest.server.engine.model.Quote;
 import com.mns.mojoinvest.server.engine.model.Ranking;
 import com.mns.mojoinvest.server.engine.model.RankingParams;
-import com.mns.mojoinvest.server.engine.model.dao.QuoteDaoImpl;
+import com.mns.mojoinvest.server.engine.model.dao.QuoteDao;
 import com.mns.mojoinvest.server.util.QuoteUtils;
 import com.mns.mojoinvest.server.util.TradingDayUtils;
 import org.joda.time.LocalDate;
@@ -25,16 +25,16 @@ import java.util.*;
 
 public class RankingCalculator {
 
-    private QuoteDaoImpl dao;
+    private QuoteDao dao;
 
-    public RankingCalculator(QuoteDaoImpl dao) {
+    public RankingCalculator(QuoteDao dao) {
         this.dao = dao;
     }
 
-    private QuoteDaoImpl getQuoteDao() {
+    private QuoteDao getQuoteDao() {
         //TODO: Figure out how to inject and serialize DAOs
         ObjectifyFactory factory = ObjectifyService.factory();
-        QuoteDaoImpl dao = new QuoteDaoImpl(factory);
+        QuoteDao dao = new QuoteDao(factory);
         dao.registerObjects(factory);
         return dao;
     }

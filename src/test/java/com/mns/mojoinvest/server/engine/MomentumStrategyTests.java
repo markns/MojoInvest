@@ -10,7 +10,7 @@ import com.mns.mojoinvest.server.engine.execution.NextTradingDayExecutor;
 import com.mns.mojoinvest.server.engine.model.Fund;
 import com.mns.mojoinvest.server.engine.model.Quote;
 import com.mns.mojoinvest.server.engine.model.dao.FundDao;
-import com.mns.mojoinvest.server.engine.model.dao.QuoteDaoImpl;
+import com.mns.mojoinvest.server.engine.model.dao.QuoteDao;
 import com.mns.mojoinvest.server.engine.model.dao.RankingDao;
 import com.mns.mojoinvest.server.engine.portfolio.Portfolio;
 import com.mns.mojoinvest.server.engine.portfolio.PortfolioProvider;
@@ -27,7 +27,7 @@ import java.util.List;
 
 public class MomentumStrategyTests {
 
-    private final QuoteDaoImpl quoteDao = new QuoteDaoImpl(ObjectifyService.factory());
+    private final QuoteDao quoteDao = new QuoteDao(ObjectifyService.factory());
     private final RankingDao rankingDao = new RankingDao(ObjectifyService.factory());
     private final FundDao fundDao = new FundDao(ObjectifyService.factory());
 

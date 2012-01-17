@@ -7,7 +7,7 @@ import com.googlecode.objectify.ObjectifyService;
 import com.mns.mojoinvest.server.engine.calculator.RankingCalculator;
 import com.mns.mojoinvest.server.engine.model.Ranking;
 import com.mns.mojoinvest.server.engine.model.RankingParams;
-import com.mns.mojoinvest.server.engine.model.dao.QuoteDaoImpl;
+import com.mns.mojoinvest.server.engine.model.dao.QuoteDao;
 import com.mns.mojoinvest.server.engine.model.dao.RankingDao;
 import org.joda.time.LocalDate;
 import org.joda.time.format.DateTimeFormat;
@@ -23,7 +23,7 @@ public class PerformanceRankingJob extends Job2<Ranking, LocalDate, RankingParam
         //TODO: Figure out how to inject and serialize DAOs
         ObjectifyFactory factory = ObjectifyService.factory();
 
-        QuoteDaoImpl quoteDao = new QuoteDaoImpl(factory);
+        QuoteDao quoteDao = new QuoteDao(factory);
         quoteDao.registerObjects(factory);
 
         RankingDao rankingDao = new RankingDao(factory);
