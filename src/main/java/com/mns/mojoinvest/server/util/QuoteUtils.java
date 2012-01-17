@@ -128,13 +128,13 @@ public class QuoteUtils {
     public static String[] toStringArray(Quote quote) {
         String[] arr = new String[9];
         arr[0] = quote.getSymbol();
-        arr[1] = quote.getDate().toString();
-        arr[2] = quote.getOpen().toString();
-        arr[3] = quote.getHigh().toString();
-        arr[4] = quote.getLow().toString();
-        arr[5] = quote.getClose().toString();
-        arr[6] = quote.getVolume().toString();
-        arr[7] = quote.getAdjClose().toString();
+        arr[1] = quote.getDate() + "";
+        arr[2] = quote.getOpen() + "";
+        arr[3] = quote.getHigh() + "";
+        arr[4] = quote.getLow() + "";
+        arr[5] = quote.getClose() + "";
+        arr[6] = quote.getVolume() + "";
+        arr[7] = quote.getAdjClose() + "";
         arr[8] = quote.isRolled() + "";
         return arr;
     }

@@ -10,13 +10,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.logging.Logger;
 
 public class MissingQuoteUtil {
-
-    public static final String DATA_DIR = "data";
-
-    private static final Logger log = Logger.getLogger(MissingQuoteUtil.class.getName());
 
     public static void main(String[] args) {
 
@@ -31,7 +26,7 @@ public class MissingQuoteUtil {
     }
 
     private static Map<String, List<Quote>> readQuotes() throws IOException {
-        CSVReader reader = new CSVReader(new BufferedReader(new FileReader("data/wisdomtree_quotes.csv")));
+        CSVReader reader = new CSVReader(new BufferedReader(new FileReader("data/ishares_quotes_tr.csv")));
 
         Map<String, List<Quote>> quoteMap = new HashMap<String, List<Quote>>();
 
@@ -49,7 +44,7 @@ public class MissingQuoteUtil {
     }
 
     private static void writeMissingQuotes(List<Quote> missing) throws IOException {
-        CSVWriter writer = new CSVWriter(new BufferedWriter(new FileWriter("data/wisdomtree_missingquotes.csv")));
+        CSVWriter writer = new CSVWriter(new BufferedWriter(new FileWriter("data/ishares_missingquotes_tr.csv")));
         for (Quote quote : missing) {
             writer.writeNext(QuoteUtils.toStringArray(quote));
         }

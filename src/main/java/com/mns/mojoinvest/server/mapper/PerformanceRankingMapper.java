@@ -5,6 +5,7 @@ import com.google.appengine.api.datastore.Text;
 import com.google.appengine.tools.mapreduce.AppEngineMapper;
 import com.google.appengine.tools.mapreduce.BlobstoreRecordKey;
 import com.google.appengine.tools.mapreduce.DatastoreMutationPool;
+import com.google.common.base.Splitter;
 import com.google.inject.Inject;
 import com.mns.mojoinvest.server.engine.calculator.RankingCalculator;
 import com.mns.mojoinvest.server.engine.model.Ranking;
@@ -30,23 +31,29 @@ public class PerformanceRankingMapper extends
     @Override
     public void map(BlobstoreRecordKey key, byte[] segment, Context context) {
         String line = new String(segment);
-        log.info("Calculating performance ranks for: " + line);
-        LocalDate date = fmt.parseDateTime(line.trim()).toLocalDate();
+
+        log.info("Received line: " + line);
 
         int performanceRange = Integer.parseInt(context.getConfiguration()
                 .get("mapreduce.mapper.performance.range"));
 
         RankingCalculator calculator = new RankingCalculator(dao);
         RankingParams params = new RankingParams(performanceRange);
-        Ranking ranking = calculator.rank(date, params);
 
-        Entity entity = new Entity("Ranking", Ranking.createId(date, params));
-        entity.setUnindexedProperty("symbols", new Text(ranking.getSymbolsStr()));
+        for (String dateStr : Splitter.on('|').trimResults().split(line)) {
 
-        DatastoreMutationPool mutationPool = this.getAppEngineContext(context)
-                .getMutationPool();
-        mutationPool.put(entity);
+            LocalDate date = fmt.parseDateTime(dateStr).toLocalDate();
 
-        //2010-09-13
+            log.info("Calculating performance ranks for: " + date);
+
+            Ranking ranking = calculator.rank(date, params);
+
+            Entity entity = new Entity("Ranking", Ranking.createId(date, params));
+            entity.setUnindexedProperty("symbols", new Text(ranking.getSymbolsStr()));
+
+            DatastoreMutationPool mutationPool = this.getAppEngineContext(context)
+                    .getMutationPool();
+            mutationPool.put(entity);
+        }
     }
 }

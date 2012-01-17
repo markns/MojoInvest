@@ -65,4 +65,8 @@ public class Ranking {
                 ", symbols='" + symbols + '\'' +
                 '}';
     }
+
+    public String toCsv() {
+        return id + "," + symbols;
+    }
 }
