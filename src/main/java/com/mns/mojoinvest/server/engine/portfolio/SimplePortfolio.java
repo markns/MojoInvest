@@ -3,7 +3,7 @@ package com.mns.mojoinvest.server.engine.portfolio;
 import com.google.inject.Inject;
 import com.google.inject.assistedinject.Assisted;
 import com.mns.mojoinvest.server.engine.model.Fund;
-import com.mns.mojoinvest.server.engine.model.dao.QuoteDaoImpl;
+import com.mns.mojoinvest.server.engine.model.dao.QuoteDao;
 import com.mns.mojoinvest.server.engine.transaction.BuyTransaction;
 import com.mns.mojoinvest.server.engine.transaction.SellTransaction;
 import com.mns.mojoinvest.shared.params.PortfolioParams;
@@ -40,14 +40,14 @@ public class SimplePortfolio implements Portfolio {
 
     private Map<Fund, Position> positions;
 
-    private QuoteDaoImpl quoteDao;
+    private QuoteDao quoteDao;
 
     private NavigableMap<LocalDate, BigDecimal> cashFlows;
 
     private BigDecimal transactionCost;
 
     @Inject
-    public SimplePortfolio(QuoteDaoImpl quoteDao, @Assisted PortfolioParams params) {
+    public SimplePortfolio(QuoteDao quoteDao, @Assisted PortfolioParams params) {
         this.quoteDao = quoteDao;
         this.positions = new HashMap<Fund, Position>();
         this.cashFlows = new TreeMap<LocalDate, BigDecimal>();

@@ -4,6 +4,8 @@ import com.google.inject.AbstractModule;
 import com.google.inject.assistedinject.FactoryModuleBuilder;
 import com.mns.mojoinvest.server.engine.execution.Executor;
 import com.mns.mojoinvest.server.engine.execution.NextTradingDayExecutor;
+import com.mns.mojoinvest.server.engine.model.dao.QuoteDao;
+import com.mns.mojoinvest.server.engine.model.dao.QuoteDaoImpl;
 import com.mns.mojoinvest.server.engine.portfolio.Portfolio;
 import com.mns.mojoinvest.server.engine.portfolio.PortfolioFactory;
 import com.mns.mojoinvest.server.engine.portfolio.SimplePortfolio;
@@ -24,6 +26,7 @@ public class EngineModule extends AbstractModule {
 //        bind(RankingStrategy.class).to(SimpleRankingStrategy.class);
 //        bind(TradingStrategy.class).to(MomentumStrategy.class);
         bind(Executor.class).to(NextTradingDayExecutor.class);
+        bind(QuoteDao.class).to(QuoteDaoImpl.class);
 
         install(new FactoryModuleBuilder()
                 .implement(Portfolio.class, SimplePortfolio.class)

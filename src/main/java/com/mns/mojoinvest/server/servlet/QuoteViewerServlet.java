@@ -3,7 +3,7 @@ package com.mns.mojoinvest.server.servlet;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.mns.mojoinvest.server.engine.model.Quote;
-import com.mns.mojoinvest.server.engine.model.dao.QuoteDaoImpl;
+import com.mns.mojoinvest.server.engine.model.dao.QuoteDao;
 import com.mns.mojoinvest.server.servlet.util.ParameterNotFoundException;
 import com.mns.mojoinvest.server.servlet.util.ParameterParser;
 
@@ -16,10 +16,10 @@ import java.util.List;
 @Singleton
 public class QuoteViewerServlet extends HttpServlet {
 
-    private final QuoteDaoImpl dao;
+    private final QuoteDao dao;
 
     @Inject
-    public QuoteViewerServlet(QuoteDaoImpl dao) {
+    public QuoteViewerServlet(QuoteDao dao) {
         this.dao = dao;
     }
 

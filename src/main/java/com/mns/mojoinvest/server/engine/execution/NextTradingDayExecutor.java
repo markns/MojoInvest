@@ -3,7 +3,7 @@ package com.mns.mojoinvest.server.engine.execution;
 import com.google.inject.Inject;
 import com.mns.mojoinvest.server.engine.model.Fund;
 import com.mns.mojoinvest.server.engine.model.Quote;
-import com.mns.mojoinvest.server.engine.model.dao.QuoteDaoImpl;
+import com.mns.mojoinvest.server.engine.model.dao.QuoteDao;
 import com.mns.mojoinvest.server.engine.portfolio.Portfolio;
 import com.mns.mojoinvest.server.engine.portfolio.PortfolioException;
 import com.mns.mojoinvest.server.engine.portfolio.Position;
@@ -18,10 +18,10 @@ public class NextTradingDayExecutor implements Executor {
 
     private static final Logger log = Logger.getLogger(NextTradingDayExecutor.class.getName());
 
-    private QuoteDaoImpl quoteDao;
+    private QuoteDao quoteDao;
 
     @Inject
-    public NextTradingDayExecutor(QuoteDaoImpl quoteDao) {
+    public NextTradingDayExecutor(QuoteDao quoteDao) {
         this.quoteDao = quoteDao;
     }
 
