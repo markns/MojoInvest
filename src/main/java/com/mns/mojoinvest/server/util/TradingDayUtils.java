@@ -23,7 +23,7 @@ public class TradingDayUtils {
 
     public static List<LocalDate> getMonthlySeries(LocalDate fromDate, LocalDate toDate, int frequency, boolean forwards) {
         List<LocalDate> dates = new ArrayList<LocalDate>();
-        while (toDate.isAfter(fromDate)) {
+        while (!toDate.isBefore(fromDate)) {
             dates.add(rollIfRequired(toDate));
             toDate = toDate.minusMonths(frequency);
         }
@@ -36,7 +36,7 @@ public class TradingDayUtils {
 
     public static List<LocalDate> getWeeklySeries(LocalDate fromDate, LocalDate toDate, int frequency, boolean forwards) {
         List<LocalDate> dates = new ArrayList<LocalDate>();
-        while (toDate.isAfter(fromDate)) {
+        while (!toDate.isBefore(fromDate)) {
             dates.add(rollIfRequired(toDate));
             toDate = toDate.minusWeeks(frequency);
         }
@@ -49,7 +49,7 @@ public class TradingDayUtils {
 
     public static List<LocalDate> getDailySeries(LocalDate fromDate, LocalDate toDate, boolean forwards) {
         List<LocalDate> dates = new ArrayList<LocalDate>();
-        while (toDate.isAfter(fromDate) || toDate.isEqual(fromDate)) {
+        while (!toDate.isBefore(fromDate)) {
             toDate = rollIfRequired(toDate);
             dates.add(toDate);
             toDate = toDate.minusDays(1);
