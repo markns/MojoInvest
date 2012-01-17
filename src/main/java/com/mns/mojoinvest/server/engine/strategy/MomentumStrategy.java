@@ -10,7 +10,6 @@ import com.mns.mojoinvest.server.engine.model.dao.FundDao;
 import com.mns.mojoinvest.server.engine.model.dao.RankingDao;
 import com.mns.mojoinvest.server.engine.portfolio.Portfolio;
 import com.mns.mojoinvest.server.engine.portfolio.PortfolioException;
-import com.mns.mojoinvest.server.engine.portfolio.Position;
 import com.mns.mojoinvest.server.util.TradingDayUtils;
 import com.mns.mojoinvest.shared.params.BacktestParams;
 import com.mns.mojoinvest.shared.params.MomentumStrategyParams;
@@ -61,6 +60,8 @@ public class MomentumStrategy {
                         acceptableFunds, strategyParams);
                 sellLosers(portfolio, rebalanceDate, selection);
                 buyWinners(portfolio, strategyParams, rebalanceDate, selection);
+
+                System.out.println(portfolio.getActiveFunds(rebalanceDate));
             } catch (NotFoundException e) {
                 //TODO: How should we handle exceptions here - what type of exceptions are they?
                 log.info(rebalanceDate + " " + e.getMessage());
@@ -91,6 +92,7 @@ public class MomentumStrategy {
                 try {
                     executor.sellAll(portfolio, fund, rebalanceDate);
                 } catch (PortfolioException e) {
+                    e.printStackTrace();
                     throw new StrategyException("Unable to sell losers", e);
                 }
             }
@@ -111,6 +113,7 @@ public class MomentumStrategy {
                 try {
                     executor.buy(portfolio, fund, rebalanceDate, allocation);
                 } catch (PortfolioException e) {
+                    e.printStackTrace();
                     throw new StrategyException("Unable to buy winners", e);
                 }
             }
@@ -120,17 +123,5 @@ public class MomentumStrategy {
     private List<LocalDate> getRebalanceDates(LocalDate fromDate, LocalDate toDate, MomentumStrategyParams params) {
         return TradingDayUtils.getMonthlySeries(fromDate, toDate, params.getHoldingPeriod(), true);
     }
-
-    private void logPortfolio(Portfolio portfolio, LocalDate rebalanceDate) {
-        for (Position position : portfolio.getOpenPositions(rebalanceDate).values()) {
-            log.info(position.getFund()
-                    + " shares: " + position.shares(rebalanceDate)
-                    + ", marketValue: " + position.marketValue(rebalanceDate)
-                    + ", returnsGain: " + position.totalReturn(rebalanceDate)
-                    + ", gain%: " + position.gainPercentage(rebalanceDate));
-
-        }
-    }
-
 
 }
