@@ -1,3 +1,15 @@
 o-7M2dNWqIEsS4FKDvgv1A trading_days.csv
 Wn_uk4geYJyIm3v-cYP_gw trading_days_test.csv
 8UPAmHQbBvPa3lPcdiFzKw wisdomtree_missingquotes.csv
+
+CSuwF47cMIJEjcx2WAQ3nw ishares_quotes.csv
+ll--ujgzUmos6CQUDnKyAQ trading_days.csv
+lndcrLsBnu19XQ5qgZbKJw ishares_missingquotes.csv
+TPxz-TFV72HeYGRoQWDSwQ ishares_funds.csv
+
+
+
+JpMSSw25BB9OHgdnyLHEtQ ishares_quotes_tr.csv
+I3zaQuCm4DYszvZBGOh14Q ishares_missingquotes_tr.csv
+YxEZGQLRz7EpBnA7u_oGzw trading_days.csv
+icnk_T7eqRpUXFdaLQ-Tmw ishares_funds.csv
