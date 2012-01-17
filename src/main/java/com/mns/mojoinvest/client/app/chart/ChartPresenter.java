@@ -2,7 +2,6 @@ package com.mns.mojoinvest.client.app.chart;
 
 import com.google.gwt.event.shared.EventBus;
 import com.google.gwt.visualization.client.DataTable;
-import com.google.gwt.visualization.client.LegendPosition;
 import com.google.gwt.visualization.client.visualizations.corechart.Options;
 import com.google.inject.Inject;
 import com.gwtplatform.mvp.client.PresenterWidget;
@@ -36,7 +35,7 @@ public class ChartPresenter extends PresenterWidget<ChartPresenter.MyView> {
 
     private Options createOptions() {
         Options options = Options.create();
-        options.setLegend(LegendPosition.NONE);
+//        options.setLegend(LegendPosition.NONE);
         return options;
     }
 }

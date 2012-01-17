@@ -3,6 +3,8 @@ package com.mns.mojoinvest.server.engine.result;
 import com.google.gwt.visualization.client.AbstractDataTable;
 import com.google.inject.Inject;
 import com.google.inject.assistedinject.Assisted;
+import com.mns.mojoinvest.server.engine.model.Fund;
+import com.mns.mojoinvest.server.engine.model.Quote;
 import com.mns.mojoinvest.server.engine.model.dao.FundDao;
 import com.mns.mojoinvest.server.engine.model.dao.QuoteDao;
 import com.mns.mojoinvest.server.engine.portfolio.Portfolio;
@@ -17,6 +19,7 @@ import com.mns.mojoinvest.shared.dto.TransactionDto;
 import org.joda.time.LocalDate;
 
 import java.math.BigDecimal;
+import java.math.MathContext;
 import java.util.*;
 import java.util.logging.Logger;
 
@@ -52,13 +55,35 @@ public class StrategyResultBuilderImpl implements StrategyResultBuilder {
         DataTableDto dto = new DataTableDto();
         dto.addColumn(new DataTableDto.Column(AbstractDataTable.ColumnType.DATE, "Date", "date"));
         dto.addColumn(new DataTableDto.Column(AbstractDataTable.ColumnType.NUMBER, "Portfolio value", "portfolio"));
+        dto.addColumn(new DataTableDto.Column(AbstractDataTable.ColumnType.NUMBER, "iShares S&P 500", "s&p500"));
+        dto.addColumn(new DataTableDto.Column(AbstractDataTable.ColumnType.NUMBER, "iShares FTSE 100", "ftse100"));
 
         List<LocalDate> dates = TradingDayUtils.getWeeklySeries(new LocalDate(fromDate), new LocalDate(toDate), 1, true);
+
+        Collection<Fund> funds = fundDao.get(Arrays.asList("ISF", "IUSA"));
+        Collection<Quote> quotes = quoteDao.get(funds, dates);
+        Map<String, Map<LocalDate, BigDecimal>> quoteMap = new HashMap<String, Map<LocalDate, BigDecimal>>();
+        for (Quote quote : quotes) {
+            if (!quoteMap.containsKey(quote.getSymbol())) {
+                quoteMap.put(quote.getSymbol(), new HashMap<LocalDate, BigDecimal>());
+            }
+            quoteMap.get(quote.getSymbol()).put(quote.getDate(), quote.getClose());
+        }
+
         for (LocalDate date : dates) {
             BigDecimal marketValue = portfolio.marketValue(date);
+
+            BigDecimal isfchange = percentageChange(quoteMap.get("ISF").get(dates.get(0)), quoteMap.get("ISF").get(date));
+            BigDecimal iusachange = percentageChange(quoteMap.get("IUSA").get(dates.get(0)), quoteMap.get("IUSA").get(date));
+
+
             log.info(date + " " + marketValue + " " + portfolio.getActiveFunds(date));
             dto.addRow(new DataTableDto.DateValue(date.toDateMidnight().toDate()),
-                    new DataTableDto.DoubleValue(portfolio.marketValue(date).doubleValue()));
+                    new DataTableDto.DoubleValue(portfolio.marketValue(date).doubleValue()),
+                    new DataTableDto.DoubleValue((isfchange.doubleValue() + 1) * 10000),
+                    new DataTableDto.DoubleValue((iusachange.doubleValue() + 1) * 10000)
+
+            );
         }
 
         return dto;
@@ -93,5 +118,11 @@ public class StrategyResultBuilderImpl implements StrategyResultBuilder {
                 return q1.getDate().compareTo(q2.getDate());
             }
         });
+    }
+
+
+    private static BigDecimal percentageChange(BigDecimal from, BigDecimal to) {
+        BigDecimal change = to.subtract(from);
+        return change.divide(from, MathContext.DECIMAL32);
     }
 }
