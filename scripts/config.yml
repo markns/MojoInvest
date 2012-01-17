@@ -67,6 +67,8 @@ transformers:
   connector_options:
   property_map:
 
+#SPAG,iShares S&P Commodity Producers Agribusiness(SPAG),Alternatives,iShares,true,UK,,,2012-01-16
+
     - property: __key__
       external_name: symbol
 
@@ -79,17 +81,19 @@ transformers:
     - property: provider
       external_name: provider
 
-    - property: aum
-      external_name: aum
+    - property: active
+      external_name: active
 
-    - property: expenseRatio
-      external_name: expenseRatio
+    - property: country
+      external_name: country
+
+    - property: index
+      external_name: index
+
+    - property: overview
+      external_name: overview
 
     - property: inceptionDate
       external_name: inceptionDate
       import_transform: transform.import_date_time('%Y-%m-%d')
       export_transform: transform.export_date_time('%Y-%m-%d')
-
-    - property: averageVol
-      external_name: averageVol
-
