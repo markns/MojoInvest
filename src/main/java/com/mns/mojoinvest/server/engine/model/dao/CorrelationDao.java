@@ -1,12 +1,10 @@
 package com.mns.mojoinvest.server.engine.model.dao;
 
-import com.google.common.base.Charsets;
-import com.google.common.io.Files;
 import com.thoughtworks.xstream.XStream;
+import org.apache.commons.io.IOUtils;
 import org.apache.commons.math.linear.BlockRealMatrix;
 import org.apache.commons.math.linear.RealMatrix;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
@@ -18,20 +16,23 @@ public class CorrelationDao {
 
     RealMatrix m;
 
-    public CorrelationDao() {
 
-        try {
-            String text = Files.toString(new File("data/ishares_correl.xml"), Charsets.UTF_8);
-            XStream xStream = new XStream();
-            m = (BlockRealMatrix) xStream.fromXML(text);
+    public double getCorrelation(String a, String b) {
+        if (m == null) {
+            try {
 
-        } catch (IOException e) {
-            e.printStackTrace();
+                String text = IOUtils.toString(CorrelationDao.class.getClassLoader()
+                        .getResourceAsStream("ishares_correl.xml"), "UTF-8");
+
+//                String text = Files.toString(new File("/Users/marknuttallsmith/Projects/MojoInvest/data/ishares_correl.xml"), Charsets.UTF_8);
+                XStream xStream = new XStream();
+                m = (BlockRealMatrix) xStream.fromXML(text);
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
 
-    }
-
-    public double getCorrel(String a, String b) {
         int x = symbols.indexOf(a);
         int y = symbols.indexOf(b);
         return m.getEntry(x, y);

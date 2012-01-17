@@ -9,6 +9,7 @@ import com.mns.mojoinvest.server.engine.model.Fund;
 import com.mns.mojoinvest.server.engine.model.Quote;
 import com.mns.mojoinvest.server.engine.model.Ranking;
 import com.mns.mojoinvest.server.engine.model.RankingParams;
+import com.mns.mojoinvest.server.engine.model.dao.CorrelationDao;
 import com.mns.mojoinvest.server.engine.model.dao.FundDao;
 import com.mns.mojoinvest.server.engine.model.dao.QuoteDao;
 import com.mns.mojoinvest.server.engine.model.dao.RankingDao;
@@ -42,6 +43,7 @@ public class MomentumStrategyTests {
 
     private RankingDao rankingDao = new RankingDao(ObjectifyService.factory());
     private FundDao fundDao = new FundDao(ObjectifyService.factory());
+    private CorrelationDao correlationDao = new CorrelationDao();
 
     private final LocalDatastoreServiceTestConfig config = new LocalDatastoreServiceTestConfig();
     private final LocalServiceTestHelper helper = new LocalServiceTestHelper(config);
@@ -84,7 +86,7 @@ public class MomentumStrategyTests {
         rankingDao.put(rankings);
         Executor executor = new NextTradingDayExecutor(quoteDao);
         when(quoteDao.get(anyFund(), anyLocalDate())).thenReturn(dummyQuote);
-        strategy = new MomentumStrategy(executor, rankingDao, fundDao);
+        strategy = new MomentumStrategy(executor, rankingDao, fundDao, correlationDao);
 
         portfolio = new SimplePortfolio(quoteDao, new PortfolioParams(10000.0, 12.95,
                 new LocalDate("2011-01-01").toDateMidnight().toDate()));

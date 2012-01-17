@@ -6,6 +6,7 @@ import com.mns.mojoinvest.server.engine.execution.Executor;
 import com.mns.mojoinvest.server.engine.model.Fund;
 import com.mns.mojoinvest.server.engine.model.Ranking;
 import com.mns.mojoinvest.server.engine.model.RankingParams;
+import com.mns.mojoinvest.server.engine.model.dao.CorrelationDao;
 import com.mns.mojoinvest.server.engine.model.dao.FundDao;
 import com.mns.mojoinvest.server.engine.model.dao.RankingDao;
 import com.mns.mojoinvest.server.engine.portfolio.Portfolio;
@@ -30,14 +31,17 @@ public class MomentumStrategy {
     private final Executor executor;
     private final RankingDao rankingDao;
     private final FundDao fundDao;
+    private final CorrelationDao correlationDao;
 
     @Inject
     public MomentumStrategy(Executor executor,
                             RankingDao rankingDao,
-                            FundDao fundDao) {
+                            FundDao fundDao,
+                            CorrelationDao correlationDao) {
         this.executor = executor;
         this.rankingDao = rankingDao;
         this.fundDao = fundDao;
+        this.correlationDao = correlationDao;
     }
 
     public void execute(Portfolio portfolio, BacktestParams backtestParams,
@@ -81,7 +85,35 @@ public class MomentumStrategy {
         ranked.retainAll(acceptableSymbols);
         if (ranked.size() <= params.getPortfolioSize() * 2)
             throw new StrategyException("Not enough funds in population to make selection");
-        return fundDao.get(ranked.subList(0, params.getPortfolioSize()));
+
+        List<String> selection = new ArrayList<String>();
+        for (String symbol : ranked) {
+
+            if (selection.size() < params.getPortfolioSize()) {
+
+                //Check correlation to funds already in selection here
+                boolean tooCorrelated = false;
+                for (String selected : selection) {
+                    double correl = correlationDao.getCorrelation(selected, symbol);
+                    if (correl > 0.95) {
+                        tooCorrelated = true;
+                        break;
+                    }
+                }
+                if (tooCorrelated) {
+                    continue;
+                }
+
+                //If something is already in the portfolio that is correlated to the selection
+                //swap it in here
+
+                selection.add(symbol);
+            } else {
+                break;
+            }
+
+        }
+        return fundDao.get(selection);
     }
 
 
