@@ -109,10 +109,17 @@ public class TradingDayUtilsTests {
     public void outputDates() {
 
         List<LocalDate> dates = TradingDayUtils
-                .getDailySeries(new LocalDate("1993-01-22"), new LocalDate("2011-11-05"), true);
+                .getDailySeries(new LocalDate("2000-01-01"), new LocalDate("2012-01-13"), true);
 
+        int c = 0;
         for (LocalDate date : dates) {
-            System.out.println(date);
+            if (c < 20)
+                System.out.print(date + "|");
+            else if (c == 20) {
+                System.out.println(date);
+                c = 0;
+            }
+            c++;
         }
 
     }
