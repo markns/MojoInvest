@@ -11,18 +11,18 @@
 
 
     <ui:style>
-
         .displayInline {
             display: inline;
         }
 
         .table {
             width: 100%;
-            table-layout: fixed;
+            /*table-layout: fixed;*/
         }
     </ui:style>
 
     <g:HTMLPanel ui:field="container">
+
         <cv:SimplePager ui:field="pager" stylePrimaryName="{style.displayInline}"
                         display="{table}" location="RIGHT"/>
 

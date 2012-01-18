@@ -10,10 +10,21 @@ public class MomentumStrategyParams implements IsSerializable {
 
     private int portfolioSize;
 
+    private Double correlation;
+
+    //TODO: Remove this constructor
     public MomentumStrategyParams(int formationPeriod, int holdingPeriod, int portfolioSize) {
         this.formationPeriod = formationPeriod;
         this.holdingPeriod = holdingPeriod;
         this.portfolioSize = portfolioSize;
+    }
+
+    public MomentumStrategyParams(int formationPeriod, int holdingPeriod,
+                                  int portfolioSize, double correlation) {
+        this.formationPeriod = formationPeriod;
+        this.holdingPeriod = holdingPeriod;
+        this.portfolioSize = portfolioSize;
+        this.correlation = correlation;
     }
 
     public MomentumStrategyParams() {
@@ -42,6 +53,14 @@ public class MomentumStrategyParams implements IsSerializable {
 
     public void setPortfolioSize(int portfolioSize) {
         this.portfolioSize = portfolioSize;
+    }
+
+    public Double getCorrelation() {
+        return correlation;
+    }
+
+    public void setCorrelation(Double correlation) {
+        this.correlation = correlation;
     }
 
     @Override

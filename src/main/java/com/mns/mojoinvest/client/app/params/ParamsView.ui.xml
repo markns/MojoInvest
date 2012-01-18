@@ -29,10 +29,12 @@
         .editField {
             display: inline;
             width: fieldWidth;
+
         }
 
         .rightAlign {
             text-align: right;
+            float: right;
         }
 
     </ui:style>
@@ -59,7 +61,9 @@
             <p:BacktestParamsEditor ui:field="backtestParams"/>
         </g:DisclosurePanel>
 
-        <g:Button ui:field='runStrategyButton'>
+        <hr width="100%"/>
+
+        <g:Button ui:field='runStrategyButton' stylePrimaryName="{style.rightAlign}">
             <ui:msg key='paramsFormRunStrategyButton'>Run strategy</ui:msg>
         </g:Button>
 

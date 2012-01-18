@@ -9,9 +9,11 @@
         .editField {
             display: inline;
             width: fieldWidth;
+            margin: 2px;
         }
 
         .rightAlign {
+            float: right;
             text-align: right;
         }
 

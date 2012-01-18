@@ -95,7 +95,7 @@ public class MomentumStrategy {
                 boolean tooCorrelated = false;
                 for (String selected : selection) {
                     double correl = correlationDao.getCorrelation(selected, symbol);
-                    if (correl > 0.95) {
+                    if (correl > params.getCorrelation()) {
                         tooCorrelated = true;
                         break;
                     }

@@ -8,10 +8,12 @@
 
         .editField {
             display: inline;
-            width: fieldWidth;
+            width: 100%;
+            margin: 2px;
         }
 
         .rightAlign {
+            float: right;
             text-align: right;
         }
 

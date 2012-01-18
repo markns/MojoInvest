@@ -2,6 +2,7 @@ package com.mns.mojoinvest.client.app.params;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.editor.client.Editor;
+import com.google.gwt.editor.ui.client.ValueBoxEditorDecorator;
 import com.google.gwt.text.client.IntegerRenderer;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
@@ -22,6 +23,8 @@ public class MomentumStrategyParamsEditor extends Composite
     ValueListBox<Integer> holdingPeriod = new ValueListBox<Integer>(IntegerRenderer.instance());
     @UiField(provided = true)
     ValueListBox<Integer> portfolioSize = new ValueListBox<Integer>(IntegerRenderer.instance());
+    @UiField
+    ValueBoxEditorDecorator<Double> correlation;
 
     public MomentumStrategyParamsEditor() {
         initWidget(GWT.<Binder>create(Binder.class).createAndBindUi(this));

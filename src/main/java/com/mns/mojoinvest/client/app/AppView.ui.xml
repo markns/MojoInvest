@@ -10,35 +10,32 @@
 
     <ui:style>
 
-        .params {
-            background-color: #ccccff;
-        }
+        /*.params {*/
+        /*background-color: #ccccff;*/
+        /*}*/
 
-        .chart {
-            background-color: #ccccff;
-        }
+        /*.chart {*/
+        /*background-color: #ccccff;*/
+        /*}*/
 
-        .trades {
-            background-color: #ccccff;
-        }
+        /*.trades {*/
+        /*background-color: #ccccff;*/
+        /*}*/
 
 
     </ui:style>
 
     <g:SplitLayoutPanel>
         <g:west size='250'>
-            <g:FlowPanel ui:field='params'
-                         addStyleNames="{style.params}"/>
+            <g:FlowPanel ui:field='params'/>
         </g:west>
 
         <g:north size='280'>
-            <g:FlowPanel ui:field='chart'
-                         addStyleNames="{style.chart}"/>
+            <g:FlowPanel ui:field='chart'/>
         </g:north>
 
         <g:center>
-            <g:FlowPanel ui:field='trades'
-                         addStyleNames="{style.trades}"/>
+            <g:FlowPanel ui:field='trades'/>
         </g:center>
     </g:SplitLayoutPanel>
 

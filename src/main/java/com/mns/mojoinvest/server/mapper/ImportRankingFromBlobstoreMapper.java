@@ -39,6 +39,9 @@ public class ImportRankingFromBlobstoreMapper extends
 
         if (!id.isEmpty()) {
             Entity quote = new Entity("Ranking", id);
+            //TODO: Need to set property as text property when over 500 char
+//            if (symbols.length() >= 500)
+//                quote.setUnindexedProperty();
             quote.setProperty("symbols", symbols);
 
             DatastoreMutationPool mutationPool = this.getAppEngineContext(context)

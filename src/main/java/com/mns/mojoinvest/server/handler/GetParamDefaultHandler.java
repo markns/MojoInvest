@@ -36,8 +36,9 @@ public class GetParamDefaultHandler implements
         Integer formationPeriodDefault = 9;
         Integer holdingPeriodDefault = 1;
         Integer portfolioSizeDefault = 3;
+        double correlation = 0.99;
         MomentumStrategyParams strategyParams = new MomentumStrategyParams(formationPeriodDefault,
-                holdingPeriodDefault, portfolioSizeDefault);
+                holdingPeriodDefault, portfolioSizeDefault, correlation);
 
         //TODO: retrieve earliest date from database
         Date fromDate = new LocalDate("2001-01-15").toDateMidnight().toDate();

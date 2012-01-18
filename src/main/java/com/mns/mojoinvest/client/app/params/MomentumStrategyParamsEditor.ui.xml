@@ -9,9 +9,11 @@
         .editField {
             display: inline;
             width: fieldWidth;
+            margin: 2px;
         }
 
         .rightAlign {
+            float: right;
             text-align: right;
         }
 
@@ -38,6 +40,14 @@
             <g:ValueListBox ui:field="portfolioSize"
                             stylePrimaryName="{style.editField}">
             </g:ValueListBox>
+            <br/>
+            Correlation:
+            <e:ValueBoxEditorDecorator ui:field="correlation"
+                                       stylePrimaryName="{style.editField}">
+                <e:valuebox>
+                    <g:DoubleBox stylePrimaryName="{style.editField}"/>
+                </e:valuebox>
+            </e:ValueBoxEditorDecorator>
             <br/>
         </div>
     </g:HTMLPanel>

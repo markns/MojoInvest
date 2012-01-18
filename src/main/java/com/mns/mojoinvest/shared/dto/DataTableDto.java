@@ -62,6 +62,7 @@ public class DataTableDto implements IsSerializable {
                     data.setValue(i, j, (Date) value.value);
                 } else if (value instanceof DoubleValue) {
                     data.setValue(i, j, (Double) value.value);
+//                    data.setProperty();
                 } else if (value instanceof IntegerValue) {
                     data.setValue(i, j, (Integer) value.value);
                 }
