@@ -11,35 +11,21 @@
     <ui:with field='res' type='com.mns.mojoinvest.client.resources.Resources'/>
 
     <ui:style>
-        .header {
-            font-size: 110%;
-            color: #555
-        }
-
-        .label {
-        }
-
-        .table {
-            margin: 10px;
-        }
-
-        /* Common measurements used in the app. */
-        @def fieldWidth 30em;
-
-        .editField {
-            display: inline;
-            width: fieldWidth;
-
-        }
 
         .rightAlign {
             text-align: right;
             float: right;
         }
 
+        .params {
+            width: 210px;
+            float: left;
+            margin-right: 20px;
+        }
+
     </ui:style>
 
-    <g:HTMLPanel>
+    <g:HTMLPanel addStyleNames="{style.params}">
 
         <g:DisclosurePanel animationEnabled="true" open="true">
             <g:header>Portfolio</g:header>

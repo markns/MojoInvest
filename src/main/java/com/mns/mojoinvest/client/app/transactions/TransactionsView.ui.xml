@@ -16,19 +16,15 @@
         }
 
         .table {
-            width: 100%;
+            width: 720px;
+            float: right;
             /*table-layout: fixed;*/
         }
     </ui:style>
 
-    <g:HTMLPanel ui:field="container">
-
-        <cv:SimplePager ui:field="pager" stylePrimaryName="{style.displayInline}"
-                        display="{table}" location="RIGHT"/>
-
-        <cv:CellTable ui:field="table" stylePrimaryName="{style.table}"
-                      title="Transactions">
-        </cv:CellTable>
+    <g:HTMLPanel ui:field="container" addStyleNames="{style.table}">
+        <cv:CellTable ui:field="table" title="Transactions"/>
+        <cv:SimplePager ui:field="pager" display="{table}" location="RIGHT"/>
     </g:HTMLPanel>
 
 </ui:UiBinder>

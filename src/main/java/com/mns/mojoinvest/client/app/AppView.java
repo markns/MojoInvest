@@ -50,35 +50,4 @@ public class AppView extends ViewWithUiHandlers<AppUiHandlers>
         }
     }
 
-
-//    @Override
-//    public void setChartData(DataTable dataTable, OptionsDto optionsDto) {
-//        lineChart = new LineChart(dataTable, createOptions(optionsDto));
-//        chartContainer.clear();
-//        chartContainer.add(lineChart);
-//    }
-
-//    private Options createOptions(OptionsDto optionsDto) {
-//        Options options = Options.create();
-//        options.setTitle(optionsDto.getTitle());
-//        options.setWidth(800);
-//        options.setHeight(400);
-//        return options;
-//    }
-
-//    @Override
-//    public void setDefaultValues() {
-//    }
-//
-//    @Override
-//    public void resetAndFocus() {
-//        setDefaultValues();
-//    }
-
-
-//    @UiHandler("getPerformance")
-//    void onCreatePerformanceClicked(ClickEvent event) {
-//        getUiHandlers().getPerformance(symbol.getValue());
-//    }
-
 }

@@ -9,50 +9,18 @@
     <ui:with field='res' type='com.mns.mojoinvest.client.resources.Resources'/>
 
     <ui:style>
-
+        .app {
+            /*margin-top: 30px;*/
+            margin-bottom: 20px;
+        }
 
     </ui:style>
 
-    <!--<g:HTMLPanel addStyleNames="{res.css.main}">-->
-    <!--<p>-->
-    <!--Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut ut-->
-    <!--pretium-->
-    <!--ante. Nullam posuere elit sit amet elit hendrerit elementum.-->
-    <!--Nunc-->
-    <!--sit amet lectus diam. Nulla ut laoreet erat. Nulla pulvinar-->
-    <!--iaculis-->
-    <!--ante sit amet semper. Proin neque neque, dignissim quis-->
-    <!--viverra id,-->
-    <!--sagittis quis enim. Lorem ipsum dolor sit amet,-->
-    <!--consectetur-->
-    <!--adipiscing elit. Proin quam enim, volutpat vel cursus-->
-    <!--eleifend,-->
-    <!--rutrum vel velit. Phasellus tempus convallis mauris sed-->
-    <!--aliquet.-->
-    <!--Vivamus accumsan lorem blandit magna sodales pretium. Fusce-->
-    <!--velit-->
-    <!--erat, mattis eget mollis ut, lacinia sed neque. In lorem magna,-->
-    <!--sollicitudin id accumsan scelerisque, fringilla sed elit. Aenean et-->
-    <!--fermentum turpis. Morbi sollicitudin libero nec lacus dapibus sit-->
-    <!--amet mollis odio fermentum. Fusce condimentum adipiscing justo eget-->
-    <!--venenatis.-->
-    <!--</p>-->
-    <!--</g:HTMLPanel>-->
-
-    <g:DockLayoutPanel addStyleNames="{res.css.main}">
-
-        <g:west size='250'>
-            <g:FlowPanel ui:field='params'/>
-        </g:west>
-
-        <g:north size='280'>
-            <g:FlowPanel ui:field='chart'/>
-        </g:north>
-
-        <g:center>
-            <g:FlowPanel ui:field='trades'/>
-        </g:center>
-    </g:DockLayoutPanel>
+    <g:FlowPanel addStyleNames="{res.css.main} {style.app}">
+        <g:FlowPanel ui:field='params' addStyleNames="{res.css.left}"/>
+        <g:FlowPanel ui:field='chart' addStyleNames="{res.css.left}"/>
+        <g:FlowPanel ui:field='trades' addStyleNames="{res.css.left}"/>
+    </g:FlowPanel>
 
 
 </ui:UiBinder>

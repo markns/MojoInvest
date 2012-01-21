@@ -8,8 +8,15 @@
     <ui:with type="com.mns.mojoinvest.client.NameTokens" field="nameTokens"/>
     <ui:with field='res' type='com.mns.mojoinvest.client.resources.Resources'/>
 
+    <ui:style>
+        .chart {
+            width: 720px;
+            height: 300px;
+            margin-bottom: 10px;
+        }
 
-    <g:HTMLPanel ui:field="container" height="100%" width="100%"/>
+    </ui:style>
 
+    <g:HTMLPanel ui:field="container" addStyleNames="{style.chart}"/>
 
 </ui:UiBinder>

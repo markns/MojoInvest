@@ -171,20 +171,5 @@ public class AppPresenter extends Presenter<AppPresenter.MyView, AppPresenter.My
     @Override
     public void getPerformance(String symbol) {
         MainEntryPoint.logger.info("Requested performance for " + symbol);
-
-//        dispatcher.execute(new GetFundPerformanceAction(symbol),
-//                new DispatchCallback<GetFundPerformanceResult>() {
-//                    @Override
-//                    public void onSuccess(GetFundPerformanceResult result) {
-//                        if (!result.getErrorText().isEmpty()) {
-//                            Window.alert(result.getErrorText());
-//                            return;
-//                        }
-//                        getView().setDefaultValues();
-//                        getView().setChartData(result.getDataTableDto().getDataTable(),
-//                                result.getOptionsDto());
-//                    }
-//                });
-
     }
 }
