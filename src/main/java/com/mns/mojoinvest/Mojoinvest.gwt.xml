@@ -39,10 +39,10 @@
     <inherits name="com.google.gwt.visualization.Visualization"/>
 
     <!--Use safe html-->
-    <set-configuration-property name="UiBinder.useSafeHtmlTemplates" value="true" />
+    <set-configuration-property name="UiBinder.useSafeHtmlTemplates" value="true"/>
 
     <!-- Specify the app entry point class.                         -->
-    <entry-point class='com.mns.mojoinvest.client.Main'/>
+    <entry-point class='com.mns.mojoinvest.client.MainEntryPoint'/>
 
     <!-- French language, independent of country -->
     <!--<extend-property name="locale" values="fr"/>-->

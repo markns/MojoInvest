@@ -11,7 +11,7 @@ import java.util.logging.Logger;
  *
  * @author Mark Nuttall-Smith
  */
-public class Main implements EntryPoint {
+public class MainEntryPoint implements EntryPoint {
 
     public final MainGinjector ginjector = GWT.create(MainGinjector.class);
 
@@ -22,7 +22,8 @@ public class Main implements EntryPoint {
         // This is required for Gwt-Platform proxy's generator.
         DelayedBindRegistry.bind(ginjector);
 
-        ginjector.getResources().mojo().ensureInjected();
+        ginjector.getResources().css().ensureInjected();
+        ginjector.getResources().widgets().ensureInjected();
         ginjector.getPlaceManager().revealCurrentPlace();
     }
 

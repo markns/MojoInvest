@@ -25,8 +25,6 @@ import com.google.gwt.resources.client.ImageResource;
  */
 public interface Resources extends ClientBundle {
 
-    ImageResource selectedNavigation();
-
     ImageResource mojo_logo();
 
     // -------------------------------------------------------------------- CSS
@@ -37,7 +35,19 @@ public interface Resources extends ClientBundle {
      * @return
      */
     @Source("mojo.css")
-    CssResource mojo();
+    MojoCss css();
+
+    interface MojoCss extends CssResource {
+
+        String main();
+
+        String left();
+
+        String right();
+
+        String clear();
+    }
+
 
     /**
      * CSS classes to style GWT and custom widgets
@@ -47,16 +57,6 @@ public interface Resources extends ClientBundle {
     @Source("widgets.css")
     CssResource widgets();
 
-
-    public interface Navigation extends CssResource {
-        @ClassName("selectedNavigationEntry")
-        String selectedNavigationEntry();
-        @ClassName("selectedDate")
-        String selectedDate();
-    }
-
-    @Source("navigation.css")
-    Navigation navigation();
 
 }
 

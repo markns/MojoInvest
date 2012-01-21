@@ -17,6 +17,8 @@ public class MomentumStrategyParamsEditor extends Composite
     interface Binder extends UiBinder<Widget, MomentumStrategyParamsEditor> {
     }
 
+    //TODO: Slider article: http://www.zackgrossbart.com/hackito/gwt-slider/
+
     @UiField(provided = true)
     ValueListBox<Integer> formationPeriod = new ValueListBox<Integer>(IntegerRenderer.instance());
     @UiField(provided = true)

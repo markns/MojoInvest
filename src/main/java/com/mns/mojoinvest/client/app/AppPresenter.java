@@ -16,7 +16,7 @@ import com.gwtplatform.mvp.client.proxy.ManualRevealCallback;
 import com.gwtplatform.mvp.client.proxy.PlaceRequest;
 import com.gwtplatform.mvp.client.proxy.ProxyPlace;
 import com.gwtplatform.mvp.client.proxy.RevealContentEvent;
-import com.mns.mojoinvest.client.Main;
+import com.mns.mojoinvest.client.MainEntryPoint;
 import com.mns.mojoinvest.client.MainPresenter;
 import com.mns.mojoinvest.client.NameTokens;
 import com.mns.mojoinvest.client.app.chart.ChartPresenter;
@@ -90,7 +90,7 @@ public class AppPresenter extends Presenter<AppPresenter.MyView, AppPresenter.My
         successCallbacks.add(new OnSuccessCallback<GetPerformanceRangesAvailableResult>() {
             @Override
             public void onSuccess(GetPerformanceRangesAvailableResult result) {
-                Main.logger.info(result.toString());
+                MainEntryPoint.logger.info(result.toString());
                 paramsPresenter.getView()
                         .setFormationPeriodsAvailable(result.getPerformanceRangesAvailable());
             }
@@ -119,7 +119,7 @@ public class AppPresenter extends Presenter<AppPresenter.MyView, AppPresenter.My
         successCallbacks.add(new OnSuccessCallback<GetParamDefaultsResult>() {
             @Override
             public void onSuccess(GetParamDefaultsResult result) {
-                Main.logger.info(result.toString());
+                MainEntryPoint.logger.info(result.toString());
                 Params params = result.getParams();
                 paramsPresenter.getView().edit(params);
                 paramsPresenter.getView()
@@ -146,7 +146,7 @@ public class AppPresenter extends Presenter<AppPresenter.MyView, AppPresenter.My
                     @Override
                     public void onFailure(Throwable caught) {
                         Window.alert(caught.toString());
-                        Main.logger.severe(caught.toString());
+                        MainEntryPoint.logger.severe(caught.toString());
                         caught.printStackTrace();
                     }
                 }
@@ -156,13 +156,13 @@ public class AppPresenter extends Presenter<AppPresenter.MyView, AppPresenter.My
     @Override
     protected void revealInParent() {
         RevealContentEvent.fire(this, MainPresenter.TYPE_RevealPageContent, this);
-        Main.logger.info("AppPresenter revealInParent");
+        MainEntryPoint.logger.info("AppPresenter revealInParent");
     }
 
     @Override
     protected void onReveal() {
         super.onReveal();
-        Main.logger.info("AppPresenter onReveal");
+        MainEntryPoint.logger.info("AppPresenter onReveal");
         setInSlot(SLOT_transactions, transactionsPresenter);
         setInSlot(SLOT_params, paramsPresenter);
         setInSlot(SLOT_chart, chartPresenter);
@@ -170,7 +170,7 @@ public class AppPresenter extends Presenter<AppPresenter.MyView, AppPresenter.My
 
     @Override
     public void getPerformance(String symbol) {
-        Main.logger.info("Requested performance for " + symbol);
+        MainEntryPoint.logger.info("Requested performance for " + symbol);
 
 //        dispatcher.execute(new GetFundPerformanceAction(symbol),
 //                new DispatchCallback<GetFundPerformanceResult>() {

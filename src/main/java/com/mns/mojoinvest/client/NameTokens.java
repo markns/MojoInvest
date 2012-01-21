@@ -30,10 +30,10 @@ package com.mns.mojoinvest.client;
  */
 public class NameTokens {
 
-    public static final String landing = "!landing";
+    public static final String home = "!home";
 
-    public static String landing() {
-        return landing;
+    public static String home() {
+        return home;
     }
 
     public static final String signIn = "!signIn";
