@@ -1,6 +1,7 @@
 package com.mns.mojoinvest.server.mapper;
 
 import com.google.appengine.api.datastore.Entity;
+import com.google.appengine.api.datastore.Text;
 import com.google.appengine.tools.mapreduce.AppEngineMapper;
 import com.google.appengine.tools.mapreduce.BlobstoreRecordKey;
 import com.google.appengine.tools.mapreduce.DatastoreMutationPool;
@@ -39,10 +40,12 @@ public class ImportRankingFromBlobstoreMapper extends
 
         if (!id.isEmpty()) {
             Entity quote = new Entity("Ranking", id);
-            //TODO: Need to set property as text property when over 500 char
-//            if (symbols.length() >= 500)
-//                quote.setUnindexedProperty();
-            quote.setProperty("symbols", symbols);
+
+            if (symbols.length() > 500) {
+                quote.setProperty("symbols", new Text(symbols));
+            } else {
+                quote.setProperty("symbols", symbols);
+            }
 
             DatastoreMutationPool mutationPool = this.getAppEngineContext(context)
                     .getMutationPool();
