@@ -37,10 +37,17 @@ public class FundDetailFetcherBatchJob extends Job1<List<Fund>, List<String>> {
     public Fund run(String symbol) {
         log.info("Attempting to fetch html for " + symbol);
         String html = fetchFundDetailHtml(symbol);
-        Details details = scrapeDetails(html, symbol);
-        log.info("Scraped details for " + symbol + " - " + details);
-        Fund fund = buildFund(details);
-        log.info("Constructed fund " + fund);
+        Fund fund;
+        try {
+            Details details = scrapeDetails(html, symbol);
+            log.info("Scraped details for " + symbol + " - " + details);
+            fund = buildFund(details);
+            log.info("Constructed fund " + fund);
+        } catch (Exception e) {
+            //Write html string to blobstore for analysis
+            log.warning("Unable to parse html for " + symbol + ", html written to blob");
+            return new Fund(symbol, null, null, null, true, null, null, null, null);
+        }
         return fund;
     }
 
@@ -58,6 +65,7 @@ public class FundDetailFetcherBatchJob extends Job1<List<Fund>, List<String>> {
         Details details = new Details(symbol);
         Document doc = Jsoup.parse(html);
 
+
         details.name = doc.getElementById("quickquote").getElementsByClass("cn").get(0).child(0).text();
 
         for (Element element : doc.select("span")) {
@@ -72,7 +80,9 @@ public class FundDetailFetcherBatchJob extends Job1<List<Fund>, List<String>> {
             if ("OVERVIEW".equals(element.text())) {
                 details.overview = element.parent().parent().ownText();
             }
+
         }
+
         return details;
     }
 

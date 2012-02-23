@@ -10,12 +10,12 @@ import com.mns.mojoinvest.server.engine.model.dao.FundDao;
 import java.util.List;
 import java.util.logging.Logger;
 
-public class FundUpdaterJob extends Job1<Void, List<Fund>> {
+public class FundUpdaterJob extends Job1<String, List<Fund>> {
 
     private static final Logger log = Logger.getLogger(FundUpdaterJob.class.getName());
 
     @Override
-    public Value<Void> run(List<Fund> current) {
+    public Value<String> run(List<Fund> current) {
 
         //TODO: Figure out how to inject and serialize DAOs
         ObjectifyFactory factory = ObjectifyService.factory();
@@ -35,7 +35,8 @@ public class FundUpdaterJob extends Job1<Void, List<Fund>> {
         log.info("Updating " + current.size() + " funds");
         dao.put(current);
 
-        return null;
+        return immediate("Set " + existing.size() + " funds as inactive: " + existing + "\n" +
+                "Updated " + current.size() + " funds");
     }
 
 

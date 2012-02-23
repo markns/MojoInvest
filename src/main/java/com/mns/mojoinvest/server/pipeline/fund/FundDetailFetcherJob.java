@@ -2,6 +2,7 @@ package com.mns.mojoinvest.server.pipeline.fund;
 
 import com.google.appengine.tools.pipeline.Job1;
 import com.google.appengine.tools.pipeline.Value;
+import com.google.common.annotations.VisibleForTesting;
 import com.mns.mojoinvest.server.engine.model.Fund;
 import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.WebResource;
@@ -40,23 +41,29 @@ public class FundDetailFetcherJob extends Job1<Fund, String> {
         return r.queryParams(params).get(String.class);
     }
 
-    private Details scrapeDetails(String html, String symbol) {
+    @VisibleForTesting
+    protected Details scrapeDetails(String html, String symbol) {
         Details details = new Details(symbol);
         Document doc = Jsoup.parse(html);
 
         details.name = doc.getElementById("quickquote").getElementsByClass("cn").get(0).child(0).text();
 
         for (Element element : doc.select("span")) {
-            if ("QUICK STATS".equals(element.text())) {
-                Element tbody = element.parent().parent().getElementsByTag("tbody").get(0);
-                details.category = tbody.child(3).child(1).text();
-                details.provider = tbody.child(4).child(1).text();
-                details.index = tbody.child(5).child(1).text();
-                details.inceptionDate = tbody.child(6).child(1).text();
-            }
+            try {
+                if ("QUICK STATS".equals(element.text())) {
+                    Element tbody = element.parent().parent().getElementsByTag("tbody").get(0);
+                    details.category = tbody.child(3).child(1).text();
+                    details.provider = tbody.child(4).child(1).text();
+                    details.index = tbody.child(5).child(1).text();
+                    details.inceptionDate = tbody.child(6).child(1).text();
+                }
 
-            if ("OVERVIEW".equals(element.text())) {
-                details.overview = element.parent().parent().ownText();
+                if ("OVERVIEW".equals(element.text())) {
+                    details.overview = element.parent().parent().ownText();
+                }
+            } catch (Exception e) {
+                //TODO: Raise hell
+                e.printStackTrace();
             }
         }
         return details;
