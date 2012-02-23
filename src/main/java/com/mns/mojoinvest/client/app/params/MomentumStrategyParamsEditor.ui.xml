@@ -3,6 +3,12 @@
              xmlns:e='urn:import:com.google.gwt.editor.ui.client'>
     <ui:style>
 
+        .momentumStrategyParams {
+            width: 210px;
+            float: right;
+            text-align: right;
+        }
+
         /* Common measurements used in the app. */
         @def fieldWidth 5em;
 
@@ -12,43 +18,31 @@
             margin: 2px;
         }
 
-        .rightAlign {
-            float: right;
-            text-align: right;
-        }
-
     </ui:style>
 
-    <g:HTMLPanel>
-
-        <!--private int formationPeriod;-->
-        <!--private int holdingPeriod;-->
-        <!--private int portfolioSize;-->
-
-        <div class="{style.rightAlign}">
-            Formation period:
-            <g:ValueListBox ui:field="formationPeriod"
-                            stylePrimaryName="{style.editField}">
-            </g:ValueListBox>
-            <br/>
-            Holding period:
-            <g:ValueListBox ui:field="holdingPeriod"
-                            stylePrimaryName="{style.editField}">
-            </g:ValueListBox>
-            <br/>
-            Portfolio size:
-            <g:ValueListBox ui:field="portfolioSize"
-                            stylePrimaryName="{style.editField}">
-            </g:ValueListBox>
-            <br/>
-            Correlation:
-            <e:ValueBoxEditorDecorator ui:field="correlation"
-                                       stylePrimaryName="{style.editField}">
-                <e:valuebox>
-                    <g:DoubleBox stylePrimaryName="{style.editField}"/>
-                </e:valuebox>
-            </e:ValueBoxEditorDecorator>
-            <br/>
-        </div>
+    <g:HTMLPanel addStyleNames="{style.momentumStrategyParams}">
+        Formation period:
+        <g:ValueListBox ui:field="formationPeriod"
+                        stylePrimaryName="{style.editField}">
+        </g:ValueListBox>
+        <br/>
+        Holding period:
+        <g:ValueListBox ui:field="holdingPeriod"
+                        stylePrimaryName="{style.editField}">
+        </g:ValueListBox>
+        <br/>
+        Portfolio size:
+        <g:ValueListBox ui:field="portfolioSize"
+                        stylePrimaryName="{style.editField}">
+        </g:ValueListBox>
+        <br/>
+        Correlation:
+        <e:ValueBoxEditorDecorator ui:field="correlation"
+                                   stylePrimaryName="{style.editField}">
+            <e:valuebox>
+                <g:DoubleBox stylePrimaryName="{style.editField}"/>
+            </e:valuebox>
+        </e:ValueBoxEditorDecorator>
+        <br/>
     </g:HTMLPanel>
 </ui:UiBinder>

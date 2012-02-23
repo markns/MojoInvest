@@ -20,6 +20,7 @@
         .params {
             width: 210px;
             float: left;
+            margin-bottom: 50px;
             margin-right: 20px;
         }
 

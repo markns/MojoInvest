@@ -10,7 +10,7 @@
         @sprite .footer {
             float: left;
             width: 100%;
-            height: 100px;
+            height: 80px;
             padding-top: 23px;
             gwt-image: "back_footer";
             background-position: top center;

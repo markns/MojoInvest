@@ -3,6 +3,12 @@
              xmlns:d='urn:import:com.google.gwt.user.datepicker.client'>
     <ui:style>
 
+        .backtestParams {
+            width: 210px;
+            float: right;
+            text-align: right;
+        }
+
         /* Common measurements used in the app. */
         @def fieldWidth 10em;
 
@@ -12,21 +18,14 @@
             margin: 2px;
         }
 
-        .rightAlign {
-            float: right;
-            text-align: right;
-        }
 
     </ui:style>
 
-    <g:HTMLPanel>
-        <div class="{style.rightAlign}">
-            From date:
-            <d:DateBox ui:field='fromDate' stylePrimaryName="{style.editField}"
-                    />
-            <br/>
-            To date:
-            <d:DateBox ui:field='toDate' stylePrimaryName="{style.editField}"/>
-        </div>
+    <g:HTMLPanel addStyleNames="{style.backtestParams}">
+        From date:
+        <d:DateBox ui:field='fromDate' stylePrimaryName="{style.editField}"/>
+        <br/>
+        To date:
+        <d:DateBox ui:field='toDate' stylePrimaryName="{style.editField}"/>
     </g:HTMLPanel>
 </ui:UiBinder>

@@ -1,44 +1,47 @@
 <ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
              xmlns:g='urn:import:com.google.gwt.user.client.ui'
              xmlns:e='urn:import:com.google.gwt.editor.ui.client'>
+
+    <ui:with field='res' type='com.mns.mojoinvest.client.resources.Resources'/>
+
+
     <ui:style>
+
+        .portfolioParams {
+            width: 210px;
+            float: right;
+
+            /*text-align: right;*/
+        }
 
         /* Common measurements used in the app. */
         @def fieldWidth 5em;
 
         .editField {
+            float: right;
             display: inline;
             width: fieldWidth;
             margin: 2px;
         }
 
-        .rightAlign {
-            float: right;
-            text-align: right;
-        }
-
     </ui:style>
 
-    <g:HTMLPanel>
-        <!--private BigDecimal initialInvestment;-->
-        <!--private BigDecimal transactionCost;-->
-        <div class="{style.rightAlign}">
-            Investment amount:
-            <e:ValueBoxEditorDecorator ui:field="initialInvestment"
-                                       stylePrimaryName="{style.editField}">
-                <e:valuebox>
-                    <g:DoubleBox stylePrimaryName="{style.editField}"/>
-                </e:valuebox>
-            </e:ValueBoxEditorDecorator>
-            <br/>
-            Transaction cost:
-            <e:ValueBoxEditorDecorator ui:field="transactionCost"
-                                       stylePrimaryName="{style.editField}">
-                <e:valuebox>
-                    <g:DoubleBox stylePrimaryName="{style.editField}"/>
-                </e:valuebox>
-            </e:ValueBoxEditorDecorator>
-        </div>
+    <g:HTMLPanel addStyleNames="{style.portfolioParams}">
+        Investment amount:
+        <e:ValueBoxEditorDecorator ui:field="initialInvestment"
+                                   stylePrimaryName="{style.editField}">
+            <e:valuebox>
+                <g:DoubleBox stylePrimaryName="{style.editField}"/>
+            </e:valuebox>
+        </e:ValueBoxEditorDecorator>
+
+        Transaction cost:
+        <e:ValueBoxEditorDecorator ui:field="transactionCost"
+                                   stylePrimaryName="{style.editField}">
+            <e:valuebox>
+                <g:DoubleBox stylePrimaryName="{style.editField}"/>
+            </e:valuebox>
+        </e:ValueBoxEditorDecorator>
     </g:HTMLPanel>
 
 </ui:UiBinder>

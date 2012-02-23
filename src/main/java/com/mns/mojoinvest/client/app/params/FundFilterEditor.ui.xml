@@ -3,31 +3,31 @@
 
     <ui:style>
 
+        .fundFilter {
+            width: 210px;
+            float: right;
+            text-align: right;
+        }
+
         /* Common measurements used in the app. */
         @def fieldWidth 15em;
 
         .editField {
             display: inline;
-            width: 100%;
+            width: 90%;
             margin: 2px;
-        }
-
-        .rightAlign {
-            float: right;
-            text-align: right;
         }
 
     </ui:style>
 
-    <g:HTMLPanel>
-        <div class="{style.rightAlign}">
-            <g:ListBox ui:field="providers" stylePrimaryName="{style.editField}"
-                       visibleItemCount="5" multipleSelect="true">
-            </g:ListBox>
-            <g:ListBox ui:field="categories" stylePrimaryName="{style.editField}"
-                       visibleItemCount="5" multipleSelect="true">
-            </g:ListBox>
-        </div>
+    <g:HTMLPanel addStyleNames="{style.fundFilter}">
+        <g:ListBox ui:field="providers" stylePrimaryName="{style.editField}"
+                   visibleItemCount="5" multipleSelect="true">
+        </g:ListBox>
+        <br/>
+        <g:ListBox ui:field="categories" stylePrimaryName="{style.editField}"
+                   visibleItemCount="5" multipleSelect="true">
+        </g:ListBox>
     </g:HTMLPanel>
 
 
