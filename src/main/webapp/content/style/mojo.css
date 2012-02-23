@@ -1,0 +1,177 @@
+*:focus {
+    outline: none;
+}
+
+html, body, #back {
+    width: 100%;
+    height: 100%;
+    /*margin: 0;*/
+}
+
+body {
+    margin: 0;
+    font-family: Helvetica, Arial, sans-serif;
+    font-size: 12px;
+    line-height: 20px;
+}
+
+.main {
+    margin: 0 auto;
+    width: 950px;
+}
+
+#head {
+    height: 94px;
+    padding-top: 16px;
+    background: url(../images/back_header.jpg) repeat-x;
+    background-color: #dce1e4;
+    border-bottom: 1px solid #bdc1c7;
+}
+
+#app {
+    height: 518px;
+}
+
+#menu {
+    float: right;
+    padding-top: 8px;
+}
+
+#menu li {
+    float: left;
+    padding-left: 36px;
+    list-style-type: none;
+}
+
+#menu a {
+    color: #444751;
+    font-size: 13px;
+    text-decoration: none;
+}
+
+#menu a:hover, #menu a:focus, #menu a:active {
+    color: #116388;
+}
+
+#quote {
+    font-size: 14px;
+    height: 65px;
+    line-height: 65px;
+    text-align: center;
+    margin: 0;
+}
+
+#content {
+    margin-bottom: 50px;
+}
+
+#intro {
+    /*background: url(images/intro.jpg) no-repeat;*/
+    /*margin-left: -21px;*/
+    /*padding: 40px 61px;*/
+    /*position: relative;*/
+    /*height: 07px;*/
+    /*width: 820px;*/
+    /*z-index: 2;*/
+}
+
+#blurb {
+    width: 584px;
+}
+
+/*Slider*/
+
+#slider {
+    margin: 0 auto;
+}
+
+.coin-slider {
+    overflow: hidden;
+    zoom: 1;
+    position: relative;
+    width: 366px;
+    float: right;
+    text-align: center;
+    margin-right: -11px;
+    padding-top: 50px;
+    /*background: url(images/slider_shadow.png) 0 225px no-repeat;*/
+}
+
+.coin-slider a {
+    text-decoration: none;
+    outline: none;
+    border: none;
+}
+
+.cs-buttons {
+    font-size: 0px;
+    padding: 24px 10px;
+    float: left;
+}
+
+.cs-buttons a {
+    margin-left: 5px;
+    height: 11px;
+    width: 11px;
+    float: left;
+    background: url(../images/slider_inactive.png);
+    text-indent: -1000px;
+}
+
+a.cs-active {
+    background: url(../images/slider_active.png);
+    color: #FFFFFF;
+}
+
+.cs-title {
+    width: 545px;
+    padding: 10px;
+    background-color: #000000;
+    color: #FFFFFF;
+}
+
+.cs-prev, .cs-next {
+    background-color: #000000;
+    color: #FFFFFF;
+    padding: 0px 10px;
+    display: none;
+}
+
+/*Footer*/
+
+#footer {
+    background: url(../images/back_footer.jpg) repeat-x;
+    background-color: #000000;
+    height: 80px;
+    margin-top: 37px;
+    padding-top: 14px;
+    color: #fff;
+    clear: both;
+}
+
+#footer ul {
+    margin: 0;
+    padding: 0;
+}
+
+#footer li {
+    float: left;
+    list-style: none;
+    margin-right: 22px;
+}
+
+#footer a {
+    color: #e2dfdf;
+}
+
+.left {
+    float: left;
+}
+
+.right {
+    float: right;
+}
+
+.clear {
+    clear: both;
+}
