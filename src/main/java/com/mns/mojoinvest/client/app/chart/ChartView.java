@@ -5,8 +5,10 @@ import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.Widget;
+import com.google.gwt.visualization.client.ChartArea;
 import com.google.gwt.visualization.client.DataTable;
 import com.google.gwt.visualization.client.VisualizationUtils;
+import com.google.gwt.visualization.client.visualizations.corechart.AxisOptions;
 import com.google.gwt.visualization.client.visualizations.corechart.LineChart;
 import com.google.gwt.visualization.client.visualizations.corechart.Options;
 import com.gwtplatform.mvp.client.ViewImpl;
@@ -42,6 +44,16 @@ public class ChartView extends ViewImpl
     public void createChart(DataTable dataTable, Options options) {
         options.setHeight(container.getOffsetHeight());
         options.setWidth(container.getOffsetWidth());
+        AxisOptions vAxisOptions = AxisOptions.create();
+
+//        vAxisOptions.setTextPosition();
+//        options.setVAxisOptions();
+        ChartArea chartArea = ChartArea.create();
+        chartArea.setLeft(70);
+        chartArea.setTop(30);
+        chartArea.setHeight(container.getOffsetHeight() - 100);
+        chartArea.setWidth(container.getOffsetWidth() - 180);
+        options.setChartArea(chartArea);
         lineChart = new LineChart(dataTable, options);
         container.clear();
         container.add(lineChart);
