@@ -25,15 +25,12 @@ import com.gwtplatform.dispatch.client.gin.DispatchAsyncModule;
 import com.gwtplatform.mvp.client.proxy.PlaceManager;
 import com.mns.mojoinvest.client.app.AppModule;
 import com.mns.mojoinvest.client.app.AppPresenter;
-import com.mns.mojoinvest.client.home.HomeModule;
-import com.mns.mojoinvest.client.home.HomePresenter;
 import com.mns.mojoinvest.client.resources.Resources;
 import com.mns.mojoinvest.client.resources.Translations;
 
 @GinModules({DispatchAsyncModule.class,
         MainModule.class,
 //        NavigationModule.class,
-        HomeModule.class,
         AppModule.class})
 public interface MainGinjector extends Ginjector {
 
@@ -52,8 +49,6 @@ public interface MainGinjector extends Ginjector {
     SignedInGatekeeper getSignedInGatekeeper();
 
     // ------------------------------------------------------------- presenters
-
-    Provider<HomePresenter> getLandingPresenter();
 
     Provider<MainPresenter> getMainPresenter();
 

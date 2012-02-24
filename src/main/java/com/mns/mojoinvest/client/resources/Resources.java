@@ -18,16 +18,11 @@ package com.mns.mojoinvest.client.resources;
 
 import com.google.gwt.resources.client.ClientBundle;
 import com.google.gwt.resources.client.CssResource;
-import com.google.gwt.resources.client.ImageResource;
 
 /**
  * @author Mark Nuttall-Smith
  */
 public interface Resources extends ClientBundle {
-
-    ImageResource mojo_logo();
-
-    // -------------------------------------------------------------------- CSS
 
     /**
      * Global CSS rules
@@ -35,9 +30,9 @@ public interface Resources extends ClientBundle {
      * @return
      */
     @Source("mojo.css")
-    MojoCss css();
+    ScratchPad css();
 
-    interface MojoCss extends CssResource {
+    interface ScratchPad extends CssResource {
 
         String main();
 
@@ -46,17 +41,8 @@ public interface Resources extends ClientBundle {
         String right();
 
         String clear();
+
     }
-
-
-    /**
-     * CSS classes to style GWT and custom widgets
-     *
-     * @return
-     */
-    @Source("widgets.css")
-    CssResource widgets();
-
 
 }
 

@@ -7,41 +7,58 @@
 
     <ui:style>
 
-        .portfolioParams {
-            width: 210px;
-            float: right;
-
-            /*text-align: right;*/
+        fieldset {
+            border: 1px solid #bdc1c7;
+            margin: 0;
+            padding: 0;
         }
 
-        /* Common measurements used in the app. */
-        @def fieldWidth 5em;
+        legend {
+            margin-left: 1em;
+        }
+
+        fieldset ol {
+            padding: 0;
+            list-style: none;
+        }
+
+        label {
+            float: left;
+            width: 10em;
+            margin-right: 1em;
+            text-align: right;
+        }
 
         .editField {
-            float: right;
             display: inline;
-            width: fieldWidth;
-            margin: 2px;
+            width: 40px;
         }
 
     </ui:style>
 
-    <g:HTMLPanel addStyleNames="{style.portfolioParams}">
-        Investment amount:
-        <e:ValueBoxEditorDecorator ui:field="initialInvestment"
-                                   stylePrimaryName="{style.editField}">
-            <e:valuebox>
-                <g:DoubleBox stylePrimaryName="{style.editField}"/>
-            </e:valuebox>
-        </e:ValueBoxEditorDecorator>
-
-        Transaction cost:
-        <e:ValueBoxEditorDecorator ui:field="transactionCost"
-                                   stylePrimaryName="{style.editField}">
-            <e:valuebox>
-                <g:DoubleBox stylePrimaryName="{style.editField}"/>
-            </e:valuebox>
-        </e:ValueBoxEditorDecorator>
+    <g:HTMLPanel>
+        <fieldset>
+            <legend>Portfolio</legend>
+            <ol>
+                <li>
+                    <label>Investment amount:</label>
+                    <e:ValueBoxEditorDecorator ui:field="initialInvestment"
+                                               addStyleNames="{style.editField}">
+                        <e:valuebox>
+                            <g:DoubleBox/>
+                        </e:valuebox>
+                    </e:ValueBoxEditorDecorator>
+                </li>
+                <li>
+                    <label>Transaction cost:</label>
+                    <e:ValueBoxEditorDecorator ui:field="transactionCost">
+                        <e:valuebox>
+                            <g:DoubleBox/>
+                        </e:valuebox>
+                    </e:ValueBoxEditorDecorator>
+                </li>
+            </ol>
+        </fieldset>
     </g:HTMLPanel>
 
 </ui:UiBinder>

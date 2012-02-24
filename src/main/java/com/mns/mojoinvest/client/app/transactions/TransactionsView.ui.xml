@@ -16,7 +16,7 @@
         }
 
         .table {
-            width: 720px;
+            width: 675px;
             float: right;
             /*table-layout: fixed;*/
         }

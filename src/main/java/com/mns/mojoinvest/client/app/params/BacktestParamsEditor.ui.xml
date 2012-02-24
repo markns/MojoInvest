@@ -1,31 +1,50 @@
 <ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
              xmlns:g='urn:import:com.google.gwt.user.client.ui'
              xmlns:d='urn:import:com.google.gwt.user.datepicker.client'>
+
     <ui:style>
 
-        .backtestParams {
-            width: 210px;
-            float: right;
+        fieldset {
+            border-left: 0;
+            border-right: 0;
+            border-bottom: 0;
+            border-top: 1px solid #bdc1c7;
+            padding: 0;
+        }
+
+        legend {
+            margin-left: 1em;
+
+        }
+
+        fieldset ol {
+            padding: 0;
+            list-style: none;
+        }
+
+        label {
+            float: left;
+            width: 10em;
+            margin-right: 1em;
             text-align: right;
         }
 
-        /* Common measurements used in the app. */
-        @def fieldWidth 10em;
-
-        .editField {
-            display: inline;
-            width: fieldWidth;
-            margin: 2px;
-        }
-
-
     </ui:style>
 
-    <g:HTMLPanel addStyleNames="{style.backtestParams}">
-        From date:
-        <d:DateBox ui:field='fromDate' stylePrimaryName="{style.editField}"/>
-        <br/>
-        To date:
-        <d:DateBox ui:field='toDate' stylePrimaryName="{style.editField}"/>
+    <g:HTMLPanel>
+        <fieldset>
+            <legend>Backtest</legend>
+            <ol>
+                <li>
+                    <label>From date:</label>
+                    <d:DateBox ui:field='fromDate'/>
+                </li>
+                <li>
+                    <label>To date:</label>
+                    <d:DateBox ui:field='toDate'/>
+                </li>
+            </ol>
+        </fieldset>
     </g:HTMLPanel>
+
 </ui:UiBinder>

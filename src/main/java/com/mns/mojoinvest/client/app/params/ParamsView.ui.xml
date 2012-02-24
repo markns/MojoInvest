@@ -12,47 +12,38 @@
 
     <ui:style>
 
-        .rightAlign {
-            text-align: right;
-            float: right;
+        .params {
+            width: 275px;
+            margin-top: 20px;
+            margin-bottom: 30px;
+            float: left;
         }
 
-        .params {
-            width: 210px;
-            float: left;
-            margin-bottom: 50px;
-            margin-right: 20px;
+        .submit {
+            float: right;
+            margin-top: 10px;
         }
+
 
     </ui:style>
 
     <g:HTMLPanel addStyleNames="{style.params}">
 
-        <g:DisclosurePanel animationEnabled="true" open="true">
-            <g:header>Portfolio</g:header>
-            <p:PortfolioParamsEditor ui:field="portfolioParams"/>
-        </g:DisclosurePanel>
+        <p:PortfolioParamsEditor ui:field="portfolioParams"/>
 
-        <g:DisclosurePanel animationEnabled="true" open="true">
-            <g:header>Strategy</g:header>
-            <p:MomentumStrategyParamsEditor ui:field="strategyParams"/>
-        </g:DisclosurePanel>
+        <p:MomentumStrategyParamsEditor ui:field="strategyParams"/>
 
-        <g:DisclosurePanel animationEnabled="true" open="true">
-            <g:header>Filters</g:header>
-            <p:FundFilterEditor ui:field="fundFilter"/>
-        </g:DisclosurePanel>
+        <p:FundFilterEditor ui:field="fundFilter"/>
 
-        <g:DisclosurePanel animationEnabled="true" open="true">
-            <g:header>Backtest</g:header>
-            <p:BacktestParamsEditor ui:field="backtestParams"/>
-        </g:DisclosurePanel>
+        <p:BacktestParamsEditor ui:field="backtestParams"/>
 
-        <hr width="100%"/>
+        <!--<hr width="100%"/>-->
 
-        <g:Button ui:field='runStrategyButton' stylePrimaryName="{style.rightAlign}">
-            <ui:msg key='paramsFormRunStrategyButton'>Run strategy</ui:msg>
-        </g:Button>
+        <div class="{style.submit}">
+            <g:Button ui:field='runStrategyButton'>
+                <ui:msg key='paramsFormRunStrategyButton'>Run strategy</ui:msg>
+            </g:Button>
+        </div>
 
     </g:HTMLPanel>
 

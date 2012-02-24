@@ -23,7 +23,6 @@ public class MainEntryPoint implements EntryPoint {
         DelayedBindRegistry.bind(ginjector);
 
         ginjector.getResources().css().ensureInjected();
-        ginjector.getResources().widgets().ensureInjected();
         ginjector.getPlaceManager().revealCurrentPlace();
     }
 

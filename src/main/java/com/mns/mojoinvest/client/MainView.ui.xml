@@ -26,17 +26,17 @@
 
     </ui:style>
 
-    <g:DockLayoutPanel unit="PX" addStyleNames="{style.body}">
-        <g:center>
-            <g:ScrollPanel>
-                <g:FlowPanel>
-                    <h:Header/>
-                    <g:FlowPanel ui:field="pageContent"/>
-                    <f:Footer/>
-                </g:FlowPanel>
-            </g:ScrollPanel>
-        </g:center>
-    </g:DockLayoutPanel>
+    <!--<g:DockLayoutPanel unit="PX" addStyleNames="{style.body}">-->
+    <!--<g:center>-->
+    <!--<g:ScrollPanel>-->
+    <!--<g:FlowPanel>-->
+    <!--<h:Header/>-->
+    <g:FlowPanel ui:field="pageContent"/>
+    <!--<f:Footer/>-->
+    <!--</g:FlowPanel>-->
+    <!--</g:ScrollPanel>-->
+    <!--</g:center>-->
+    <!--</g:DockLayoutPanel>-->
 
 
 </ui:UiBinder>

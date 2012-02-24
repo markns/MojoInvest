@@ -1,48 +1,64 @@
 <ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
              xmlns:g='urn:import:com.google.gwt.user.client.ui'
              xmlns:e='urn:import:com.google.gwt.editor.ui.client'>
+
+
+    <ui:with field='res' type='com.mns.mojoinvest.client.resources.Resources'/>
+
     <ui:style>
 
-        .momentumStrategyParams {
-            width: 210px;
-            float: right;
-            text-align: right;
+        fieldset {
+            border: 1px solid #bdc1c7;
+            padding: 0;
         }
 
-        /* Common measurements used in the app. */
-        @def fieldWidth 5em;
+        legend {
+            margin-left: 1em;
+        }
 
-        .editField {
-            display: inline;
-            width: fieldWidth;
-            margin: 2px;
+        fieldset ol {
+            padding: 0;
+            list-style: none;
+        }
+
+        label {
+            float: left;
+            width: 10em;
+            margin-right: 1em;
+            text-align: right;
         }
 
     </ui:style>
 
-    <g:HTMLPanel addStyleNames="{style.momentumStrategyParams}">
-        Formation period:
-        <g:ValueListBox ui:field="formationPeriod"
-                        stylePrimaryName="{style.editField}">
-        </g:ValueListBox>
-        <br/>
-        Holding period:
-        <g:ValueListBox ui:field="holdingPeriod"
-                        stylePrimaryName="{style.editField}">
-        </g:ValueListBox>
-        <br/>
-        Portfolio size:
-        <g:ValueListBox ui:field="portfolioSize"
-                        stylePrimaryName="{style.editField}">
-        </g:ValueListBox>
-        <br/>
-        Correlation:
-        <e:ValueBoxEditorDecorator ui:field="correlation"
-                                   stylePrimaryName="{style.editField}">
-            <e:valuebox>
-                <g:DoubleBox stylePrimaryName="{style.editField}"/>
-            </e:valuebox>
-        </e:ValueBoxEditorDecorator>
-        <br/>
+
+    <g:HTMLPanel>
+        <fieldset>
+            <legend>Strategy</legend>
+            <ol>
+                <li>
+                    <label>Formation period:</label>
+
+                    <g:ValueListBox ui:field="formationPeriod"/>
+                </li>
+                <li>
+                    <label>Holding period:</label>
+                    <g:ValueListBox ui:field="holdingPeriod"/>
+                </li>
+                <li>
+                    <label>Portfolio size:</label>
+                    <g:ValueListBox ui:field="portfolioSize"/>
+                </li>
+                <li>
+                    <label>Correlation:</label>
+                    <e:ValueBoxEditorDecorator ui:field="correlation">
+                        <e:valuebox>
+                            <g:DoubleBox/>
+                        </e:valuebox>
+                    </e:ValueBoxEditorDecorator>
+                </li>
+            </ol>
+        </fieldset>
     </g:HTMLPanel>
+
+
 </ui:UiBinder>

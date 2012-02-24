@@ -1,34 +1,67 @@
 <ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
              xmlns:g='urn:import:com.google.gwt.user.client.ui'>
 
+
     <ui:style>
 
-        .fundFilter {
-            width: 210px;
-            float: right;
+        fieldset {
+            border: 1px solid #bdc1c7;
+            padding: 0;
+        }
+
+        legend {
+            margin-left: 1em;
+        }
+
+        fieldset ol {
+            padding: 0;
+            list-style: none;
+        }
+
+        label {
+            float: left;
+            width: 10em;
+            margin-right: 1em;
             text-align: right;
         }
 
-        /* Common measurements used in the app. */
-        @def fieldWidth 15em;
+        /* specific */
+        .two-columns {
+            margin: 0;
+        }
 
-        .editField {
-            display: inline;
-            width: 90%;
-            margin: 2px;
+        .two-columns li {
+            float: left;
+            list-style: none;
+            width: 132px;
+            margin-left: 2px;
+        }
+
+        .filterListBox {
+            width: 132px;
         }
 
     </ui:style>
 
-    <g:HTMLPanel addStyleNames="{style.fundFilter}">
-        <g:ListBox ui:field="providers" stylePrimaryName="{style.editField}"
-                   visibleItemCount="5" multipleSelect="true">
-        </g:ListBox>
-        <br/>
-        <g:ListBox ui:field="categories" stylePrimaryName="{style.editField}"
-                   visibleItemCount="5" multipleSelect="true">
-        </g:ListBox>
-    </g:HTMLPanel>
 
+    <g:HTMLPanel>
+        <fieldset>
+            <legend>Filters</legend>
+            <ol class="{style.two-columns}">
+                <li>
+                    <label>Providers:</label>
+                    <g:ListBox ui:field="providers" addStyleNames="{style.filterListBox}"
+                               visibleItemCount="5" multipleSelect="true">
+                    </g:ListBox>
+                </li>
+                <li>
+                    <label>Categories:</label>
+                    <g:ListBox ui:field="categories" addStyleNames="{style.filterListBox}"
+                               visibleItemCount="5" multipleSelect="true">
+                    </g:ListBox>
+                </li>
+            </ol>
+        </fieldset>
+    </g:HTMLPanel>
 
 </ui:UiBinder>
