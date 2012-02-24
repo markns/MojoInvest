@@ -2,9 +2,12 @@ package com.mns.mojoinvest.client.app.transactions;
 
 import com.google.gwt.cell.client.DateCell;
 import com.google.gwt.cell.client.NumberCell;
+import com.google.gwt.cell.client.SafeHtmlCell;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.i18n.client.DateTimeFormat;
 import com.google.gwt.i18n.client.NumberFormat;
+import com.google.gwt.safehtml.shared.SafeHtml;
+import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.cellview.client.CellTable;
@@ -14,6 +17,7 @@ import com.google.gwt.user.cellview.client.TextColumn;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.gwt.view.client.ListDataProvider;
+import com.google.gwt.view.client.NoSelectionModel;
 import com.gwtplatform.mvp.client.ViewImpl;
 import com.mns.mojoinvest.client.resources.Resources;
 import com.mns.mojoinvest.shared.dto.TransactionDto;
@@ -47,16 +51,16 @@ public class TransactionsView extends ViewImpl
 
         widget = uiBinder.createAndBindUi(this);
 
-//        table.s
-
-        Column<TransactionDto, String> fundNameColumn = new TextColumn<TransactionDto>() {
+        Column<TransactionDto, SafeHtml> fundNameColumn = new Column<TransactionDto, SafeHtml>(new SafeHtmlCell()) {
             @Override
-            public String getValue(TransactionDto transaction) {
-                return transaction.getFundName();
+            public SafeHtml getValue(TransactionDto transaction) {
+                String val = transaction.getFundName().substring(0, 20) + "...";
+                return new SafeHtmlBuilder().appendHtmlConstant("<span title='" +
+                        new SafeHtmlBuilder().appendEscaped(transaction.getFundName()).toSafeHtml().asString() + "'>" + val + "</span>").toSafeHtml();
             }
         };
         table.addColumn(fundNameColumn, "Name");
-//        table.setColumnWidth(fundNameColumn, "40ex");
+        table.setColumnWidth(fundNameColumn, "30em");
 
         Column<TransactionDto, String> symbolColumn = new TextColumn<TransactionDto>() {
             @Override
@@ -84,7 +88,7 @@ public class TransactionsView extends ViewImpl
             }
         };
         table.addColumn(dateColumn, "Date");
-//        table.setColumnWidth(dateColumn, "25ex");
+        table.setColumnWidth(dateColumn, "25em");
 
 
         NumberCell sharesCell = new NumberCell(); //TODO: Formatting
@@ -113,15 +117,17 @@ public class TransactionsView extends ViewImpl
             }
         };
         table.addColumn(cashValueColumn, "Cash value");
+        table.setColumnWidth(dateColumn, "20em");
 
-        NumberCell commissionCell = new NumberCell(NumberFormat.getCurrencyFormat());
-        Column<TransactionDto, Number> commissionColumn = new Column<TransactionDto, Number>(commissionCell) {
-            @Override
-            public Number getValue(TransactionDto transaction) {
-                return transaction.getCommission();
-            }
-        };
-        table.addColumn(commissionColumn, "Commission");
+
+//        NumberCell commissionCell = new NumberCell(NumberFormat.getCurrencyFormat());
+//        Column<TransactionDto, Number> commissionColumn = new Column<TransactionDto, Number>(commissionCell) {
+//            @Override
+//            public Number getValue(TransactionDto transaction) {
+//                return transaction.getCommission();
+//            }
+//        };
+//        table.addColumn(commissionColumn, "Commission");
 
 
         // Connect the table to the data provider.
@@ -129,7 +135,7 @@ public class TransactionsView extends ViewImpl
 
 
 //        table.setRowCount(numRows, false);
-//        table.setSelectionModel(selectionModel);
+        table.setSelectionModel(new NoSelectionModel<TransactionDto>());
 //        table.setKeyboardSelectionPolicy(HasKeyboardSelectionPolicy.KeyboardSelectionPolicy.DISABLED);
 
     }
