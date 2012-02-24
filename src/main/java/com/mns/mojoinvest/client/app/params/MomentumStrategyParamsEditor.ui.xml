@@ -7,26 +7,6 @@
 
     <ui:style>
 
-        fieldset {
-            border: 1px solid #bdc1c7;
-            padding: 0;
-        }
-
-        legend {
-            margin-left: 1em;
-        }
-
-        fieldset ol {
-            padding: 0;
-            list-style: none;
-        }
-
-        label {
-            float: left;
-            width: 10em;
-            margin-right: 1em;
-            text-align: right;
-        }
 
     </ui:style>
 

@@ -10,17 +10,50 @@
 
     <ui:style>
         .app {
-            /*margin-top: 30px;*/
             margin-bottom: 20px;
+        }
+
+        .strategyHeading {
+            font-size: 14px;
+            margin-top: 20px;
+            border-bottom: 1px solid #bdc1c7;
+        }
+
+        .tabPanel {
+            float: right;
+            width: 655px;
+            height: 600px;
         }
 
     </ui:style>
 
-    <g:FlowPanel addStyleNames="{res.css.main} {style.app}">
+    <g:HTMLPanel addStyleNames="{res.css.main} {style.app}">
+        <div class="{style.strategyHeading}">
+            <g:Label text="Momentum Strategy"/>
+        </div>
         <g:FlowPanel ui:field='params' addStyleNames="{res.css.left}"/>
-        <g:FlowPanel ui:field='chart' addStyleNames="{res.css.left}"/>
-        <g:FlowPanel ui:field='trades' addStyleNames="{res.css.left}"/>
-    </g:FlowPanel>
+        <g:TabLayoutPanel addStyleNames="{style.tabPanel}"
+                          ui:field="tabPanel" barUnit="PX" barHeight="43">
+            <g:tab>
+                <g:header>
+                    Chart
+                </g:header>
+                <g:FlowPanel ui:field='chart' addStyleNames="{res.css.left}"/>
+            </g:tab>
+            <g:tab>
+                <g:header>
+                    Trades
+                </g:header>
+                <g:FlowPanel ui:field='trades' addStyleNames="{res.css.left}"/>
+            </g:tab>
+            <g:tab>
+                <g:header>
+                    Analysis
+                </g:header>
+                <g:FlowPanel ui:field='analysis' addStyleNames="{res.css.left}"/>
+            </g:tab>
+        </g:TabLayoutPanel>
+    </g:HTMLPanel>
 
 
 </ui:UiBinder>

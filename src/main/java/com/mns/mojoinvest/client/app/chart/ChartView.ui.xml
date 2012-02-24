@@ -10,7 +10,7 @@
 
     <ui:style>
         .chart {
-            width: 675px;
+            width: 655px;
             height: 350px;
             margin-bottom: 10px;
         }

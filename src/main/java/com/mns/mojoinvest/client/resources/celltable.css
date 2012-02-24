@@ -1,0 +1,19 @@
+.cellTableHeader {
+    border-bottom: 1px solid #6f7277;
+    padding: 3px 15px;
+    text-align: left;
+    /*color: #4b4a4a;*/
+    font-weight: normal;
+    /*background: red;*/
+    /*text-shadow: #ddf 1px 1px 0;*/
+    overflow: hidden;
+}
+
+.cellTableFooter {
+    border-top: 1px solid #6f7277;
+    padding: 3px 15px;
+    text-align: left;
+    /*color: #4b4a4a;*/
+    /*text-shadow: #ddf 1px 1px 0;*/
+    overflow: hidden;
+}

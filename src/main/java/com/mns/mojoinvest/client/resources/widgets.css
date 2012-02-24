@@ -1,8 +1,8 @@
 @external tire-calendarPopup, gwt-DatePicker, datePickerMonthSelector, datePickerDays, datePickerWeekdayLabel, datePickerWeekendLabel, datePickerDayIsToday, datePickerDayIsWeekend, datePickerDayIsFiller, datePickerDayIsValue, datePickerDayIsDisabled, datePickerDayIsHighlighted, datePickerDayIsValueAndHighlighted, datePickerMonthSelector, datePickerMonth, datePickerDay, datePickerPreviousButton, datePickerNextButton, gwt-PopupPanelGlass, gwt-SplitLayoutPanel-VDragger, gwt-SplitLayoutPanel-HDragger;
 .tire-calendarPopup {
     box-shadow: #666 0px 4px 10px;
-    -moz-box-shadow: #666 0 px 4 px 10 px;
-    -webkit-box-shadow: #666 0 px 4 px 10 px;
+    -moz-box-shadow: #666 0px 4px 10px;
+    -webkit-box-shadow: #666 0px 4px 10px;
 }
 
 .gwt-DatePicker {
@@ -11,7 +11,7 @@
     cursor: default;
 }
 
-.gwt-DatePicker td,.datePickerMonthSelector td:focus {
+.gwt-DatePicker td, .datePickerMonthSelector td:focus {
     outline: none
 }
 
@@ -20,14 +20,14 @@
     background: white;
 }
 
-.datePickerDay,.datePickerWeekdayLabel,.datePickerWeekendLabel {
+.datePickerDay, .datePickerWeekdayLabel, .datePickerWeekendLabel {
     font-size: 90%;
     text-align: center;
     padding: 5px;
     outline: none;
 }
 
-.datePickerWeekdayLabel,.datePickerWeekendLabel {
+.datePickerWeekdayLabel, .datePickerWeekendLabel {
     color: white;
     background: #1b92a8;
     padding: 5px;
@@ -85,7 +85,7 @@ td.datePickerMonth {
     background: #1b92a8;
 }
 
-.datePickerPreviousButton,.datePickerNextButton {
+.datePickerPreviousButton, .datePickerNextButton {
     font-size: 110%;
     line-height: 1em;
     color: white;
@@ -104,14 +104,55 @@ td.datePickerMonth {
 
 /* Splitters */
 .gwt-SplitLayoutPanel-HDragger, .gwt-SplitLayoutPanel-VDragger {
-  background-color: white;
+    background-color: white;
 
 }
 
 .gwt-SplitLayoutPanel-HDragger {
-  cursor: col-resize;
+    cursor: col-resize;
 }
 
 .gwt-SplitLayoutPanel-VDragger {
-  cursor: row-resize;
+    cursor: row-resize;
+}
+
+.gwt-TabLayoutPanel {
+}
+
+.gwt-TabLayoutPanel .gwt-TabLayoutPanelTabs {
+    background: #eeeeee;
+    border-bottom: 1px solid #bdc1c7;
+}
+
+.gwt-TabLayoutPanelContentContainer {
+    border: 0;
+    /*border-color: #ff6666;*/
+    /*border-style: solid;*/
+    /*border-width: 2px 1px 1px;*/
+}
+
+.gwt-TabLayoutPanel .gwt-TabLayoutPanelContent {
+    /*border-color: #660099;*/
+    /*border-style: solid;*/
+    /*border-width: 1px;*/
+    border: 0;
+    overflow: hidden;
+    padding: 6px;
+}
+
+.gwt-TabLayoutPanel .gwt-TabLayoutPanelTab {
+    margin-left: 6px;
+    padding: 3px 6px 3px 6px;
+    cursor: pointer;
+    /*cursor: hand;*/
+    color: black;
+    /*font-weight: bold;*/
+    text-align: center;
+    /*background: #e3e3e3;*/
+}
+
+.gwt-TabLayoutPanel .gwt-TabLayoutPanelTab-selected {
+    cursor: default;
+    font-weight: bold;
+    /*background: #bcbcbc;*/
 }

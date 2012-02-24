@@ -4,27 +4,6 @@
 
     <ui:style>
 
-        fieldset {
-            border: 1px solid #bdc1c7;
-            padding: 0;
-        }
-
-        legend {
-            margin-left: 1em;
-        }
-
-        fieldset ol {
-            padding: 0;
-            list-style: none;
-        }
-
-        label {
-            float: left;
-            width: 10em;
-            margin-right: 1em;
-            text-align: right;
-        }
-
         /* specific */
         .two-columns {
             margin: 0;
@@ -51,13 +30,13 @@
                 <li>
                     <label>Providers:</label>
                     <g:ListBox ui:field="providers" addStyleNames="{style.filterListBox}"
-                               visibleItemCount="5" multipleSelect="true">
+                               visibleItemCount="4" multipleSelect="true">
                     </g:ListBox>
                 </li>
                 <li>
                     <label>Categories:</label>
                     <g:ListBox ui:field="categories" addStyleNames="{style.filterListBox}"
-                               visibleItemCount="5" multipleSelect="true">
+                               visibleItemCount="4" multipleSelect="true">
                     </g:ListBox>
                 </li>
             </ol>

@@ -7,33 +7,6 @@
 
     <ui:style>
 
-        fieldset {
-            border: 1px solid #bdc1c7;
-            margin: 0;
-            padding: 0;
-        }
-
-        legend {
-            margin-left: 1em;
-        }
-
-        fieldset ol {
-            padding: 0;
-            list-style: none;
-        }
-
-        label {
-            float: left;
-            width: 10em;
-            margin-right: 1em;
-            text-align: right;
-        }
-
-        .editField {
-            display: inline;
-            width: 40px;
-        }
-
     </ui:style>
 
     <g:HTMLPanel>
@@ -42,8 +15,7 @@
             <ol>
                 <li>
                     <label>Investment amount:</label>
-                    <e:ValueBoxEditorDecorator ui:field="initialInvestment"
-                                               addStyleNames="{style.editField}">
+                    <e:ValueBoxEditorDecorator ui:field="initialInvestment">
                         <e:valuebox>
                             <g:DoubleBox/>
                         </e:valuebox>

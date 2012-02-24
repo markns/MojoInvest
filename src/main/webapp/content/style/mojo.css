@@ -21,8 +21,8 @@ body {
 }
 
 #head {
-    height: 94px;
-    padding-top: 16px;
+    height: 80px;
+    padding-top: 18px;
     background: url(../images/back_header.jpg) repeat-x;
     background-color: #dce1e4;
     border-bottom: 1px solid #bdc1c7;

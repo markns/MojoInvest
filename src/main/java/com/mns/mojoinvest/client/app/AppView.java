@@ -4,6 +4,7 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.FlowPanel;
+import com.google.gwt.user.client.ui.TabLayoutPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.gwtplatform.mvp.client.ViewWithUiHandlers;
 import com.mns.mojoinvest.client.util.UiUtils;
@@ -26,6 +27,10 @@ public class AppView extends ViewWithUiHandlers<AppUiHandlers>
 
     @UiField
     FlowPanel params;
+    @UiField
+    TabLayoutPanel tabPanel;
+    @UiField
+    FlowPanel analysis;
 
     public AppView() {
         widget = uiBinder.createAndBindUi(this);

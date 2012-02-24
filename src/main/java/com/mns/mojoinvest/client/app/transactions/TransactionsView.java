@@ -15,6 +15,7 @@ import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.gwt.view.client.ListDataProvider;
 import com.gwtplatform.mvp.client.ViewImpl;
+import com.mns.mojoinvest.client.resources.Resources;
 import com.mns.mojoinvest.shared.dto.TransactionDto;
 
 import java.util.Date;
@@ -31,11 +32,9 @@ public class TransactionsView extends ViewImpl
     @UiField
     HTMLPanel container;
 
-//    @UiField(provided = true)
-//    SimplePager pager = new SimplePager();
-
-    @UiField
+    @UiField(provided = true)
     CellTable<TransactionDto> table;
+
     @UiField
     SimplePager pager;
 
@@ -43,7 +42,12 @@ public class TransactionsView extends ViewImpl
 
     public TransactionsView() {
 
+        CellTable.Resources resources = GWT.create(Resources.TableResources.class);
+        table = new CellTable<TransactionDto>(10, resources);
+
         widget = uiBinder.createAndBindUi(this);
+
+//        table.s
 
         Column<TransactionDto, String> fundNameColumn = new TextColumn<TransactionDto>() {
             @Override
@@ -52,7 +56,7 @@ public class TransactionsView extends ViewImpl
             }
         };
         table.addColumn(fundNameColumn, "Name");
-        table.setColumnWidth(fundNameColumn, "40ex");
+//        table.setColumnWidth(fundNameColumn, "40ex");
 
         Column<TransactionDto, String> symbolColumn = new TextColumn<TransactionDto>() {
             @Override
@@ -80,7 +84,7 @@ public class TransactionsView extends ViewImpl
             }
         };
         table.addColumn(dateColumn, "Date");
-        table.setColumnWidth(dateColumn, "25ex");
+//        table.setColumnWidth(dateColumn, "25ex");
 
 
         NumberCell sharesCell = new NumberCell(); //TODO: Formatting

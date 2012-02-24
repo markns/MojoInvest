@@ -18,6 +18,7 @@ package com.mns.mojoinvest.client.resources;
 
 import com.google.gwt.resources.client.ClientBundle;
 import com.google.gwt.resources.client.CssResource;
+import com.google.gwt.user.cellview.client.CellTable;
 
 /**
  * @author Mark Nuttall-Smith
@@ -29,7 +30,7 @@ public interface Resources extends ClientBundle {
      *
      * @return
      */
-    @Source("mojo.css")
+    @Source("mojo-gwt.css")
     ScratchPad css();
 
     interface ScratchPad extends CssResource {
@@ -42,7 +43,25 @@ public interface Resources extends ClientBundle {
 
         String clear();
 
+
     }
 
+    /**
+     * CSS classes to style GWT and custom widgets
+     *
+     * @return
+     */
+    @Source("widgets.css")
+    @CssResource.NotStrict
+    CssResource widgets();
+
+
+    interface TableResources extends CellTable.Resources {
+        @Source({CellTable.Style.DEFAULT_CSS, "celltable.css"})
+        TableStyle cellTableStyle();
+    }
+
+    interface TableStyle extends CellTable.Style {
+    }
 }
 
