@@ -35,8 +35,8 @@
         <gae.version>1.6.0</gae.version>
         <gin.version>1.5.0</gin.version>
         <guice.version>3.0</guice.version>
-        <gwt.version>2.3.0</gwt.version>
-        <gwtp.version>0.6</gwtp.version>
+        <gwt.version>2.4.0</gwt.version>
+        <gwtp.version>0.7</gwtp.version>
         <json.version>20090211</json.version>
         <jsr107cache.version>1.1</jsr107cache.version>
         <junit.version>4.8.1</junit.version>
