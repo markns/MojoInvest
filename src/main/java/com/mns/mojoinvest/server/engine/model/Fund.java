@@ -147,29 +147,11 @@ public class Fund implements Serializable, Comparable<Fund> {
         return symbol.compareTo(o.getSymbol());
     }
 
-
-
     @Override
     public String toString() {
         return symbol;
-//        return "Fund{" +
-//                "symbol='" + symbol + '\'' +
-//                ", name='" + name + '\'' +
-//                ", category='" + category + '\'' +
-//                ", provider='" + provider + '\'' +
-//                ", inceptionDate=" + inceptionDate +
-//                '}';
     }
 
-//    @Override
-//    public String toString() {
-//        return "Fund{" +
-//                "symbol='" + symbol + '\'' +
-//                ", name='" + name + '\'' +
-//                ", category='" + category + '\'' +
-//                ", provider='" + provider + '\'' +
-//                '}';
-//    }
 
     @Override
     public boolean equals(Object o) {
@@ -178,11 +160,6 @@ public class Fund implements Serializable, Comparable<Fund> {
 
         Fund fund = (Fund) o;
 
-        if (category != null ? !category.equals(fund.category) : fund.category != null) return false;
-        if (inceptionDate != null ? !inceptionDate.equals(fund.inceptionDate) : fund.inceptionDate != null)
-            return false;
-        if (name != null ? !name.equals(fund.name) : fund.name != null) return false;
-        if (provider != null ? !provider.equals(fund.provider) : fund.provider != null) return false;
         if (!symbol.equals(fund.symbol)) return false;
 
         return true;
@@ -190,16 +167,7 @@ public class Fund implements Serializable, Comparable<Fund> {
 
     @Override
     public int hashCode() {
-        int result = symbol.hashCode();
-        result = 31 * result + (name != null ? name.hashCode() : 0);
-        result = 31 * result + (category != null ? category.hashCode() : 0);
-        result = 31 * result + (provider != null ? provider.hashCode() : 0);
-        result = 31 * result + (inceptionDate != null ? inceptionDate.hashCode() : 0);
-        return result;
+        return symbol.hashCode();
     }
 
-    public String toCsv() {
-
-        return null;
-    }
 }
