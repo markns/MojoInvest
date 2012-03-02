@@ -24,6 +24,10 @@ public class FundUpdaterJob extends Job1<String, List<Fund>> {
         //
 
         List<Fund> existing = dao.list();
+
+        log.info("Existing " + existing.size() + " - " + existing);
+        log.info("Current  " + current.size() + " - " + current);
+
         //Subtract set of current funds from existing to find inactive.
         existing.removeAll(current);
         for (Fund fund : existing) {
