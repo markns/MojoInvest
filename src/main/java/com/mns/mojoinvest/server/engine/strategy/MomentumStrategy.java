@@ -90,23 +90,6 @@ public class MomentumStrategy {
         for (String symbol : ranked) {
 
             if (selection.size() < params.getPortfolioSize()) {
-
-                //Check correlation to funds already in selection here
-                boolean tooCorrelated = false;
-                for (String selected : selection) {
-                    double correl = correlationDao.getCorrelation(selected, symbol);
-                    if (correl > params.getCorrelation()) {
-                        tooCorrelated = true;
-                        break;
-                    }
-                }
-                if (tooCorrelated) {
-                    continue;
-                }
-
-                //If something is already in the portfolio that is correlated to the selection
-                //swap it in here
-
                 selection.add(symbol);
             } else {
                 break;
