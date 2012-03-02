@@ -23,17 +23,19 @@ public class HolidayFinderUtil {
         Map<LocalDate, MutableInt> freq = new HashMap<LocalDate, MutableInt>();
 
         List<LocalDate> dates = TradingDayUtils.getDailySeries(
-                new LocalDate("2000-04-03"), new LocalDate("2012-01-13"), true);
+                new LocalDate("1993-01-29"), new LocalDate("2012-02-24"), true);
         for (LocalDate date : dates) {
             freq.put(date, new MutableInt(0));
         }
 
 
-        String[] files = new String[]{"data/ishares_quotes_tr.csv"};
+        String[] files = new String[]{"/Users/marknuttallsmith/Projects/ETFData/consolidated_quotes.csv"};
         for (String file : files) {
 
             CSVReader reader = new CSVReader(new BufferedReader(new FileReader(file)));
-            for (String[] row : reader.readAll()) {
+
+            String[] row;
+            while ((row = reader.readNext()) != null) {
                 if ("symbol".equals(row[0]))
                     continue;
                 Quote quote = QuoteUtils.fromStringArray(row);
