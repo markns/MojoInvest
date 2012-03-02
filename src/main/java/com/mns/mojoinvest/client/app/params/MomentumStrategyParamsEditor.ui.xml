@@ -17,7 +17,6 @@
             <ol>
                 <li>
                     <label>Formation period:</label>
-
                     <g:ValueListBox ui:field="formationPeriod"/>
                 </li>
                 <li>
@@ -27,14 +26,6 @@
                 <li>
                     <label>Portfolio size:</label>
                     <g:ValueListBox ui:field="portfolioSize"/>
-                </li>
-                <li>
-                    <label>Correlation:</label>
-                    <e:ValueBoxEditorDecorator ui:field="correlation">
-                        <e:valuebox>
-                            <g:DoubleBox/>
-                        </e:valuebox>
-                    </e:ValueBoxEditorDecorator>
                 </li>
             </ol>
         </fieldset>
