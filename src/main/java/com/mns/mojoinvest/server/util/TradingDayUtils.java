@@ -20,7 +20,6 @@ public class TradingDayUtils {
 //      would cause the payment to be in the previous calendar month, in which case the payment date is rolled to
 //      the next business day. Many institutions have month-end accounting procedures that necessitate this.
 
-
     public static List<LocalDate> getMonthlySeries(LocalDate fromDate, LocalDate toDate, int frequency, boolean forwards) {
         List<LocalDate> dates = new ArrayList<LocalDate>();
         while (!rollBack(toDate).isBefore(fromDate)) {
@@ -80,9 +79,13 @@ public class TradingDayUtils {
     //Always roll back because we might not have the market data if we roll forwards
     public static LocalDate rollBack(LocalDate date) {
         if (date.dayOfWeek().get() == DateTimeConstants.SATURDAY)
-            return date.minusDays(1);
+            //Recursion is to check that we haven't rolled into a non-weekend holiday
+            return rollBack(date.minusDays(1));
         else if (date.dayOfWeek().get() == DateTimeConstants.SUNDAY)
-            return date.minusDays(2);
+            return rollBack(date.minusDays(2));
+        else if (HolidayUtils.isHoliday(date))
+            //Recursion is to check for multi-day non-weekend closures eg. 7/11
+            return rollBack(date.minusDays(1));
         else
             return date;
     }

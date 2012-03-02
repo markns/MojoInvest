@@ -37,13 +37,11 @@ public class QuoteUtils {
             }
 
             if (date.equals(quote.getDate())) {
-//                System.out.println("equals");
                 previousQuote = quote;
                 if (quoteIter.hasNext()) {
                     quote = quoteIter.next();
                 }
             } else {
-//                System.out.println("added missing " + previousQuote);
                 missingQuotes.add(rollQuote(previousQuote, date));
             }
 
@@ -53,7 +51,8 @@ public class QuoteUtils {
 
     }
 
-    //TODO : tidy this method up
+
+    @Deprecated
     public static List<Quote> getMissingQuotes(LocalDate fromDate, LocalDate toDate, List<Quote> quotes) {
 
         sortByDate(quotes);
