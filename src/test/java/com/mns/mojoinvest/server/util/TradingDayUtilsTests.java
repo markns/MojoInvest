@@ -2,8 +2,6 @@ package com.mns.mojoinvest.server.util;
 
 import org.joda.time.DateTimeConstants;
 import org.joda.time.LocalDate;
-import org.joda.time.format.DateTimeFormat;
-import org.joda.time.format.DateTimeFormatter;
 import org.junit.Test;
 
 import java.util.ArrayList;
@@ -12,9 +10,6 @@ import java.util.List;
 import static junit.framework.Assert.assertEquals;
 
 public class TradingDayUtilsTests {
-
-    public static final DateTimeFormatter fmt = DateTimeFormat.forPattern("E yyyy-MM-dd");
-
 
     @Test
     public void testGetMonthlySeries() {
@@ -106,6 +101,47 @@ public class TradingDayUtilsTests {
         assertEquals(dates, sl);
     }
 
+    @Test
+    public void testHolidayRolling() {
+//        "2011-04-22", "Good Friday", "US";
+        String[] dtStrs = {
+                "2011-04-26",
+                "2011-04-25",
+                "2011-04-21",
+                "2011-04-20",
+                "2011-04-19"
+        };
+
+        List<LocalDate> sl = loadAList(dtStrs);
+        List<LocalDate> dates = TradingDayUtils.getDailySeries(new LocalDate(2011, 4, 19), new LocalDate(2011, 4, 26), false);
+        assertEquals(dates, sl);
+    }
+
+
+    @Test
+    public void testMinusMonths() {
+        LocalDate date = new LocalDate("2011-11-01");
+        LocalDate date2 = date.minusMonths(1);
+        assertEquals(new LocalDate("2011-10-01"), date2);
+        assertEquals(DateTimeConstants.SATURDAY, date2.dayOfWeek().get());
+        date2 = TradingDayUtils.rollBack(date2);
+        assertEquals(new LocalDate("2011-09-30"), date2);
+        assertEquals(DateTimeConstants.FRIDAY, date2.dayOfWeek().get());
+    }
+
+    private static List<LocalDate> loadAList(String[] someStrs) {
+        List<LocalDate> newList = new ArrayList<LocalDate>();
+        try {
+            for (int i = 0; i < someStrs.length; ++i) {
+                newList.add(new LocalDate(someStrs[i]));
+            } // end of the for
+        } catch (IllegalArgumentException pe) {
+            pe.printStackTrace();
+        }
+        return newList;
+    }
+
+
     public void outputDates() {
 
         List<LocalDate> dates = TradingDayUtils
@@ -122,30 +158,6 @@ public class TradingDayUtilsTests {
             c++;
         }
 
-    }
-
-    @Test
-    public void testMinusMonths() {
-        LocalDate date = new LocalDate("2011-11-01");
-        LocalDate date2 = date.minusMonths(1);
-        assertEquals(new LocalDate("2011-10-01"), date2);
-        assertEquals(DateTimeConstants.SATURDAY, date2.dayOfWeek().get());
-        date2 = TradingDayUtils.rollBack(date2);
-        assertEquals(new LocalDate("2011-09-30"), date2);
-        assertEquals(DateTimeConstants.FRIDAY, date2.dayOfWeek().get());
-    }
-
-
-    private List<LocalDate> loadAList(String[] someStrs) {
-        List<LocalDate> newList = new ArrayList<LocalDate>();
-        try {
-            for (int i = 0; i < someStrs.length; ++i) {
-                newList.add(new LocalDate(someStrs[i]));
-            } // end of the for
-        } catch (IllegalArgumentException pe) {
-            pe.printStackTrace();
-        }
-        return newList;
     }
 
 }
