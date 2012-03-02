@@ -204,4 +204,8 @@ public class HolidayUtils {
     public static boolean isHoliday(LocalDate date) {
         return holidays.containsKey(date);
     }
+
+    public static String get(LocalDate date) {
+        return holidays.get(date);
+    }
 }
