@@ -41,6 +41,10 @@ public class Ranking {
             .trimResults()
             .omitEmptyStrings();
 
+    public String getId() {
+        return id;
+    }
+
     public List<String> getSymbols() {
         if (symbolsList == null) {
             symbolsList = toList(SPLITTER.split(symbols));
