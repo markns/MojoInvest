@@ -25,8 +25,11 @@ public class DailyPipeline extends Job1<List<Quote>, LocalDate> {
 
         List<Value<String>> messages = new ArrayList<Value<String>>();
         if (HolidayUtils.isHoliday(date)) {
-            messages.add(immediate("Not running pipeline, today is " + HolidayUtils.get(date)));
+            String message = "Not running pipeline, today is " + HolidayUtils.get(date);
+            log.info(message);
+            messages.add(immediate(message));
             futureCall(new EmailStatusJob(), futureList(messages));
+            return null;
         }
 
         FutureValue<List<Fund>> funds = futureCall(new FundFetcherJob());
