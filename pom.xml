@@ -217,12 +217,12 @@
             <scope>provided</scope>
         </dependency>
         <!--  Don't declare gwt-dev as a project dependency. This may introduce complex dependency conflicts -->
-        <dependency>
-            <groupId>com.google.gwt</groupId>
-            <artifactId>gwt-dev</artifactId>
-            <version>${gwt.version}</version>
-            <scope>provided</scope>
-        </dependency>
+        <!--<dependency>-->
+        <!--<groupId>com.google.gwt</groupId>-->
+        <!--<artifactId>gwt-dev</artifactId>-->
+        <!--<version>${gwt.version}</version>-->
+        <!--<scope>provided</scope>-->
+        <!--</dependency>-->
         <dependency>
             <groupId>com.google.gwt.visualization</groupId>
             <artifactId>gwt-visualization</artifactId>
@@ -286,7 +286,7 @@
             <groupId>com.gwtplatform</groupId>
             <artifactId>gwtp-processors</artifactId>
             <version>${gwtp.version}</version>
-            <scope>provided</scope>
+            <!--<scope>provided</scope>-->
         </dependency>
         <dependency>
             <groupId>com.gwtplatform</groupId>
@@ -425,8 +425,8 @@
                     <source>${target.jdk}</source>
                     <target>${target.jdk}</target>
                     <encoding>${project.encoding}</encoding>
-                    <generatedSourcesDirectory>${project.build.directory}/generated-sources/apt
-                    </generatedSourcesDirectory>
+                    <!--<compilerArgument>-proc:none</compilerArgument>-->
+                    <generatedSourcesDirectory>${project.build.directory}/generated</generatedSourcesDirectory>
                 </configuration>
             </plugin>
 
@@ -443,7 +443,7 @@
                         </goals>
                         <configuration>
                             <sources>
-                                <source>${project.build.directory}/generated-sources/apt</source>
+                                <source>${project.build.directory}/generated</source>
                                 <!--<source>${project.build.directory}/generated-sources/gwt</source>-->
                             </sources>
                         </configuration>
@@ -494,7 +494,7 @@
                     <server>com.google.appengine.tools.development.gwt.AppEngineLauncher</server>
                     <hostedWebapp>${webappDirectory}</hostedWebapp>
                     <copyWebapp>true</copyWebapp>
-                    <runTarget>Mojoinvest.html</runTarget>
+                    <runTarget>app.html</runTarget>
                     <appEngineVersion>${gae.version}</appEngineVersion>
                     <appEngineHome>${gae.home}</appEngineHome>
                     <testTimeOut>180</testTimeOut>
