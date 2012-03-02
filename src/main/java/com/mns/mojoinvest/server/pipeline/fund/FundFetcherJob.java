@@ -53,10 +53,9 @@ public class FundFetcherJob extends Job0<List<Fund>> {
         c.setReadTimeout(10000);
         c.setConnectTimeout(10000);
 
-        WebResource r = c.resource("http://moneycentral.msn.com/investor/partsub/funds/etfperformancetracker.aspx");
+        WebResource r = c.resource("http://investing.money.msn.com/investments/etf-performance-tracker");
         MultivaluedMap<String, String> params = new MultivaluedMapImpl();
-        params.add("tab", "mkt");
-        params.add("show", "all");
+        params.add("page", "0");
         log.info("Attempting to fetch all funds html");
         String html = r.queryParams(params).get(String.class);
         log.info("Received all funds html");
@@ -65,17 +64,30 @@ public class FundFetcherJob extends Job0<List<Fund>> {
 
     protected List<String> scrapeSymbols(String html) {
         Document doc = Jsoup.parse(html);
-        Element table = doc.getElementById("ctl00_ctl00_ctl00_ctl00_HtmlBody_HtmlBody_HtmlBody_Column1_dgETF");
-        Element tbody = table.getElementsByTag("tbody").get(0);
-        Elements tr = tbody.getElementsByTag("tr");
-        List<String> symbols = new ArrayList<String>();
-        for (Element element : tr) {
-            String symbol = element.child(1).text();
-            if ("TICKER".equals(symbol))
-                continue;
-            symbols.add(symbol);
+
+
+        for (Element element : doc.select("span")) {
+            try {
+                if ("DETAILS".equals(element.text())) {
+                    Element tbody = element.parent().parent().getElementsByTag("tbody").get(0);
+
+                    Elements trs = tbody.getElementsByTag("tr");
+                    List<String> symbols = new ArrayList<String>();
+                    for (Element tr : trs) {
+                        String symbol = tr.child(1).text();
+                        if ("TICKER".equals(symbol))
+                            continue;
+                        symbols.add(symbol);
+                    }
+                    return symbols;
+                }
+            } catch (Exception e) {
+                //TODO: Raise hell
+                e.printStackTrace();
+            }
         }
-        return symbols;
+//        throw new Exception("");
+        return null;
     }
 
     public static class FundFetcherBatchJob extends Job1<List<Fund>, List<String>> {
