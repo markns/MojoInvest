@@ -45,7 +45,7 @@ public class RankingCalculator {
             dao = getQuoteDao();
         }
         List<Quote> toQuotes = dao.query(date);
-        LocalDate fromDate = TradingDayUtils.rollIfRequired(date.minusMonths(params.getFormationPeriod()));
+        LocalDate fromDate = TradingDayUtils.rollBack(date.minusMonths(params.getFormationPeriod()));
         List<Quote> fromQuotes = dao.query(fromDate);
         Map<String, BigDecimal> performances = calculatePerformances(fromQuotes, toQuotes);
         return buildRanking(date, params, performances);
@@ -104,7 +104,7 @@ public class RankingCalculator {
                 .getDailySeries(new LocalDate("2000-04-03"), new LocalDate("2012-01-13"), true);
 
         for (LocalDate date : dates) {
-            LocalDate fromDate = TradingDayUtils.rollIfRequired(date.minusMonths(params.getFormationPeriod()));
+            LocalDate fromDate = TradingDayUtils.rollBack(date.minusMonths(params.getFormationPeriod()));
 
             List<Quote> fromQuotes = quotes.get(fromDate);
             List<Quote> toQuotes = quotes.get(date);

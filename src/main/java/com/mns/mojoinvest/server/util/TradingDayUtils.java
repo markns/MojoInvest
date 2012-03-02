@@ -23,8 +23,8 @@ public class TradingDayUtils {
 
     public static List<LocalDate> getMonthlySeries(LocalDate fromDate, LocalDate toDate, int frequency, boolean forwards) {
         List<LocalDate> dates = new ArrayList<LocalDate>();
-        while (!rollIfRequired(toDate).isBefore(fromDate)) {
-            dates.add(rollIfRequired(toDate));
+        while (!rollBack(toDate).isBefore(fromDate)) {
+            dates.add(rollBack(toDate));
             toDate = toDate.minusMonths(frequency);
         }
         if (forwards) {
@@ -36,8 +36,8 @@ public class TradingDayUtils {
 
     public static List<LocalDate> getWeeklySeries(LocalDate fromDate, LocalDate toDate, int frequency, boolean forwards) {
         List<LocalDate> dates = new ArrayList<LocalDate>();
-        while (!rollIfRequired(toDate).isBefore(fromDate)) {
-            dates.add(rollIfRequired(toDate));
+        while (!rollBack(toDate).isBefore(fromDate)) {
+            dates.add(rollBack(toDate));
             toDate = toDate.minusWeeks(frequency);
         }
         if (forwards) {
@@ -49,8 +49,8 @@ public class TradingDayUtils {
 
     public static List<LocalDate> getDailySeries(LocalDate fromDate, LocalDate toDate, boolean forwards) {
         List<LocalDate> dates = new ArrayList<LocalDate>();
-        while (!rollIfRequired(toDate).isBefore(fromDate)) {
-            toDate = rollIfRequired(toDate);
+        while (!rollBack(toDate).isBefore(fromDate)) {
+            toDate = rollBack(toDate);
             dates.add(toDate);
             toDate = toDate.minusDays(1);
         }
@@ -65,12 +65,12 @@ public class TradingDayUtils {
         List<LocalDate> dates = new ArrayList<LocalDate>();
         int count = 0;
         if (inclusive) {
-            date = rollIfRequired(date);
+            date = rollBack(date);
             dates.add(date);
             count++;
         }
         while (count < numDays) {
-            date = rollIfRequired(date.minusDays(1));
+            date = rollBack(date.minusDays(1));
             dates.add(date);
             count++;
         }
@@ -78,7 +78,7 @@ public class TradingDayUtils {
     }
 
     //Always roll back because we might not have the market data if we roll forwards
-    public static LocalDate rollIfRequired(LocalDate date) {
+    public static LocalDate rollBack(LocalDate date) {
         if (date.dayOfWeek().get() == DateTimeConstants.SATURDAY)
             return date.minusDays(1);
         else if (date.dayOfWeek().get() == DateTimeConstants.SUNDAY)

@@ -130,7 +130,7 @@ public class TradingDayUtilsTests {
         LocalDate date2 = date.minusMonths(1);
         assertEquals(new LocalDate("2011-10-01"), date2);
         assertEquals(DateTimeConstants.SATURDAY, date2.dayOfWeek().get());
-        date2 = TradingDayUtils.rollIfRequired(date2);
+        date2 = TradingDayUtils.rollBack(date2);
         assertEquals(new LocalDate("2011-09-30"), date2);
         assertEquals(DateTimeConstants.FRIDAY, date2.dayOfWeek().get());
     }
