@@ -28,7 +28,7 @@ public class NextTradingDayExecutor implements Executor {
     @Override
     public void buy(Portfolio portfolio, Fund fund, LocalDate date, BigDecimal allocation)
             throws PortfolioException {
-        //TODO: getRanking execution price should be mid between open and close
+        //TODO: getRanking execution price should be mid between open and close of next days quote
         Quote executionQuote = quoteDao.get(fund, date);
         BigDecimal shares = allocation.divide(executionQuote.getClose(), 0, BigDecimal.ROUND_DOWN);
         BuyTransaction tx = new BuyTransaction(fund, date, shares,
@@ -39,7 +39,7 @@ public class NextTradingDayExecutor implements Executor {
     @Override
     public void sellAll(Portfolio portfolio, Fund fund, LocalDate date)
             throws PortfolioException {
-        //TODO: getRanking execution price should be mid between open and close
+        //TODO: getRanking execution price should be mid between open and close of next days quote
         Quote executionQuote = quoteDao.get(fund, date);
         Position position = portfolio.getPosition(fund);
         SellTransaction tx = new SellTransaction(fund, date, position.shares(date),
