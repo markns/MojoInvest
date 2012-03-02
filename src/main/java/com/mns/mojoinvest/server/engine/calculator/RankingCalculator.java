@@ -1,6 +1,7 @@
 package com.mns.mojoinvest.server.engine.calculator;
 
 import au.com.bytecode.opencsv.CSVReader;
+import au.com.bytecode.opencsv.CSVWriter;
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Functions;
 import com.google.common.base.Joiner;
@@ -16,9 +17,7 @@ import com.mns.mojoinvest.server.util.QuoteUtils;
 import com.mns.mojoinvest.server.util.TradingDayUtils;
 import org.joda.time.LocalDate;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.*;
 import java.math.BigDecimal;
 import java.math.MathContext;
 import java.util.*;
@@ -95,36 +94,42 @@ public class RankingCalculator {
 
     public static void main(String[] args) throws IOException {
 
-        RankingParams params = new RankingParams(9);
         RankingCalculator calculator = new RankingCalculator();
-
         Map<LocalDate, List<Quote>> quotes = calculator.readQuoteFiles();
 
         List<LocalDate> dates = TradingDayUtils
-                .getDailySeries(new LocalDate("2000-04-03"), new LocalDate("2012-01-13"), true);
+                .getDailySeries(new LocalDate("1993-01-29"), new LocalDate("2012-02-24"), true);
 
-        for (LocalDate date : dates) {
-            LocalDate fromDate = TradingDayUtils.rollBack(date.minusMonths(params.getFormationPeriod()));
+        for (Integer formationPeriod : Arrays.asList(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12)) {
+            RankingParams params = new RankingParams(formationPeriod);
 
-            List<Quote> fromQuotes = quotes.get(fromDate);
-            List<Quote> toQuotes = quotes.get(date);
-            if (fromQuotes != null && toQuotes != null) {
-                Map<String, BigDecimal> performances = calculator.calculatePerformances(fromQuotes, toQuotes);
-                Ranking ranking = calculator.buildRanking(date, params, performances);
-                System.out.println(ranking.toCsv());
+
+            CSVWriter writer = new CSVWriter(new BufferedWriter(new FileWriter("data/ranking_" + formationPeriod + "m.csv")));
+
+            for (LocalDate date : dates) {
+                LocalDate fromDate = TradingDayUtils.rollBack(date.minusMonths(params.getFormationPeriod()));
+
+                List<Quote> fromQuotes = quotes.get(fromDate);
+                List<Quote> toQuotes = quotes.get(date);
+                if (fromQuotes != null && toQuotes != null) {
+                    Map<String, BigDecimal> performances = calculator.calculatePerformances(fromQuotes, toQuotes);
+                    Ranking ranking = calculator.buildRanking(date, params, performances);
+                    writer.writeNext(new String[]{ranking.getId(), ranking.getSymbolsStr()});
+                }
             }
+            writer.close();
         }
-
 
     }
 
     private Map<LocalDate, List<Quote>> readQuoteFiles() throws IOException {
         Map<LocalDate, List<Quote>> quoteMap = new HashMap<LocalDate, List<Quote>>();
 
-        String[] files = new String[]{"data/ishares_quotes_tr.csv", "data/ishares_missingquotes_tr.csv"};
+        String[] files = new String[]{"../ETFData/quotes.csv", "../ETFData/quotes_missing.csv"};
         for (String file : files) {
             readQuotesFromFile(quoteMap, file);
         }
+        System.out.println("finished reading quotes");
         return quoteMap;
 
     }
