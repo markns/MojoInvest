@@ -65,7 +65,7 @@ public class MomentumStrategy {
                 sellLosers(portfolio, rebalanceDate, selection);
                 buyWinners(portfolio, strategyParams, rebalanceDate, selection);
 
-                System.out.println(portfolio.getActiveFunds(rebalanceDate));
+//                System.out.println(portfolio.getActiveFunds(rebalanceDate));
             } catch (NotFoundException e) {
                 //TODO: How should we handle exceptions here - what type of exceptions are they?
                 log.info(rebalanceDate + " " + e.getMessage());
