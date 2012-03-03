@@ -18,11 +18,13 @@ package com.mns.mojoinvest.shared.action;
 
 import com.gwtplatform.dispatch.shared.Action;
 
+import java.util.Arrays;
+
 /**
  * This provides a simple way to send multiple actions to be executed in
  * sequence. If any fail, the rules for the {@link OnException} value provided
  * in the constructor determine the outcome.
- *
+ * <p/>
  * Note: copied from original package because the no-arg constructor had only
  * default package visibility, meaning the class couldn't be extended.
  *
@@ -96,5 +98,12 @@ public class BatchAction implements Action<BatchResult> {
     @Override
     public boolean isSecured() {
         return false;
+    }
+
+    @Override
+    public String toString() {
+        return "BatchAction{" +
+                "actions=" + (actions == null ? null : Arrays.asList(actions)) +
+                '}';
     }
 }
