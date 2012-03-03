@@ -1,7 +1,9 @@
 package com.mns.mojoinvest.server.engine.model.dao;
 
 import com.google.inject.Inject;
-import com.googlecode.objectify.*;
+import com.googlecode.objectify.Key;
+import com.googlecode.objectify.ObjectifyFactory;
+import com.googlecode.objectify.Query;
 import com.mns.mojoinvest.server.engine.model.Fund;
 
 import java.util.*;
@@ -73,7 +75,8 @@ public class FundDao extends DAOBase {
         List<Fund> funds = list();
         SortedSet<String> providers = new TreeSet<String>();
         for (Fund fund : funds) {
-            providers.add(fund.getProvider());
+            if (fund.getProvider() != null && !fund.getProvider().isEmpty())
+                providers.add(fund.getProvider());
         }
         return new ArrayList<String>(providers);
     }
@@ -82,7 +85,8 @@ public class FundDao extends DAOBase {
         List<Fund> funds = list();
         SortedSet<String> categories = new TreeSet<String>();
         for (Fund fund : funds) {
-            categories.add(fund.getCategory());
+            if (fund.getCategory() != null && !fund.getCategory().isEmpty())
+                categories.add(fund.getCategory());
         }
         return new ArrayList<String>(categories);
     }
