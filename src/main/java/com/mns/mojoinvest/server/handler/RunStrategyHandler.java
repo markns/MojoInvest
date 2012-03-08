@@ -18,9 +18,7 @@ import com.mns.mojoinvest.shared.dto.StrategyResult;
 import com.mns.mojoinvest.shared.params.FundFilter;
 import com.mns.mojoinvest.shared.params.Params;
 
-import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Map;
 import java.util.Set;
 
 public class RunStrategyHandler implements
@@ -79,12 +77,14 @@ public class RunStrategyHandler implements
     }
 
     private Set<Fund> getAcceptableFunds(FundFilter fundFilter) {
-        Map<String, Object> filter = new HashMap<String, Object>(2);
-        if (fundFilter.getProviders().size() > 0)
-            filter.put("provider in", fundFilter.getProviders());
-        if (fundFilter.getCategories().size() > 0)
-            filter.put("category in", fundFilter.getCategories());
-        return new HashSet<Fund>(fundDao.query(filter));
+        Set<Fund> funds = new HashSet<Fund>();
+        for (String category : fundFilter.getCategories()) {
+            funds.addAll(fundDao.getByCategory(category));
+        }
+        for (String provider : fundFilter.getProviders()) {
+            funds.addAll(fundDao.getByProvider(provider));
+        }
+        return funds;
     }
 
     @Override
