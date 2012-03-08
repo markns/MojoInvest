@@ -60,12 +60,12 @@ public class MomentumStrategy {
             try {
                 Ranking ranking = rankingDao.get(rebalanceDate,
                         new RankingParams(strategyParams.getFormationPeriod()));
+                log.info(rebalanceDate + " " + ranking);
                 Collection<Fund> selection = getSelection(ranking.getSymbols(),
                         acceptableFunds, strategyParams);
+                log.info(rebalanceDate + " " + selection);
                 sellLosers(portfolio, rebalanceDate, selection);
                 buyWinners(portfolio, strategyParams, rebalanceDate, selection);
-
-//                System.out.println(portfolio.getActiveFunds(rebalanceDate));
             } catch (NotFoundException e) {
                 //TODO: How should we handle exceptions here - what type of exceptions are they?
                 log.info(rebalanceDate + " " + e.getMessage());
