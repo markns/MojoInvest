@@ -10,6 +10,24 @@
         <welcome-file>index.html</welcome-file>
     </welcome-file-list>
 
+    <!--FILTERS-->
+
+    <!--Appstats Event Recorder-->
+    <filter>
+        <filter-name>appstats</filter-name>
+        <!--TODO: Delegate to appstats after ignoring /appstats requests-->
+        <filter-class>com.google.appengine.tools.appstats.AppstatsFilter</filter-class>
+        <init-param>
+            <param-name>logMessage</param-name>
+            <param-value>Appstats available: /appstats/details?time={ID}</param-value>
+        </init-param>
+    </filter>
+
+    <filter-mapping>
+        <filter-name>appstats</filter-name>
+        <url-pattern>/*</url-pattern>
+    </filter-mapping>
+
     <filter>
         <filter-name>guiceFilter</filter-name>
         <filter-class>com.google.inject.servlet.GuiceFilter</filter-class>
@@ -31,14 +49,7 @@
         <listener-class>com.mns.mojoinvest.server.guice.MyGuiceServletContextListener</listener-class>
     </listener>
 
-    <!--<security-constraint>-->
-    <!--<web-resource-collection>-->
-    <!--<url-pattern>/mapper/*</url-pattern>-->
-    <!--</web-resource-collection>-->
-    <!--<auth-constraint>-->
-    <!--<role-name>admin</role-name>-->
-    <!--</auth-constraint>-->
-    <!--</security-constraint>-->
+    <!--SERVLETS-->
 
     <!--Remote Api -->
     <servlet>
@@ -50,7 +61,7 @@
         <url-pattern>/remote_api</url-pattern>
     </servlet-mapping>
 
-
+    <!--Pipeline Servlet-->
     <servlet>
         <servlet-name>PipelineServlet</servlet-name>
         <servlet-class>com.google.appengine.tools.pipeline.impl.servlets.PipelineServlet</servlet-class>
@@ -59,7 +70,6 @@
         <servlet-name>PipelineServlet</servlet-name>
         <url-pattern>/_ah/pipeline/*</url-pattern>
     </servlet-mapping>
-
 
     <!--Mapper servlet for uploading data-->
     <servlet>
@@ -87,5 +97,31 @@
         <url-pattern>/upload-success</url-pattern>
     </servlet-mapping>
 
+
+    <!--Appstats Console Path-->
+    <servlet>
+        <servlet-name>appstats</servlet-name>
+        <servlet-class>com.google.appengine.tools.appstats.AppstatsServlet</servlet-class>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>appstats</servlet-name>
+        <url-pattern>/appstats/*</url-pattern>
+    </servlet-mapping>
+
+    <!--Security Constraints-->
+    <security-constraint>
+        <web-resource-collection>
+            <url-pattern>/appstats/*</url-pattern>
+            <url-pattern>/mapper/*</url-pattern>
+            <url-pattern>/remote_api/*</url-pattern>
+            <url-pattern>/mapreduce/*</url-pattern>
+            <url-pattern>/upload</url-pattern>
+            <url-pattern>/upload-success</url-pattern>
+        </web-resource-collection>
+        <auth-constraint>
+            <role-name>admin</role-name>
+        </auth-constraint>
+    </security-constraint>
 
 </web-app>
