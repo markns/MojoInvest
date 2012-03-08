@@ -88,7 +88,7 @@ public class MomentumStrategyTests {
         rankingDao.put(rankings);
         Executor executor = new NextTradingDayExecutor(quoteDao);
         when(quoteDao.get(anyFund(), anyLocalDate())).thenReturn(dummyQuote);
-        strategy = new MomentumStrategy(executor, rankingDao, fundDao, correlationDao);
+        strategy = new MomentumStrategy(executor, rankingDao, fundDao);
 
         portfolio = new SimplePortfolio(quoteDao, new PortfolioParams(10000.0, 12.95,
                 new LocalDate("2011-01-01").toDateMidnight().toDate()));
