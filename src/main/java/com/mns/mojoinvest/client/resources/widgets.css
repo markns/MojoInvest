@@ -102,7 +102,7 @@ td.datePickerMonth {
     opacity: 0.5;
 }
 
-/* Splitters */
+    /* Splitters */
 .gwt-SplitLayoutPanel-HDragger, .gwt-SplitLayoutPanel-VDragger {
     background-color: white;
 
@@ -126,6 +126,7 @@ td.datePickerMonth {
 
 .gwt-TabLayoutPanelContentContainer {
     border: 0;
+    height: 494px;
     /*border-color: #ff6666;*/
     /*border-style: solid;*/
     /*border-width: 2px 1px 1px;*/
