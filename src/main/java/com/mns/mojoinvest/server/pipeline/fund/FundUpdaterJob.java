@@ -8,6 +8,7 @@ import com.mns.mojoinvest.server.engine.model.Fund;
 import com.mns.mojoinvest.server.engine.model.dao.FundDao;
 
 import java.util.List;
+import java.util.Set;
 import java.util.logging.Logger;
 
 public class FundUpdaterJob extends Job1<String, List<Fund>> {
@@ -23,24 +24,27 @@ public class FundUpdaterJob extends Job1<String, List<Fund>> {
         dao.registerObjects(factory);
         //
 
-        List<Fund> existing = dao.list();
+        Set<Fund> existing = dao.list();
 
         log.info("Existing " + existing.size() + " - " + existing);
         log.info("Current  " + current.size() + " - " + current);
 
         //Subtract set of current funds from existing to find inactive.
         existing.removeAll(current);
+        int currentSize = current.size();
+        int existingSize = existing.size();
         for (Fund fund : existing) {
             fund.setActive(false);
         }
-        log.info("Setting " + existing.size() + " funds as inactive: " + existing);
-        dao.put(existing);
+        current.addAll(existing);
 
-        log.info("Updating " + current.size() + " funds");
+
+        log.info("Setting " + existingSize + " funds as inactive: " + existing);
+        log.info("Updating " + currentSize + " active funds");
         dao.put(current);
 
-        return immediate("Set " + existing.size() + " funds as inactive: " + existing + "\n" +
-                "Updated " + current.size() + " funds");
+        return immediate("Set " + existingSize + " funds as inactive: " + existing + "\n" +
+                "Updated " + currentSize + " active funds");
     }
 
 
