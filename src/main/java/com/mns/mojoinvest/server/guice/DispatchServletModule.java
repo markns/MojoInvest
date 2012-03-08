@@ -46,6 +46,8 @@ public class DispatchServletModule extends ServletModule {
         serve("/quoteviewer").with(QuoteViewerServlet.class);
         serve("/fundviewer").with(FundViewerServlet.class);
         serve("/rankingviewer").with(RankingViewerServlet.class);
+        serve("/test").with(TestServlet.class);
+        serve("/test2").with(Test2Servlet.class);
 
         bindConstant().annotatedWith(ServiceKey.class).to("123456");
         bindConstant().annotatedWith(ServiceUrl.class).to("http://crawlservice.appspot.com/");

@@ -13,8 +13,11 @@ import org.joda.time.LocalDate;
 
 import java.math.BigDecimal;
 import java.util.*;
+import java.util.logging.Logger;
 
 public class QuoteDao extends DAOBase {
+
+    private static final Logger log = Logger.getLogger(QuoteDao.class.getName());
 
     private static boolean objectsRegistered;
 
@@ -34,10 +37,6 @@ public class QuoteDao extends DAOBase {
         objectsRegistered = true;
         ofyFactory.register(Quote.class);
         ofyFactory.getConversions().add(new MyTypeConverters());
-    }
-
-    public Quote find(Key<Quote> key) {
-        return ofy().find(key);
     }
 
     public Key<Quote> put(Quote quote) {
@@ -77,6 +76,13 @@ public class QuoteDao extends DAOBase {
         return q.list();
     }
 
+    public List<Quote> query(String symbol, LocalDate date) {
+        Query<Quote> q = ofy().query(Quote.class);
+        q.filter("symbol", symbol);
+        q.filter("date", date.toDateMidnight().toDate());
+        return q.list();
+    }
+
     public Collection<Quote> get(List<Key<Quote>> keys) {
         return ofy().get(keys).values();
     }
@@ -99,11 +105,14 @@ public class QuoteDao extends DAOBase {
         return get(keys);
     }
 
-    public Quote get(Fund fund, LocalDate date) {
-        Key<Quote> key = new Key<Quote>(Quote.class, QuoteUtils.quoteId(fund.getSymbol(), date));
+    public Quote get(String symbol, LocalDate date) {
+        Key<Quote> key = new Key<Quote>(Quote.class, QuoteUtils.quoteId(symbol, date));
         return ofy().get(key);
     }
 
+    public Quote get(Fund fund, LocalDate date) {
+        return get(fund.getSymbol(), date);
+    }
 
     public Collection<Quote> getAverage(Collection<Fund> funds, LocalDate date, int averagingRange) {
         List<LocalDate> dates = TradingDayUtils.getDailySeries(date.minusDays(averagingRange), date, true);
