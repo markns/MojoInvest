@@ -44,8 +44,8 @@ public class FundDetailFetcherBatchJob extends Job1<List<Fund>, List<String>> {
             fund = buildFund(details);
             log.info("Constructed fund " + fund);
         } catch (Exception e) {
-            //Write html string to blobstore for analysis
-            log.warning("Unable to parse html for " + symbol + ", html written to blob");
+            //TODO: Write html string to blobstore for analysis
+            log.warning("Unable to parse html for " + symbol + ", TODO: html written to blob");
             return new Fund(symbol, null, null, null, true, null, null, null, null);
         }
         return fund;

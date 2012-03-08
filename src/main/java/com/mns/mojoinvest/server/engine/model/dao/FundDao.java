@@ -3,12 +3,16 @@ package com.mns.mojoinvest.server.engine.model.dao;
 import com.google.inject.Inject;
 import com.googlecode.objectify.Key;
 import com.googlecode.objectify.ObjectifyFactory;
-import com.googlecode.objectify.Query;
 import com.mns.mojoinvest.server.engine.model.Fund;
+import com.mns.mojoinvest.server.engine.model.Funds;
 
 import java.util.*;
+import java.util.logging.Logger;
 
 public class FundDao extends DAOBase {
+
+    private static final Logger log = Logger.getLogger(FundDao.class.getName());
+
 
     private static boolean objectsRegistered;
 
@@ -26,68 +30,73 @@ public class FundDao extends DAOBase {
     public void registerObjects(ObjectifyFactory ofyFactory) {
         objectsRegistered = true;
         ofyFactory.register(Fund.class);
+        ofyFactory.register(Funds.class);
         ofyFactory.getConversions().add(new MyTypeConverters());
     }
 
-    public List<Fund> list() {
-        Query<Fund> q = ofy().query(Fund.class).filter("active =", true);
-        return q.list();
+    public Key<Funds> put(Set<Fund> funds) {
+        //This method should update local caches also
+        return ofy().put(new Funds(funds));
     }
 
-    public List<String> getAllSymbols() {
-        Query<Fund> q = ofy().query(Fund.class);
-        List<String> symbols = new ArrayList<String>();
-        for (Fund fund : q.list()) {
-            symbols.add(fund.getSymbol());
+    private Map<String, Fund> activeFunds;
+    private Map<String, Set<Fund>> providers;
+    private Map<String, Set<Fund>> categories;
+
+    public Collection<Fund> getAll() {
+
+        if (activeFunds == null || providers == null || categories == null) {
+            activeFunds = new HashMap<String, Fund>();
+            providers = new HashMap<String, Set<Fund>>();
+            categories = new HashMap<String, Set<Fund>>();
+            Funds funds = ofy().get(new Key<Funds>(Funds.class, "funds"));
+            for (Fund fund : funds.getFunds()) {
+                if (fund.isActive()) {
+                    activeFunds.put(fund.getSymbol(), fund);
+                }
+                if (!providers.containsKey(fund.getProvider())) {
+                    providers.put(fund.getProvider(), new HashSet<Fund>());
+                }
+                providers.get(fund.getProvider()).add(fund);
+
+                if (!categories.containsKey(fund.getCategory())) {
+                    categories.put(fund.getCategory(), new HashSet<Fund>());
+                }
+                categories.get(fund.getCategory()).add(fund);
+            }
         }
-        return symbols;
+        return activeFunds.values();
+
     }
 
     public Fund get(String symbol) {
-        return ofy().get(new Key<Fund>(Fund.class, symbol));
+        return activeFunds.get(symbol);
     }
 
     public Collection<Fund> get(List<String> symbols) {
-        List<Key<Fund>> keys = new ArrayList<Key<Fund>>();
+        Set<Fund> funds = new HashSet<Fund>();
         for (String symbol : symbols) {
-            keys.add(new Key<Fund>(Fund.class, symbol));
+            Fund fund = activeFunds.get(symbol);
+            if (fund != null) {
+                funds.add(fund);
+            }
         }
-        return ofy().get(keys).values();
-    }
-
-    public List<Fund> query(Map<String, Object> filters) {
-        Query<Fund> q = ofy().query(Fund.class);
-        for (Map.Entry<String, Object> entry : filters.entrySet()) {
-            q.filter(entry.getKey(), entry.getValue());
-        }
-        return q.list();
-    }
-
-    public Key<Fund> put(Fund fund) {
-        return ofy().put(fund);
-    }
-
-    public Map<Key<Fund>, Fund> put(Collection<Fund> funds) {
-        return ofy().put(funds);
+        return funds;
     }
 
     public List<String> getProviders() {
-        List<Fund> funds = list();
-        SortedSet<String> providers = new TreeSet<String>();
-        for (Fund fund : funds) {
-            if (fund.getProvider() != null && !fund.getProvider().isEmpty())
-                providers.add(fund.getProvider());
-        }
-        return new ArrayList<String>(providers);
+        return new ArrayList<String>(providers.keySet());
     }
 
     public List<String> getCategories() {
-        List<Fund> funds = list();
-        SortedSet<String> categories = new TreeSet<String>();
-        for (Fund fund : funds) {
-            if (fund.getCategory() != null && !fund.getCategory().isEmpty())
-                categories.add(fund.getCategory());
-        }
-        return new ArrayList<String>(categories);
+        return new ArrayList<String>(categories.keySet());
+    }
+
+    public Collection<? extends Fund> getByCategory(String category) {
+        return categories.get(category);
+    }
+
+    public Collection<? extends Fund> getByProvider(String provider) {
+        return providers.get(provider);
     }
 }

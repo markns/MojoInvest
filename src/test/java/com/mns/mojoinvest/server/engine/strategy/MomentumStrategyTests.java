@@ -2,6 +2,7 @@ package com.mns.mojoinvest.server.engine.strategy;
 
 import com.google.appengine.tools.development.testing.LocalDatastoreServiceTestConfig;
 import com.google.appengine.tools.development.testing.LocalServiceTestHelper;
+import com.google.common.collect.Sets;
 import com.googlecode.objectify.ObjectifyService;
 import com.mns.mojoinvest.server.engine.execution.Executor;
 import com.mns.mojoinvest.server.engine.execution.NextTradingDayExecutor;
@@ -30,6 +31,7 @@ import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.Set;
 
 import static org.mockito.Mockito.argThat;
 import static org.mockito.Mockito.when;
@@ -52,7 +54,7 @@ public class MomentumStrategyTests {
             BigDecimal.ONE, BigDecimal.ONE, BigDecimal.ONE, BigDecimal.ONE,
             BigDecimal.ONE, BigDecimal.ONE, BigDecimal.ONE, BigDecimal.ONE, false);
 
-    Collection<Fund> funds = Arrays.asList(
+    Set<Fund> funds = Sets.newHashSet(
             new Fund("A", "A", "", "", true, "", "", "", new LocalDate("2001-01-01")),
             new Fund("B", "B", "", "", true, "", "", "", new LocalDate("2001-01-01")),
             new Fund("C", "C", "", "", true, "", "", "", new LocalDate("2001-01-01")),

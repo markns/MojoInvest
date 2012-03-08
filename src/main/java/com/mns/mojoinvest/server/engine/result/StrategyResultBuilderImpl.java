@@ -55,14 +55,14 @@ public class StrategyResultBuilderImpl implements StrategyResultBuilder {
         DataTableDto dto = new DataTableDto();
         dto.addColumn(new DataTableDto.Column(AbstractDataTable.ColumnType.DATE, "Date", "date"));
         dto.addColumn(new DataTableDto.Column(AbstractDataTable.ColumnType.NUMBER, "Portfolio value", "portfolio"));
-        dto.addColumn(new DataTableDto.Column(AbstractDataTable.ColumnType.NUMBER, "iShares S&P 500", "s&p500"));
-        dto.addColumn(new DataTableDto.Column(AbstractDataTable.ColumnType.NUMBER, "iShares FTSE 100", "ftse100"));
+        dto.addColumn(new DataTableDto.Column(AbstractDataTable.ColumnType.NUMBER, "SPDR S&P 500", "SPY"));
+//        dto.addColumn(new DataTableDto.Column(AbstractDataTable.ColumnType.NUMBER, "iShares FTSE 100", "ftse100"));
 //        dto.addColumn(new DataTableDto.Column(AbstractDataTable.ColumnType.NUMBER, "iShares FTSE China 25", "ftse100"));
 //        dto.addColumn(new DataTableDto.Column(AbstractDataTable.ColumnType.NUMBER, "iShares FTSE BRIC 50", "bric100"));
 
         List<LocalDate> dates = TradingDayUtils.getWeeklySeries(new LocalDate(fromDate), new LocalDate(toDate), 2, true);
 
-        Collection<Fund> funds = fundDao.get(Arrays.asList("ISF", "IUSA"));
+        Collection<Fund> funds = fundDao.get(Arrays.asList("SPY"/*, "IUSA"*/));
         Collection<Quote> quotes = quoteDao.get(funds, dates);
         Map<String, Map<LocalDate, BigDecimal>> quoteMap = new HashMap<String, Map<LocalDate, BigDecimal>>();
         for (Quote quote : quotes) {
@@ -75,8 +75,8 @@ public class StrategyResultBuilderImpl implements StrategyResultBuilder {
         for (LocalDate date : dates) {
             BigDecimal marketValue = portfolio.marketValue(date);
 
-            BigDecimal isfchange = percentageChange(quoteMap.get("ISF").get(dates.get(0)), quoteMap.get("ISF").get(date));
-            BigDecimal iusachange = percentageChange(quoteMap.get("IUSA").get(dates.get(0)), quoteMap.get("IUSA").get(date));
+            BigDecimal isfchange = percentageChange(quoteMap.get("SPY").get(dates.get(0)), quoteMap.get("SPY").get(date));
+//            BigDecimal iusachange = percentageChange(quoteMap.get("IUSA").get(dates.get(0)), quoteMap.get("IUSA").get(date));
 //            BigDecimal fxcchange = percentageChange(quoteMap.get("FXC").get(dates.get(0)), quoteMap.get("FXC").get(date));
 //            BigDecimal bricchange = percentageChange(quoteMap.get("BRIC").get(dates.get(0)), quoteMap.get("BRIC").get(date));
 
@@ -84,8 +84,8 @@ public class StrategyResultBuilderImpl implements StrategyResultBuilder {
             log.info(date + " " + marketValue + " " + portfolio.getActiveFunds(date));
             dto.addRow(new DataTableDto.DateValue(date.toDateMidnight().toDate()),
                     new DataTableDto.DoubleValue(portfolio.marketValue(date).doubleValue()),
-                    new DataTableDto.DoubleValue((isfchange.doubleValue() + 1) * 10000),
-                    new DataTableDto.DoubleValue((iusachange.doubleValue() + 1) * 10000)
+                    new DataTableDto.DoubleValue((isfchange.doubleValue() + 1) * 10000)
+//                    new DataTableDto.DoubleValue((iusachange.doubleValue() + 1) * 10000)
 //                    new DataTableDto.DoubleValue((fxcchange.doubleValue() + 1) * 10000)
 //                    ,new DataTableDto.DoubleValue((bricchange.doubleValue() + 1) * 10000)
 

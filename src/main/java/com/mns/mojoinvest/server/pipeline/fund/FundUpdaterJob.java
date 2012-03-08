@@ -7,6 +7,8 @@ import com.googlecode.objectify.ObjectifyService;
 import com.mns.mojoinvest.server.engine.model.Fund;
 import com.mns.mojoinvest.server.engine.model.dao.FundDao;
 
+import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.logging.Logger;
@@ -24,7 +26,7 @@ public class FundUpdaterJob extends Job1<String, List<Fund>> {
         dao.registerObjects(factory);
         //
 
-        Set<Fund> existing = dao.list();
+        Collection<Fund> existing = dao.getAll();
 
         log.info("Existing " + existing.size() + " - " + existing);
         log.info("Current  " + current.size() + " - " + current);
@@ -36,12 +38,15 @@ public class FundUpdaterJob extends Job1<String, List<Fund>> {
         for (Fund fund : existing) {
             fund.setActive(false);
         }
-        current.addAll(existing);
+
+        //TODO: No need to create hash set here, return correct collection from fund fetcher
+        Set<Fund> funds = new HashSet<Fund>(current);
+        funds.addAll(existing);
 
 
         log.info("Setting " + existingSize + " funds as inactive: " + existing);
         log.info("Updating " + currentSize + " active funds");
-        dao.put(current);
+        dao.put(funds);
 
         return immediate("Set " + existingSize + " funds as inactive: " + existing + "\n" +
                 "Updated " + currentSize + " active funds");
