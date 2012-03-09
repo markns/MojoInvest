@@ -14,17 +14,24 @@ import com.mns.mojoinvest.shared.dispatch.RunStrategyResult;
 import com.mns.mojoinvest.shared.params.Params;
 
 import java.util.List;
+import java.util.Set;
 
 public class ParamsPresenter extends PresenterWidget<ParamsPresenter.MyView>
         implements ParamsUiHandlers {
 
     public interface MyView extends View, HasUiHandlers<ParamsUiHandlers> {
         void setFormationPeriodsAvailable(List<Integer> performanceRangeAcceptable);
-        void setProvidersAvailable(List<String> providersAvailable);
-        void setProvidersSelected(List<String> providers);
-        void setCategoriesAvailable(List<String> categoriesAvailable);
-        void setCategoriesSelected(List<String> categories);
+
+        void setProvidersAvailable(Set<String> providersAvailable);
+
+        void setProvidersSelected(Set<String> providers);
+
+        void setCategoriesAvailable(Set<String> categoriesAvailable);
+
+        void setCategoriesSelected(Set<String> categories);
+
         void edit(Params params);
+
         Params flush();
     }
 
@@ -51,6 +58,7 @@ public class ParamsPresenter extends PresenterWidget<ParamsPresenter.MyView>
                 //TODO: Not sure about the ParamsPresenter.this reference
                 RunStrategySuccessEvent.fire(ParamsPresenter.this, result, true);
             }
+
             @Override
             public void onFailure(Throwable caught) {
                 Window.alert("Strategy failed to execute successfully: " + caught);

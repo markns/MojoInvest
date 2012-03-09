@@ -10,7 +10,6 @@ import com.mns.mojoinvest.server.engine.model.Fund;
 import com.mns.mojoinvest.server.engine.model.Quote;
 import com.mns.mojoinvest.server.engine.model.Ranking;
 import com.mns.mojoinvest.server.engine.model.RankingParams;
-import com.mns.mojoinvest.server.engine.model.dao.CorrelationDao;
 import com.mns.mojoinvest.server.engine.model.dao.FundDao;
 import com.mns.mojoinvest.server.engine.model.dao.QuoteDao;
 import com.mns.mojoinvest.server.engine.model.dao.RankingDao;
@@ -45,7 +44,6 @@ public class MomentumStrategyTests {
 
     private RankingDao rankingDao = new RankingDao(ObjectifyService.factory());
     private FundDao fundDao = new FundDao(ObjectifyService.factory());
-    private CorrelationDao correlationDao = new CorrelationDao();
 
     private final LocalDatastoreServiceTestConfig config = new LocalDatastoreServiceTestConfig();
     private final LocalServiceTestHelper helper = new LocalServiceTestHelper(config);

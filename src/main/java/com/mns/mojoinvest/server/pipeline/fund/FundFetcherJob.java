@@ -41,9 +41,9 @@ public class FundFetcherJob extends Job0<List<Fund>> {
                 batch.clear();
             }
         }
-//        if (batch.size() > 0) {
-//            fundLists.add(futureCall(new FundDetailFetcherBatchJob(), immediate(batch)));
-//        }
+        if (batch.size() > 0) {
+            fundLists.add(futureCall(new FundDetailFetcherBatchJob(), immediate(batch)));
+        }
 
         return futureCall(new MergeFundListJob(), futureList(fundLists));
     }

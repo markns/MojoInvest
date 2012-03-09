@@ -45,7 +45,7 @@ public class StrategyResultBuilderImpl implements StrategyResultBuilder {
         DataTableDto dataTableDto = createDataTableDto(portfolio, transactionDtos.get(0).getDate(),
                 transactionDtos.get(transactionDtos.size() - 1).getDate());
 
-        return new StrategyResult(dataTableDto, transactionDtos);
+        return new StrategyResult(dataTableDto, new ArrayList<TransactionDto>(transactionDtos));
     }
 
 

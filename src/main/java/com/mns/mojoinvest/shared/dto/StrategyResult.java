@@ -2,14 +2,15 @@ package com.mns.mojoinvest.shared.dto;
 
 import com.google.gwt.user.client.rpc.IsSerializable;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class StrategyResult implements IsSerializable {
 
     private DataTableDto dataTableDto;
-    private List<TransactionDto> transactions;
+    private ArrayList<TransactionDto> transactions;
 
-    public StrategyResult(DataTableDto dataTableDto, List<TransactionDto> transactions) {
+    public StrategyResult(DataTableDto dataTableDto, ArrayList<TransactionDto> transactions) {
         this.dataTableDto = dataTableDto;
         this.transactions = transactions;
     }

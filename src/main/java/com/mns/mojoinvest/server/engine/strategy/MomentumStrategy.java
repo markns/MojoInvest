@@ -41,7 +41,7 @@ public class MomentumStrategy {
     }
 
     public void execute(Portfolio portfolio, BacktestParams backtestParams,
-                        Set<Fund> acceptableFunds, MomentumStrategyParams strategyParams)
+                        Set<? extends Fund> acceptableFunds, MomentumStrategyParams strategyParams)
             throws StrategyException {
 
         LocalDate fromDate = new LocalDate(backtestParams.getFromDate());
@@ -51,27 +51,26 @@ public class MomentumStrategy {
             throw new StrategyException("From date cannot be after to date");
 
         List<LocalDate> rebalanceDates = getRebalanceDates(fromDate, toDate, strategyParams);
+        List<Ranking> rankings = rankingDao.get(rebalanceDates, new RankingParams(strategyParams.getFormationPeriod()));
 
-        for (LocalDate rebalanceDate : rebalanceDates) {
+        for (int i = 0; i < rebalanceDates.size(); i++) {
             try {
-                Ranking ranking = rankingDao.get(rebalanceDate,
-                        new RankingParams(strategyParams.getFormationPeriod()));
-                log.info(rebalanceDate + " " + ranking);
-                Collection<Fund> selection = getSelection(ranking.getSymbols(),
+                log.info(rankings.get(i).getId() + " " + rankings.get(i));
+                Collection<Fund> selection = getSelection(rankings.get(i).getSymbols(),
                         acceptableFunds, strategyParams);
-                log.info(rebalanceDate + " " + selection);
-                sellLosers(portfolio, rebalanceDate, selection);
-                buyWinners(portfolio, strategyParams, rebalanceDate, selection);
+                log.info(rebalanceDates.get(i) + " " + selection);
+                sellLosers(portfolio, rebalanceDates.get(i), selection);
+                buyWinners(portfolio, strategyParams, rebalanceDates.get(i), selection);
             } catch (NotFoundException e) {
                 //TODO: How should we handle exceptions here - what type of exceptions are they?
-                log.info(rebalanceDate + " " + e.getMessage());
+                log.info(rebalanceDates.get(i) + " " + e.getMessage());
             } catch (StrategyException e) {
-                log.info(rebalanceDate + " " + e.getMessage());
+                log.info(rebalanceDates.get(i) + " " + e.getMessage());
             }
         }
     }
 
-    private Collection<Fund> getSelection(List<String> ranked, Set<Fund> acceptableFunds,
+    private Collection<Fund> getSelection(List<String> ranked, Set<? extends Fund> acceptableFunds,
                                           MomentumStrategyParams params) throws StrategyException {
 
         List<String> acceptableSymbols = new ArrayList<String>(acceptableFunds.size());

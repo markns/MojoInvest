@@ -2,15 +2,13 @@ package com.mns.mojoinvest.server.pipeline.fund;
 
 import com.google.appengine.tools.pipeline.Job1;
 import com.google.appengine.tools.pipeline.Value;
+import com.googlecode.objectify.NotFoundException;
 import com.googlecode.objectify.ObjectifyFactory;
 import com.googlecode.objectify.ObjectifyService;
-import com.mns.mojoinvest.server.engine.model.Fund;
+import com.mns.mojoinvest.server.engine.model.*;
 import com.mns.mojoinvest.server.engine.model.dao.FundDao;
 
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.logging.Logger;
 
 public class FundUpdaterJob extends Job1<String, List<Fund>> {
@@ -26,30 +24,77 @@ public class FundUpdaterJob extends Job1<String, List<Fund>> {
         dao.registerObjects(factory);
         //
 
-        Collection<Fund> existing = dao.getAll();
-
-        log.info("Existing " + existing.size() + " - " + existing);
-        log.info("Current  " + current.size() + " - " + current);
+        Collection<Fund> existing = null;
+        try {
+            existing = dao.getAll();
+        } catch (NotFoundException e) {
+            existing = new HashSet<Fund>(0);
+        }
 
         //Subtract set of current funds from existing to find inactive.
         existing.removeAll(current);
-        int currentSize = current.size();
-        int existingSize = existing.size();
         for (Fund fund : existing) {
             fund.setActive(false);
         }
+        String message = "Setting " + existing.size() + " funds as inactive: " + existing;
+        log.info(message);
+        String returnMessage = "" + message;
+        dao.put(new HashSet<Fund>(existing));
 
-        //TODO: No need to create hash set here, return correct collection from fund fetcher
-        Set<Fund> funds = new HashSet<Fund>(current);
-        funds.addAll(existing);
+        //Build maps of categories and providers to fund symbols
+        Map<String, Provider> providers = buildProviderMap(current);
+        Map<String, Category> categories = buildCategoryMap(current);
+        Set<String> symbols = getSymbols(current);
 
+        message = "Updating " + current.size() + " active funds";
+        log.info(message);
+        returnMessage = returnMessage + "\n" + message;
 
-        log.info("Setting " + existingSize + " funds as inactive: " + existing);
-        log.info("Updating " + currentSize + " active funds");
-        dao.put(funds);
+        //TODO: All these saves should be wrapped in a single transaction
+        dao.put(new ProviderSet(providers.keySet()));
+        dao.putProviders(providers.values());
+        dao.put(new CategorySet(categories.keySet()));
+        dao.putCategories(categories.values());
+        //TODO: No need to create hashset here, return correct collection from fund fetcher
 
-        return immediate("Set " + existingSize + " funds as inactive: " + existing + "\n" +
-                "Updated " + currentSize + " active funds");
+        dao.put(new Symbols(symbols));
+        dao.put(new HashSet<Fund>(current));
+
+        return immediate(returnMessage);
+    }
+
+    private Set<String> getSymbols(List<Fund> current) {
+        Set<String> symbols = new HashSet<String>(current.size());
+        for (Fund fund : current) {
+            symbols.add(fund.getSymbol());
+        }
+        return symbols;
+    }
+
+    private HashMap<String, Category> buildCategoryMap(List<Fund> current) {
+        HashMap<String, Category> categories = new HashMap<String, Category>();
+        for (Fund fund : current) {
+            if (fund.getCategory() != null) {
+                if (!categories.containsKey(fund.getCategory())) {
+                    categories.put(fund.getCategory(), new Category(fund.getCategory()));
+                }
+                categories.get(fund.getCategory()).add(fund.getSymbol());
+            }
+        }
+        return categories;
+    }
+
+    private HashMap<String, Provider> buildProviderMap(List<Fund> current) {
+        HashMap<String, Provider> providers = new HashMap<String, Provider>();
+        for (Fund fund : current) {
+            if (fund.getProvider() != null) {
+                if (!providers.containsKey(fund.getProvider())) {
+                    providers.put(fund.getProvider(), new Provider(fund.getProvider()));
+                }
+                providers.get(fund.getProvider()).add(fund.getSymbol());
+            }
+        }
+        return providers;
     }
 
 

@@ -1,49 +1,22 @@
 package com.mns.mojoinvest.server.engine.model.dao;
 
 import com.google.inject.Inject;
-import com.google.inject.Singleton;
 import com.googlecode.objectify.Key;
 import com.googlecode.objectify.ObjectifyFactory;
-import com.mns.mojoinvest.server.engine.model.Fund;
-import com.mns.mojoinvest.server.engine.model.Funds;
+import com.mns.mojoinvest.server.engine.model.*;
 
 import java.util.*;
 import java.util.logging.Logger;
 
-@Singleton
 public class FundDao extends DAOBase {
 
     private static final Logger log = Logger.getLogger(FundDao.class.getName());
 
     private static boolean objectsRegistered;
 
-    private Map<String, Fund> funds = new HashMap<String, Fund>();
-    private Map<String, Set<Fund>> providers = new HashMap<String, Set<Fund>>();
-    private Map<String, Set<Fund>> categories = new HashMap<String, Set<Fund>>();
-
     @Inject
     public FundDao(final ObjectifyFactory objectifyFactory) {
         super(objectifyFactory);
-
-        //Initialise local caches
-        Funds funds = ofy().get(new Key<Funds>(Funds.class, "funds"));
-        for (Fund fund : funds.getFunds()) {
-            if (fund.isActive()) {
-                this.funds.put(fund.getSymbol(), fund);
-            }
-            if (fund.getProvider() != null) {
-                if (!providers.containsKey(fund.getProvider())) {
-                    providers.put(fund.getProvider(), new HashSet<Fund>());
-                }
-                providers.get(fund.getProvider()).add(fund);
-            }
-            if (fund.getCategory() != null) {
-                if (!categories.containsKey(fund.getCategory())) {
-                    categories.put(fund.getCategory(), new HashSet<Fund>());
-                }
-                categories.get(fund.getCategory()).add(fund);
-            }
-        }
     }
 
     @Override
@@ -54,49 +27,93 @@ public class FundDao extends DAOBase {
     @Override
     public void registerObjects(ObjectifyFactory ofyFactory) {
         objectsRegistered = true;
-        ofyFactory.register(Funds.class);
+        ofyFactory.register(Fund.class);
+        ofyFactory.register(Symbols.class);
+        ofyFactory.register(Provider.class);
+        ofyFactory.register(ProviderSet.class);
+        ofyFactory.register(Category.class);
+        ofyFactory.register(CategorySet.class);
         ofyFactory.getConversions().add(new MyTypeConverters());
-    }
-
-    public synchronized Key<Funds> put(Set<Fund> funds) {
-        //TODO: This method should update local caches also
-
-        return ofy().put(new Funds(funds));
     }
 
 
     public Collection<Fund> getAll() {
-        return funds.values();
+        Key<Symbols> key = new Key<Symbols>(Symbols.class, "symbols");
+        Symbols symbols = ofy().get(key);
+
+        List<Key<Fund>> keys = new ArrayList<Key<Fund>>();
+        for (String symbol : symbols.getsymbols()) {
+            keys.add(new Key<Fund>(Fund.class, symbol));
+        }
+        return ofy().get(keys).values();
     }
 
     public Fund get(String symbol) {
-        return funds.get(symbol);
+        Key<Fund> key = new Key<Fund>(Fund.class, symbol);
+        return ofy().get(key);
     }
 
     public Collection<Fund> get(List<String> symbols) {
-        Set<Fund> funds = new HashSet<Fund>();
+        List<Key<Fund>> keys = new ArrayList<Key<Fund>>();
         for (String symbol : symbols) {
-            Fund fund = this.funds.get(symbol);
-            if (fund != null) {
-                funds.add(fund);
-            }
+            keys.add(new Key<Fund>(Fund.class, symbol));
         }
-        return funds;
+        return ofy().get(keys).values();
     }
 
-    public List<String> getProviders() {
-        return new ArrayList<String>(providers.keySet());
+    public Collection<Fund> getByCategory(String categoryName) {
+        Key<Category> key = new Key<Category>(Category.class, categoryName);
+        Category category = ofy().get(key);
+
+        List<Key<Fund>> keys = new ArrayList<Key<Fund>>();
+        for (String symbol : category.getSymbols()) {
+            keys.add(new Key<Fund>(Fund.class, symbol));
+        }
+        return ofy().get(keys).values();
     }
 
-    public List<String> getCategories() {
-        return new ArrayList<String>(categories.keySet());
+    public Collection<Fund> getByProvider(String providerName) {
+        Key<Provider> key = new Key<Provider>(Provider.class, providerName);
+        Provider provider = ofy().get(key);
+
+        List<Key<Fund>> keys = new ArrayList<Key<Fund>>();
+        for (String symbol : provider.getSymbols()) {
+            keys.add(new Key<Fund>(Fund.class, symbol));
+        }
+        return ofy().get(keys).values();
     }
 
-    public Collection<? extends Fund> getByCategory(String category) {
-        return categories.get(category);
+    //*************
+
+    public Map<Key<Fund>, Fund> put(Set<Fund> funds) {
+        return ofy().put(funds);
     }
 
-    public Collection<? extends Fund> getByProvider(String provider) {
-        return providers.get(provider);
+    public Key<Symbols> put(Symbols symbols) {
+        return ofy().put(symbols);
+    }
+
+    public void put(ProviderSet providerSet) {
+        ofy().put(providerSet);
+    }
+
+    public Map<Key<Provider>, Provider> putProviders(Collection<Provider> providers) {
+        return ofy().put(providers);
+    }
+
+    public Key<CategorySet> put(CategorySet categorySet) {
+        return ofy().put(categorySet);
+    }
+
+    public Map<Key<Category>, Category> putCategories(Collection<Category> values) {
+        return ofy().put(values);
+    }
+
+    public Set<String> getProviderSet() {
+        return ofy().get(new Key<ProviderSet>(ProviderSet.class, "providers")).getProviders();
+    }
+
+    public Set<String> getCategorySet() {
+        return ofy().get(new Key<CategorySet>(CategorySet.class, "categories")).getCategories();
     }
 }

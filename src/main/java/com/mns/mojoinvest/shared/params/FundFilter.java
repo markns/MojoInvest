@@ -2,17 +2,17 @@ package com.mns.mojoinvest.shared.params;
 
 import com.google.gwt.user.client.rpc.IsSerializable;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 public class FundFilter implements IsSerializable {
 
-    private List<String> providers = new ArrayList<String>();
+    private Set<String> providers = new HashSet<String>();
 
-    private List<String> categories = new ArrayList<String>();
+    private Set<String> categories = new HashSet<String>();
 
 
-    public FundFilter(List<String> providers, List<String> categories) {
+    public FundFilter(Set<String> providers, Set<String> categories) {
         this.providers = providers;
         this.categories = categories;
     }
@@ -20,11 +20,11 @@ public class FundFilter implements IsSerializable {
     public FundFilter() {
     }
 
-    public List<String> getProviders() {
+    public Set<String> getProviders() {
         return providers;
     }
 
-    public List<String> getCategories() {
+    public Set<String> getCategories() {
         return categories;
     }
 

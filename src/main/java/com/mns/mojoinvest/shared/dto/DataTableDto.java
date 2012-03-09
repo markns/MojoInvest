@@ -11,25 +11,25 @@ import java.util.List;
 
 public class DataTableDto implements IsSerializable {
 
-    private List<Column> cols;
+    private ArrayList<Column> cols;
 
-    private List<List<AbstractValue>> rows;
+    private ArrayList<ArrayList<AbstractValue>> rows;
 
     public DataTableDto() {
         cols = new ArrayList<Column>();
-        rows = new ArrayList<List<AbstractValue>>();
+        rows = new ArrayList<ArrayList<AbstractValue>>();
     }
 
     public void addColumn(Column column) {
         cols.add(column);
     }
 
-    public void addRow(List<AbstractValue> values) {
+    public void addRow(ArrayList<AbstractValue> values) {
         rows.add(values);
     }
 
     public void addRow(AbstractValue... values) {
-        addRow(Arrays.asList(values));
+        addRow(new ArrayList<AbstractValue>(Arrays.asList(values)));
     }
 
     public List<Column> getCols() {
@@ -37,7 +37,7 @@ public class DataTableDto implements IsSerializable {
 //        return null;
     }
 
-    public List<List<AbstractValue>> getRows() {
+    public List<ArrayList<AbstractValue>> getRows() {
         return rows;
     }
 

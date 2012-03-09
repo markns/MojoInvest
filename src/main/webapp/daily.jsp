@@ -42,6 +42,7 @@
     if (null != text) {
 %>
 <H4>Daily pipeline...</H4>
+
 <p>
 
         <%

@@ -8,6 +8,8 @@ import com.mns.mojoinvest.server.engine.model.dao.FundDao;
 import com.mns.mojoinvest.shared.dispatch.GetProvidersAvailableAction;
 import com.mns.mojoinvest.shared.dispatch.GetProvidersAvailableResult;
 
+import java.util.HashSet;
+
 public class GetProvidersAvailableHandler implements
         ActionHandler<GetProvidersAvailableAction, GetProvidersAvailableResult> {
 
@@ -20,7 +22,7 @@ public class GetProvidersAvailableHandler implements
 
     @Override
     public GetProvidersAvailableResult execute(GetProvidersAvailableAction action, ExecutionContext context) throws ActionException {
-        return new GetProvidersAvailableResult("", fundDao.getProviders());
+        return new GetProvidersAvailableResult("", new HashSet<String>(fundDao.getProviderSet()));
     }
 
     @Override

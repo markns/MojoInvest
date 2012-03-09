@@ -56,7 +56,7 @@ public class RunStrategyHandler implements
         Portfolio portfolio = portfolioFactory.create(params.getPortfolioParams());
 
         //TODO: Abstract the getAcceptableFunds call to a separate class
-        Set<Fund> funds = getAcceptableFunds(params.getFundFilter());
+        Set<? extends Fund> funds = getAcceptableFunds(params.getFundFilter());
 
         StrategyResult result;
         try {
@@ -76,7 +76,7 @@ public class RunStrategyHandler implements
         return builder.build();
     }
 
-    private Set<Fund> getAcceptableFunds(FundFilter fundFilter) {
+    private Set<? extends Fund> getAcceptableFunds(FundFilter fundFilter) {
         Set<Fund> funds = new HashSet<Fund>();
         for (String category : fundFilter.getCategories()) {
             funds.addAll(fundDao.getByCategory(category));

@@ -11,7 +11,7 @@ import com.mns.mojoinvest.shared.params.*;
 import org.joda.time.LocalDate;
 
 import java.util.Date;
-import java.util.List;
+import java.util.Set;
 
 public class GetParamDefaultHandler implements
         ActionHandler<GetParamDefaultsAction, GetParamDefaultsResult> {
@@ -44,8 +44,8 @@ public class GetParamDefaultHandler implements
         Date toDate = new LocalDate("2012-01-15").toDateMidnight().toDate();
         BacktestParams backtestParams = new BacktestParams(fromDate, toDate);
 
-        List<String> providers = fundDao.getProviders();
-        List<String> categories = fundDao.getCategories();
+        Set<String> providers = fundDao.getProviderSet();
+        Set<String> categories = fundDao.getCategorySet();
         FundFilter fundFilter = new FundFilter(providers, categories);
 
         Params params = new Params(backtestParams, strategyParams, portfolioParams, fundFilter);

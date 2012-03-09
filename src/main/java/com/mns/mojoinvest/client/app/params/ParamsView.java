@@ -13,6 +13,7 @@ import com.gwtplatform.mvp.client.ViewWithUiHandlers;
 import com.mns.mojoinvest.shared.params.Params;
 
 import java.util.List;
+import java.util.Set;
 
 public class ParamsView extends ViewWithUiHandlers<ParamsUiHandlers>
         implements ParamsPresenter.MyView, Editor<Params> {
@@ -56,7 +57,7 @@ public class ParamsView extends ViewWithUiHandlers<ParamsUiHandlers>
     }
 
     @Override
-    public void setProvidersAvailable(List<String> providersAvailable) {
+    public void setProvidersAvailable(Set<String> providersAvailable) {
         fundFilter.providers.clear();
         for (String provider : providersAvailable) {
             fundFilter.providers.addItem(provider);
@@ -64,7 +65,7 @@ public class ParamsView extends ViewWithUiHandlers<ParamsUiHandlers>
     }
 
     @Override
-    public void setProvidersSelected(List<String> providersSelected) {
+    public void setProvidersSelected(Set<String> providersSelected) {
         //TODO: Optimise with a different data structure?
         for (int i = 0; i < fundFilter.providers.getItemCount(); i++) {
             if (providersSelected.contains(fundFilter.providers.getItemText(i))) {
@@ -76,7 +77,7 @@ public class ParamsView extends ViewWithUiHandlers<ParamsUiHandlers>
     }
 
     @Override
-    public void setCategoriesAvailable(List<String> categoriesAvailable) {
+    public void setCategoriesAvailable(Set<String> categoriesAvailable) {
         fundFilter.categories.clear();
         for (String category : categoriesAvailable) {
             fundFilter.categories.addItem(category);
@@ -84,7 +85,7 @@ public class ParamsView extends ViewWithUiHandlers<ParamsUiHandlers>
     }
 
     @Override
-    public void setCategoriesSelected(List<String> categoriesSelected) {
+    public void setCategoriesSelected(Set<String> categoriesSelected) {
         for (int i = 0; i < fundFilter.categories.getItemCount(); i++) {
             if (categoriesSelected.contains(fundFilter.categories.getItemText(i))) {
                 fundFilter.categories.setItemSelected(i, true);

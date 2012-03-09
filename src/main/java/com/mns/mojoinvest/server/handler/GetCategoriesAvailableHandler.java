@@ -8,6 +8,8 @@ import com.mns.mojoinvest.server.engine.model.dao.FundDao;
 import com.mns.mojoinvest.shared.dispatch.GetCategoriesAvailableAction;
 import com.mns.mojoinvest.shared.dispatch.GetCategoriesAvailableResult;
 
+import java.util.HashSet;
+
 public class GetCategoriesAvailableHandler implements
         ActionHandler<GetCategoriesAvailableAction, GetCategoriesAvailableResult> {
 
@@ -20,7 +22,7 @@ public class GetCategoriesAvailableHandler implements
 
     @Override
     public GetCategoriesAvailableResult execute(GetCategoriesAvailableAction action, ExecutionContext context) throws ActionException {
-        return new GetCategoriesAvailableResult("", fundDao.getCategories());
+        return new GetCategoriesAvailableResult("", new HashSet<String>(fundDao.getCategorySet()));
     }
 
     @Override
