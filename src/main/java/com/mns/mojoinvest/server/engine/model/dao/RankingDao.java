@@ -8,7 +8,6 @@ import com.mns.mojoinvest.server.engine.model.RankingParams;
 import org.joda.time.LocalDate;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
@@ -37,12 +36,12 @@ public class RankingDao extends DAOBase {
         return ofy().get(key);
     }
 
-    public Collection<Ranking> get(List<LocalDate> dates, RankingParams params) {
+    public List<Ranking> get(List<LocalDate> dates, RankingParams params) {
         List<Key<Ranking>> keys = new ArrayList<Key<Ranking>>(dates.size());
         for (LocalDate date : dates) {
             keys.add(new Key<Ranking>(Ranking.class, Ranking.createId(date, params)));
         }
-        return ofy().get(keys).values();
+        return new ArrayList<Ranking>(ofy().get(keys).values());
     }
 
     public Key<Ranking> put(Ranking ranking) {
