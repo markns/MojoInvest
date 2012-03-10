@@ -42,7 +42,7 @@ public class FundDao extends DAOBase {
         Symbols symbols = ofy().get(key);
 
         List<Key<Fund>> keys = new ArrayList<Key<Fund>>();
-        for (String symbol : symbols.getsymbols()) {
+        for (String symbol : symbols.getSymbols()) {
             keys.add(new Key<Fund>(Fund.class, symbol));
         }
         return ofy().get(keys).values();

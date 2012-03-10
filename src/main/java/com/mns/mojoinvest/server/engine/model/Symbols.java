@@ -5,6 +5,7 @@ import com.googlecode.objectify.annotation.Entity;
 import com.googlecode.objectify.annotation.Unindexed;
 
 import javax.persistence.Id;
+import java.util.HashSet;
 import java.util.Set;
 
 @Cached
@@ -15,9 +16,9 @@ public class Symbols {
     private static final long serialVersionUID = 1L;
 
     @Id
-    String id = "symbols";   //There will only be one of these entities
+    private String id = "symbols";   //There will only be one of these entities
 
-    Set<String> symbols;
+    private Set<String> symbols = new HashSet<String>();
 
     public Symbols() {
         //Serialization
@@ -27,7 +28,7 @@ public class Symbols {
         this.symbols = symbols;
     }
 
-    public Set<String> getsymbols() {
+    public Set<String> getSymbols() {
         return symbols;
     }
 }

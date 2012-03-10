@@ -84,7 +84,7 @@ public class RunStrategySuccessEvent extends GwtEvent<RunStrategySuccessEvent.Ru
     public int hashCode() {
         int hashCode = 23;
         hashCode = (hashCode * 37) + (runStrategyResult == null ? 1 : runStrategyResult.hashCode());
-        hashCode = (hashCode * 37) + new Boolean(originator).hashCode();
+        hashCode = (hashCode * 37) + Boolean.valueOf(originator).hashCode();
         return hashCode;
     }
 

@@ -132,8 +132,8 @@ public class TradingDayUtilsTests {
     private static List<LocalDate> loadAList(String[] someStrs) {
         List<LocalDate> newList = new ArrayList<LocalDate>();
         try {
-            for (int i = 0; i < someStrs.length; ++i) {
-                newList.add(new LocalDate(someStrs[i]));
+            for (String someStr : someStrs) {
+                newList.add(new LocalDate(someStr));
             } // end of the for
         } catch (IllegalArgumentException pe) {
             pe.printStackTrace();

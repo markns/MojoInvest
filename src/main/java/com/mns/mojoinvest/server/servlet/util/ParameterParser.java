@@ -92,9 +92,8 @@ public class ParameterParser {
      *
      * @param name the parameter name
      * @return the parameter value as a String
-     * @throws ParameterNotFoundException
-     *          if the parameter was not found
-     *          or was the empty string
+     * @throws ParameterNotFoundException if the parameter was not found
+     *                                    or was the empty string
      */
     public String getStringParameter(String name)
             throws ParameterNotFoundException {
@@ -140,10 +139,9 @@ public class ParameterParser {
      *
      * @param name the parameter name
      * @return the parameter value as a boolean
-     * @throws ParameterNotFoundException
-     *                               if the parameter was not found
-     * @throws NumberFormatException if the parameter could not be converted
-     *                               to a boolean
+     * @throws ParameterNotFoundException if the parameter was not found
+     * @throws NumberFormatException      if the parameter could not be converted
+     *                                    to a boolean
      */
     public boolean getBooleanParameter(String name)
             throws ParameterNotFoundException, NumberFormatException {
@@ -183,10 +181,9 @@ public class ParameterParser {
      *
      * @param name the parameter name
      * @return the parameter value as a byte
-     * @throws ParameterNotFoundException
-     *                               if the parameter was not found
-     * @throws NumberFormatException if the parameter value could not
-     *                               be converted to a byte
+     * @throws ParameterNotFoundException if the parameter was not found
+     * @throws NumberFormatException      if the parameter value could not
+     *                                    be converted to a byte
      */
     public byte getByteParameter(String name)
             throws ParameterNotFoundException, NumberFormatException {
@@ -215,9 +212,8 @@ public class ParameterParser {
      *
      * @param name the parameter name
      * @return the parameter value as a char
-     * @throws ParameterNotFoundException
-     *          if the parameter was not found
-     *          or was the empty string
+     * @throws ParameterNotFoundException if the parameter was not found
+     *                                    or was the empty string
      */
     public char getCharParameter(String name)
             throws ParameterNotFoundException {
@@ -249,14 +245,13 @@ public class ParameterParser {
      *
      * @param name the parameter name
      * @return the parameter value as a double
-     * @throws ParameterNotFoundException
-     *                               if the parameter was not found
-     * @throws NumberFormatException if the parameter could not be converted
-     *                               to a double
+     * @throws ParameterNotFoundException if the parameter was not found
+     * @throws NumberFormatException      if the parameter could not be converted
+     *                                    to a double
      */
     public double getDoubleParameter(String name)
             throws ParameterNotFoundException, NumberFormatException {
-        return new Double(getStringParameter(name)).doubleValue();
+        return new Double(getStringParameter(name));
     }
 
     /**
@@ -280,14 +275,13 @@ public class ParameterParser {
      *
      * @param name the parameter name
      * @return the parameter value as a float
-     * @throws ParameterNotFoundException
-     *                               if the parameter was not found
-     * @throws NumberFormatException if the parameter could not be converted
-     *                               to a float
+     * @throws ParameterNotFoundException if the parameter was not found
+     * @throws NumberFormatException      if the parameter could not be converted
+     *                                    to a float
      */
     public float getFloatParameter(String name)
             throws ParameterNotFoundException, NumberFormatException {
-        return new Float(getStringParameter(name)).floatValue();
+        return new Float(getStringParameter(name));
     }
 
     /**
@@ -311,10 +305,9 @@ public class ParameterParser {
      *
      * @param name the parameter name
      * @return the parameter value as a int
-     * @throws ParameterNotFoundException
-     *                               if the parameter was not found
-     * @throws NumberFormatException if the parameter could not be converted
-     *                               to a int
+     * @throws ParameterNotFoundException if the parameter was not found
+     * @throws NumberFormatException      if the parameter could not be converted
+     *                                    to a int
      */
     public int getIntParameter(String name)
             throws ParameterNotFoundException, NumberFormatException {
@@ -342,10 +335,9 @@ public class ParameterParser {
      *
      * @param name the parameter name
      * @return the parameter value as a long
-     * @throws ParameterNotFoundException
-     *                               if the parameter was not found
-     * @throws NumberFormatException if the parameter could not be converted
-     *                               to a long
+     * @throws ParameterNotFoundException if the parameter was not found
+     * @throws NumberFormatException      if the parameter could not be converted
+     *                                    to a long
      */
     public long getLongParameter(String name)
             throws ParameterNotFoundException, NumberFormatException {
@@ -373,10 +365,9 @@ public class ParameterParser {
      *
      * @param name the parameter name
      * @return the parameter value as a short
-     * @throws ParameterNotFoundException
-     *                               if the parameter was not found
-     * @throws NumberFormatException if the parameter could not be converted
-     *                               to a short
+     * @throws ParameterNotFoundException if the parameter was not found
+     * @throws NumberFormatException      if the parameter could not be converted
+     *                                    to a short
      */
     public short getShortParameter(String name)
             throws ParameterNotFoundException, NumberFormatException {

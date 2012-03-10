@@ -15,7 +15,6 @@
     <!--Appstats Event Recorder-->
     <filter>
         <filter-name>appstats</filter-name>
-        <!--TODO: Delegate to appstats after ignoring /appstats requests-->
         <filter-class>com.google.appengine.tools.appstats.AppstatsFilter</filter-class>
         <init-param>
             <param-name>logMessage</param-name>
@@ -25,7 +24,7 @@
 
     <filter-mapping>
         <filter-name>appstats</filter-name>
-        <url-pattern>/*</url-pattern>
+        <url-pattern>/dispatch/*</url-pattern>
     </filter-mapping>
 
     <filter>
