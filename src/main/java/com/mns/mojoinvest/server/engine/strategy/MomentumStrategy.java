@@ -6,7 +6,6 @@ import com.mns.mojoinvest.server.engine.execution.Executor;
 import com.mns.mojoinvest.server.engine.model.Fund;
 import com.mns.mojoinvest.server.engine.model.Ranking;
 import com.mns.mojoinvest.server.engine.model.RankingParams;
-import com.mns.mojoinvest.server.engine.model.dao.FundDao;
 import com.mns.mojoinvest.server.engine.model.dao.RankingDao;
 import com.mns.mojoinvest.server.engine.portfolio.Portfolio;
 import com.mns.mojoinvest.server.engine.portfolio.PortfolioException;
@@ -29,15 +28,11 @@ public class MomentumStrategy {
 
     private final Executor executor;
     private final RankingDao rankingDao;
-    private final FundDao fundDao;
 
     @Inject
-    public MomentumStrategy(Executor executor,
-                            RankingDao rankingDao,
-                            FundDao fundDao) {
+    public MomentumStrategy(Executor executor, RankingDao rankingDao) {
         this.executor = executor;
         this.rankingDao = rankingDao;
-        this.fundDao = fundDao;
     }
 
     public void execute(Portfolio portfolio, BacktestParams backtestParams,
