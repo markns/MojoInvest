@@ -2,7 +2,6 @@ package com.mns.mojoinvest.server.engine.strategy;
 
 import com.google.appengine.tools.development.testing.LocalDatastoreServiceTestConfig;
 import com.google.appengine.tools.development.testing.LocalServiceTestHelper;
-import com.google.common.collect.Sets;
 import com.googlecode.objectify.ObjectifyService;
 import com.mns.mojoinvest.server.engine.execution.Executor;
 import com.mns.mojoinvest.server.engine.execution.NextTradingDayExecutor;
@@ -27,10 +26,7 @@ import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
 import java.math.BigDecimal;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 import static org.mockito.Mockito.argThat;
 import static org.mockito.Mockito.when;
@@ -52,18 +48,20 @@ public class MomentumStrategyTests {
             BigDecimal.ONE, BigDecimal.ONE, BigDecimal.ONE, BigDecimal.ONE,
             BigDecimal.ONE, BigDecimal.ONE, BigDecimal.ONE, BigDecimal.ONE, false);
 
-    Set<Fund> funds = Sets.newHashSet(
-            new Fund("A", "A", "", "", true, "", "", "", new LocalDate("2001-01-01")),
-            new Fund("B", "B", "", "", true, "", "", "", new LocalDate("2001-01-01")),
-            new Fund("C", "C", "", "", true, "", "", "", new LocalDate("2001-01-01")),
-            new Fund("D", "D", "", "", true, "", "", "", new LocalDate("2001-01-01")),
-            new Fund("E", "E", "", "", true, "", "", "", new LocalDate("2001-01-01")),
-            new Fund("F", "F", "", "", true, "", "", "", new LocalDate("2001-01-01")),
-            new Fund("G", "G", "", "", true, "", "", "", new LocalDate("2001-01-01")),
-            new Fund("H", "H", "", "", true, "", "", "", new LocalDate("2001-01-01")),
-            new Fund("I", "I", "", "", true, "", "", "", new LocalDate("2001-01-01")),
-            new Fund("J", "J", "", "", true, "", "", "", new LocalDate("2001-01-01"))
-    );
+    Map<String, Fund> funds = new HashMap<String, Fund>() {
+        {
+            put("A", new Fund("A", "A", "", "", true, "", "", "", new LocalDate("2001-01-01")));
+            put("B", new Fund("B", "B", "", "", true, "", "", "", new LocalDate("2001-01-01")));
+            put("C", new Fund("C", "C", "", "", true, "", "", "", new LocalDate("2001-01-01")));
+            put("D", new Fund("D", "D", "", "", true, "", "", "", new LocalDate("2001-01-01")));
+            put("E", new Fund("E", "E", "", "", true, "", "", "", new LocalDate("2001-01-01")));
+            put("F", new Fund("F", "F", "", "", true, "", "", "", new LocalDate("2001-01-01")));
+            put("G", new Fund("G", "G", "", "", true, "", "", "", new LocalDate("2001-01-01")));
+            put("H", new Fund("H", "H", "", "", true, "", "", "", new LocalDate("2001-01-01")));
+            put("I", new Fund("I", "I", "", "", true, "", "", "", new LocalDate("2001-01-01")));
+            put("J", new Fund("J", "J", "", "", true, "", "", "", new LocalDate("2001-01-01")));
+        }
+    };
 
     RankingParams rankingParams = new RankingParams(9);
     Collection<Ranking> rankings = Arrays.asList(
@@ -82,7 +80,7 @@ public class MomentumStrategyTests {
     @Before
     public void setUp() {
         helper.setUp();
-        fundDao.put(funds);
+        fundDao.put(new HashSet<Fund>(funds.values()));
         rankingDao.put(rankings);
         Executor executor = new NextTradingDayExecutor(quoteDao);
         when(quoteDao.get(anyFund(), anyLocalDate())).thenReturn(dummyQuote);
@@ -97,7 +95,7 @@ public class MomentumStrategyTests {
 
     @Test
     public void testStrategy() throws StrategyException {
-        strategy.execute(portfolio, backtestParams, new HashSet<Fund>(funds), strategyParams);
+        strategy.execute(portfolio, backtestParams, funds, strategyParams);
     }
 
     private LocalDate anyLocalDate() {

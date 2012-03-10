@@ -18,7 +18,9 @@ import com.mns.mojoinvest.shared.dto.StrategyResult;
 import com.mns.mojoinvest.shared.params.FundFilter;
 import com.mns.mojoinvest.shared.params.Params;
 
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
 public class RunStrategyHandler implements
@@ -56,7 +58,7 @@ public class RunStrategyHandler implements
         Portfolio portfolio = portfolioFactory.create(params.getPortfolioParams());
 
         //TODO: Abstract the getAcceptableFunds call to a separate class
-        Set<? extends Fund> funds = getAcceptableFunds(params.getFundFilter());
+        Map<String, Fund> funds = getAcceptableFunds(params.getFundFilter());
 
         StrategyResult result;
         try {
@@ -76,7 +78,7 @@ public class RunStrategyHandler implements
         return builder.build();
     }
 
-    private Set<? extends Fund> getAcceptableFunds(FundFilter fundFilter) {
+    private Map<String, Fund> getAcceptableFunds(FundFilter fundFilter) {
         Set<Fund> funds = new HashSet<Fund>();
         for (String category : fundFilter.getCategories()) {
             funds.addAll(fundDao.getByCategory(category));
@@ -84,7 +86,11 @@ public class RunStrategyHandler implements
         for (String provider : fundFilter.getProviders()) {
             funds.addAll(fundDao.getByProvider(provider));
         }
-        return funds;
+        Map<String, Fund> fundMap = new HashMap<String, Fund>();
+        for (Fund fund : funds) {
+            fundMap.put(fund.getSymbol(), fund);
+        }
+        return fundMap;
     }
 
     @Override

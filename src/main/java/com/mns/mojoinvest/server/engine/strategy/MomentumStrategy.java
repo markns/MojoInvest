@@ -20,7 +20,7 @@ import java.math.MathContext;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import java.util.Set;
+import java.util.Map;
 import java.util.logging.Logger;
 
 public class MomentumStrategy {
@@ -41,7 +41,7 @@ public class MomentumStrategy {
     }
 
     public void execute(Portfolio portfolio, BacktestParams backtestParams,
-                        Set<? extends Fund> acceptableFunds, MomentumStrategyParams strategyParams)
+                        Map<String, Fund> acceptableFunds, MomentumStrategyParams strategyParams)
             throws StrategyException {
 
         LocalDate fromDate = new LocalDate(backtestParams.getFromDate());
@@ -70,28 +70,20 @@ public class MomentumStrategy {
         }
     }
 
-    private Collection<Fund> getSelection(List<String> ranked, Set<? extends Fund> acceptableFunds,
+    private Collection<Fund> getSelection(List<String> ranked, Map<String, Fund> acceptableFunds,
                                           MomentumStrategyParams params) throws StrategyException {
-
-        List<String> acceptableSymbols = new ArrayList<String>(acceptableFunds.size());
-        for (Fund fund : acceptableFunds) {
-            acceptableSymbols.add(fund.getSymbol());
-        }
-        ranked.retainAll(acceptableSymbols);
+        ranked.retainAll(acceptableFunds.keySet());
         if (ranked.size() <= params.getPortfolioSize() * 2)
             throw new StrategyException("Not enough funds in population to make selection");
-
-        List<String> selection = new ArrayList<String>();
+        List<Fund> selection = new ArrayList<Fund>();
         for (String symbol : ranked) {
-
             if (selection.size() < params.getPortfolioSize()) {
-                selection.add(symbol);
+                selection.add(acceptableFunds.get(symbol));
             } else {
                 break;
             }
-
         }
-        return fundDao.get(selection);
+        return selection;
     }
 
 
