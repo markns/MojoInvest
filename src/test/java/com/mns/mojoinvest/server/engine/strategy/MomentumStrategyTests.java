@@ -98,11 +98,12 @@ public class MomentumStrategyTests {
         strategy.execute(portfolio, backtestParams, funds, strategyParams);
     }
 
-    private LocalDate anyLocalDate() {
+    //TODO: Move to shared class
+    public static LocalDate anyLocalDate() {
         return argThat(new IsLocalDate());
     }
 
-    private Fund anyFund() {
+    public static Fund anyFund() {
         return argThat(new IsFund());
     }
 

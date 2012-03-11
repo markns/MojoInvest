@@ -13,8 +13,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.math.BigDecimal;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 
 import static junit.framework.Assert.*;
 
@@ -52,6 +51,7 @@ public class PositionTests {
             new Quote("TEST", buy100Date, BigDecimal.ZERO, BigDecimal.ZERO, BigDecimal.ZERO, new BigDecimal("400"), BigDecimal.ZERO, BigDecimal.ZERO, BigDecimal.ZERO, BigDecimal.ZERO, false),
             new Quote("TEST", buy200Date, BigDecimal.ZERO, BigDecimal.ZERO, BigDecimal.ZERO, new BigDecimal("500"), BigDecimal.ZERO, BigDecimal.ZERO, BigDecimal.ZERO, BigDecimal.ZERO, false),
             new Quote("TEST", sell50Date, BigDecimal.ZERO, BigDecimal.ZERO, BigDecimal.ZERO, new BigDecimal("550"), BigDecimal.ZERO, BigDecimal.ZERO, BigDecimal.ZERO, BigDecimal.ZERO, false),
+            new Quote("TEST", sell50_2Date, BigDecimal.ZERO, BigDecimal.ZERO, BigDecimal.ZERO, new BigDecimal("550"), BigDecimal.ZERO, BigDecimal.ZERO, BigDecimal.ZERO, BigDecimal.ZERO, false),
             new Quote("TEST", sell100Date, BigDecimal.ZERO, BigDecimal.ZERO, BigDecimal.ZERO, new BigDecimal("490"), BigDecimal.ZERO, BigDecimal.ZERO, BigDecimal.ZERO, BigDecimal.ZERO, false),
             new Quote("TEST", sell200Date, BigDecimal.ZERO, BigDecimal.ZERO, BigDecimal.ZERO, new BigDecimal("510"), BigDecimal.ZERO, BigDecimal.ZERO, BigDecimal.ZERO, BigDecimal.ZERO, false)
     );
@@ -244,5 +244,31 @@ public class PositionTests {
         assertEquals(new BigDecimal("17.5357400"), position.totalReturn(sell50Date));
         assertEquals(new BigDecimal("8.32855800"), position.totalReturn(sell200Date));
     }
+
+    @Test
+    public void testGetQuotes() throws PortfolioException {
+
+        Position position = new Position(quoteDao, fund);
+        position.add(buy100);//2011-02-01
+        position.add(buy200);//2011-03-01
+        position.add(sell50);//2011-03-15
+        position.add(sell50_2);//2011-04-01
+        position.add(sell200);//2011-06-01
+
+        NavigableSet<LocalDate> dates =
+                new TreeSet<LocalDate>(Arrays.asList(
+                        new LocalDate("2011-01-15"),
+                        new LocalDate("2011-02-01"),
+                        new LocalDate("2011-03-15"),
+                        new LocalDate("2011-04-01"),
+                        new LocalDate("2011-06-01"),
+                        new LocalDate("2011-08-01")
+                ));
+
+        Collection<Quote> quotes = position.getQuotes(dates);
+        System.out.println(quotes);
+        position.marketValue(dates);
+    }
+
 
 }

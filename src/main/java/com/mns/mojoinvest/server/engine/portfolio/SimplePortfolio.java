@@ -237,4 +237,20 @@ public class SimplePortfolio implements Portfolio {
     }
 
 
+    public List<BigDecimal> marketValue(NavigableSet<LocalDate> dates) {
+        List<BigDecimal> portfolioValues = new ArrayList<BigDecimal>(dates.size());
+        for (Position position : positions.values()) {
+            List<BigDecimal> positionValues = position.marketValue(dates);
+            for (int i = 0; i < portfolioValues.size(); i++) {
+                portfolioValues.set(i, portfolioValues.get(i).add(positionValues.get(i)));
+            }
+        }
+        for (Map.Entry<LocalDate, BigDecimal> entry : cashFlows.entrySet()) {
+            //add cashflow to the portfolio value
+        }
+
+        return portfolioValues;
+    }
+
+
 }

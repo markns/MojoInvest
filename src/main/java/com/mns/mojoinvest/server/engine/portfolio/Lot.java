@@ -1,5 +1,6 @@
 package com.mns.mojoinvest.server.engine.portfolio;
 
+import com.mns.mojoinvest.server.engine.model.Quote;
 import com.mns.mojoinvest.server.engine.transaction.BuyTransaction;
 import com.mns.mojoinvest.server.engine.transaction.SellTransaction;
 import com.mns.mojoinvest.server.engine.transaction.Transaction;
@@ -40,6 +41,9 @@ public class Lot {
 
     private static final Logger log = Logger.getLogger(Lot.class.getName());
 
+    private final LocalDate openDate;
+    private LocalDate closeDate;
+
     private final BuyTransaction openingTransaction;
 
     private final NavigableMap<LocalDate, SellTransaction> closingTransactionsMap;
@@ -47,6 +51,7 @@ public class Lot {
     public Lot(BuyTransaction openingTransaction) {
         log.fine("Creating new lot from " + openingTransaction);
         this.openingTransaction = openingTransaction;
+        this.openDate = openingTransaction.getDate();
         this.closingTransactionsMap = new TreeMap<LocalDate, SellTransaction>();
     }
 
@@ -66,12 +71,18 @@ public class Lot {
             throws PortfolioException {
         if (!saleIsValid(transaction))
             throw new PortfolioException("Lot is not large enough to be able to meet sale " + transaction);
+        if (closesLot(transaction))
+            closeDate = transaction.getDate();
         closingTransactionsMap.put(transaction.getDate(), transaction);
     }
 
     private boolean saleIsValid(Transaction transaction) {
         //TODO: throw exception if any transactions exist after transaction.getDate
         return getRemainingQuantity(transaction.getDate()).compareTo(transaction.getQuantity()) >= 0;
+    }
+
+    private boolean closesLot(Transaction transaction) {
+        return getRemainingQuantity(transaction.getDate()).compareTo(transaction.getQuantity()) == 0;
     }
 
     /**
@@ -107,6 +118,14 @@ public class Lot {
      */
     public BigDecimal getInitialInvestment() {
         return openingTransaction.getInitialInvestment();
+    }
+
+    public LocalDate getOpenDate() {
+        return openDate;
+    }
+
+    public LocalDate getCloseDate() {
+        return closeDate;
     }
 
     public boolean openedAfter(LocalDate date) {
@@ -243,4 +262,9 @@ public class Lot {
     }
 
 
+    public List<BigDecimal> marketValue(NavigableSet<LocalDate> dates, Collection<Quote> quotes) {
+        NavigableSet<LocalDate> lotDates = dates.subSet(openDate, true, closeDate, true);
+        System.out.println(lotDates);
+        return null;
+    }
 }

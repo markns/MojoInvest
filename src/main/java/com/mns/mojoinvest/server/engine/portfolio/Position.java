@@ -10,8 +10,7 @@ import org.joda.time.LocalDate;
 
 import java.math.BigDecimal;
 import java.math.MathContext;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 
 /**
@@ -238,5 +237,29 @@ public class Position {
         return returnsGain(date).divide(cashOut(date).negate(), MathContext.DECIMAL32)
                 //multiply by 100 for percentage
                 .multiply(BigDecimal.TEN.multiply(BigDecimal.TEN));
+    }
+
+    public List<BigDecimal> marketValue(NavigableSet<LocalDate> dates) {
+
+        List<BigDecimal> positionValues = new ArrayList<BigDecimal>(dates.size());
+        for (Lot lot : lots) {
+            List<BigDecimal> lotValues = lot.marketValue(dates, getQuotes(dates));
+//            for (int i = 0; i < lotValues.size(); i++) {
+//                positionValues.set(i, positionValues.get(i).add(lotValues.get(i)));
+//            }
+        }
+        return positionValues;
+    }
+
+    public Collection<Quote> getQuotes(NavigableSet<LocalDate> dates) {
+        NavigableSet<LocalDate> positionDates = new TreeSet<LocalDate>();
+        for (Lot lot : lots) {
+            if (lot.getCloseDate() == null) {
+                positionDates.addAll(dates.tailSet(lot.getOpenDate(), true));
+            } else {
+                positionDates.addAll(dates.subSet(lot.getOpenDate(), true, lot.getCloseDate(), true));
+            }
+        }
+        return quoteDao.get(fund, positionDates);
     }
 }
