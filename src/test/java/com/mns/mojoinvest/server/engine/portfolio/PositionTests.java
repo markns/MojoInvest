@@ -265,7 +265,7 @@ public class PositionTests {
                         new LocalDate("2011-08-01")
                 ));
 
-        Collection<Quote> quotes = position.getQuotes(dates);
+        Map<LocalDate, Quote> quotes = position.getQuotes(dates);
         System.out.println(quotes);
         position.marketValue(dates);
     }

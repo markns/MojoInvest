@@ -243,7 +243,7 @@ public class Position {
 
         List<BigDecimal> positionValues = new ArrayList<BigDecimal>(dates.size());
         for (Lot lot : lots) {
-            List<BigDecimal> lotValues = lot.marketValue(dates, getQuotes(dates));
+            Map<LocalDate, BigDecimal> lotValues = lot.marketValue(dates, getQuotes(dates));
 //            for (int i = 0; i < lotValues.size(); i++) {
 //                positionValues.set(i, positionValues.get(i).add(lotValues.get(i)));
 //            }
@@ -251,7 +251,7 @@ public class Position {
         return positionValues;
     }
 
-    public Collection<Quote> getQuotes(NavigableSet<LocalDate> dates) {
+    public Map<LocalDate, Quote> getQuotes(NavigableSet<LocalDate> dates) {
         NavigableSet<LocalDate> positionDates = new TreeSet<LocalDate>();
         for (Lot lot : lots) {
             if (lot.getCloseDate() == null) {
@@ -260,6 +260,10 @@ public class Position {
                 positionDates.addAll(dates.subSet(lot.getOpenDate(), true, lot.getCloseDate(), true));
             }
         }
-        return quoteDao.get(fund, positionDates);
+        Map<LocalDate, Quote> quotes = new HashMap<LocalDate, Quote>();
+        for (Quote quote : quoteDao.get(fund, positionDates)) {
+            quotes.put(quote.getDate(), quote);
+        }
+        return quotes;
     }
 }

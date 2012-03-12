@@ -262,9 +262,28 @@ public class Lot {
     }
 
 
-    public List<BigDecimal> marketValue(NavigableSet<LocalDate> dates, Collection<Quote> quotes) {
+    public Map<LocalDate, BigDecimal> marketValue(NavigableSet<LocalDate> dates, Map<LocalDate, Quote> quotes) {
+
         NavigableSet<LocalDate> lotDates = dates.subSet(openDate, true, closeDate, true);
-        System.out.println(lotDates);
-        return null;
+
+        Map<LocalDate, BigDecimal> marketValues = new HashMap<LocalDate, BigDecimal>();
+
+        for (LocalDate lotDate : lotDates) {
+            marketValues.put(lotDate, getInitialQuantity());
+        }
+
+        for (SellTransaction sellTransaction : closingTransactionsMap.values()) {
+            for (Map.Entry<LocalDate, BigDecimal> e : marketValues.entrySet()) {
+                if (sellTransaction.getDate().isBefore(e.getKey())) {
+                    marketValues.put(e.getKey(), e.getValue().subtract(sellTransaction.getQuantity()));
+                }
+            }
+        }
+
+        for (Map.Entry<LocalDate, BigDecimal> e : marketValues.entrySet()) {
+            marketValues.put(e.getKey(), e.getValue().multiply(quotes.get(e.getKey()).getClose()));
+        }
+
+        return marketValues;
     }
 }
