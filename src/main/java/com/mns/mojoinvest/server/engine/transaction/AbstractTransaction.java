@@ -1,6 +1,5 @@
 package com.mns.mojoinvest.server.engine.transaction;
 
-import com.mns.mojoinvest.server.engine.model.Fund;
 import org.joda.time.LocalDate;
 
 import java.math.BigDecimal;
@@ -8,15 +7,15 @@ import java.math.BigDecimal;
 public abstract class AbstractTransaction implements Transaction {
 
     protected final String ref;
-    protected final Fund fund;
+    protected final String fund;
     protected final LocalDate date;
     protected final BigDecimal units;
     protected final BigDecimal price;
     protected final BigDecimal commission;
 
-    public AbstractTransaction(Fund fund, LocalDate date, BigDecimal units,
+    public AbstractTransaction(String fund, LocalDate date, BigDecimal units,
                                BigDecimal price, BigDecimal commission) {
-        this.ref = fund.getSymbol() + "/" + date;
+        this.ref = fund + "/" + date;
         this.fund = fund;
         this.date = date;
         this.units = units;
@@ -28,7 +27,7 @@ public abstract class AbstractTransaction implements Transaction {
         return ref;
     }
 
-    public Fund getFund() {
+    public String getFund() {
         return fund;
     }
 
@@ -51,7 +50,7 @@ public abstract class AbstractTransaction implements Transaction {
     @Override
     public String toString() {
         return this.getClass().getSimpleName() +
-                "{fund=" + fund.getSymbol() +
+                "{fund=" + fund +
                 ", date=" + date +
                 ", units=" + units +
                 ", price=" + price +
@@ -87,16 +86,16 @@ public abstract class AbstractTransaction implements Transaction {
         return result;
     }
 
-    public static Transaction fromStrArr(Fund fund, String[] arr) {
+    public static Transaction fromStrArr(String[] arr) {
         if (arr[0].equals("BUY")) {
-            return new BuyTransaction(fund,
+            return new BuyTransaction(arr[1],
                     new LocalDate(arr[2]),
                     new BigDecimal(arr[3]),
                     new BigDecimal(arr[4]),
                     new BigDecimal(arr[5])
             );
         } else {
-            return new SellTransaction(fund,
+            return new SellTransaction(arr[1],
                     new LocalDate(arr[2]),
                     new BigDecimal(arr[3]),
                     new BigDecimal(arr[4]),
@@ -108,7 +107,7 @@ public abstract class AbstractTransaction implements Transaction {
         String buySell = this instanceof BuyTransaction ? "BUY" : "SELL";
         return new String[]{
                 buySell,
-                fund.getSymbol(),
+                fund,
                 date.toString(),
                 units.toString(),
                 price.toString(),

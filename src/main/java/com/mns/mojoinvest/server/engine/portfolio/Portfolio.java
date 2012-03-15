@@ -1,6 +1,5 @@
 package com.mns.mojoinvest.server.engine.portfolio;
 
-import com.mns.mojoinvest.server.engine.model.Fund;
 import com.mns.mojoinvest.server.engine.transaction.BuyTransaction;
 import com.mns.mojoinvest.server.engine.transaction.SellTransaction;
 import com.mns.mojoinvest.server.engine.transaction.Transaction;
@@ -16,9 +15,9 @@ public interface Portfolio {
 
     BigDecimal getTransactionCost();
 
-    boolean contains(Fund fund, LocalDate date);
+    boolean contains(String fund, LocalDate date);
 
-    Position getPosition(Fund fund);
+    Position getPosition(String fund);
 
     void add(Transaction transaction) throws PortfolioException;
 
@@ -28,13 +27,13 @@ public interface Portfolio {
 
     Collection<Position> getPositions();
 
-    Map<Fund, Position> getOpenPositions(LocalDate date);
+    Map<String, Position> getOpenPositions(LocalDate date);
 
     int openPositionCount(LocalDate date);
 
-    Collection<Fund> getFunds();
+    Collection<String> getFunds();
 
-    Collection<Fund> getActiveFunds(LocalDate date);
+    Collection<String> getActiveFunds(LocalDate date);
 
     BigDecimal costBasis(LocalDate date);
 

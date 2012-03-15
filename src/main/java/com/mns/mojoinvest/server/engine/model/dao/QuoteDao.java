@@ -87,14 +87,27 @@ public class QuoteDao extends DAOBase {
         return ofy().get(keys).values();
     }
 
-    public Collection<Quote> get(Collection<Fund> funds, Collection<LocalDate> dates) {
+    public Collection<Quote> get(Collection<String> symbols, Collection<LocalDate> dates) {
+        List<Key<Quote>> keys = getKeys(symbols, dates);
+        return get(keys);
+    }
+
+    public List<Key<Quote>> getKeys(Collection<String> symbols, Collection<LocalDate> dates) {
         List<Key<Quote>> keys = new ArrayList<Key<Quote>>();
         for (LocalDate date : dates) {
-            for (Fund fund : funds) {
-                keys.add(new Key<Quote>(Quote.class, QuoteUtils.quoteId(fund.getSymbol(), date)));
+            for (String symbol : symbols) {
+                keys.add(new Key<Quote>(Quote.class, QuoteUtils.quoteId(symbol, date)));
             }
         }
-        return get(keys);
+        return keys;
+    }
+
+    public List<Key<Quote>> getKeys(String symbol, Collection<LocalDate> dates) {
+        List<Key<Quote>> keys = new ArrayList<Key<Quote>>();
+        for (LocalDate date : dates) {
+            keys.add(new Key<Quote>(Quote.class, QuoteUtils.quoteId(symbol, date)));
+        }
+        return keys;
     }
 
     public Collection<Quote> get(Fund fund, Collection<LocalDate> dates) {

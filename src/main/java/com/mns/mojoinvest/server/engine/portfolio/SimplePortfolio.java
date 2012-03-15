@@ -2,7 +2,7 @@ package com.mns.mojoinvest.server.engine.portfolio;
 
 import com.google.inject.Inject;
 import com.google.inject.assistedinject.Assisted;
-import com.mns.mojoinvest.server.engine.model.Fund;
+import com.mns.mojoinvest.server.engine.model.dao.FundDao;
 import com.mns.mojoinvest.server.engine.model.dao.QuoteDao;
 import com.mns.mojoinvest.server.engine.transaction.BuyTransaction;
 import com.mns.mojoinvest.server.engine.transaction.SellTransaction;
@@ -39,18 +39,17 @@ import java.util.*;
  */
 public class SimplePortfolio implements Portfolio {
 
-    private Map<Fund, Position> positions;
-
+    private Map<String, Position> positions;
+    private FundDao fundDao;
     private QuoteDao quoteDao;
-
     private NavigableMap<LocalDate, BigDecimal> cashFlows;
-
     private BigDecimal transactionCost;
 
     @Inject
-    public SimplePortfolio(QuoteDao quoteDao, @Assisted PortfolioParams params) {
+    public SimplePortfolio(FundDao fundDao, QuoteDao quoteDao, @Assisted PortfolioParams params) {
+        this.fundDao = fundDao;
         this.quoteDao = quoteDao;
-        this.positions = new HashMap<Fund, Position>();
+        this.positions = new HashMap<String, Position>();
         this.cashFlows = new TreeMap<LocalDate, BigDecimal>();
         this.cashFlows.put(new LocalDate(params.getCreationDate()),
                 BigDecimal.valueOf(params.getInitialInvestment()));
@@ -77,12 +76,12 @@ public class SimplePortfolio implements Portfolio {
     }
 
     @Override
-    public boolean contains(Fund fund, LocalDate date) {
+    public boolean contains(String fund, LocalDate date) {
         return getOpenPositions(date).containsKey(fund);
     }
 
     @Override
-    public Position getPosition(Fund fund) {
+    public Position getPosition(String fund) {
         return positions.get(fund);
     }
 
@@ -102,22 +101,20 @@ public class SimplePortfolio implements Portfolio {
             throw new PortfolioException("Not enough cash in portfolio to buy "
                     + transaction);
 
-        Fund fund = transaction.getFund();
-        if (!positions.containsKey(fund)) {
-            positions.put(fund, new Position(quoteDao, fund));
+        if (!positions.containsKey(transaction.getFund())) {
+            positions.put(transaction.getFund(), new Position(quoteDao, fundDao.get(transaction.getFund())));
         }
         addCashFlow(transaction.getDate(), transaction.getCashValue());
-        positions.get(fund).add(transaction);
+        positions.get(transaction.getFund()).add(transaction);
     }
 
     @Override
     public void add(SellTransaction transaction) throws PortfolioException {
-        Fund fund = transaction.getFund();
-        if (!positions.containsKey(fund)) {
+        if (!positions.containsKey(transaction.getFund())) {
             throw new PortfolioException("Cannot sell a fund that is not held");
         }
         addCashFlow(transaction.getDate(), transaction.getCashValue());
-        positions.get(fund).add(transaction);
+        positions.get(transaction.getFund()).add(transaction);
     }
 
     public Collection<Position> getPositions() {
@@ -125,11 +122,11 @@ public class SimplePortfolio implements Portfolio {
     }
 
     @Override
-    public Map<Fund, Position> getOpenPositions(LocalDate date) {
-        Map<Fund, Position> currentPositions = new HashMap<Fund, Position>();
+    public Map<String, Position> getOpenPositions(LocalDate date) {
+        Map<String, Position> currentPositions = new HashMap<String, Position>();
         for (Position position : positions.values()) {
             if (position.open(date)) {
-                currentPositions.put(position.getFund(), position);
+                currentPositions.put(position.getFund().getSymbol(), position);
             }
         }
         return currentPositions;
@@ -141,12 +138,12 @@ public class SimplePortfolio implements Portfolio {
     }
 
     @Override
-    public Collection<Fund> getFunds() {
+    public Collection<String> getFunds() {
         return positions.keySet();
     }
 
     @Override
-    public Collection<Fund> getActiveFunds(LocalDate date) {
+    public Collection<String> getActiveFunds(LocalDate date) {
         return getOpenPositions(date).keySet();
     }
 

@@ -1,13 +1,12 @@
 package com.mns.mojoinvest.server.engine.transaction;
 
-import com.mns.mojoinvest.server.engine.model.Fund;
 import org.joda.time.LocalDate;
 
 import java.math.BigDecimal;
 
 public class BuyTransaction extends AbstractTransaction {
 
-    public BuyTransaction(Fund fund, LocalDate date, BigDecimal units,
+    public BuyTransaction(String fund, LocalDate date, BigDecimal units,
                           BigDecimal price, BigDecimal commission) {
         super(fund, date, units, price, commission);
     }

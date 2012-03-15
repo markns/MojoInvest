@@ -2,9 +2,11 @@ package com.mns.mojoinvest.server.engine.portfolio;
 
 import com.google.appengine.tools.development.testing.LocalDatastoreServiceTestConfig;
 import com.google.appengine.tools.development.testing.LocalServiceTestHelper;
+import com.google.common.collect.Sets;
 import com.googlecode.objectify.ObjectifyService;
 import com.mns.mojoinvest.server.engine.model.Fund;
 import com.mns.mojoinvest.server.engine.model.Quote;
+import com.mns.mojoinvest.server.engine.model.dao.FundDao;
 import com.mns.mojoinvest.server.engine.model.dao.QuoteDao;
 import com.mns.mojoinvest.server.engine.transaction.BuyTransaction;
 import com.mns.mojoinvest.server.engine.transaction.SellTransaction;
@@ -25,6 +27,7 @@ public class PortfolioTests {
     private final PortfolioParams loadsofcash = new PortfolioParams(10000000d, 15.0d, new LocalDate("2011-01-01").toDateMidnight().toDate());
 
     private final QuoteDao quoteDao = new QuoteDao(ObjectifyService.factory());
+    private final FundDao fundDao = new FundDao(ObjectifyService.factory());
     private final Fund ABC = new Fund("ABC", "ABC fund", "Category", "Provider", true,
             "US", "Index", "Blah blah", new LocalDate("2011-01-01"));
     private final Fund DEF = new Fund("DEF", "DEF fund", "Category", "Provider", true,
@@ -42,19 +45,19 @@ public class PortfolioTests {
     private static final LocalDate sell100Date = new LocalDate("2011-05-01");
     private static final LocalDate sell200Date = new LocalDate("2011-06-01");
 
-    private final BuyTransaction buyABC100 = new BuyTransaction(ABC, buy100Date, new BigDecimal("100"), new BigDecimal("471.09"), COMMISSION);
-    private final BuyTransaction buyABC200 = new BuyTransaction(ABC, buy200Date, new BigDecimal("200"), new BigDecimal("471.09"), COMMISSION);
-    private final SellTransaction sellABC50 = new SellTransaction(ABC, sell50Date, new BigDecimal("50"), new BigDecimal("573.20"), COMMISSION);
-    private final SellTransaction sellABC50_2 = new SellTransaction(ABC, sell50_2Date, new BigDecimal("50"), new BigDecimal("498.30"), COMMISSION);
-    private final SellTransaction sellABC100 = new SellTransaction(ABC, sell100Date, new BigDecimal("100"), new BigDecimal("480.00"), COMMISSION);
-    private final SellTransaction sellABC200 = new SellTransaction(ABC, sell200Date, new BigDecimal("200"), new BigDecimal("520.00"), COMMISSION);
+    private final BuyTransaction buyABC100 = new BuyTransaction("ABC", buy100Date, new BigDecimal("100"), new BigDecimal("471.09"), COMMISSION);
+    private final BuyTransaction buyABC200 = new BuyTransaction("ABC", buy200Date, new BigDecimal("200"), new BigDecimal("471.09"), COMMISSION);
+    private final SellTransaction sellABC50 = new SellTransaction("ABC", sell50Date, new BigDecimal("50"), new BigDecimal("573.20"), COMMISSION);
+    private final SellTransaction sellABC50_2 = new SellTransaction("ABC", sell50_2Date, new BigDecimal("50"), new BigDecimal("498.30"), COMMISSION);
+    private final SellTransaction sellABC100 = new SellTransaction("ABC", sell100Date, new BigDecimal("100"), new BigDecimal("480.00"), COMMISSION);
+    private final SellTransaction sellABC200 = new SellTransaction("ABC", sell200Date, new BigDecimal("200"), new BigDecimal("520.00"), COMMISSION);
 
-    private final BuyTransaction buyDEF100 = new BuyTransaction(DEF, buy100Date, new BigDecimal("100"), new BigDecimal("471.09"), COMMISSION);
-    private final BuyTransaction buyDEF200 = new BuyTransaction(DEF, buy200Date, new BigDecimal("200"), new BigDecimal("471.09"), COMMISSION);
-    private final SellTransaction sellDEF50 = new SellTransaction(DEF, sell50Date, new BigDecimal("50"), new BigDecimal("573.20"), COMMISSION);
-    private final SellTransaction sellDEF50_2 = new SellTransaction(DEF, sell50_2Date, new BigDecimal("50"), new BigDecimal("498.30"), COMMISSION);
-    private final SellTransaction sellDEF100 = new SellTransaction(DEF, sell100Date, new BigDecimal("100"), new BigDecimal("480.00"), COMMISSION);
-    private final SellTransaction sellDEF200 = new SellTransaction(DEF, sell200Date, new BigDecimal("200"), new BigDecimal("520.00"), COMMISSION);
+    private final BuyTransaction buyDEF100 = new BuyTransaction("DEF", buy100Date, new BigDecimal("100"), new BigDecimal("471.09"), COMMISSION);
+    private final BuyTransaction buyDEF200 = new BuyTransaction("DEF", buy200Date, new BigDecimal("200"), new BigDecimal("471.09"), COMMISSION);
+    private final SellTransaction sellDEF50 = new SellTransaction("DEF", sell50Date, new BigDecimal("50"), new BigDecimal("573.20"), COMMISSION);
+    private final SellTransaction sellDEF50_2 = new SellTransaction("DEF", sell50_2Date, new BigDecimal("50"), new BigDecimal("498.30"), COMMISSION);
+    private final SellTransaction sellDEF100 = new SellTransaction("DEF", sell100Date, new BigDecimal("100"), new BigDecimal("480.00"), COMMISSION);
+    private final SellTransaction sellDEF200 = new SellTransaction("DEF", sell200Date, new BigDecimal("200"), new BigDecimal("520.00"), COMMISSION);
 
     private final LocalDatastoreServiceTestConfig config = new LocalDatastoreServiceTestConfig();
     private final LocalServiceTestHelper helper = new LocalServiceTestHelper(config);
@@ -86,12 +89,13 @@ public class PortfolioTests {
     @Before
     public void setUp() {
         helper.setUp();
+        fundDao.put(Sets.newHashSet(ABC, DEF));
         quoteDao.put(quotes);
     }
 
     @Test
     public void testCreatePortfolio() {
-        Portfolio portfolio = new SimplePortfolio(quoteDao, params);
+        Portfolio portfolio = new SimplePortfolio(fundDao, quoteDao, params);
         assertEquals(new BigDecimal("50000.0"), portfolio.getCash(buy100Date.minusDays(1)));
         assertEquals(new BigDecimal("15.0"), portfolio.getTransactionCost());
         assertEquals(0, portfolio.getPositions().size());
@@ -99,31 +103,31 @@ public class PortfolioTests {
 
     @Test
     public void testPortfolioContains() throws PortfolioException {
-        Portfolio portfolio = new SimplePortfolio(quoteDao, params);
+        Portfolio portfolio = new SimplePortfolio(fundDao, quoteDao, params);
         portfolio.add(buyABC100);
-        assertTrue(portfolio.contains(ABC, buy100Date));
-        assertFalse(portfolio.contains(ABC, buy100Date.minusDays(1)));
-        assertFalse(portfolio.contains(DEF, buy100Date));
+        assertTrue(portfolio.contains("ABC", buy100Date));
+        assertFalse(portfolio.contains("ABC", buy100Date.minusDays(1)));
+        assertFalse(portfolio.contains("DEF", buy100Date));
     }
 
     @Test
     public void testAddAndGetPosition() throws PortfolioException {
-        Portfolio portfolio = new SimplePortfolio(quoteDao, params);
+        Portfolio portfolio = new SimplePortfolio(fundDao, quoteDao, params);
         portfolio.add(buyABC100);
-        Position position = portfolio.getPosition(ABC);
+        Position position = portfolio.getPosition("ABC");
         assertEquals(ABC, position.getFund());
     }
 
     @Test(expected = PortfolioException.class)
     public void testAddTooLargeFails() throws PortfolioException {
-        Portfolio portfolio = new SimplePortfolio(quoteDao, params);
+        Portfolio portfolio = new SimplePortfolio(fundDao, quoteDao, params);
         portfolio.add(buyABC100);
         portfolio.add(buyABC100); //Not enough cash to add the same transaction again
     }
 
     @Test
     public void testGetPositions() throws PortfolioException {
-        Portfolio portfolio = new SimplePortfolio(quoteDao, loadsofcash);
+        Portfolio portfolio = new SimplePortfolio(fundDao, quoteDao, loadsofcash);
         portfolio.add(buyABC100);
         assertEquals(1, portfolio.getPositions().size());
         portfolio.add(buyDEF200);
@@ -137,7 +141,7 @@ public class PortfolioTests {
 
     @Test
     public void testOpenPositionCount() throws PortfolioException {
-        Portfolio portfolio = new SimplePortfolio(quoteDao, loadsofcash);
+        Portfolio portfolio = new SimplePortfolio(fundDao, quoteDao, loadsofcash);
         portfolio.add(buyABC100);
         assertEquals(1, portfolio.openPositionCount(buy100Date));
         portfolio.add(buyDEF200);
@@ -150,7 +154,7 @@ public class PortfolioTests {
 
     @Test
     public void testGetActiveFunds() throws PortfolioException {
-        Portfolio portfolio = new SimplePortfolio(quoteDao, loadsofcash);
+        Portfolio portfolio = new SimplePortfolio(fundDao, quoteDao, loadsofcash);
         portfolio.add(buyABC100);
         assertEquals(1, portfolio.getActiveFunds(buy100Date).size());
         portfolio.add(buyDEF200);
@@ -163,7 +167,7 @@ public class PortfolioTests {
 
     @Test
     public void testCostBasis() throws PortfolioException {
-        Portfolio portfolio = new SimplePortfolio(quoteDao, loadsofcash);
+        Portfolio portfolio = new SimplePortfolio(fundDao, quoteDao, loadsofcash);
         portfolio.add(buyABC100);
         assertEquals(new BigDecimal("47124.00"), portfolio.costBasis(buy100Date));
         portfolio.add(buyDEF200);
@@ -176,7 +180,7 @@ public class PortfolioTests {
 
     @Test
     public void testCashOut() throws PortfolioException {
-        Portfolio portfolio = new SimplePortfolio(quoteDao, loadsofcash);
+        Portfolio portfolio = new SimplePortfolio(fundDao, quoteDao, loadsofcash);
         portfolio.add(buyABC100);
         assertEquals(new BigDecimal("-47124.00"), portfolio.cashOut(buy100Date));
         portfolio.add(buyDEF200);
@@ -190,7 +194,7 @@ public class PortfolioTests {
 
     @Test
     public void testMarketValue() throws PortfolioException {
-        Portfolio portfolio = new SimplePortfolio(quoteDao, loadsofcash);
+        Portfolio portfolio = new SimplePortfolio(fundDao, quoteDao, loadsofcash);
         portfolio.add(buyABC100);
         assertEquals(new BigDecimal("9992876.00"), portfolio.marketValue(buy100Date));
         assertEquals(new BigDecimal("10000000"), portfolio.marketValue(buy100Date.minusDays(1)));
@@ -204,7 +208,7 @@ public class PortfolioTests {
 
     @Test
     public void testGain() throws PortfolioException {
-        Portfolio portfolio = new SimplePortfolio(quoteDao, loadsofcash);
+        Portfolio portfolio = new SimplePortfolio(fundDao, quoteDao, loadsofcash);
         portfolio.add(buyABC100);
         assertEquals(new BigDecimal("-7124.00"), portfolio.gain(buy100Date));
         assertEquals(new BigDecimal("0"), portfolio.gain(buy100Date.minusDays(1)));
@@ -218,7 +222,7 @@ public class PortfolioTests {
 
     @Test
     public void testGainPercentage() throws PortfolioException {
-        Portfolio portfolio = new SimplePortfolio(quoteDao, loadsofcash);
+        Portfolio portfolio = new SimplePortfolio(fundDao, quoteDao, loadsofcash);
         portfolio.add(buyABC100);
         assertEquals(new BigDecimal("-15.1175600"), portfolio.gainPercentage(buy100Date));
         assertEquals(new BigDecimal("0"), portfolio.gainPercentage(buy100Date.minusDays(1)));
@@ -232,7 +236,7 @@ public class PortfolioTests {
 
     @Test
     public void testReturnsGain() throws PortfolioException {
-        Portfolio portfolio = new SimplePortfolio(quoteDao, loadsofcash);
+        Portfolio portfolio = new SimplePortfolio(fundDao, quoteDao, loadsofcash);
         portfolio.add(buyABC100);
         assertEquals(new BigDecimal("-7124.00"), portfolio.returnsGain(buy100Date));
         assertEquals(new BigDecimal("0"), portfolio.returnsGain(buy100Date.minusDays(1)));
@@ -246,7 +250,7 @@ public class PortfolioTests {
 
     @Test
     public void testOverallReturn() throws PortfolioException {
-        Portfolio portfolio = new SimplePortfolio(quoteDao, loadsofcash);
+        Portfolio portfolio = new SimplePortfolio(fundDao, quoteDao, loadsofcash);
         portfolio.add(buyABC100);
         assertEquals(new BigDecimal("-15.1175600"), portfolio.overallReturn(buy100Date));
         assertEquals(new BigDecimal("0"), portfolio.overallReturn(buy100Date.minusDays(1)));

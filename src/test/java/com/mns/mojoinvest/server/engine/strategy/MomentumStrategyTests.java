@@ -2,6 +2,7 @@ package com.mns.mojoinvest.server.engine.strategy;
 
 import com.google.appengine.tools.development.testing.LocalDatastoreServiceTestConfig;
 import com.google.appengine.tools.development.testing.LocalServiceTestHelper;
+import com.google.common.collect.Sets;
 import com.googlecode.objectify.ObjectifyService;
 import com.mns.mojoinvest.server.engine.execution.Executor;
 import com.mns.mojoinvest.server.engine.execution.NextTradingDayExecutor;
@@ -63,6 +64,8 @@ public class MomentumStrategyTests {
         }
     };
 
+    Set<String> acceptable = Sets.newHashSet("A", "B", "C", "D", "E", "F", "G", "H", "I", "J");
+
     RankingParams rankingParams = new RankingParams(9);
     Collection<Ranking> rankings = Arrays.asList(
             new Ranking(new LocalDate("2011-09-01"), rankingParams, "A|B|C|D|E|F|G|H|I|J"),
@@ -86,7 +89,7 @@ public class MomentumStrategyTests {
         when(quoteDao.get(anyFund(), anyLocalDate())).thenReturn(dummyQuote);
         strategy = new MomentumStrategy(executor, rankingDao);
 
-        portfolio = new SimplePortfolio(quoteDao, new PortfolioParams(10000.0, 12.95,
+        portfolio = new SimplePortfolio(fundDao, quoteDao, new PortfolioParams(10000.0, 12.95,
                 new LocalDate("2011-01-01").toDateMidnight().toDate()));
         backtestParams = new BacktestParams(new LocalDate("2011-09-01").toDateMidnight().toDate(),
                 new LocalDate("2012-01-01").toDateMidnight().toDate());
@@ -95,7 +98,7 @@ public class MomentumStrategyTests {
 
     @Test
     public void testStrategy() throws StrategyException {
-        strategy.execute(portfolio, backtestParams, funds, strategyParams);
+        strategy.execute(portfolio, backtestParams, acceptable, strategyParams);
     }
 
     //TODO: Move to shared class

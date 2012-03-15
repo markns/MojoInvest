@@ -3,7 +3,6 @@ package com.mns.mojoinvest.server.engine.strategy;
 import com.google.inject.Inject;
 import com.googlecode.objectify.NotFoundException;
 import com.mns.mojoinvest.server.engine.execution.Executor;
-import com.mns.mojoinvest.server.engine.model.Fund;
 import com.mns.mojoinvest.server.engine.model.Ranking;
 import com.mns.mojoinvest.server.engine.model.RankingParams;
 import com.mns.mojoinvest.server.engine.model.dao.RankingDao;
@@ -16,7 +15,6 @@ import org.joda.time.LocalDate;
 
 import java.math.BigDecimal;
 import java.math.MathContext;
-import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -54,13 +52,11 @@ public class MomentumStrategy {
             try {
                 Set<String> selection = getSelection(rankings.get(i).getSymbols(), acceptableFunds, strategyParams);
                 log.info("Rebalance date: " + rebalanceDates.get(i) + ", Selection: " + selection);
-//                sellLosers(portfolio, rebalanceDates.get(i), selection);
-//                buyWinners(portfolio, strategyParams, rebalanceDates.get(i), selection);
+                sellLosers(portfolio, rebalanceDates.get(i), selection);
+                buyWinners(portfolio, strategyParams, rebalanceDates.get(i), selection);
             } catch (NotFoundException e) {
-                //TODO: How should we handle exceptions here - what type of exceptions are they?
-                log.info(rebalanceDates.get(i) + " " + e.getMessage());
-            } catch (StrategyException e) {
-                log.info(rebalanceDates.get(i) + " " + e.getMessage());
+                log.severe(rebalanceDates.get(i) + " " + e.getMessage());
+                throw new StrategyException("Unable to find entity for rebalance date " + rebalanceDates.get(i), e);
             }
         }
     }
@@ -82,28 +78,29 @@ public class MomentumStrategy {
     }
 
 
-    private void sellLosers(Portfolio portfolio, LocalDate rebalanceDate, Collection<Fund> selection)
+    private void sellLosers(Portfolio portfolio, LocalDate rebalanceDate, Set<String> selection)
             throws StrategyException {
-        for (Fund fund : portfolio.getActiveFunds(rebalanceDate)) {
+        for (String fund : portfolio.getActiveFunds(rebalanceDate)) {
             if (!selection.contains(fund)) {
                 try {
                     executor.sellAll(portfolio, fund, rebalanceDate);
                 } catch (PortfolioException e) {
                     e.printStackTrace();
-                    throw new StrategyException("Unable to sell losers", e);
+                    throw new StrategyException("Unable to sell losers on " + rebalanceDate +
+                            ", current portfolio: " + portfolio.getActiveFunds(rebalanceDate), e);
                 }
             }
         }
     }
 
     private void buyWinners(Portfolio portfolio, MomentumStrategyParams params, LocalDate rebalanceDate,
-                            Collection<Fund> selection) throws StrategyException {
+                            Set<String> selection) throws StrategyException {
 
         BigDecimal numEmpty = new BigDecimal(params.getPortfolioSize() - portfolio.openPositionCount(rebalanceDate));
         BigDecimal availableCash = portfolio.getCash(rebalanceDate).
                 subtract(portfolio.getTransactionCost().
                         multiply(numEmpty));
-        for (Fund fund : selection) {
+        for (String fund : selection) {
             if (!portfolio.contains(fund, rebalanceDate)) {
                 BigDecimal allocation = availableCash
                         .divide(numEmpty, MathContext.DECIMAL32);
@@ -111,7 +108,8 @@ public class MomentumStrategy {
                     executor.buy(portfolio, fund, rebalanceDate, allocation);
                 } catch (PortfolioException e) {
                     e.printStackTrace();
-                    throw new StrategyException("Unable to buy winners", e);
+                    throw new StrategyException("Unable to buy winners on " + rebalanceDate +
+                            ", current portfolio: " + portfolio.getActiveFunds(rebalanceDate), e);
                 }
             }
         }

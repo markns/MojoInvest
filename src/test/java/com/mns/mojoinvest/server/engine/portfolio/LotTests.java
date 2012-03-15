@@ -31,10 +31,10 @@ public class LotTests {
     private final LocalDate sell1Date = new LocalDate("2011-03-01");
     private final LocalDate sell2Date = new LocalDate("2011-04-01");
     private final LocalDate sellTooLargeDate = new LocalDate("2011-03-01");
-    private final BuyTransaction buy = new BuyTransaction(fund, buyDate, new BigDecimal("100"), new BigDecimal("471.09"), COMMISSION);
-    private final SellTransaction sell1 = new SellTransaction(fund, sell1Date, new BigDecimal("50"), new BigDecimal("573.20"), COMMISSION);
-    private final SellTransaction sell2 = new SellTransaction(fund, sell2Date, new BigDecimal("50"), new BigDecimal("498.30"), COMMISSION);
-    private final SellTransaction sellTooLarge = new SellTransaction(fund, sellTooLargeDate, new BigDecimal("200"), new BigDecimal("2"), COMMISSION);
+    private final BuyTransaction buy = new BuyTransaction("TEST", buyDate, new BigDecimal("100"), new BigDecimal("471.09"), COMMISSION);
+    private final SellTransaction sell1 = new SellTransaction("TEST", sell1Date, new BigDecimal("50"), new BigDecimal("573.20"), COMMISSION);
+    private final SellTransaction sell2 = new SellTransaction("TEST", sell2Date, new BigDecimal("50"), new BigDecimal("498.30"), COMMISSION);
+    private final SellTransaction sellTooLarge = new SellTransaction("TEST", sellTooLargeDate, new BigDecimal("200"), new BigDecimal("2"), COMMISSION);
 
     @Mock
     private QuoteDao quoteDao;

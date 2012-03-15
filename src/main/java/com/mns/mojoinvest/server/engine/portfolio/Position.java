@@ -10,9 +10,7 @@ import org.joda.time.LocalDate;
 
 import java.math.BigDecimal;
 import java.math.MathContext;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 import java.util.logging.Logger;
 
 
@@ -83,7 +81,7 @@ public class Position {
     }
 
     public void add(BuyTransaction transaction) throws PortfolioException {
-        if (!fund.equals(transaction.getFund())) {
+        if (!fund.getSymbol().equals(transaction.getFund())) {
             throw new PortfolioException("Attempt to add a " + transaction.getFund() +
                     " transaction to a " + fund + " position");
         }
@@ -93,7 +91,7 @@ public class Position {
 
     public void add(SellTransaction transaction) throws PortfolioException {
         //TODO: Check if a later transaction has already been added
-        if (!fund.equals(transaction.getFund())) {
+        if (!fund.getSymbol().equals(transaction.getFund())) {
             throw new PortfolioException("Attempt to add a " + transaction.getFund() +
                     " transaction to a " + fund + " position");
         }
@@ -257,4 +255,16 @@ public class Position {
         return positionValues;
     }
 
+    public Collection<LocalDate> getActiveDates(List<LocalDate> dates) {
+        NavigableSet<LocalDate> dateset = new TreeSet<LocalDate>(dates);
+        List<LocalDate> activeDates = new ArrayList<LocalDate>();
+        for (Lot lot : lots) {
+            if (lot.getCloseDate() != null) {
+                activeDates.addAll(dateset.subSet(lot.getOpenDate(), true, lot.getCloseDate(), true));
+            } else {
+                activeDates.addAll(dateset.tailSet(lot.getOpenDate(), true));
+            }
+        }
+        return activeDates;
+    }
 }

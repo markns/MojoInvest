@@ -1,7 +1,6 @@
 package com.mns.mojoinvest.server.engine.execution;
 
 import com.google.inject.Inject;
-import com.mns.mojoinvest.server.engine.model.Fund;
 import com.mns.mojoinvest.server.engine.model.Quote;
 import com.mns.mojoinvest.server.engine.model.dao.QuoteDao;
 import com.mns.mojoinvest.server.engine.portfolio.Portfolio;
@@ -26,7 +25,7 @@ public class NextTradingDayExecutor implements Executor {
     }
 
     @Override
-    public void buy(Portfolio portfolio, Fund fund, LocalDate date, BigDecimal allocation)
+    public void buy(Portfolio portfolio, String fund, LocalDate date, BigDecimal allocation)
             throws PortfolioException {
         //TODO: getRanking execution price should be mid between open and close of next days quote
         Quote executionQuote = quoteDao.get(fund, date);
@@ -37,7 +36,7 @@ public class NextTradingDayExecutor implements Executor {
     }
 
     @Override
-    public void sellAll(Portfolio portfolio, Fund fund, LocalDate date)
+    public void sellAll(Portfolio portfolio, String fund, LocalDate date)
             throws PortfolioException {
         //TODO: getRanking execution price should be mid between open and close of next days quote
         Quote executionQuote = quoteDao.get(fund, date);

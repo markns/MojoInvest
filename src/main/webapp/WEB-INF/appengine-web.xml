@@ -17,4 +17,8 @@
     <!--TODO: Are we?-->
     <threadsafe>true</threadsafe>
 
+    <!--TODO: Remove this-->
+    <precompilation-enabled>false</precompilation-enabled>
+
+
 </appengine-web-app>

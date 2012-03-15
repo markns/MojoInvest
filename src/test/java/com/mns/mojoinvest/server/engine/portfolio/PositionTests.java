@@ -38,13 +38,13 @@ public class PositionTests {
     private static final LocalDate sell200Date = new LocalDate("2011-06-01");
 
 
-    private final BuyTransaction buy100 = new BuyTransaction(fund, buy100Date, new BigDecimal("100"), new BigDecimal("471.09"), COMMISSION);
-    private final BuyTransaction buy200 = new BuyTransaction(fund, buy200Date, new BigDecimal("200"), new BigDecimal("471.09"), COMMISSION);
-    private final SellTransaction sell50 = new SellTransaction(fund, sell50Date, new BigDecimal("50"), new BigDecimal("573.20"), COMMISSION);
-    private final SellTransaction sell50_2 = new SellTransaction(fund, sell50_2Date, new BigDecimal("50"), new BigDecimal("498.30"), COMMISSION);
-    private final SellTransaction sell100 = new SellTransaction(fund, sell100Date, new BigDecimal("100"), new BigDecimal("480.00"), COMMISSION);
-    private final SellTransaction sell200 = new SellTransaction(fund, sell200Date, new BigDecimal("200"), new BigDecimal("520.00"), COMMISSION);
-    private final BuyTransaction buyWrongFund = new BuyTransaction(wrongfund, buy200Date, new BigDecimal("200"), new BigDecimal("520.00"), COMMISSION);
+    private final BuyTransaction buy100 = new BuyTransaction("TEST", buy100Date, new BigDecimal("100"), new BigDecimal("471.09"), COMMISSION);
+    private final BuyTransaction buy200 = new BuyTransaction("TEST", buy200Date, new BigDecimal("200"), new BigDecimal("471.09"), COMMISSION);
+    private final SellTransaction sell50 = new SellTransaction("TEST", sell50Date, new BigDecimal("50"), new BigDecimal("573.20"), COMMISSION);
+    private final SellTransaction sell50_2 = new SellTransaction("TEST", sell50_2Date, new BigDecimal("50"), new BigDecimal("498.30"), COMMISSION);
+    private final SellTransaction sell100 = new SellTransaction("TEST", sell100Date, new BigDecimal("100"), new BigDecimal("480.00"), COMMISSION);
+    private final SellTransaction sell200 = new SellTransaction("TEST", sell200Date, new BigDecimal("200"), new BigDecimal("520.00"), COMMISSION);
+    private final BuyTransaction buyWrongFund = new BuyTransaction("WRONG", buy200Date, new BigDecimal("200"), new BigDecimal("520.00"), COMMISSION);
 
     private final LocalDatastoreServiceTestConfig config = new LocalDatastoreServiceTestConfig();
     private final LocalServiceTestHelper helper = new LocalServiceTestHelper(config);

@@ -81,6 +81,7 @@ public class RunStrategyHandler implements
                     new LocalDate(backtestParams.getToDate()));
         } catch (StrategyException e) {
             e.printStackTrace();
+            log.severe("Error running strategy with " + params);
             throw new ActionException(e);
         }
 

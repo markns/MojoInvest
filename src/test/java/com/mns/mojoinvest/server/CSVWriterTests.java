@@ -68,8 +68,8 @@ public class CSVWriterTests {
     public void testTransactionToStringArr() {
         Fund fund = new Fund("ABC", "ABC fund", "Category", "Provider", true,
                 "US", "Index", "Blah blah", new LocalDate("2011-01-01"));
-        BuyTransaction buy = new BuyTransaction(fund, new LocalDate("2011-01-01"), new BigDecimal("100"), new BigDecimal("471.09"), BigDecimal.TEN);
-        SellTransaction sell = new SellTransaction(fund, new LocalDate("2011-01-01"), new BigDecimal("100"), new BigDecimal("471.09"), BigDecimal.TEN);
+        BuyTransaction buy = new BuyTransaction("ABC", new LocalDate("2011-01-01"), new BigDecimal("100"), new BigDecimal("471.09"), BigDecimal.TEN);
+        SellTransaction sell = new SellTransaction("ABC", new LocalDate("2011-01-01"), new BigDecimal("100"), new BigDecimal("471.09"), BigDecimal.TEN);
 
         StringWriter stringWriter = new StringWriter();
         CSVWriter writer = new CSVWriter(stringWriter);
@@ -87,13 +87,13 @@ public class CSVWriterTests {
         Fund fund = new Fund("ABC", "ABC fund", "Category", "Provider", true,
                 "US", "Index", "Blah blah", new LocalDate("2011-01-01"));
 
-        BuyTransaction expectedBuy = new BuyTransaction(fund, new LocalDate("2011-01-01"), new BigDecimal("100"), new BigDecimal("471.09"), BigDecimal.TEN);
-        SellTransaction expectedSell = new SellTransaction(fund, new LocalDate("2011-01-01"), new BigDecimal("100"), new BigDecimal("471.09"), BigDecimal.TEN);
+        BuyTransaction expectedBuy = new BuyTransaction("ABC", new LocalDate("2011-01-01"), new BigDecimal("100"), new BigDecimal("471.09"), BigDecimal.TEN);
+        SellTransaction expectedSell = new SellTransaction("ABC", new LocalDate("2011-01-01"), new BigDecimal("100"), new BigDecimal("471.09"), BigDecimal.TEN);
 
         String[] buyArr = new String[]{"BUY", "ABC", "2011-01-01", "100", "471.09", "10"};
         String[] sellArr = new String[]{"SELL", "ABC", "2011-01-01", "100", "471.09", "10"};
-        Transaction buy = AbstractTransaction.fromStrArr(fund, buyArr);
-        Transaction sell = AbstractTransaction.fromStrArr(fund, sellArr);
+        Transaction buy = AbstractTransaction.fromStrArr(buyArr);
+        Transaction sell = AbstractTransaction.fromStrArr(sellArr);
 
         assertEquals(expectedBuy, buy);
         assertEquals(expectedSell, sell);

@@ -3,6 +3,7 @@ package com.mns.mojoinvest.server.engine.result;
 import au.com.bytecode.opencsv.CSVWriter;
 import com.google.gwt.visualization.client.AbstractDataTable;
 import com.google.inject.Inject;
+import com.googlecode.objectify.Key;
 import com.mns.mojoinvest.server.engine.model.Fund;
 import com.mns.mojoinvest.server.engine.model.Quote;
 import com.mns.mojoinvest.server.engine.model.dao.FundDao;
@@ -75,9 +76,14 @@ public class StrategyResultBuilder {
     }
 
     private Collection<Quote> cacheQuotesForPortfolio(Portfolio portfolio, List<LocalDate> dates) {
-        return quoteDao.get(portfolio.getFunds(), dates);
-    }
+        List<Key<Quote>> keys = new ArrayList<Key<Quote>>();
+        for (Position position : portfolio.getPositions()) {
+            keys.addAll(quoteDao.getKeys(position.getFund().getSymbol(), position.getActiveDates(dates)));
+        }
+        log.info("Found " + keys.size() + " quote keys. Starting load...");
 
+        return quoteDao.get(keys);
+    }
 
     private DataTableDto createDataTableDto(List<BigDecimal> marketValues, List<LocalDate> dates) {
 
@@ -87,21 +93,22 @@ public class StrategyResultBuilder {
         dto.addColumn(new DataTableDto.Column(AbstractDataTable.ColumnType.NUMBER, "SPDR S&P 500", "SPY"));
 
         Collection<Fund> funds = fundDao.get(Arrays.asList("SPY"));
-        Collection<Quote> quotes = quoteDao.get(funds, dates);
-
-        Map<String, Map<LocalDate, BigDecimal>> quoteMap = new HashMap<String, Map<LocalDate, BigDecimal>>();
-        for (Quote quote : quotes) {
-            if (!quoteMap.containsKey(quote.getSymbol())) {
-                quoteMap.put(quote.getSymbol(), new HashMap<LocalDate, BigDecimal>());
-            }
-            quoteMap.get(quote.getSymbol()).put(quote.getDate(), quote.getClose());
-        }
+//        Collection<Quote> quotes = quoteDao.get(funds, dates);
+//
+//        Map<String, Map<LocalDate, BigDecimal>> quoteMap = new HashMap<String, Map<LocalDate, BigDecimal>>();
+//        for (Quote quote : quotes) {
+//            if (!quoteMap.containsKey(quote.getSymbol())) {
+//                quoteMap.put(quote.getSymbol(), new HashMap<LocalDate, BigDecimal>());
+//            }
+//            quoteMap.get(quote.getSymbol()).put(quote.getDate(), quote.getClose());
+//        }
 
         for (int i = 0; i < marketValues.size(); i++) {
-            BigDecimal isfchange = percentageChange(quoteMap.get("SPY").get(dates.get(0)), quoteMap.get("SPY").get(dates.get(i)));
+//            BigDecimal isfchange = percentageChange(quoteMap.get("SPY").get(dates.get(0)), quoteMap.get("SPY").get(dates.get(i)));
             dto.addRow(new DataTableDto.DateValue(dates.get(i).toDateMidnight().toDate()),
-                    new DataTableDto.DoubleValue(marketValues.get(i).doubleValue()),
-                    new DataTableDto.DoubleValue((isfchange.doubleValue() + 1) * 10000)
+                    new DataTableDto.DoubleValue(marketValues.get(i).doubleValue())
+
+//                    new DataTableDto.DoubleValue((isfchange.doubleValue() + 1) * 10000)
             );
         }
 
@@ -118,12 +125,11 @@ public class StrategyResultBuilder {
         List<TransactionDto> transactionDtos = new ArrayList<TransactionDto>();
         for (Transaction transaction : transactions) {
             if (transaction instanceof BuyTransaction) {
-                //TODO: Shouldn't have to create this DTO
-                transactionDtos.add(new TransactionDto("Buy", transaction.getFund().getSymbol(), transaction.getFund().getName(),
+                transactionDtos.add(new TransactionDto("Buy", transaction.getFund(), transaction.getFund() + "get desc",
                         transaction.getDate().toDateMidnight().toDate(), transaction.getQuantity().doubleValue(),
                         transaction.getPrice().doubleValue(), transaction.getCommission().doubleValue()));
             } else if (transaction instanceof SellTransaction) {
-                transactionDtos.add(new TransactionDto("Sell", transaction.getFund().getSymbol(), transaction.getFund().getName(),
+                transactionDtos.add(new TransactionDto("Sell", transaction.getFund(), transaction.getFund() + "get desc",
                         transaction.getDate().toDateMidnight().toDate(), transaction.getQuantity().doubleValue(),
                         transaction.getPrice().doubleValue(), transaction.getCommission().doubleValue()));
             }
