@@ -59,6 +59,10 @@ public class Lot {
         return openingTransaction;
     }
 
+    public Collection<SellTransaction> getClosingTransactions() {
+        return closingTransactionsMap.values();
+    }
+
     public Collection<SellTransaction> getClosingTransactions(LocalDate date) {
         List<SellTransaction> transactions = new ArrayList<SellTransaction>();
         for (SellTransaction transaction : closingTransactionsMap.headMap(date, true).values()) {
@@ -263,9 +267,12 @@ public class Lot {
 
 
     public Map<LocalDate, BigDecimal> marketValue(NavigableSet<LocalDate> dates, Map<LocalDate, Quote> quotes) {
-
-        NavigableSet<LocalDate> lotDates = dates.subSet(openDate, true, closeDate, true);
-
+        NavigableSet<LocalDate> lotDates;
+        if (closeDate == null) {
+            lotDates = dates.tailSet(openDate, true);
+        } else {
+            lotDates = dates.subSet(openDate, true, closeDate, true);
+        }
         Map<LocalDate, BigDecimal> marketValues = new HashMap<LocalDate, BigDecimal>();
 
         for (LocalDate lotDate : lotDates) {

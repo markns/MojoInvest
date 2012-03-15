@@ -170,4 +170,30 @@ public class Fund implements Serializable, Comparable<Fund> {
         return symbol.hashCode();
     }
 
+    public static Fund fromStrArr(String[] arr) {
+        return new Fund(arr[0],
+                arr[1],
+                arr[2],
+                arr[3],
+                Boolean.parseBoolean(arr[4]),
+                arr[5],
+                arr[6],
+                arr[7],
+                new LocalDate(arr[8])
+        );
+    }
+
+    public String[] toStrArr() {
+        return new String[]{
+                symbol,
+                name,
+                category,
+                provider,
+                active + "",
+                country,
+                index,
+                overview,
+                inceptionDate.toString()
+        };
+    }
 }

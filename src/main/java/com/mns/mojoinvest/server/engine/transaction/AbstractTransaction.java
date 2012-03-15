@@ -58,4 +58,62 @@ public abstract class AbstractTransaction implements Transaction {
                 ", commission=" + commission +
                 '}';
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        AbstractTransaction that = (AbstractTransaction) o;
+
+        if (!commission.equals(that.commission)) return false;
+        if (!date.equals(that.date)) return false;
+        if (!fund.equals(that.fund)) return false;
+        if (!price.equals(that.price)) return false;
+        if (!ref.equals(that.ref)) return false;
+        if (!units.equals(that.units)) return false;
+
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = ref.hashCode();
+        result = 31 * result + fund.hashCode();
+        result = 31 * result + date.hashCode();
+        result = 31 * result + units.hashCode();
+        result = 31 * result + price.hashCode();
+        result = 31 * result + commission.hashCode();
+        return result;
+    }
+
+    public static Transaction fromStrArr(Fund fund, String[] arr) {
+        if (arr[0].equals("BUY")) {
+            return new BuyTransaction(fund,
+                    new LocalDate(arr[2]),
+                    new BigDecimal(arr[3]),
+                    new BigDecimal(arr[4]),
+                    new BigDecimal(arr[5])
+            );
+        } else {
+            return new SellTransaction(fund,
+                    new LocalDate(arr[2]),
+                    new BigDecimal(arr[3]),
+                    new BigDecimal(arr[4]),
+                    new BigDecimal(arr[5]));
+        }
+    }
+
+    public String[] toStrArr() {
+        String buySell = this instanceof BuyTransaction ? "BUY" : "SELL";
+        return new String[]{
+                buySell,
+                fund.getSymbol(),
+                date.toString(),
+                units.toString(),
+                price.toString(),
+                commission.toString()
+        };
+    }
+
 }

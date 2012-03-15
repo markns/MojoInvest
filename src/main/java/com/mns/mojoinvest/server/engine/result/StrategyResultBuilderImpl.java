@@ -62,7 +62,7 @@ public class StrategyResultBuilderImpl implements StrategyResultBuilder {
 
         List<LocalDate> dates = TradingDayUtils.getWeeklySeries(new LocalDate(fromDate), new LocalDate(toDate), 2, true);
 
-        Collection<Fund> funds = fundDao.get(Arrays.asList("SPY"/*, "IUSA"*/));
+        Collection<Fund> funds = fundDao.get(Arrays.asList("SPY"));
         Collection<Quote> quotes = quoteDao.get(funds, dates);
         Map<String, Map<LocalDate, BigDecimal>> quoteMap = new HashMap<String, Map<LocalDate, BigDecimal>>();
         for (Quote quote : quotes) {
@@ -72,18 +72,14 @@ public class StrategyResultBuilderImpl implements StrategyResultBuilder {
             quoteMap.get(quote.getSymbol()).put(quote.getDate(), quote.getClose());
         }
 
-        for (LocalDate date : dates) {
-            BigDecimal marketValue = portfolio.marketValue(date);
+        List<BigDecimal> marketValues = portfolio.marketValue(new TreeSet<LocalDate>(dates));
 
-            BigDecimal isfchange = percentageChange(quoteMap.get("SPY").get(dates.get(0)), quoteMap.get("SPY").get(date));
-//            BigDecimal iusachange = percentageChange(quoteMap.get("IUSA").get(dates.get(0)), quoteMap.get("IUSA").get(date));
-//            BigDecimal fxcchange = percentageChange(quoteMap.get("FXC").get(dates.get(0)), quoteMap.get("FXC").get(date));
-//            BigDecimal bricchange = percentageChange(quoteMap.get("BRIC").get(dates.get(0)), quoteMap.get("BRIC").get(date));
+        for (int i = 0; i < marketValues.size(); i++) {
 
-
-            log.info(date + " " + marketValue + " " + portfolio.getActiveFunds(date));
-            dto.addRow(new DataTableDto.DateValue(date.toDateMidnight().toDate()),
-                    new DataTableDto.DoubleValue(portfolio.marketValue(date).doubleValue()),
+            BigDecimal isfchange = percentageChange(quoteMap.get("SPY").get(dates.get(0)), quoteMap.get("SPY").get(dates.get(i)));
+//            log.info(dates.get(i) + " " + marketValues.get(i) + " " + portfolio.getActiveFunds(dates.get(i)));
+            dto.addRow(new DataTableDto.DateValue(dates.get(i).toDateMidnight().toDate()),
+                    new DataTableDto.DoubleValue(marketValues.get(i).doubleValue()),
                     new DataTableDto.DoubleValue((isfchange.doubleValue() + 1) * 10000)
 //                    new DataTableDto.DoubleValue((iusachange.doubleValue() + 1) * 10000)
 //                    new DataTableDto.DoubleValue((fxcchange.doubleValue() + 1) * 10000)
@@ -91,6 +87,7 @@ public class StrategyResultBuilderImpl implements StrategyResultBuilder {
 
             );
         }
+
 
         return dto;
     }

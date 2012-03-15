@@ -11,6 +11,7 @@ import org.joda.time.LocalDate;
 import java.math.BigDecimal;
 import java.math.MathContext;
 import java.util.*;
+import java.util.logging.Logger;
 
 
 /**
@@ -41,6 +42,8 @@ public class Position {
     private List<Lot> lots;
 
     private final List<Transaction> transactions;
+
+    private static final Logger log = Logger.getLogger(Position.class.getName());
 
     public Position(QuoteDao quoteDao, Fund fund) {
         this.quoteDao = quoteDao;
@@ -240,13 +243,40 @@ public class Position {
     }
 
     public List<BigDecimal> marketValue(NavigableSet<LocalDate> dates) {
-
+        Map<LocalDate, Integer> posHack = new HashMap<LocalDate, Integer>();
+        int hack = 0;
+        for (LocalDate date : dates) {
+            posHack.put(date, hack++);
+        }
         List<BigDecimal> positionValues = new ArrayList<BigDecimal>(dates.size());
+        for (int i = 0; i < dates.size(); i++) {
+            positionValues.add(BigDecimal.ZERO);
+        }
+        log.info("Fund " + fund.getSymbol() + " = new Fund(\"" + fund.getSymbol() + "\", \"" + fund.getName() +
+                "\", \"Category\", \"Provider\", true,\n" +
+                " \"US\", \"Index\", \"Blah blah\", new LocalDate(\"2011-01-01\"));");
+        Map<LocalDate, Quote> quotes = getQuotes(dates);
+
+
+//        CSVWriter writer = new CSVWriter();
+////        writer.w
+////        for (Quote quote : quotes.values()) {
+////            log.info("Quote:" + Quote.toStrArr(quote));
+////            log.info("new Quote(\"" + quote.getSymbol() + "\",new LocalDate(\"" + quote.getDate() + "\"),new BigDecimal(\"" + quote.getClose() + "\"));");
+////        }
         for (Lot lot : lots) {
-            Map<LocalDate, BigDecimal> lotValues = lot.marketValue(dates, getQuotes(dates));
-//            for (int i = 0; i < lotValues.size(); i++) {
-//                positionValues.set(i, positionValues.get(i).add(lotValues.get(i)));
-//            }
+            BuyTransaction opening = lot.getOpeningTransaction();
+            log.info("new BuyTransaction(" + opening.getFund().getSymbol() + ", new LocalDate(\"" + opening.getDate() + "\"), " +
+                    "new BigDecimal(\"" + opening.getQuantity() + "\"), new BigDecimal(\"" + opening.getPrice() + "\"), COMMISSION);");
+            for (SellTransaction sell : lot.getClosingTransactions()) {
+                log.info("new SellTransaction(" + sell.getFund().getSymbol() + ", new LocalDate(\"" + sell.getDate() + "\"), " +
+                        "new BigDecimal(\"" + sell.getQuantity() + "\"), new BigDecimal(\"" + sell.getPrice() + "\"), COMMISSION);");
+            }
+            Map<LocalDate, BigDecimal> lotValues = lot.marketValue(dates, quotes);
+            for (Map.Entry<LocalDate, BigDecimal> entry : lotValues.entrySet()) {
+                positionValues.set(posHack.get(entry.getKey()),
+                        positionValues.get(posHack.get(entry.getKey())).add(entry.getValue()));
+            }
         }
         return positionValues;
     }

@@ -67,6 +67,21 @@ public class Quote implements Serializable {
         this.rolled = rolled;
     }
 
+    public Quote(String symbol, LocalDate date, BigDecimal close) {
+        this.id = QuoteUtils.quoteId(symbol, date);
+        this.symbol = symbol;
+        this.date = date;
+        this.open = BigDecimal.ZERO;
+        this.high = BigDecimal.ZERO;
+        this.low = BigDecimal.ZERO;
+        this.close = close;
+        this.bid = BigDecimal.ZERO;
+        this.ask = BigDecimal.ZERO;
+        this.volume = BigDecimal.ZERO;
+        this.adjClose = BigDecimal.ZERO;
+        this.rolled = false;
+    }
+
     public String getId() {
         return id;
     }
@@ -194,5 +209,34 @@ public class Quote implements Serializable {
         result = 31 * result + (adjClose != null ? adjClose.hashCode() : 0);
         result = 31 * result + (rolled ? 1 : 0);
         return result;
+    }
+
+
+    public static Quote fromStrArr(String[] row) {
+        return new Quote(row[0],
+                new LocalDate(row[1]),
+                row[2].isEmpty() ? null : new BigDecimal(row[2]),
+                row[3].isEmpty() ? null : new BigDecimal(row[3]),
+                row[4].isEmpty() ? null : new BigDecimal(row[4]),
+                row[5].isEmpty() ? null : new BigDecimal(row[5]),
+                null, null, row[6].isEmpty() ? null : new BigDecimal(row[6]),
+                row[7].isEmpty() ? null : new BigDecimal(row[7]),
+                false);
+    }
+
+    public String[] toStrArr() {
+        return new String[]{
+                symbol,
+                date.toString(),
+                open.toString(),
+                high.toString(),
+                low.toString(),
+                close.toString(),
+                bid.toString(),
+                ask.toString(),
+                volume.toString(),
+                adjClose.toString(),
+                rolled + ""};
+
     }
 }

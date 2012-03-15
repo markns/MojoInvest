@@ -50,10 +50,10 @@ public class MomentumStrategy {
 
         for (int i = 0; i < rebalanceDates.size(); i++) {
             try {
-                log.info(rankings.get(i).getId() + " " + rankings.get(i));
+//                log.info(rankings.get(i).getId() + " " + rankings.get(i));
                 Collection<Fund> selection = getSelection(rankings.get(i).getSymbols(),
                         acceptableFunds, strategyParams);
-                log.info(rebalanceDates.get(i) + " " + selection);
+//                log.info(rebalanceDates.get(i) + " " + selection);
                 sellLosers(portfolio, rebalanceDates.get(i), selection);
                 buyWinners(portfolio, strategyParams, rebalanceDates.get(i), selection);
             } catch (NotFoundException e) {

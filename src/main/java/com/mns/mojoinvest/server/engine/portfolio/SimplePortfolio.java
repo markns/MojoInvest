@@ -6,6 +6,7 @@ import com.mns.mojoinvest.server.engine.model.Fund;
 import com.mns.mojoinvest.server.engine.model.dao.QuoteDao;
 import com.mns.mojoinvest.server.engine.transaction.BuyTransaction;
 import com.mns.mojoinvest.server.engine.transaction.SellTransaction;
+import com.mns.mojoinvest.server.engine.transaction.Transaction;
 import com.mns.mojoinvest.shared.params.PortfolioParams;
 import org.joda.time.LocalDate;
 
@@ -83,6 +84,15 @@ public class SimplePortfolio implements Portfolio {
     @Override
     public Position getPosition(Fund fund) {
         return positions.get(fund);
+    }
+
+    @Override
+    public void add(Transaction transaction) throws PortfolioException {
+        if (transaction instanceof BuyTransaction) {
+            add((BuyTransaction) transaction);
+        } else {
+            add((SellTransaction) transaction);
+        }
     }
 
     @Override
@@ -239,6 +249,9 @@ public class SimplePortfolio implements Portfolio {
 
     public List<BigDecimal> marketValue(NavigableSet<LocalDate> dates) {
         List<BigDecimal> portfolioValues = new ArrayList<BigDecimal>(dates.size());
+        for (int i = 0; i < dates.size(); i++) {
+            portfolioValues.add(BigDecimal.ZERO);
+        }
         for (Position position : positions.values()) {
             List<BigDecimal> positionValues = position.marketValue(dates);
             for (int i = 0; i < portfolioValues.size(); i++) {
