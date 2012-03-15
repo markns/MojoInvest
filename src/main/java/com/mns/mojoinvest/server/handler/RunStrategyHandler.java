@@ -1,11 +1,12 @@
 package com.mns.mojoinvest.server.handler;
 
 import au.com.bytecode.opencsv.CSVWriter;
+import com.google.appengine.api.memcache.MemcacheService;
+import com.google.appengine.api.memcache.MemcacheServiceFactory;
 import com.google.inject.Inject;
 import com.gwtplatform.dispatch.server.ExecutionContext;
 import com.gwtplatform.dispatch.server.actionhandler.ActionHandler;
 import com.gwtplatform.dispatch.shared.ActionException;
-import com.mns.mojoinvest.server.engine.model.Fund;
 import com.mns.mojoinvest.server.engine.model.dao.FundDao;
 import com.mns.mojoinvest.server.engine.portfolio.Lot;
 import com.mns.mojoinvest.server.engine.portfolio.Portfolio;
@@ -24,9 +25,7 @@ import com.mns.mojoinvest.shared.params.Params;
 import org.joda.time.LocalDate;
 
 import java.io.StringWriter;
-import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Map;
 import java.util.Set;
 import java.util.logging.Logger;
 
@@ -55,6 +54,9 @@ public class RunStrategyHandler implements
     public RunStrategyResult execute(final RunStrategyAction action,
                                      final ExecutionContext context) throws ActionException {
 
+        MemcacheService memcache = MemcacheServiceFactory.getMemcacheService("ObjectifyCache");
+        memcache.clearAll();
+
         Params params = action.getParams();
 
         //TODO: Total hack - sort this out
@@ -63,16 +65,19 @@ public class RunStrategyHandler implements
         //TODO: Does the portfolioFactory need to be synchronised?
         Portfolio portfolio = portfolioFactory.create(params.getPortfolioParams());
 
-        //TODO: Abstract the getAcceptableFunds call to a separate class
-        Map<String, Fund> funds = getAcceptableFunds(params.getFundFilter());
+        //TODO: Abstract the getAcceptableFunds call to a separate class - why is it so slow!
+        log.info("Getting set of acceptable funds");
+        Set<String> funds = getAcceptableFunds(params.getFundFilter());
 
         StrategyResult result;
         try {
             BacktestParams backtestParams = params.getBacktestParams();
+            log.info("Running strategy with " + params);
             strategy.execute(portfolio, backtestParams, funds, params.getStrategyParams());
-            log.info(logPortfolio(portfolio));
+//            log.info(logPortfolio(portfolio));
+            log.info("Starting build of strategy result set");
             result = strategyResultBuilder.build(portfolio, new LocalDate(backtestParams.getFromDate()),
-                    //tODO: try to implement a getToLocalDate() method in backtestParams
+                    //TODO: try to implement a getToLocalDate() method in backtestParams
                     new LocalDate(backtestParams.getToDate()));
         } catch (StrategyException e) {
             e.printStackTrace();
@@ -97,19 +102,15 @@ public class RunStrategyHandler implements
         return stringWriter.toString();
     }
 
-    private Map<String, Fund> getAcceptableFunds(FundFilter fundFilter) {
-        Set<Fund> funds = new HashSet<Fund>();
+    private Set<String> getAcceptableFunds(FundFilter fundFilter) {
+        Set<String> funds = new HashSet<String>();
         for (String category : fundFilter.getCategories()) {
             funds.addAll(fundDao.getByCategory(category));
         }
         for (String provider : fundFilter.getProviders()) {
             funds.addAll(fundDao.getByProvider(provider));
         }
-        Map<String, Fund> fundMap = new HashMap<String, Fund>();
-        for (Fund fund : funds) {
-            fundMap.put(fund.getSymbol(), fund);
-        }
-        return fundMap;
+        return funds;
     }
 
     @Override

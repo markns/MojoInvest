@@ -1,7 +1,6 @@
 package com.mns.mojoinvest.server.engine.portfolio;
 
-import com.google.inject.Inject;
-import com.google.inject.assistedinject.Assisted;
+import com.mns.mojoinvest.server.engine.model.Quote;
 import com.mns.mojoinvest.server.engine.model.dao.QuoteDao;
 import com.mns.mojoinvest.server.engine.transaction.BuyTransaction;
 import com.mns.mojoinvest.server.engine.transaction.SellTransaction;
@@ -51,8 +50,7 @@ public class Lot {
     private final NavigableMap<LocalDate, SellTransaction> sellTransactionsMap;
     private QuoteDao quoteDao;
 
-    @Inject
-    public Lot(@Assisted BuyTransaction openingTransaction) {
+    public Lot(QuoteDao quoteDao, BuyTransaction openingTransaction) {
         log.fine("Creating new lot from " + openingTransaction);
         this.quoteDao = quoteDao;
         this.openingTransaction = openingTransaction;
@@ -272,48 +270,37 @@ public class Lot {
 
 
     public List<BigDecimal> marketValue(List<LocalDate> dates) {
-
-        SortedMap<LocalDate, BigDecimal> quantities = new TreeMap<LocalDate, BigDecimal>();
-
-        for (LocalDate date : dates) {
-            if (!date.isBefore(openDate) ^
-                    (closeDate != null && !date.isBefore(closeDate))) {
-                quantities.put(date, getInitialQuantity());
+        List<BigDecimal> quantities = getRemainingQuantity(dates);
+        List<BigDecimal> lotValues = new ArrayList<BigDecimal>(dates.size());
+        for (int i = 0; i < dates.size(); i++) {
+            if (quantities.get(i).equals(BigDecimal.ZERO)) {
+                lotValues.add(BigDecimal.ZERO);
+            } else {
+                Quote quote = quoteDao.get(openingTransaction.getFund(), dates.get(i));
+                lotValues.add(quantities.get(i).multiply(quote.getClose()));
             }
         }
+        return lotValues;
+    }
 
+    public List<BigDecimal> getRemainingQuantity(List<LocalDate> dates) {
+        SortedMap<LocalDate, BigDecimal> quantities = new TreeMap<LocalDate, BigDecimal>();
+        for (LocalDate date : dates) {
+            if (!date.isBefore(openDate)) {
+                quantities.put(date, getInitialQuantity());
+            } else {
+                quantities.put(date, BigDecimal.ZERO);
+            }
+        }
         for (SellTransaction sellTransaction : sellTransactionsMap.values()) {
             for (Map.Entry<LocalDate, BigDecimal> e : quantities.entrySet()) {
-                if (sellTransaction.getDate().isBefore(e.getKey())) {
-                    quantities.put(e.getKey(), e.getValue().subtract(sellTransaction.getQuantity()));
+                if (!sellTransaction.getDate().isAfter(e.getKey())) {
+                    quantities.put(e.getKey(),
+                            e.getValue().subtract(sellTransaction.getQuantity()));
                 }
             }
         }
-
-        List<BigDecimal> lotValues = new ArrayList<BigDecimal>(Collections.nCopies(dates.size(), BigDecimal.ZERO));
-        int i = 0;
-        for (LocalDate date : dates) {
-            if (!date.isBefore(openDate) ^
-                    (closeDate != null && !date.isBefore(closeDate))) {
-
-                lotValues.set(i, lotValues.get(i).add(BigDecimal.TEN));
-            }
-            i++;
-        }
-        return lotValues;
-
-//        NavigableSet<LocalDate> lotDates;
-//        if (closeDate == null) {
-//            lotDates = dates.tailSet(openDate, true);
-//        } else {
-//            lotDates = dates.subSet(openDate, true, closeDate, true);
-//        }
-
-//
-//        for (Map.Entry<LocalDate, BigDecimal> e : marketValues.entrySet()) {
-//            marketValues.put(e.getKey(), e.getValue().multiply(quotes.get(e.getKey()).getClose()));
-//        }
-//
-//        return marketValues;
+        return new ArrayList<BigDecimal>(quantities.values());
     }
+
 }

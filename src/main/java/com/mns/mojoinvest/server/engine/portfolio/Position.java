@@ -10,7 +10,9 @@ import org.joda.time.LocalDate;
 
 import java.math.BigDecimal;
 import java.math.MathContext;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import java.util.logging.Logger;
 
 
@@ -86,7 +88,7 @@ public class Position {
                     " transaction to a " + fund + " position");
         }
         transactions.add(transaction);
-        lots.add(new Lot(transaction));
+        lots.add(new Lot(quoteDao, transaction));
     }
 
     public void add(SellTransaction transaction) throws PortfolioException {
@@ -246,31 +248,13 @@ public class Position {
 
         List<BigDecimal> positionValues = new ArrayList<BigDecimal>(Collections.nCopies(dates.size(), BigDecimal.ZERO));
 
-//        Map<LocalDate, Quote> quotes = getQuotes(new TreeSet<LocalDate>(dates));
-
         for (Lot lot : lots) {
             List<BigDecimal> lotValues = lot.marketValue(dates);
-//            for (Map.Entry<LocalDate, BigDecimal> entry : lotValues.entrySet()) {
-//                positionValues.set(posHack.get(entry.getKey()),
-//                        positionValues.get(posHack.get(entry.getKey())).add(entry.getValue()));
-//            }
+            for (int i = 0; i < positionValues.size(); i++) {
+                positionValues.set(i, positionValues.get(i).add(lotValues.get(i)));
+            }
         }
         return positionValues;
     }
 
-    public Map<LocalDate, Quote> getQuotes(NavigableSet<LocalDate> dates) {
-        NavigableSet<LocalDate> positionDates = new TreeSet<LocalDate>();
-        for (Lot lot : lots) {
-            if (lot.getCloseDate() == null) {
-                positionDates.addAll(dates.tailSet(lot.getOpenDate(), true));
-            } else {
-                positionDates.addAll(dates.subSet(lot.getOpenDate(), true, lot.getCloseDate(), true));
-            }
-        }
-        Map<LocalDate, Quote> quotes = new HashMap<LocalDate, Quote>();
-        for (Quote quote : quoteDao.get(fund, positionDates)) {
-            quotes.put(quote.getDate(), quote);
-        }
-        return quotes;
-    }
 }

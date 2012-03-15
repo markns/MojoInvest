@@ -61,26 +61,28 @@ public class FundDao extends DAOBase {
         return ofy().get(keys).values();
     }
 
-    public Collection<Fund> getByCategory(String categoryName) {
+    public Set<String> getByCategory(String categoryName) {
         Key<Category> key = new Key<Category>(Category.class, categoryName);
         Category category = ofy().get(key);
+        return category.getSymbols();
 
-        List<Key<Fund>> keys = new ArrayList<Key<Fund>>();
-        for (String symbol : category.getSymbols()) {
-            keys.add(new Key<Fund>(Fund.class, symbol));
-        }
-        return ofy().get(keys).values();
+//        List<Key<Fund>> keys = new ArrayList<Key<Fund>>();
+//        for (String symbol : category.getSymbols()) {
+//            keys.add(new Key<Fund>(Fund.class, symbol));
+//        }
+//        return ofy().get(keys).values();
     }
 
-    public Collection<Fund> getByProvider(String providerName) {
+    public Set<String> getByProvider(String providerName) {
         Key<Provider> key = new Key<Provider>(Provider.class, providerName);
         Provider provider = ofy().get(key);
+        return provider.getSymbols();
 
-        List<Key<Fund>> keys = new ArrayList<Key<Fund>>();
-        for (String symbol : provider.getSymbols()) {
-            keys.add(new Key<Fund>(Fund.class, symbol));
-        }
-        return ofy().get(keys).values();
+//        List<Key<Fund>> keys = new ArrayList<Key<Fund>>();
+//        for (String symbol : provider.getSymbols()) {
+//            keys.add(new Key<Fund>(Fund.class, symbol));
+//        }
+//        return ofy().get(keys).values();
     }
 
     //*************

@@ -16,10 +16,10 @@ import org.joda.time.LocalDate;
 
 import java.math.BigDecimal;
 import java.math.MathContext;
-import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
+import java.util.Set;
 import java.util.logging.Logger;
 
 public class MomentumStrategy {
@@ -36,7 +36,7 @@ public class MomentumStrategy {
     }
 
     public void execute(Portfolio portfolio, BacktestParams backtestParams,
-                        Map<String, Fund> acceptableFunds, MomentumStrategyParams strategyParams)
+                        Set<String> acceptableFunds, MomentumStrategyParams strategyParams)
             throws StrategyException {
 
         LocalDate fromDate = new LocalDate(backtestParams.getFromDate());
@@ -46,16 +46,16 @@ public class MomentumStrategy {
             throw new StrategyException("From date cannot be after to date");
 
         List<LocalDate> rebalanceDates = getRebalanceDates(fromDate, toDate, strategyParams);
+        log.info("Loading rankings for " + rebalanceDates.size() + " rebalance dates");
         List<Ranking> rankings = rankingDao.get(rebalanceDates, new RankingParams(strategyParams.getFormationPeriod()));
 
+        log.info("Starting rebalancing");
         for (int i = 0; i < rebalanceDates.size(); i++) {
             try {
-//                log.info(rankings.get(i).getId() + " " + rankings.get(i));
-                Collection<Fund> selection = getSelection(rankings.get(i).getSymbols(),
-                        acceptableFunds, strategyParams);
-//                log.info(rebalanceDates.get(i) + " " + selection);
-                sellLosers(portfolio, rebalanceDates.get(i), selection);
-                buyWinners(portfolio, strategyParams, rebalanceDates.get(i), selection);
+                Set<String> selection = getSelection(rankings.get(i).getSymbols(), acceptableFunds, strategyParams);
+                log.info("Rebalance date: " + rebalanceDates.get(i) + ", Selection: " + selection);
+//                sellLosers(portfolio, rebalanceDates.get(i), selection);
+//                buyWinners(portfolio, strategyParams, rebalanceDates.get(i), selection);
             } catch (NotFoundException e) {
                 //TODO: How should we handle exceptions here - what type of exceptions are they?
                 log.info(rebalanceDates.get(i) + " " + e.getMessage());
@@ -65,15 +65,15 @@ public class MomentumStrategy {
         }
     }
 
-    private Collection<Fund> getSelection(List<String> ranked, Map<String, Fund> acceptableFunds,
-                                          MomentumStrategyParams params) throws StrategyException {
-        ranked.retainAll(acceptableFunds.keySet());
+    private Set<String> getSelection(List<String> ranked, Set<String> acceptableFunds,
+                                     MomentumStrategyParams params) throws StrategyException {
+        ranked.retainAll(acceptableFunds);
         if (ranked.size() <= params.getPortfolioSize() * 2)
             throw new StrategyException("Not enough funds in population to make selection");
-        List<Fund> selection = new ArrayList<Fund>();
+        Set<String> selection = new HashSet<String>();
         for (String symbol : ranked) {
             if (selection.size() < params.getPortfolioSize()) {
-                selection.add(acceptableFunds.get(symbol));
+                selection.add(symbol);
             } else {
                 break;
             }

@@ -227,15 +227,15 @@ public class Quote implements Serializable {
     public String[] toStrArr() {
         return new String[]{
                 symbol,
-                date.toString(),
-                open.toString(),
-                high.toString(),
-                low.toString(),
-                close.toString(),
-                bid.toString(),
-                ask.toString(),
-                volume.toString(),
-                adjClose.toString(),
+                date + "",
+                open + "",
+                high + "",
+                low + "",
+                close + "",
+                bid + "",
+                ask + "",
+                volume + "",
+                adjClose + "",
                 rolled + ""};
 
     }

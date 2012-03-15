@@ -38,18 +38,30 @@ public class StrategyResultBuilder {
     }
 
     public StrategyResult build(Portfolio portfolio, LocalDate fromDate, LocalDate toDate) {
+
+        log.info("Building transaction history");
         List<TransactionDto> transactionDtos = getTransactionHistory(portfolio);
 
-        //TODO: Construct result date series based on date range
-        List<LocalDate> dates = TradingDayUtils.getWeeklySeries(new LocalDate(fromDate), new LocalDate(toDate), 2, true);
+        //TODO: The date series should not contain dates outside of the range
+        LocalDate fromLocalDate = new LocalDate(fromDate);
+        LocalDate toLocalDate = new LocalDate(toDate);
+        List<LocalDate> dates;
+        if (toLocalDate.isAfter(fromLocalDate.plusYears(2))) {
+            dates = TradingDayUtils.getMonthlySeries(fromLocalDate, toLocalDate, 1, true);
+        } else {
+            dates = TradingDayUtils.getWeeklySeries(fromLocalDate, toLocalDate, 2, true);
+        }
 
+        log.info("Caching quotes for portfolio calculations");
         Collection<Quote> quotes = cacheQuotesForPortfolio(portfolio, dates);
-        log.info(logQuotes(quotes));
-
+//        log.info(logQuotes(quotes));
+        log.info("Calculating portfolio market values for date series");
         List<BigDecimal> marketValues = portfolio.marketValue(dates);
 
+        log.info("Creating result set dto");
         DataTableDto dataTableDto = createDataTableDto(marketValues, dates);
 
+        log.info("Returning strategy results");
         return new StrategyResult(dataTableDto, new ArrayList<TransactionDto>(transactionDtos));
     }
 
