@@ -10,7 +10,6 @@ import java.math.BigDecimal;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
-import java.util.NavigableSet;
 
 public interface Portfolio {
     BigDecimal getCash(LocalDate date);
@@ -33,6 +32,8 @@ public interface Portfolio {
 
     int openPositionCount(LocalDate date);
 
+    Collection<Fund> getFunds();
+
     Collection<Fund> getActiveFunds(LocalDate date);
 
     BigDecimal costBasis(LocalDate date);
@@ -49,6 +50,5 @@ public interface Portfolio {
 
     BigDecimal returnsGain(LocalDate date);
 
-    List<BigDecimal> marketValue(NavigableSet<LocalDate> dates);
-
+    List<BigDecimal> marketValue(List<LocalDate> dates);
 }

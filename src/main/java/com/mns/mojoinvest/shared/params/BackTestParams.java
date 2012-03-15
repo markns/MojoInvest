@@ -29,7 +29,6 @@ public class BacktestParams implements IsSerializable {
     }
 
 
-
     public void setFromDate(Date fromDate) {
         this.fromDate = fromDate;
     }
@@ -49,4 +48,5 @@ public class BacktestParams implements IsSerializable {
                 ", toDate=" + toDate +
                 '}';
     }
+
 }

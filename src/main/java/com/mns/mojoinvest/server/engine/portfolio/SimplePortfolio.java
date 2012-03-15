@@ -141,6 +141,11 @@ public class SimplePortfolio implements Portfolio {
     }
 
     @Override
+    public Collection<Fund> getFunds() {
+        return positions.keySet();
+    }
+
+    @Override
     public Collection<Fund> getActiveFunds(LocalDate date) {
         return getOpenPositions(date).keySet();
     }
@@ -247,13 +252,12 @@ public class SimplePortfolio implements Portfolio {
     }
 
 
-    public List<BigDecimal> marketValue(NavigableSet<LocalDate> dates) {
-        List<BigDecimal> portfolioValues = new ArrayList<BigDecimal>(dates.size());
-        for (int i = 0; i < dates.size(); i++) {
-            portfolioValues.add(BigDecimal.ZERO);
-        }
+    public List<BigDecimal> marketValue(List<LocalDate> dates) {
+        List<BigDecimal> portfolioValues = new ArrayList<BigDecimal>(Collections.nCopies(dates.size(), BigDecimal.ZERO));
+
         for (Position position : positions.values()) {
             List<BigDecimal> positionValues = position.marketValue(dates);
+            //Add values of the two lists
             for (int i = 0; i < portfolioValues.size(); i++) {
                 portfolioValues.set(i, portfolioValues.get(i).add(positionValues.get(i)));
             }

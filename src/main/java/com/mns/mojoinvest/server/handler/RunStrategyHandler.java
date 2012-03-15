@@ -1,47 +1,53 @@
 package com.mns.mojoinvest.server.handler;
 
+import au.com.bytecode.opencsv.CSVWriter;
 import com.google.inject.Inject;
 import com.gwtplatform.dispatch.server.ExecutionContext;
 import com.gwtplatform.dispatch.server.actionhandler.ActionHandler;
 import com.gwtplatform.dispatch.shared.ActionException;
 import com.mns.mojoinvest.server.engine.model.Fund;
 import com.mns.mojoinvest.server.engine.model.dao.FundDao;
+import com.mns.mojoinvest.server.engine.portfolio.Lot;
 import com.mns.mojoinvest.server.engine.portfolio.Portfolio;
 import com.mns.mojoinvest.server.engine.portfolio.PortfolioFactory;
+import com.mns.mojoinvest.server.engine.portfolio.Position;
 import com.mns.mojoinvest.server.engine.result.StrategyResultBuilder;
-import com.mns.mojoinvest.server.engine.result.StrategyResultBuilderFactory;
 import com.mns.mojoinvest.server.engine.strategy.MomentumStrategy;
 import com.mns.mojoinvest.server.engine.strategy.StrategyException;
+import com.mns.mojoinvest.server.engine.transaction.SellTransaction;
 import com.mns.mojoinvest.shared.dispatch.RunStrategyAction;
 import com.mns.mojoinvest.shared.dispatch.RunStrategyResult;
 import com.mns.mojoinvest.shared.dto.StrategyResult;
+import com.mns.mojoinvest.shared.params.BacktestParams;
 import com.mns.mojoinvest.shared.params.FundFilter;
 import com.mns.mojoinvest.shared.params.Params;
+import org.joda.time.LocalDate;
 
+import java.io.StringWriter;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+import java.util.logging.Logger;
 
 public class RunStrategyHandler implements
         ActionHandler<RunStrategyAction, RunStrategyResult> {
 
+    private static final Logger log = Logger.getLogger(RunStrategyHandler.class.getName());
+
     private MomentumStrategy strategy;
-
     private final PortfolioFactory portfolioFactory;
-
-    private final StrategyResultBuilderFactory strategyResultBuilderFactory;
-
+    private final StrategyResultBuilder strategyResultBuilder;
     private final FundDao fundDao;
 
     @Inject
     public RunStrategyHandler(MomentumStrategy strategy,
                               PortfolioFactory portfolioFactory,
-                              StrategyResultBuilderFactory strategyResultBuilderFactory,
+                              StrategyResultBuilder strategyResultBuilder,
                               FundDao fundDao) {
         this.strategy = strategy;
         this.portfolioFactory = portfolioFactory;
-        this.strategyResultBuilderFactory = strategyResultBuilderFactory;
+        this.strategyResultBuilder = strategyResultBuilder;
         this.fundDao = fundDao;
     }
 
@@ -62,9 +68,12 @@ public class RunStrategyHandler implements
 
         StrategyResult result;
         try {
-            strategy.execute(portfolio, params.getBacktestParams(),
-                    funds, params.getStrategyParams());
-            result = buildStrategyResults(portfolio);
+            BacktestParams backtestParams = params.getBacktestParams();
+            strategy.execute(portfolio, backtestParams, funds, params.getStrategyParams());
+            log.info(logPortfolio(portfolio));
+            result = strategyResultBuilder.build(portfolio, new LocalDate(backtestParams.getFromDate()),
+                    //tODO: try to implement a getToLocalDate() method in backtestParams
+                    new LocalDate(backtestParams.getToDate()));
         } catch (StrategyException e) {
             e.printStackTrace();
             throw new ActionException(e);
@@ -73,9 +82,19 @@ public class RunStrategyHandler implements
         return new RunStrategyResult("", result);
     }
 
-    private StrategyResult buildStrategyResults(Portfolio portfolio) {
-        StrategyResultBuilder builder = strategyResultBuilderFactory.create(portfolio);
-        return builder.build();
+    private String logPortfolio(Portfolio portfolio) {
+        StringWriter stringWriter = new StringWriter();
+        CSVWriter writer = new CSVWriter(stringWriter);
+        for (Position position : portfolio.getPositions()) {
+            writer.writeNext(position.getFund().toStrArr());
+            for (Lot lot : position.getLots()) {
+                writer.writeNext(lot.getOpeningTransaction().toStrArr());
+                for (SellTransaction sellTransaction : lot.getSellTransactions()) {
+                    writer.writeNext(sellTransaction.toStrArr());
+                }
+            }
+        }
+        return stringWriter.toString();
     }
 
     private Map<String, Fund> getAcceptableFunds(FundFilter fundFilter) {

@@ -14,6 +14,7 @@ import java.util.List;
 public class ValuationTests {
     public static final BigDecimal COMMISSION = new BigDecimal("12.95");
 
+
     public void setUp() throws PortfolioException {
 
 //

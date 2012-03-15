@@ -127,14 +127,14 @@ public class Position {
                         transaction.getDate(), remainingQuantity,
                         transaction.getPrice(), commission);
 
-                lot.addClosingTransaction(closingTransaction);
+                lot.addSellTransaction(closingTransaction);
 
                 transaction = new SellTransaction(transaction.getFund(),
                         transaction.getDate(), difference.negate(), transaction.getPrice(),
                         commission);
 
             } else {
-                lot.addClosingTransaction(transaction);
+                lot.addSellTransaction(transaction);
                 break;
             }
         }
@@ -242,41 +242,18 @@ public class Position {
                 .multiply(BigDecimal.TEN.multiply(BigDecimal.TEN));
     }
 
-    public List<BigDecimal> marketValue(NavigableSet<LocalDate> dates) {
-        Map<LocalDate, Integer> posHack = new HashMap<LocalDate, Integer>();
-        int hack = 0;
-        for (LocalDate date : dates) {
-            posHack.put(date, hack++);
-        }
-        List<BigDecimal> positionValues = new ArrayList<BigDecimal>(dates.size());
-        for (int i = 0; i < dates.size(); i++) {
-            positionValues.add(BigDecimal.ZERO);
-        }
-        log.info("Fund " + fund.getSymbol() + " = new Fund(\"" + fund.getSymbol() + "\", \"" + fund.getName() +
-                "\", \"Category\", \"Provider\", true,\n" +
-                " \"US\", \"Index\", \"Blah blah\", new LocalDate(\"2011-01-01\"));");
-        Map<LocalDate, Quote> quotes = getQuotes(dates);
+    public List<BigDecimal> marketValue(List<LocalDate> dates) {
 
+        List<BigDecimal> positionValues = new ArrayList<BigDecimal>(Collections.nCopies(dates.size(), BigDecimal.ZERO));
 
-//        CSVWriter writer = new CSVWriter();
-////        writer.w
-////        for (Quote quote : quotes.values()) {
-////            log.info("Quote:" + Quote.toStrArr(quote));
-////            log.info("new Quote(\"" + quote.getSymbol() + "\",new LocalDate(\"" + quote.getDate() + "\"),new BigDecimal(\"" + quote.getClose() + "\"));");
-////        }
+//        Map<LocalDate, Quote> quotes = getQuotes(new TreeSet<LocalDate>(dates));
+
         for (Lot lot : lots) {
-            BuyTransaction opening = lot.getOpeningTransaction();
-            log.info("new BuyTransaction(" + opening.getFund().getSymbol() + ", new LocalDate(\"" + opening.getDate() + "\"), " +
-                    "new BigDecimal(\"" + opening.getQuantity() + "\"), new BigDecimal(\"" + opening.getPrice() + "\"), COMMISSION);");
-            for (SellTransaction sell : lot.getClosingTransactions()) {
-                log.info("new SellTransaction(" + sell.getFund().getSymbol() + ", new LocalDate(\"" + sell.getDate() + "\"), " +
-                        "new BigDecimal(\"" + sell.getQuantity() + "\"), new BigDecimal(\"" + sell.getPrice() + "\"), COMMISSION);");
-            }
-            Map<LocalDate, BigDecimal> lotValues = lot.marketValue(dates, quotes);
-            for (Map.Entry<LocalDate, BigDecimal> entry : lotValues.entrySet()) {
-                positionValues.set(posHack.get(entry.getKey()),
-                        positionValues.get(posHack.get(entry.getKey())).add(entry.getValue()));
-            }
+            List<BigDecimal> lotValues = lot.marketValue(dates);
+//            for (Map.Entry<LocalDate, BigDecimal> entry : lotValues.entrySet()) {
+//                positionValues.set(posHack.get(entry.getKey()),
+//                        positionValues.get(posHack.get(entry.getKey())).add(entry.getValue()));
+//            }
         }
         return positionValues;
     }

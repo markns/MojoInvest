@@ -1,6 +1,8 @@
 package com.mns.mojoinvest.server.engine.portfolio;
 
-import com.mns.mojoinvest.server.engine.model.Quote;
+import com.google.inject.Inject;
+import com.google.inject.assistedinject.Assisted;
+import com.mns.mojoinvest.server.engine.model.dao.QuoteDao;
 import com.mns.mojoinvest.server.engine.transaction.BuyTransaction;
 import com.mns.mojoinvest.server.engine.transaction.SellTransaction;
 import com.mns.mojoinvest.server.engine.transaction.Transaction;
@@ -46,38 +48,41 @@ public class Lot {
 
     private final BuyTransaction openingTransaction;
 
-    private final NavigableMap<LocalDate, SellTransaction> closingTransactionsMap;
+    private final NavigableMap<LocalDate, SellTransaction> sellTransactionsMap;
+    private QuoteDao quoteDao;
 
-    public Lot(BuyTransaction openingTransaction) {
+    @Inject
+    public Lot(@Assisted BuyTransaction openingTransaction) {
         log.fine("Creating new lot from " + openingTransaction);
+        this.quoteDao = quoteDao;
         this.openingTransaction = openingTransaction;
         this.openDate = openingTransaction.getDate();
-        this.closingTransactionsMap = new TreeMap<LocalDate, SellTransaction>();
+        this.sellTransactionsMap = new TreeMap<LocalDate, SellTransaction>();
     }
 
     public BuyTransaction getOpeningTransaction() {
         return openingTransaction;
     }
 
-    public Collection<SellTransaction> getClosingTransactions() {
-        return closingTransactionsMap.values();
+    public Collection<SellTransaction> getSellTransactions() {
+        return sellTransactionsMap.values();
     }
 
-    public Collection<SellTransaction> getClosingTransactions(LocalDate date) {
+    public Collection<SellTransaction> getSellTransactions(LocalDate date) {
         List<SellTransaction> transactions = new ArrayList<SellTransaction>();
-        for (SellTransaction transaction : closingTransactionsMap.headMap(date, true).values()) {
+        for (SellTransaction transaction : sellTransactionsMap.headMap(date, true).values()) {
             transactions.add(transaction);
         }
         return transactions;
     }
 
-    public void addClosingTransaction(SellTransaction transaction)
+    public void addSellTransaction(SellTransaction transaction)
             throws PortfolioException {
         if (!saleIsValid(transaction))
             throw new PortfolioException("Lot is not large enough to be able to meet sale " + transaction);
         if (closesLot(transaction))
             closeDate = transaction.getDate();
-        closingTransactionsMap.put(transaction.getDate(), transaction);
+        sellTransactionsMap.put(transaction.getDate(), transaction);
     }
 
     private boolean saleIsValid(Transaction transaction) {
@@ -106,7 +111,7 @@ public class Lot {
      */
     public BigDecimal getRemainingQuantity(LocalDate date) {
         BigDecimal closingQuantity = BigDecimal.ZERO;
-        for (SellTransaction closingTransaction : getClosingTransactions(date)) {
+        for (SellTransaction closingTransaction : getSellTransactions(date)) {
             closingQuantity = closingQuantity.add(closingTransaction.getQuantity());
         }
         return getInitialQuantity().subtract(closingQuantity);
@@ -183,7 +188,7 @@ public class Lot {
      */
     public BigDecimal cashIn(LocalDate date) {
         BigDecimal cashIn = BigDecimal.ZERO;
-        for (Transaction transaction : getClosingTransactions(date)) {
+        for (Transaction transaction : getSellTransactions(date)) {
             cashIn = cashIn.add(transaction.getCashValue());
         }
         return cashIn;
@@ -266,31 +271,49 @@ public class Lot {
     }
 
 
-    public Map<LocalDate, BigDecimal> marketValue(NavigableSet<LocalDate> dates, Map<LocalDate, Quote> quotes) {
-        NavigableSet<LocalDate> lotDates;
-        if (closeDate == null) {
-            lotDates = dates.tailSet(openDate, true);
-        } else {
-            lotDates = dates.subSet(openDate, true, closeDate, true);
-        }
-        Map<LocalDate, BigDecimal> marketValues = new HashMap<LocalDate, BigDecimal>();
+    public List<BigDecimal> marketValue(List<LocalDate> dates) {
 
-        for (LocalDate lotDate : lotDates) {
-            marketValues.put(lotDate, getInitialQuantity());
+        SortedMap<LocalDate, BigDecimal> quantities = new TreeMap<LocalDate, BigDecimal>();
+
+        for (LocalDate date : dates) {
+            if (!date.isBefore(openDate) ^
+                    (closeDate != null && !date.isBefore(closeDate))) {
+                quantities.put(date, getInitialQuantity());
+            }
         }
 
-        for (SellTransaction sellTransaction : closingTransactionsMap.values()) {
-            for (Map.Entry<LocalDate, BigDecimal> e : marketValues.entrySet()) {
+        for (SellTransaction sellTransaction : sellTransactionsMap.values()) {
+            for (Map.Entry<LocalDate, BigDecimal> e : quantities.entrySet()) {
                 if (sellTransaction.getDate().isBefore(e.getKey())) {
-                    marketValues.put(e.getKey(), e.getValue().subtract(sellTransaction.getQuantity()));
+                    quantities.put(e.getKey(), e.getValue().subtract(sellTransaction.getQuantity()));
                 }
             }
         }
 
-        for (Map.Entry<LocalDate, BigDecimal> e : marketValues.entrySet()) {
-            marketValues.put(e.getKey(), e.getValue().multiply(quotes.get(e.getKey()).getClose()));
-        }
+        List<BigDecimal> lotValues = new ArrayList<BigDecimal>(Collections.nCopies(dates.size(), BigDecimal.ZERO));
+        int i = 0;
+        for (LocalDate date : dates) {
+            if (!date.isBefore(openDate) ^
+                    (closeDate != null && !date.isBefore(closeDate))) {
 
-        return marketValues;
+                lotValues.set(i, lotValues.get(i).add(BigDecimal.TEN));
+            }
+            i++;
+        }
+        return lotValues;
+
+//        NavigableSet<LocalDate> lotDates;
+//        if (closeDate == null) {
+//            lotDates = dates.tailSet(openDate, true);
+//        } else {
+//            lotDates = dates.subSet(openDate, true, closeDate, true);
+//        }
+
+//
+//        for (Map.Entry<LocalDate, BigDecimal> e : marketValues.entrySet()) {
+//            marketValues.put(e.getKey(), e.getValue().multiply(quotes.get(e.getKey()).getClose()));
+//        }
+//
+//        return marketValues;
     }
 }

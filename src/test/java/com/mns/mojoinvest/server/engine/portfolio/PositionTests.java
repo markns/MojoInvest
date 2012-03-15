@@ -13,7 +13,9 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.math.BigDecimal;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 import static junit.framework.Assert.*;
 
@@ -255,8 +257,8 @@ public class PositionTests {
         position.add(sell50_2);//2011-04-01
         position.add(sell200);//2011-06-01
 
-        NavigableSet<LocalDate> dates =
-                new TreeSet<LocalDate>(Arrays.asList(
+        List<LocalDate> dates =
+                new ArrayList<LocalDate>(Arrays.asList(
                         new LocalDate("2011-01-15"),
                         new LocalDate("2011-02-01"),
                         new LocalDate("2011-03-15"),
@@ -265,8 +267,8 @@ public class PositionTests {
                         new LocalDate("2011-08-01")
                 ));
 
-        Map<LocalDate, Quote> quotes = position.getQuotes(dates);
-        System.out.println(quotes);
+//        Map<LocalDate, Quote> quotes = position.getQuotes(dates);
+//        System.out.println(quotes);
         position.marketValue(dates);
     }
 
