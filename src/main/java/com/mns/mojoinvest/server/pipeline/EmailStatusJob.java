@@ -15,8 +15,11 @@ import javax.mail.internet.MimeMessage;
 import java.io.UnsupportedEncodingException;
 import java.util.List;
 import java.util.Properties;
+import java.util.logging.Logger;
 
 public class EmailStatusJob extends Job1<Void, List<String>> {
+
+    private static final Logger log = Logger.getLogger(EmailStatusJob.class.getName());
 
     @Override
     public Value<Void> run(List<String> messages) {
@@ -33,11 +36,11 @@ public class EmailStatusJob extends Job1<Void, List<String>> {
             Transport.send(msg);
 
         } catch (AddressException e) {
-            // ...
+            log.warning("Unable to send email " + e.toString());
         } catch (MessagingException e) {
-            // ...
+            log.warning("Unable to send email " + e.toString());
         } catch (UnsupportedEncodingException e) {
-            // ...
+            log.warning("Unable to send email " + e.toString());
         }
 
         return null;
