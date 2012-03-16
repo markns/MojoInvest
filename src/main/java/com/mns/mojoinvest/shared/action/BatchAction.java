@@ -30,6 +30,8 @@ import java.util.Arrays;
  *
  * @author David Peterson
  */
+
+//TODO: Improve error handling of BatchAction
 public class BatchAction implements Action<BatchResult> {
 
     /**
