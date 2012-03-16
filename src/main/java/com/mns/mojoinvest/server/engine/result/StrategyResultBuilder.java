@@ -4,9 +4,7 @@ import au.com.bytecode.opencsv.CSVWriter;
 import com.google.gwt.visualization.client.AbstractDataTable;
 import com.google.inject.Inject;
 import com.googlecode.objectify.Key;
-import com.mns.mojoinvest.server.engine.model.Fund;
 import com.mns.mojoinvest.server.engine.model.Quote;
-import com.mns.mojoinvest.server.engine.model.dao.FundDao;
 import com.mns.mojoinvest.server.engine.model.dao.QuoteDao;
 import com.mns.mojoinvest.server.engine.portfolio.Portfolio;
 import com.mns.mojoinvest.server.engine.portfolio.Position;
@@ -29,12 +27,10 @@ public class StrategyResultBuilder {
 
     private static final Logger log = Logger.getLogger(StrategyResultBuilder.class.getName());
 
-    private final FundDao fundDao;
     private final QuoteDao quoteDao;
 
     @Inject
-    public StrategyResultBuilder(FundDao fundDao, QuoteDao quoteDao) {
-        this.fundDao = fundDao;
+    public StrategyResultBuilder(QuoteDao quoteDao) {
         this.quoteDao = quoteDao;
     }
 
@@ -93,23 +89,22 @@ public class StrategyResultBuilder {
         dto.addColumn(new DataTableDto.Column(AbstractDataTable.ColumnType.NUMBER, "Portfolio value", "portfolio"));
         dto.addColumn(new DataTableDto.Column(AbstractDataTable.ColumnType.NUMBER, "SPDR S&P 500", "SPY"));
 
-        Collection<Fund> funds = fundDao.get(Arrays.asList("SPY"));
-//        Collection<Quote> quotes = quoteDao.get(funds, dates);
-//
-//        Map<String, Map<LocalDate, BigDecimal>> quoteMap = new HashMap<String, Map<LocalDate, BigDecimal>>();
-//        for (Quote quote : quotes) {
-//            if (!quoteMap.containsKey(quote.getSymbol())) {
-//                quoteMap.put(quote.getSymbol(), new HashMap<LocalDate, BigDecimal>());
-//            }
-//            quoteMap.get(quote.getSymbol()).put(quote.getDate(), quote.getClose());
-//        }
+        List<String> funds = Arrays.asList("SPY");
+        Collection<Quote> quotes = quoteDao.get(funds, dates);
+        Map<String, Map<LocalDate, BigDecimal>> quoteMap = new HashMap<String, Map<LocalDate, BigDecimal>>();
+        for (Quote quote : quotes) {
+            if (!quoteMap.containsKey(quote.getSymbol())) {
+                quoteMap.put(quote.getSymbol(), new HashMap<LocalDate, BigDecimal>());
+            }
+            quoteMap.get(quote.getSymbol()).put(quote.getDate(), quote.getClose());
+        }
 
         for (int i = 0; i < marketValues.size(); i++) {
-//            BigDecimal isfchange = percentageChange(quoteMap.get("SPY").get(dates.get(0)), quoteMap.get("SPY").get(dates.get(i)));
+            BigDecimal isfchange = percentageChange(quoteMap.get("SPY").get(dates.get(0)),
+                    quoteMap.get("SPY").get(dates.get(i)));
             dto.addRow(new DataTableDto.DateValue(dates.get(i).toDateMidnight().toDate()),
                     new DataTableDto.DoubleValue(marketValues.get(i).doubleValue())
-
-//                    new DataTableDto.DoubleValue((isfchange.doubleValue() + 1) * 10000)
+                    , new DataTableDto.DoubleValue((isfchange.doubleValue() + 1) * 10000)
             );
         }
 

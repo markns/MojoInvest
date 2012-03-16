@@ -13,6 +13,7 @@ import org.joda.time.LocalDate;
 import java.math.BigDecimal;
 import java.math.MathContext;
 import java.util.*;
+import java.util.logging.Logger;
 
 /**
  * A portfolio is a collection of positions that the user holds in various securities, plus metadata.
@@ -38,6 +39,8 @@ import java.util.*;
  * total return = returns gain / cash out
  */
 public class SimplePortfolio implements Portfolio {
+
+    private static final Logger log = Logger.getLogger(SimplePortfolio.class.getName());
 
     private Map<String, Position> positions;
     private FundDao fundDao;
@@ -252,6 +255,7 @@ public class SimplePortfolio implements Portfolio {
     public List<BigDecimal> marketValue(List<LocalDate> dates) {
         List<BigDecimal> portfolioValues = new ArrayList<BigDecimal>(Collections.nCopies(dates.size(), BigDecimal.ZERO));
 
+        log.info("Calculating portfolio market values from " + positions.size() + " positions");
         for (Position position : positions.values()) {
             List<BigDecimal> positionValues = position.marketValue(dates);
             //Add values of the two lists
@@ -259,8 +263,10 @@ public class SimplePortfolio implements Portfolio {
                 portfolioValues.set(i, portfolioValues.get(i).add(positionValues.get(i)));
             }
         }
-        for (Map.Entry<LocalDate, BigDecimal> entry : cashFlows.entrySet()) {
-            //add cashflow to the portfolio value
+
+        log.info("Adding cash to portfolio values");
+        for (int i = 0; i < dates.size(); i++) {
+            portfolioValues.set(i, portfolioValues.get(i).add(getCash(dates.get(i))));
         }
 
         return portfolioValues;
