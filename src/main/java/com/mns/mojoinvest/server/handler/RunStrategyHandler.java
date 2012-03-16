@@ -1,8 +1,6 @@
 package com.mns.mojoinvest.server.handler;
 
 import au.com.bytecode.opencsv.CSVWriter;
-import com.google.appengine.api.memcache.MemcacheService;
-import com.google.appengine.api.memcache.MemcacheServiceFactory;
 import com.google.inject.Inject;
 import com.gwtplatform.dispatch.server.ExecutionContext;
 import com.gwtplatform.dispatch.server.actionhandler.ActionHandler;
@@ -53,9 +51,6 @@ public class RunStrategyHandler implements
     @Override
     public RunStrategyResult execute(final RunStrategyAction action,
                                      final ExecutionContext context) throws ActionException {
-
-        MemcacheService memcache = MemcacheServiceFactory.getMemcacheService("ObjectifyCache");
-        memcache.clearAll();
 
         Params params = action.getParams();
 
