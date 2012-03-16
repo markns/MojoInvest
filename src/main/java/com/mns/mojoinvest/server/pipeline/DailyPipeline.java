@@ -16,14 +16,18 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
 
-public class DailyPipeline extends Job1<List<Quote>, LocalDate> {
+public class DailyPipeline extends Job1<Void, LocalDate> {
 
     private static final Logger log = Logger.getLogger(DailyPipeline.class.getName());
 
     @Override
-    public Value<List<Quote>> run(LocalDate date) {
+    public Value<Void> run(LocalDate date) {
 
         List<Value<String>> messages = new ArrayList<Value<String>>();
+
+        messages.add(immediate("Daily pipeline '" + getPipelineKey() + "' started for date " + date));
+        messages.add(immediate("Pipeline console available at /_ah/pipeline/status.html?root=" + getPipelineKey()));
+
         if (HolidayUtils.isHoliday(date)) {
             String message = "Not running pipeline, today is " + HolidayUtils.get(date);
             log.info(message);
@@ -45,6 +49,8 @@ public class DailyPipeline extends Job1<List<Quote>, LocalDate> {
 
         //Send email for confirmation of success or failure
         futureCall(new EmailStatusJob(), futureList(messages));
+
+        //TODO: Delete pipeline job records on success?
 
         return null;
     }
