@@ -2,12 +2,14 @@ package com.mns.mojoinvest.server.servlet;
 
 import com.google.appengine.api.memcache.MemcacheService;
 import com.google.appengine.api.memcache.MemcacheServiceFactory;
+import com.google.inject.Singleton;
 
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
+@Singleton
 public class ClearCacheServlet extends HttpServlet {
 
     @Override
