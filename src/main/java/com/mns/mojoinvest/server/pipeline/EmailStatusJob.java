@@ -42,7 +42,6 @@ public class EmailStatusJob extends Job1<Void, List<String>> {
         } catch (UnsupportedEncodingException e) {
             log.warning("Unable to send email " + e.toString());
         }
-
         return null;
     }
 }
