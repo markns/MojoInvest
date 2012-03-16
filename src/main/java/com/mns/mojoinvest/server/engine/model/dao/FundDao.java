@@ -53,7 +53,7 @@ public class FundDao extends DAOBase {
         return ofy().get(key);
     }
 
-    public Collection<Fund> get(List<String> symbols) {
+    public Collection<Fund> get(Collection<String> symbols) {
         List<Key<Fund>> keys = new ArrayList<Key<Fund>>();
         for (String symbol : symbols) {
             keys.add(new Key<Fund>(Fund.class, symbol));

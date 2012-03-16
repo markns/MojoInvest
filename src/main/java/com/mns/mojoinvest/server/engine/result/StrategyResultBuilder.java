@@ -41,7 +41,8 @@ public class StrategyResultBuilder {
     public StrategyResult build(Portfolio portfolio, LocalDate fromDate, LocalDate toDate) {
 
         log.info("Building transaction history");
-        List<TransactionDto> transactionDtos = getTransactionHistory(portfolio);
+        List<TransactionDto> transactionDtos = new ArrayList<TransactionDto>(0);
+        //TODO: Make this call when user navigates to transaction tab? getTransactionHistory(portfolio);
 
         //TODO: The date series should not contain dates outside of the range
         LocalDate fromLocalDate = new LocalDate(fromDate);

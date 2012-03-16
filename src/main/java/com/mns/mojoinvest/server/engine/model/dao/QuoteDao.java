@@ -110,6 +110,14 @@ public class QuoteDao extends DAOBase {
         return keys;
     }
 
+    public List<Key<Quote>> getKeys(List<String> symbols, LocalDate date) {
+        List<Key<Quote>> keys = new ArrayList<Key<Quote>>();
+        for (String symbol : symbols) {
+            keys.add(new Key<Quote>(Quote.class, QuoteUtils.quoteId(symbol, date)));
+        }
+        return keys;
+    }
+
     public Collection<Quote> get(Fund fund, Collection<LocalDate> dates) {
         List<Key<Quote>> keys = new ArrayList<Key<Quote>>();
         for (LocalDate date : dates) {
@@ -126,5 +134,4 @@ public class QuoteDao extends DAOBase {
     public Quote get(Fund fund, LocalDate date) {
         return get(fund.getSymbol(), date);
     }
-
 }
