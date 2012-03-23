@@ -76,7 +76,7 @@ body {
 }
 
 #blurb {
-    width: 584px;
+    width: 475px;
 }
 
 /*Slider*/
@@ -89,11 +89,11 @@ body {
     overflow: hidden;
     zoom: 1;
     position: relative;
-    width: 366px;
+    width: 475px;
     float: right;
     text-align: center;
     margin-right: -11px;
-    padding-top: 50px;
+    padding-top: 10px;
     /*background: url(images/slider_shadow.png) 0 225px no-repeat;*/
 }
 
@@ -135,6 +135,39 @@ a.cs-active {
     color: #FFFFFF;
     padding: 0px 10px;
     display: none;
+}
+
+.three-columns {
+    margin: 0;
+    height: 128px;
+    padding-left: 40px;
+    padding-top: 20px;
+    margin-bottom: 40px;
+}
+
+.three-columns li {
+    float: left;
+    list-style: none;
+    padding-left: 68px;
+    width: 227px;
+}
+
+.three-collumns h2 a {
+    color: #444751;
+    font-size: 13px;
+    text-decoration: none;
+}
+
+.ico-chart {
+    background: url(../images/ico-chart.jpg) no-repeat top left;
+}
+
+.ico-paper {
+    background: url(../images/ico-paper.jpg) no-repeat top left;
+}
+
+.ico-strategies {
+    background: url(../images/ico-strategies.jpg) no-repeat top left;
 }
 
 /*Footer*/
