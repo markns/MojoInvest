@@ -37,7 +37,8 @@ public class StrategyResultBuilder {
     public StrategyResult build(Portfolio portfolio, LocalDate fromDate, LocalDate toDate) {
 
         log.info("Building transaction history");
-        List<TransactionDto> transactionDtos = new ArrayList<TransactionDto>(0);
+//        List<TransactionDto> transactionDtos = new ArrayList<TransactionDto>(0);
+        List<TransactionDto> transactionDtos = getTransactionHistory(portfolio);
         //TODO: Make this call when user navigates to transaction tab? getTransactionHistory(portfolio);
 
         //TODO: The date series should not contain dates outside of the range
@@ -87,9 +88,11 @@ public class StrategyResultBuilder {
         DataTableDto dto = new DataTableDto();
         dto.addColumn(new DataTableDto.Column(AbstractDataTable.ColumnType.DATE, "Date", "date"));
         dto.addColumn(new DataTableDto.Column(AbstractDataTable.ColumnType.NUMBER, "Portfolio value", "portfolio"));
-        dto.addColumn(new DataTableDto.Column(AbstractDataTable.ColumnType.NUMBER, "SPDR S&P 500", "SPY"));
+        dto.addColumn(new DataTableDto.Column(AbstractDataTable.ColumnType.NUMBER, "S&P 500", "SPY"));
+        dto.addColumn(new DataTableDto.Column(AbstractDataTable.ColumnType.NUMBER, "Dow Jones Industrial Average", "DIA"));
+        dto.addColumn(new DataTableDto.Column(AbstractDataTable.ColumnType.NUMBER, "Nasdaq-100 Index", "QQQ"));
 
-        List<String> funds = Arrays.asList("SPY");
+        List<String> funds = Arrays.asList("SPY", "DIA", "QQQ");
         Collection<Quote> quotes = quoteDao.get(funds, dates);
         Map<String, Map<LocalDate, BigDecimal>> quoteMap = new HashMap<String, Map<LocalDate, BigDecimal>>();
         for (Quote quote : quotes) {
@@ -100,11 +103,17 @@ public class StrategyResultBuilder {
         }
 
         for (int i = 0; i < marketValues.size(); i++) {
-            BigDecimal isfchange = percentageChange(quoteMap.get("SPY").get(dates.get(0)),
+            BigDecimal spy = percentageChange(quoteMap.get("SPY").get(dates.get(0)),
                     quoteMap.get("SPY").get(dates.get(i)));
+            BigDecimal dia = percentageChange(quoteMap.get("DIA").get(dates.get(0)),
+                    quoteMap.get("DIA").get(dates.get(i)));
+            BigDecimal qqq = percentageChange(quoteMap.get("QQQ").get(dates.get(0)),
+                    quoteMap.get("QQQ").get(dates.get(i)));
             dto.addRow(new DataTableDto.DateValue(dates.get(i).toDateMidnight().toDate()),
                     new DataTableDto.DoubleValue(marketValues.get(i).doubleValue())
-                    , new DataTableDto.DoubleValue((isfchange.doubleValue() + 1) * 10000)
+                    , new DataTableDto.DoubleValue((spy.doubleValue() + 1) * 10000)
+                    , new DataTableDto.DoubleValue((dia.doubleValue() + 1) * 10000)
+                    , new DataTableDto.DoubleValue((qqq.doubleValue() + 1) * 10000)
             );
         }
 
