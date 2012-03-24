@@ -55,7 +55,7 @@ public class FundFetcherJob extends Job0<List<Fund>> {
 
         WebResource r = c.resource("http://investing.money.msn.com/investments/etf-performance-tracker");
         MultivaluedMap<String, String> params = new MultivaluedMapImpl();
-        params.add("page", "0");
+//        params.add("page", "0");
         log.info("Attempting to fetch all funds html");
         String html = r.queryParams(params).get(String.class);
         log.info("Received all funds html");

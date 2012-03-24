@@ -40,21 +40,6 @@ public class QuotesFetcherJob extends Job2<List<Quote>, List<Fund>, LocalDate> {
     }
 
 
-    public static class QuoteBatchJob extends Job2<List<Quote>, List<Fund>, LocalDate> {
-
-        private static final Logger log = Logger.getLogger(QuoteBatchJob.class.getName());
-
-        @Override
-        public Value<List<Quote>> run(List<Fund> funds, LocalDate date) {
-            List<FutureValue<Quote>> quotes = new ArrayList<FutureValue<Quote>>();
-            log.info("Attempting to retrieve quotes for " + funds.size() + " funds");
-            for (Fund fund : funds) {
-                quotes.add(futureCall(new QuoteFetcherJob(), immediate(fund), immediate(date)));
-            }
-            return futureList(quotes);
-        }
-    }
-
     private static class MergeQuoteListJob extends Job1<List<Quote>, List<List<Quote>>> {
 
         @Override
@@ -66,7 +51,6 @@ public class QuotesFetcherJob extends Job2<List<Quote>, List<Fund>, LocalDate> {
             return immediate(quotes);
         }
     }
-
 
 
 }

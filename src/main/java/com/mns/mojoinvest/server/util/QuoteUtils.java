@@ -16,7 +16,7 @@ public class QuoteUtils {
 
     public static List<Quote> rollMissingQuotes(List<Quote> quotes) {
 
-        sortByDate(quotes);
+        sortByDateAsc(quotes);
         List<LocalDate> dates = TradingDayUtils.getDailySeries(quotes.get(0).getDate(),
                 quotes.get(quotes.size() - 1).getDate(), true);
 
@@ -55,7 +55,7 @@ public class QuoteUtils {
     @Deprecated
     public static List<Quote> getMissingQuotes(LocalDate fromDate, LocalDate toDate, List<Quote> quotes) {
 
-        sortByDate(quotes);
+        sortByDateAsc(quotes);
         List<LocalDate> dates = TradingDayUtils.getDailySeries(fromDate, toDate, true);
 
         List<Quote> missingQuotes = new ArrayList<Quote>();
@@ -102,11 +102,20 @@ public class QuoteUtils {
     }
 
 
-    public static void sortByDate(List<Quote> quotes) {
+    public static void sortByDateAsc(List<Quote> quotes) {
         Collections.sort(quotes, new Comparator<Quote>() {
             @Override
             public int compare(Quote q1, Quote q2) {
                 return q1.getDate().compareTo(q2.getDate());
+            }
+        });
+    }
+
+    public static void sortByDateDesc(List<Quote> quotes) {
+        Collections.sort(quotes, new Comparator<Quote>() {
+            @Override
+            public int compare(Quote q1, Quote q2) {
+                return q2.getDate().compareTo(q1.getDate());
             }
         });
     }

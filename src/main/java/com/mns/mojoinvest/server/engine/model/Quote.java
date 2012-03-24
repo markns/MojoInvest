@@ -1,5 +1,6 @@
 package com.mns.mojoinvest.server.engine.model;
 
+import com.googlecode.objectify.Key;
 import com.googlecode.objectify.annotation.Cached;
 import com.googlecode.objectify.annotation.Unindexed;
 import com.mns.mojoinvest.server.util.QuoteUtils;
@@ -175,6 +176,21 @@ public class Quote implements Serializable {
 //                '}';
     }
 
+    public String toDescriptiveString() {
+        return "Quote{" +
+                "id=" + id +
+                ", symbol='" + symbol + '\'' +
+                ", date='" + date + '\'' +
+                ", open=" + open +
+                ", high=" + high +
+                ", low=" + low +
+                ", close=" + close +
+                ", volume=" + volume +
+                ", adjClose=" + adjClose +
+                ", rolled=" + rolled +
+                '}';
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -238,5 +254,9 @@ public class Quote implements Serializable {
                 adjClose + "",
                 rolled + ""};
 
+    }
+
+    public Key<Quote> getKey() {
+        return new Key<Quote>(Quote.class, QuoteUtils.quoteId(symbol, date));
     }
 }

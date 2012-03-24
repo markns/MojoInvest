@@ -29,12 +29,12 @@ public class QuoteFetcherBatchJob extends Job2<List<Quote>, List<Fund>, LocalDat
         List<Quote> quotes = new ArrayList<Quote>();
         log.info("Attempting to retrieve quotes for " + funds.size() + " funds");
         for (Fund fund : funds) {
-            quotes.add(run(fund, date));
+            quotes.add(runOne(fund, date));
         }
         return immediate(quotes);
     }
 
-    public Quote run(Fund fund, LocalDate date) {
+    public Quote runOne(Fund fund, LocalDate date) {
         String html = fetchQuoteHtml(fund.getSymbol());
         Map<String, String> details = scrapeQuoteDetails(html);
         return buildQuote(fund.getSymbol(), date, details);

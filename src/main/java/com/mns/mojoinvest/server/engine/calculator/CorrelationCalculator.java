@@ -39,7 +39,7 @@ public class CorrelationCalculator {
         for (int j = 0; j < k.size(); j++) {
 
             List<Quote> q = quotes.get(k.get(j));
-            QuoteUtils.sortByDate(q);
+            QuoteUtils.sortByDateAsc(q);
             Collections.reverse(q);
             if (q.size() > range) {
                 Object[] arr = q.subList(0, range).toArray();
