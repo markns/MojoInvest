@@ -21,6 +21,7 @@ public class TradingDayUtils {
 //      the next business day. Many institutions have month-end accounting procedures that necessitate this.
 
     //TODO: Change these methods to accept an enum Month, Week, Day and switch
+    //TODO: Maybe add an option to specify stub date
 
     public static List<LocalDate> getMonthlySeries(LocalDate fromDate, LocalDate toDate, int frequency, boolean forwards) {
         List<LocalDate> dates = new ArrayList<LocalDate>();
