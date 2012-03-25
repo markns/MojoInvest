@@ -45,7 +45,7 @@ public class RunCalculationsJob extends Job2<Void, LocalDate, Fund> {
 //        Standard Deviation - 1, 3, 6, 9, 12 month
 
 
-        CalculationService service = new CalculationService(null, null);
+        CalculationService service = new CalculationService(dao);
 
         List<CalculatedValue> cvs = service.calculateSMA(fund, date.minusWeeks(4), date, 4);
 

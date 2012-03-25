@@ -3,8 +3,7 @@ package com.mns.mojoinvest.server.engine.calculator;
 import com.mns.mojoinvest.server.engine.model.CalculatedValue;
 import com.mns.mojoinvest.server.engine.model.Fund;
 import com.mns.mojoinvest.server.engine.model.Quote;
-import com.mns.mojoinvest.server.engine.model.dao.InMemoryFundDao;
-import com.mns.mojoinvest.server.engine.model.dao.InMemoryQuoteDao;
+import com.mns.mojoinvest.server.engine.model.dao.QuoteDao;
 import com.mns.mojoinvest.server.util.TradingDayUtils;
 import org.joda.time.LocalDate;
 
@@ -14,12 +13,9 @@ import java.util.List;
 
 public class CalculationService {
 
-    private final InMemoryFundDao fundDao;
-    private final InMemoryQuoteDao quoteDao;
+    private final QuoteDao quoteDao;
 
-    public CalculationService(InMemoryFundDao fundDao, InMemoryQuoteDao quoteDao) {
-
-        this.fundDao = fundDao;
+    public CalculationService(QuoteDao quoteDao) {
         this.quoteDao = quoteDao;
     }
 

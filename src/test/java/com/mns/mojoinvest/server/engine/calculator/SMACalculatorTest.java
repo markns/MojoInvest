@@ -12,7 +12,6 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.List;
 
 public class SMACalculatorTest {
@@ -77,10 +76,9 @@ public class SMACalculatorTest {
     @Test
     public void blah() {
 
-        CalculationService service = new CalculationService(fundDao, quoteDao);
-        Collection<Fund> funds = fundDao.getAll();
+        CalculationService service = new CalculationService(quoteDao);
 
-        for (Fund fund : funds) {
+        for (Fund fund : fundDao.getAll()) {
 
             List<Quote> quotes = quoteDao.get(fund);
             QuoteUtils.sortByDateAsc(quotes);
