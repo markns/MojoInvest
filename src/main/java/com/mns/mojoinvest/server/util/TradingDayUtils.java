@@ -46,6 +46,16 @@ public class TradingDayUtils {
         return dates;
     }
 
+    public static List<LocalDate> getWeeklySeries(LocalDate date, int numWeeks, boolean forwards) {
+        List<LocalDate> dates = new ArrayList<LocalDate>(numWeeks);
+        int i = 0;
+        while (i++ < numWeeks) {
+            dates.add(date);
+            date = date.minusWeeks(1);
+        }
+        return dates;
+    }
+
     public static List<LocalDate> getDailySeries(LocalDate fromDate, LocalDate toDate, boolean forwards) {
         List<LocalDate> dates = new ArrayList<LocalDate>();
         while (!rollBack(toDate).isBefore(fromDate)) {

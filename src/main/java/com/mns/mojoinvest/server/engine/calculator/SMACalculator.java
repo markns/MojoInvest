@@ -1,5 +1,6 @@
 package com.mns.mojoinvest.server.engine.calculator;
 
+import java.math.BigDecimal;
 import java.util.LinkedList;
 import java.util.Queue;
 
@@ -14,17 +15,17 @@ public class SMACalculator {
         this.period = period;
     }
 
-    public void newNum(double num) {
-        sum += num;
-        window.add(num);
+    public void newNum(BigDecimal num) {
+        sum += num.doubleValue();
+        window.add(num.doubleValue());
         if (window.size() > period) {
             sum -= window.remove();
         }
     }
 
-    public double getAvg() {
-        if (window.isEmpty()) return 0; // technically the average is undefined
-        return sum / window.size();
+    public BigDecimal getAvg() {
+        if (window.isEmpty()) return BigDecimal.ZERO; // technically the average is undefined
+        return new BigDecimal(sum / window.size());
     }
 
     public static void main(String[] args) {
@@ -33,7 +34,7 @@ public class SMACalculator {
         for (int windSize : windowSizes) {
             SMACalculator SMA = new SMACalculator(windSize);
             for (double x : testData) {
-                SMA.newNum(x);
+                SMA.newNum(new BigDecimal(x));
                 System.out.println("Next number = " + x + ", SMA = " + SMA.getAvg());
             }
             System.out.println();
