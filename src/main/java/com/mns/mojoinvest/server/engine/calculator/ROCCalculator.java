@@ -1,4 +1,4 @@
 package com.mns.mojoinvest.server.engine.calculator;
 
-public class VolatilityCalculator {
+public class ROCCalculator {
 }
