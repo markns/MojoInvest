@@ -52,10 +52,6 @@ public class InMemoryQuoteDao implements QuoteDao {
         reader.close();
     }
 
-    public List<Quote> get(Fund fund) {
-        return map.get(fund.getSymbol());
-    }
-
     public List<Quote> get(Fund fund, final Collection<LocalDate> dates) {
         List<Quote> quotes = map.get(fund.getSymbol());
         return Lists.newArrayList(Iterables.filter(quotes, new Predicate<Quote>() {
@@ -93,7 +89,7 @@ public class InMemoryQuoteDao implements QuoteDao {
 
     @Override
     public List<Quote> query(Fund fund) {
-        throw new NotImplementedException();
+        return map.get(fund.getSymbol());
     }
 
     @Override

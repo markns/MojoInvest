@@ -6,6 +6,7 @@ import com.mns.mojoinvest.server.engine.model.Quote;
 import com.mns.mojoinvest.server.engine.model.dao.CalculatedValueDao;
 import com.mns.mojoinvest.server.engine.model.dao.InMemoryFundDao;
 import com.mns.mojoinvest.server.engine.model.dao.InMemoryQuoteDao;
+import com.mns.mojoinvest.server.engine.model.dao.QuoteDao;
 import com.mns.mojoinvest.server.util.QuoteUtils;
 import org.joda.time.LocalDate;
 import org.junit.Before;
@@ -67,7 +68,7 @@ public class SMACalculatorTest {
 
 
     private final InMemoryFundDao fundDao = new InMemoryFundDao();
-    private final InMemoryQuoteDao quoteDao =
+    private final QuoteDao quoteDao =
             new InMemoryQuoteDao(Arrays.asList("../ETFData/data/etf_sector_quotes.csv",
                     "../ETFData/data/yahoo_quotes_missing.csv"));
     private final CalculatedValueDao calculatedValueDao = new CalculatedValueDao(ObjectifyService.factory());
@@ -80,7 +81,7 @@ public class SMACalculatorTest {
 
         for (Fund fund : fundDao.getAll()) {
 
-            List<Quote> quotes = quoteDao.get(fund);
+            List<Quote> quotes = quoteDao.query(fund);
             QuoteUtils.sortByDateAsc(quotes);
             LocalDate earliest = quotes.get(0).getDate();
             LocalDate latest = quotes.get(quotes.size() - 1).getDate();

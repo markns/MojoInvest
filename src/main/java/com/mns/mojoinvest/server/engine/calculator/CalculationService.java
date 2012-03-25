@@ -1,5 +1,6 @@
 package com.mns.mojoinvest.server.engine.calculator;
 
+import com.google.inject.Inject;
 import com.mns.mojoinvest.server.engine.model.CalculatedValue;
 import com.mns.mojoinvest.server.engine.model.Fund;
 import com.mns.mojoinvest.server.engine.model.Quote;
@@ -15,6 +16,7 @@ public class CalculationService {
 
     private final QuoteDao quoteDao;
 
+    @Inject
     public CalculationService(QuoteDao quoteDao) {
         this.quoteDao = quoteDao;
     }
