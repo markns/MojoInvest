@@ -46,6 +46,7 @@ public class DispatchServletModule extends ServletModule {
         serve("/quoteviewer").with(QuoteViewerServlet.class);
         serve("/fundviewer").with(FundViewerServlet.class);
         serve("/rankingviewer").with(RankingViewerServlet.class);
+        serve("/strategy").with(StrategyServlet.class);
         serve("/calculator").with(SMACalculatorServlet.class);
         serve("/clearcache").with(ClearCacheServlet.class);
         serve("/fundindexes").with(UpdateFundIndexesServlet.class);

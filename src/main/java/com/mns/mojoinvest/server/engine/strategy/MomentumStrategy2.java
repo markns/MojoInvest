@@ -4,14 +4,16 @@ import com.google.inject.Inject;
 import com.googlecode.objectify.Key;
 import com.googlecode.objectify.NotFoundException;
 import com.mns.mojoinvest.server.engine.execution.Executor;
+import com.mns.mojoinvest.server.engine.model.CalculatedValue;
+import com.mns.mojoinvest.server.engine.model.Fund;
 import com.mns.mojoinvest.server.engine.model.Quote;
 import com.mns.mojoinvest.server.engine.model.Ranking;
-import com.mns.mojoinvest.server.engine.model.RankingParams;
+import com.mns.mojoinvest.server.engine.model.dao.CalculatedValueDao;
 import com.mns.mojoinvest.server.engine.model.dao.FundDao;
 import com.mns.mojoinvest.server.engine.model.dao.QuoteDao;
-import com.mns.mojoinvest.server.engine.model.dao.RankingDao;
 import com.mns.mojoinvest.server.engine.portfolio.Portfolio;
 import com.mns.mojoinvest.server.engine.portfolio.PortfolioException;
+import com.mns.mojoinvest.server.servlet.StrategyServlet;
 import com.mns.mojoinvest.server.util.TradingDayUtils;
 import com.mns.mojoinvest.shared.params.BacktestParams;
 import com.mns.mojoinvest.shared.params.MomentumStrategyParams;
@@ -19,10 +21,7 @@ import org.joda.time.LocalDate;
 
 import java.math.BigDecimal;
 import java.math.MathContext;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.logging.Logger;
 
 public class MomentumStrategy2 {
@@ -30,20 +29,20 @@ public class MomentumStrategy2 {
     private static final Logger log = Logger.getLogger(MomentumStrategy2.class.getName());
 
     private final Executor executor;
-    private final RankingDao rankingDao;
     private final QuoteDao quoteDao;
     private final FundDao fundDao;
+    private final CalculatedValueDao calculatedValueDao;
 
     @Inject
-    public MomentumStrategy2(Executor executor, RankingDao rankingDao, QuoteDao quoteDao, FundDao fundDao) {
+    public MomentumStrategy2(Executor executor, QuoteDao quoteDao, FundDao fundDao, CalculatedValueDao calculatedValueDao) {
         this.executor = executor;
-        this.rankingDao = rankingDao;
         this.quoteDao = quoteDao;
         this.fundDao = fundDao;
+        this.calculatedValueDao = calculatedValueDao;
     }
 
     public void execute(Portfolio portfolio, BacktestParams backtestParams,
-                        Set<String> acceptableFunds, MomentumStrategyParams strategyParams)
+                        Collection<Fund> universe, StrategyServlet.Strategy2Params strategyParams)
             throws StrategyException {
 
         LocalDate fromDate = new LocalDate(backtestParams.getFromDate());
@@ -53,15 +52,22 @@ public class MomentumStrategy2 {
             throw new StrategyException("From date cannot be after to date");
 
         List<LocalDate> rebalanceDates = getRebalanceDates(fromDate, toDate, strategyParams);
-        List<Ranking> rankings = getRankings(strategyParams, rebalanceDates);
-        List<List<String>> selections = getSelections(acceptableFunds, strategyParams, rebalanceDates, rankings);
-        cacheFundsAndQuotes(rebalanceDates, selections);
-        runRebalancing(portfolio, strategyParams, rebalanceDates, selections);
-    }
 
-    private List<Ranking> getRankings(MomentumStrategyParams strategyParams, List<LocalDate> rebalanceDates) {
-        log.info("Loading rankings for " + rebalanceDates.size() + " rebalance dates");
-        return rankingDao.get(rebalanceDates, new RankingParams(strategyParams.getFormationPeriod()));
+        for (LocalDate rebalanceDate : rebalanceDates) {
+            Collection<CalculatedValue> ma1s = calculatedValueDao.get(rebalanceDate, universe, "SMA", strategyParams.getMa1());
+            Collection<CalculatedValue> ma2s = calculatedValueDao.get(rebalanceDate, universe, "SMA", strategyParams.getMa2());
+            System.out.println(ma1s);
+            System.out.println(ma2s);
+
+            if (ma1s.size() == ma2s.size()) {
+
+            }
+
+            //Calculate ma1s/ma2s
+            //Divide by Std Dev
+            //Rank order
+        }
+
     }
 
     private void runRebalancing(Portfolio portfolio, MomentumStrategyParams strategyParams, List<LocalDate> rebalanceDates, List<List<String>> selections) throws StrategyException {
@@ -155,8 +161,8 @@ public class MomentumStrategy2 {
         }
     }
 
-    private List<LocalDate> getRebalanceDates(LocalDate fromDate, LocalDate toDate, MomentumStrategyParams params) {
-        return TradingDayUtils.getMonthlySeries(fromDate, toDate, params.getHoldingPeriod(), true);
+    private List<LocalDate> getRebalanceDates(LocalDate fromDate, LocalDate toDate, StrategyServlet.Strategy2Params params) {
+        return TradingDayUtils.getWeeklySeries(fromDate, toDate, params.getRebalanceFrequency(), true);
     }
 
 }

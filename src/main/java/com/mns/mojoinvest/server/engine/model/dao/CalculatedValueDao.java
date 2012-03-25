@@ -4,10 +4,16 @@ import com.google.inject.Inject;
 import com.googlecode.objectify.Key;
 import com.googlecode.objectify.ObjectifyFactory;
 import com.mns.mojoinvest.server.engine.model.CalculatedValue;
+import com.mns.mojoinvest.server.engine.model.Fund;
+import org.joda.time.LocalDate;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Logger;
+
+import static com.mns.mojoinvest.server.util.DatastoreUtils.forDatastore;
 
 public class CalculatedValueDao extends DAOBase {
 
@@ -41,4 +47,18 @@ public class CalculatedValueDao extends DAOBase {
     public Map<Key<CalculatedValue>, CalculatedValue> put(List<CalculatedValue> cvs) {
         return ofy().put(cvs);
     }
+
+    public Collection<CalculatedValue> get(LocalDate date, Collection<Fund> funds,
+                                           String type, int period) {
+        List<Key<CalculatedValue>> keys = new ArrayList<Key<CalculatedValue>>();
+        for (Fund fund : funds) {
+            keys.add(new Key<CalculatedValue>(CalculatedValue.class, calculatedValueId(date, fund.getSymbol(), type, period)));
+        }
+        return ofy().get(keys).values();
+    }
+
+    public static String calculatedValueId(LocalDate date, String symbol, String type, int period) {
+        return forDatastore(date) + "|" + symbol + "|" + type + "|" + period;
+    }
+
 }
