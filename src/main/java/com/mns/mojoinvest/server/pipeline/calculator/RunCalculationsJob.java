@@ -15,6 +15,7 @@ import org.joda.time.LocalDate;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class RunCalculationsJob extends Job2<Void, LocalDate, Fund> {
@@ -45,10 +46,11 @@ public class RunCalculationsJob extends Job2<Void, LocalDate, Fund> {
 //        Standard Deviation - 1, 3, 6, 9, 12 month
 
 
-        CalculationService service = new CalculationService(dao);
-
-        List<CalculatedValue> cvs = service.calculateSMA(fund, date.minusWeeks(4), date, 4);
-
+        CalculationService calculationService = new CalculationService(dao);
+        List<CalculatedValue> cvs = new ArrayList<CalculatedValue>();
+        for (int period : Arrays.asList(4, 8, 12, 16, 20, 24, 28, 32, 36, 40, 44, 48, 52)) {
+            cvs.addAll(calculationService.calculateSMA(fund, date.minusWeeks(period), date, period));
+        }
         cvDao.put(cvs);
 
         return null;
