@@ -55,7 +55,11 @@ public class FundFetcherJob extends Job0<List<Fund>> {
 
         WebResource r = c.resource("http://investing.money.msn.com/investments/etf-performance-tracker");
         MultivaluedMap<String, String> params = new MultivaluedMapImpl();
-//        params.add("page", "0");
+        params.add("page", "0");
+        params.add("fam", "iShares");
+        params.add("cat", "All");
+        params.add("view", "View");
+
         log.info("Attempting to fetch all funds html");
         String html = r.queryParams(params).get(String.class);
         log.info("Received all funds html");
@@ -88,22 +92,6 @@ public class FundFetcherJob extends Job0<List<Fund>> {
         }
 //        throw new Exception("");
         return null;
-    }
-
-    public static class FundFetcherBatchJob extends Job1<List<Fund>, List<String>> {
-
-        private static final Logger log = Logger.getLogger(FundFetcherBatchJob.class.getName());
-
-        @Override
-        public Value<List<Fund>> run(List<String> symbols) {
-            List<FutureValue<Fund>> funds = new ArrayList<FutureValue<Fund>>();
-            log.info("Attempting to retrieve details for batch: " + symbols);
-            for (String symbol : symbols) {
-                funds.add(futureCall(new FundDetailFetcherJob(), immediate(symbol)));
-            }
-            return futureList(funds);
-        }
-
     }
 
     private static class MergeFundListJob extends Job1<List<Fund>, List<List<Fund>>> {
