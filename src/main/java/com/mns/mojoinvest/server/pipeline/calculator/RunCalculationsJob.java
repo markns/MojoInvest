@@ -8,6 +8,7 @@ import com.mns.mojoinvest.server.engine.calculator.CalculationService;
 import com.mns.mojoinvest.server.engine.model.CalculatedValue;
 import com.mns.mojoinvest.server.engine.model.Fund;
 import com.mns.mojoinvest.server.engine.model.dao.CalculatedValueDao;
+import com.mns.mojoinvest.server.engine.model.dao.ObjectifyQuoteDao;
 import com.mns.mojoinvest.server.engine.model.dao.QuoteDao;
 import org.joda.time.LocalDate;
 
@@ -27,7 +28,7 @@ public class RunCalculationsJob extends Job2<Void, LocalDate, Fund> {
             throws IOException, ClassNotFoundException {
 
         ObjectifyFactory factory = ObjectifyService.factory();
-        this.dao = new QuoteDao(factory);
+        this.dao = new ObjectifyQuoteDao(factory);
         this.dao.registerObjects(factory);
 
         this.cvDao = new CalculatedValueDao(factory);

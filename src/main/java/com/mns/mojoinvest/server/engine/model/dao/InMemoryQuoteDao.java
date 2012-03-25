@@ -63,7 +63,6 @@ public class InMemoryQuoteDao {
                 return dates.contains(input.getDate());
             }
         });
-
     }
 
 }

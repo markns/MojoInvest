@@ -5,6 +5,7 @@ import com.google.appengine.tools.development.testing.LocalServiceTestHelper;
 import com.googlecode.objectify.ObjectifyService;
 import com.mns.mojoinvest.server.engine.model.Fund;
 import com.mns.mojoinvest.server.engine.model.Quote;
+import com.mns.mojoinvest.server.engine.model.dao.ObjectifyQuoteDao;
 import com.mns.mojoinvest.server.engine.model.dao.QuoteDao;
 import org.joda.time.LocalDate;
 import org.junit.Before;
@@ -16,7 +17,7 @@ import java.util.List;
 
 public class YahooQuoteFetcherBatchJobTest {
 
-    private final QuoteDao quoteDao = new QuoteDao(ObjectifyService.factory());
+    private final QuoteDao quoteDao = new ObjectifyQuoteDao(ObjectifyService.factory());
 
     private final LocalDatastoreServiceTestConfig config = new LocalDatastoreServiceTestConfig();
     private final LocalServiceTestHelper helper = new LocalServiceTestHelper(config);

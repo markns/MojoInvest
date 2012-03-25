@@ -8,6 +8,7 @@ import com.googlecode.objectify.ObjectifyFactory;
 import com.googlecode.objectify.ObjectifyService;
 import com.mns.mojoinvest.server.engine.model.Fund;
 import com.mns.mojoinvest.server.engine.model.Quote;
+import com.mns.mojoinvest.server.engine.model.dao.ObjectifyQuoteDao;
 import com.mns.mojoinvest.server.engine.model.dao.QuoteDao;
 import com.mns.mojoinvest.server.pipeline.PipelineException;
 import com.mns.mojoinvest.server.util.QuoteUtils;
@@ -32,7 +33,7 @@ public class YahooQuoteFetcherBatchJob extends Job2<String, List<Fund>, LocalDat
     private void readObject(ObjectInputStream in)
             throws IOException, ClassNotFoundException {
         ObjectifyFactory factory = ObjectifyService.factory();
-        dao = new QuoteDao(factory);
+        dao = new ObjectifyQuoteDao(factory);
         dao.registerObjects(factory);
         messages = new ArrayList<String>();
         fetcher = new YahooQuoteFetcher();
