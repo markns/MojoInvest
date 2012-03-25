@@ -20,6 +20,8 @@ public class TradingDayUtils {
 //      would cause the payment to be in the previous calendar month, in which case the payment date is rolled to
 //      the next business day. Many institutions have month-end accounting procedures that necessitate this.
 
+    //TODO: Change these methods to accept an enum Month, Week, Day and switch
+
     public static List<LocalDate> getMonthlySeries(LocalDate fromDate, LocalDate toDate, int frequency, boolean forwards) {
         List<LocalDate> dates = new ArrayList<LocalDate>();
         while (!rollBack(toDate).isBefore(fromDate)) {
@@ -42,16 +44,6 @@ public class TradingDayUtils {
         if (forwards) {
             //Little bit back to front the logic here
             Collections.reverse(dates);
-        }
-        return dates;
-    }
-
-    public static List<LocalDate> getWeeklySeries(LocalDate date, int numWeeks, boolean forwards) {
-        List<LocalDate> dates = new ArrayList<LocalDate>(numWeeks);
-        int i = 0;
-        while (i++ < numWeeks) {
-            dates.add(date);
-            date = date.minusWeeks(1);
         }
         return dates;
     }

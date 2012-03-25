@@ -1,6 +1,7 @@
 package com.mns.mojoinvest.server.engine.calculator;
 
 import java.math.BigDecimal;
+import java.math.MathContext;
 import java.util.LinkedList;
 import java.util.Queue;
 
@@ -24,8 +25,8 @@ public class SMACalculator {
     }
 
     public BigDecimal getAvg() {
-        if (window.isEmpty()) return BigDecimal.ZERO; // technically the average is undefined
-        return new BigDecimal(sum / window.size());
+        if (window.size() != period) return null; // technically the average is undefined
+        return new BigDecimal(sum / window.size(), MathContext.DECIMAL32);
     }
 
     public static void main(String[] args) {

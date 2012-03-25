@@ -5,6 +5,8 @@ import com.googlecode.objectify.Key;
 import com.googlecode.objectify.ObjectifyFactory;
 import com.mns.mojoinvest.server.engine.model.CalculatedValue;
 
+import java.util.List;
+import java.util.Map;
 import java.util.logging.Logger;
 
 public class CalculatedValueDao extends DAOBase {
@@ -34,5 +36,9 @@ public class CalculatedValueDao extends DAOBase {
 
     public Key<CalculatedValue> put(CalculatedValue cv) {
         return ofy().put(cv);
+    }
+
+    public Map<Key<CalculatedValue>, CalculatedValue> put(List<CalculatedValue> cvs) {
+        return ofy().put(cvs);
     }
 }
