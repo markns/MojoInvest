@@ -3,20 +3,21 @@ package com.mns.mojoinvest.server.engine.model.dao;
 import au.com.bytecode.opencsv.CSVReader;
 import com.google.common.base.Predicate;
 import com.google.common.collect.Iterables;
+import com.google.common.collect.Lists;
+import com.googlecode.objectify.Key;
+import com.googlecode.objectify.ObjectifyFactory;
 import com.mns.mojoinvest.server.engine.model.Fund;
 import com.mns.mojoinvest.server.engine.model.Quote;
 import com.mns.mojoinvest.server.util.QuoteUtils;
+import org.apache.commons.lang.NotImplementedException;
 import org.joda.time.LocalDate;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
-public class InMemoryQuoteDao {
+public class InMemoryQuoteDao implements QuoteDao {
 
     private final Map<String, List<Quote>> map = new HashMap<String, List<Quote>>();
 
@@ -55,16 +56,95 @@ public class InMemoryQuoteDao {
         return map.get(fund.getSymbol());
     }
 
-    public Iterable<Quote> get(Fund fund, final List<LocalDate> dates) {
+    public List<Quote> get(Fund fund, final Collection<LocalDate> dates) {
         List<Quote> quotes = map.get(fund.getSymbol());
-        return Iterables.filter(quotes, new Predicate<Quote>() {
+        return Lists.newArrayList(Iterables.filter(quotes, new Predicate<Quote>() {
             @Override
             public boolean apply(Quote input) {
                 return dates.contains(input.getDate());
             }
-        });
+        }));
     }
 
+    @Override
+    public void registerObjects(ObjectifyFactory ofyFactory) {
+        throw new NotImplementedException();
+    }
+
+    @Override
+    public Key<Quote> put(Quote quote) {
+        throw new NotImplementedException();
+    }
+
+    @Override
+    public Map<Key<Quote>, Quote> put(Iterable<Quote> quotes) {
+        throw new NotImplementedException();
+    }
+
+    @Override
+    public List<Quote> list() {
+        throw new NotImplementedException();
+    }
+
+    @Override
+    public List<Quote> query(Map<String, Object> filters) {
+        throw new NotImplementedException();
+    }
+
+    @Override
+    public List<Quote> query(Fund fund) {
+        throw new NotImplementedException();
+    }
+
+    @Override
+    public List<Quote> query(String symbol) {
+        throw new NotImplementedException();
+    }
+
+    @Override
+    public List<Quote> query(LocalDate date) {
+        throw new NotImplementedException();
+    }
+
+    @Override
+    public List<Quote> query(String symbol, LocalDate date) {
+        throw new NotImplementedException();
+    }
+
+    @Override
+    public Collection<Quote> get(List<Key<Quote>> keys) {
+        throw new NotImplementedException();
+    }
+
+    @Override
+    public Collection<Quote> get(Collection<String> symbols, Collection<LocalDate> dates) {
+        throw new NotImplementedException();
+    }
+
+    @Override
+    public List<Key<Quote>> getKeys(Collection<String> symbols, Collection<LocalDate> dates) {
+        throw new NotImplementedException();
+    }
+
+    @Override
+    public List<Key<Quote>> getKeys(String symbol, Collection<LocalDate> dates) {
+        throw new NotImplementedException();
+    }
+
+    @Override
+    public List<Key<Quote>> getKeys(List<String> symbols, LocalDate date) {
+        throw new NotImplementedException();
+    }
+
+    @Override
+    public Quote get(String symbol, LocalDate date) {
+        throw new NotImplementedException();
+    }
+
+    @Override
+    public Quote get(Fund fund, LocalDate date) {
+        throw new NotImplementedException();
+    }
 }
 
 
