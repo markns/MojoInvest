@@ -94,7 +94,7 @@ public class InMemoryQuoteDao implements QuoteDao {
 
     @Override
     public List<Quote> query(String symbol) {
-        throw new NotImplementedException();
+        return map.get(symbol);
     }
 
     @Override

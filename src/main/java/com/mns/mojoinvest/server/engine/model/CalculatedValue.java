@@ -42,4 +42,14 @@ public class CalculatedValue {
                 ", value=" + value +
                 '}';
     }
+
+    public static CalculatedValue fromStrArr(String[] row) {
+        return new CalculatedValue(row[0], new BigDecimal(row[1]));
+    }
+
+    public String[] toStrArr() {
+        return new String[]{
+                key,
+                value + ""};
+    }
 }
