@@ -193,7 +193,7 @@ public class Fund implements Serializable, Comparable<Fund> {
                 country,
                 index,
                 overview,
-                inceptionDate.toString()
+                inceptionDate + ""
         };
     }
 }

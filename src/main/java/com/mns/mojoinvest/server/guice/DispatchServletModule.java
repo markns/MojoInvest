@@ -46,8 +46,9 @@ public class DispatchServletModule extends ServletModule {
         serve("/quoteviewer").with(QuoteViewerServlet.class);
         serve("/fundviewer").with(FundViewerServlet.class);
         serve("/rankingviewer").with(RankingViewerServlet.class);
+        serve("/calculator").with(SMACalculatorServlet.class);
         serve("/clearcache").with(ClearCacheServlet.class);
-        serve("/test").with(TestServlet.class);
+        serve("/fundindexes").with(UpdateFundIndexesServlet.class);
         serve("/test2").with(Test2Servlet.class);
 
         bindConstant().annotatedWith(ServiceKey.class).to("123456");

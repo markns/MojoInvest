@@ -11,14 +11,13 @@ import com.mns.mojoinvest.server.engine.model.dao.QuoteDao;
 import com.mns.mojoinvest.server.util.QuoteUtils;
 import org.joda.time.LocalDate;
 
+import java.io.FileWriter;
 import java.io.IOException;
-import java.io.OutputStreamWriter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 public class SMACalculatorTool {
-
 
     public static void main(String[] args) throws IOException {
         SMACalculatorTool tool = new SMACalculatorTool();
@@ -26,16 +25,17 @@ public class SMACalculatorTool {
     }
 
     private final QuoteDao quoteDao =
-            new InMemoryQuoteDao(Arrays.asList("../ETFData/data/etf_sector_quotes.csv",
-                    "../ETFData/data/yahoo_quotes_missing.csv"));
+            new InMemoryQuoteDao("data/etf_international_quotes.csv");
     private final InMemoryFundDao fundDao =
-            new InMemoryFundDao();
+            new InMemoryFundDao("data/etf_international_funds.csv");
 
-    CalculationService service = new CalculationService(quoteDao);
+    private final CalculationService service = new CalculationService(quoteDao);
+
+    private static final String outfile = "data/etf_international_cvs.csv";
 
     private void run() throws IOException {
 
-        CSVWriter writer = new CSVWriter(new OutputStreamWriter(System.out));
+        CSVWriter writer = new CSVWriter(new FileWriter(outfile));
 
         for (Fund fund : fundDao.getAll()) {
 
@@ -45,7 +45,7 @@ public class SMACalculatorTool {
             LocalDate latest = quotes.get(quotes.size() - 1).getDate();
 
             List<CalculatedValue> cvs = new ArrayList<CalculatedValue>();
-            for (int period : Arrays.asList(4, 8, 12, 16, 20, 24, 28, 32, 36, 40, 44, 48, 52)) {
+            for (int period : Arrays.asList(4, 12, 26, 40, 52)) {
                 cvs.addAll(service.calculateSMA(fund, earliest, latest, period));
                 cvs.addAll(service.calculateSMA(fund, earliest, latest.minusDays(1), period));
                 cvs.addAll(service.calculateSMA(fund, earliest, latest.minusDays(2), period));

@@ -1,8 +1,11 @@
 package com.mns.mojoinvest.server.engine.model.dao;
 
+import au.com.bytecode.opencsv.CSVReader;
 import com.mns.mojoinvest.server.engine.model.Fund;
-import org.joda.time.LocalDate;
 
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -11,19 +14,24 @@ public class InMemoryFundDao {
 
     List<Fund> funds = new ArrayList<Fund>();
 
-    public InMemoryFundDao() {
-        funds.add(new Fund("IYH", "", "", "", false, "", "", "", new LocalDate()));
-        funds.add(new Fund("IBB", "", "", "", false, "", "", "", new LocalDate()));
-        funds.add(new Fund("IDU", "", "", "", false, "", "", "", new LocalDate()));
-        funds.add(new Fund("IYK", "", "", "", false, "", "", "", new LocalDate()));
-        funds.add(new Fund("IGE", "", "", "", false, "", "", "", new LocalDate()));
-        funds.add(new Fund("IYE", "", "", "", false, "", "", "", new LocalDate()));
-        funds.add(new Fund("IYM", "", "", "", false, "", "", "", new LocalDate()));
-        funds.add(new Fund("IYZ", "", "", "", false, "", "", "", new LocalDate()));
-        funds.add(new Fund("IYC", "", "", "", false, "", "", "", new LocalDate()));
-        funds.add(new Fund("IYF", "", "", "", false, "", "", "", new LocalDate()));
-        funds.add(new Fund("IYJ", "", "", "", false, "", "", "", new LocalDate()));
-        funds.add(new Fund("IYT", "", "", "", false, "", "", "", new LocalDate()));
+    public InMemoryFundDao(String... filenames) {
+        try {
+            for (String filename : filenames) {
+
+                readFundFile(filename);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void readFundFile(String file) throws IOException {
+        CSVReader reader = new CSVReader(new BufferedReader(new FileReader(file)));
+        for (String[] row : reader.readAll()) {
+            Fund fund = Fund.fromStrArr(row);
+            funds.add(fund);
+        }
+        reader.close();
     }
 
 

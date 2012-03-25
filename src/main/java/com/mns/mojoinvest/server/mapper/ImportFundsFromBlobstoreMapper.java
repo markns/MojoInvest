@@ -47,7 +47,6 @@ public class ImportFundsFromBlobstoreMapper extends
 
         if (!symbol.isEmpty()) {
             Entity quote = new Entity("Fund", symbol);
-//            quote.setProperty("symbol", symbol);
             quote.setProperty("name", name);
             quote.setProperty("category", category);
             quote.setProperty("provider", provider);

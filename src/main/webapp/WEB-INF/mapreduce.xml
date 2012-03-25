@@ -53,6 +53,32 @@
 
     </configuration>
 
+    <configuration name="Import Calculated Value data from the Blobstore">
+
+        <property>
+            <name>mapreduce.map.class</name>
+            <!--  Set this to be your Mapper class  -->
+            <value>com.mns.mojoinvest.server.mapper.ImportCalculatedValuesFromBlobstoreMapper</value>
+        </property>
+
+        <!--  This is a default tool that lets us iterate over blobstore data -->
+        <property>
+            <name>mapreduce.inputformat.class</name>
+            <value>com.google.appengine.tools.mapreduce.BlobstoreInputFormat</value>
+        </property>
+
+        <property>
+            <name human="Blob Keys to Map Over">mapreduce.mapper.inputformat.blobstoreinputformat.blobkeys</name>
+            <value template="optional">blobkeyhere</value>
+        </property>
+
+        <property>
+            <name human="Number of shards to use">mapreduce.mapper.shardcount</name>
+            <value template="optional">10</value>
+        </property>
+
+    </configuration>
+
     <configuration name="Import Ranking data from the Blobstore">
 
         <property>

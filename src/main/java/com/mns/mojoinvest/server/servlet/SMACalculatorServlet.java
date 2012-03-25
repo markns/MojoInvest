@@ -20,9 +20,12 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.logging.Logger;
 
 @Singleton
 public class SMACalculatorServlet extends HttpServlet {
+
+    private static final Logger log = Logger.getLogger(SMACalculatorServlet.class.getName());
 
     private final QuoteDao quoteDao;
     private final FundDao fundDao;
@@ -43,6 +46,7 @@ public class SMACalculatorServlet extends HttpServlet {
 
         for (Fund fund : fundDao.getAll()) {
 
+            log.info("Running calculations for " + fund);
             List<Quote> quotes = quoteDao.query(fund.getSymbol());
             QuoteUtils.sortByDateAsc(quotes);
             LocalDate earliest = quotes.get(0).getDate();

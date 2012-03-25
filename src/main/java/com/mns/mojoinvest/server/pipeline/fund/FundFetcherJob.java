@@ -50,8 +50,8 @@ public class FundFetcherJob extends Job0<List<Fund>> {
 
     private String fetchAllFundsHtml() {
         Client c = Client.create();
-        c.setReadTimeout(10000);
-        c.setConnectTimeout(10000);
+        c.setReadTimeout(60000);
+        c.setConnectTimeout(60000);
 
         WebResource r = c.resource("http://investing.money.msn.com/investments/etf-performance-tracker");
         MultivaluedMap<String, String> params = new MultivaluedMapImpl();
@@ -68,7 +68,6 @@ public class FundFetcherJob extends Job0<List<Fund>> {
 
     protected List<String> scrapeSymbols(String html) {
         Document doc = Jsoup.parse(html);
-
 
         for (Element element : doc.select("span")) {
             try {

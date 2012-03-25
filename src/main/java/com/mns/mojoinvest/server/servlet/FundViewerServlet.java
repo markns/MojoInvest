@@ -41,19 +41,8 @@ public class FundViewerServlet extends HttpServlet {
         if (csv) {
             for (Fund fund : funds) {
                 resp.getWriter().write("<li>");
-
-                String date = "";
-                if (fund.getInceptionDate() != null) {
-                    date = fmt.print(fund.getInceptionDate());
-                }
-                String[] data = new String[]{fund.getSymbol(),
-                        fund.getProvider(),
-                        fund.getCategory(),
-                        date
-                };
-                writer.writeNext(data);
+                writer.writeNext(fund.toStrArr());
                 resp.getWriter().write("</li>");
-
             }
         } else {
             for (Fund fund : funds) {

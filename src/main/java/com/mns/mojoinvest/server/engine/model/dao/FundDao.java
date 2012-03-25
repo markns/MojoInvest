@@ -36,6 +36,9 @@ public class FundDao extends DAOBase {
         ofyFactory.getConversions().add(new MyTypeConverters());
     }
 
+    public Collection<Fund> list() {
+        return ofy().query(Fund.class).list();
+    }
 
     public Collection<Fund> getAll() {
         Key<Symbols> key = new Key<Symbols>(Symbols.class, "symbols");

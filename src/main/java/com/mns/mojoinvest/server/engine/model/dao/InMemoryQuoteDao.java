@@ -21,21 +21,16 @@ public class InMemoryQuoteDao implements QuoteDao {
 
     private final Map<String, List<Quote>> map = new HashMap<String, List<Quote>>();
 
-    public InMemoryQuoteDao(List<String> filenames) {
+    public InMemoryQuoteDao(String... filenames) {
         try {
-            readQuoteFiles(filenames);
+            for (String file : filenames) {
+                readQuotesFromFile(file);
+            }
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
-    private void readQuoteFiles(List<String> filenames) throws IOException {
-        for (String file : filenames) {
-            readQuotesFromFile(file);
-        }
-        System.out.println("finished reading quotes");
-
-    }
 
     private void readQuotesFromFile(String file) throws IOException {
         CSVReader reader = new CSVReader(new BufferedReader(new FileReader(file)));
