@@ -48,6 +48,16 @@ public class CalculatedValueDao extends DAOBase {
         return ofy().put(cvs);
     }
 
+    public Collection<CalculatedValue> get(List<LocalDate> dates, Collection<Fund> funds, String type, int period) {
+        List<Key<CalculatedValue>> keys = new ArrayList<Key<CalculatedValue>>();
+        for (LocalDate date : dates) {
+            for (Fund fund : funds) {
+                keys.add(new Key<CalculatedValue>(CalculatedValue.class, calculatedValueId(date, fund.getSymbol(), type, period)));
+            }
+        }
+        return ofy().get(keys).values();
+    }
+
     public Collection<CalculatedValue> get(LocalDate date, Collection<Fund> funds,
                                            String type, int period) {
         List<Key<CalculatedValue>> keys = new ArrayList<Key<CalculatedValue>>();
@@ -60,5 +70,4 @@ public class CalculatedValueDao extends DAOBase {
     public static String calculatedValueId(LocalDate date, String symbol, String type, int period) {
         return forDatastore(date) + "|" + symbol + "|" + type + "|" + period;
     }
-
 }

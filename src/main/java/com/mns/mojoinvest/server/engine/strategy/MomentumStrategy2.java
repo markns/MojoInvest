@@ -1,13 +1,12 @@
 package com.mns.mojoinvest.server.engine.strategy;
 
+import com.google.common.base.Functions;
+import com.google.common.collect.ImmutableSortedMap;
+import com.google.common.collect.Ordering;
 import com.google.inject.Inject;
-import com.googlecode.objectify.Key;
-import com.googlecode.objectify.NotFoundException;
 import com.mns.mojoinvest.server.engine.execution.Executor;
 import com.mns.mojoinvest.server.engine.model.CalculatedValue;
 import com.mns.mojoinvest.server.engine.model.Fund;
-import com.mns.mojoinvest.server.engine.model.Quote;
-import com.mns.mojoinvest.server.engine.model.Ranking;
 import com.mns.mojoinvest.server.engine.model.dao.CalculatedValueDao;
 import com.mns.mojoinvest.server.engine.model.dao.FundDao;
 import com.mns.mojoinvest.server.engine.model.dao.QuoteDao;
@@ -16,11 +15,11 @@ import com.mns.mojoinvest.server.engine.portfolio.PortfolioException;
 import com.mns.mojoinvest.server.servlet.StrategyServlet;
 import com.mns.mojoinvest.server.util.TradingDayUtils;
 import com.mns.mojoinvest.shared.params.BacktestParams;
-import com.mns.mojoinvest.shared.params.MomentumStrategyParams;
 import org.joda.time.LocalDate;
 
 import java.math.BigDecimal;
 import java.math.MathContext;
+import java.math.RoundingMode;
 import java.util.*;
 import java.util.logging.Logger;
 
@@ -53,79 +52,72 @@ public class MomentumStrategy2 {
 
         List<LocalDate> rebalanceDates = getRebalanceDates(fromDate, toDate, strategyParams);
 
+        log.info("Starting load of calculated values");
+        //TODO: Factor calculation of RS to separate class
+        Collection<CalculatedValue> ma1s = calculatedValueDao.get(rebalanceDates, universe, "SMA", strategyParams.getMa1());
+        Collection<CalculatedValue> ma2s = calculatedValueDao.get(rebalanceDates, universe, "SMA", strategyParams.getMa2());
+
+        log.info("Building intermediate data structures");
+        //CalculatedValue -> Data|Symbol|Type|Period
+        Map<LocalDate, Map<String, BigDecimal>> ma1Map = new HashMap<LocalDate, Map<String, BigDecimal>>();
+        for (CalculatedValue ma1 : ma1s) {
+            if (!ma1Map.containsKey(ma1.getDate())) {
+                ma1Map.put(ma1.getDate(), new HashMap<String, BigDecimal>());
+            }
+            ma1Map.get(ma1.getDate()).put(ma1.getSymbol(), ma1.getValue());
+        }
+
+        Map<LocalDate, Map<String, BigDecimal>> ma2Map = new HashMap<LocalDate, Map<String, BigDecimal>>();
+        for (CalculatedValue ma2 : ma2s) {
+            if (!ma2Map.containsKey(ma2.getDate())) {
+                ma2Map.put(ma2.getDate(), new HashMap<String, BigDecimal>());
+            }
+            ma2Map.get(ma2.getDate()).put(ma2.getSymbol(), ma2.getValue());
+        }
+        //TODO: Bug - did all funds start on the same date?
+
         for (LocalDate rebalanceDate : rebalanceDates) {
-            Collection<CalculatedValue> ma1s = calculatedValueDao.get(rebalanceDate, universe, "SMA", strategyParams.getMa1());
-            Collection<CalculatedValue> ma2s = calculatedValueDao.get(rebalanceDate, universe, "SMA", strategyParams.getMa2());
-            System.out.println(ma1s);
-            System.out.println(ma2s);
+            if (ma1Map.containsKey(rebalanceDate) && ma2Map.containsKey(rebalanceDate)) {
+                Map<String, BigDecimal> ma1vals = ma1Map.get(rebalanceDate);
+                Map<String, BigDecimal> ma2vals = ma2Map.get(rebalanceDate);
+                Map<String, BigDecimal> rs = new HashMap<String, BigDecimal>();
+                for (String symbol : ma1vals.keySet()) {
+                    if (ma1vals.containsKey(symbol)) {
+                        //Calculate ma1s/ma2s
+                        rs.put(symbol, ma1vals.get(symbol).divide(ma2vals.get(symbol), RoundingMode.HALF_EVEN));
+                        //Divide by Std Dev
+                    }
+                }
+//                log.info(rebalanceDate + " " +ImmutableSortedMap.copyOf(rs, valueComparator));
 
-            if (ma1s.size() == ma2s.size()) {
+                List<String> selection = getSelection(rs, strategyParams);
+                sellLosers(portfolio, rebalanceDate, selection);
+                buyWinners(portfolio, strategyParams, rebalanceDate, selection);
 
-            }
-
-            //Calculate ma1s/ma2s
-            //Divide by Std Dev
-            //Rank order
-        }
-
-    }
-
-    private void runRebalancing(Portfolio portfolio, MomentumStrategyParams strategyParams, List<LocalDate> rebalanceDates, List<List<String>> selections) throws StrategyException {
-        log.info("Starting rebalancing");
-        for (int i = 0; i < rebalanceDates.size(); i++) {
-            try {
-                List<String> selection = selections.get(i);
-                log.fine("Rebalance date: " + rebalanceDates.get(i) + ", Selection: " + selection);
-                sellLosers(portfolio, rebalanceDates.get(i), selection);
-                buyWinners(portfolio, strategyParams, rebalanceDates.get(i), selection);
-            } catch (NotFoundException e) {
-                log.severe(rebalanceDates.get(i) + " " + e.getMessage());
-                throw new StrategyException("Unable to find entity for rebalance date " + rebalanceDates.get(i), e);
+                log.info(rebalanceDate + " " + portfolio.getActiveFunds(rebalanceDate) + " " + portfolio.marketValue(rebalanceDate));
             }
         }
     }
 
-    private List<List<String>> getSelections(Set<String> acceptableFunds, MomentumStrategyParams strategyParams, List<LocalDate> rebalanceDates, List<Ranking> rankings) throws StrategyException {
-        log.info("Getting selections from rankings and acceptable funds");
-        List<List<String>> selections = new ArrayList<List<String>>();
-        for (int i = 0; i < rebalanceDates.size(); i++) {
-            selections.add(getSelection(rankings.get(i).getSymbols(),
-                    acceptableFunds, strategyParams));
-        }
-        return selections;
-    }
+    private List<String> getSelection(Map<String, BigDecimal> rs, StrategyServlet.Strategy2Params params) {
+        //Rank order
+        Ordering<String> valueComparator = Ordering.natural()
+                .reverse()
+                .onResultOf(Functions.forMap(rs))
+                .compound(Ordering.natural());
 
-    private void cacheFundsAndQuotes(List<LocalDate> rebalanceDates, List<List<String>> selections) {
-        log.info("Starting cache of funds and quotes");
-        HashSet<String> funds = new HashSet<String>();
-        List<Key<Quote>> quoteKeys = new ArrayList<Key<Quote>>();
-        for (int i = 0; i < rebalanceDates.size(); i++) {
-            List<String> selection = selections.get(i);
-            for (String fund : selection) {
-                funds.add(fund);
-            }
-            quoteKeys.addAll(quoteDao.getKeys(selection, rebalanceDates.get(i)));
-        }
-        log.info("Getting " + funds.size() + " funds");
-        fundDao.get(funds);
-        log.info("Getting " + quoteKeys.size() + " quotes");
-        quoteDao.get(quoteKeys);
-    }
+        List<String> rank = new ArrayList<String>(ImmutableSortedMap.copyOf(rs, valueComparator).keySet());
+        return rank.subList(0, params.getCastOff());
 
-    private List<String> getSelection(List<String> ranked, Set<String> acceptableFunds,
-                                      MomentumStrategyParams params) throws StrategyException {
-        ranked.retainAll(acceptableFunds);
-        if (ranked.size() <= params.getPortfolioSize() * 2)
-            throw new StrategyException("Not enough funds in population to make selection");
-        return ranked.subList(0, params.getPortfolioSize());
     }
 
     private void sellLosers(Portfolio portfolio, LocalDate rebalanceDate, List<String> selection)
             throws StrategyException {
-        for (String fund : portfolio.getActiveFunds(rebalanceDate)) {
-            if (!selection.contains(fund)) {
+
+        for (String symbol : portfolio.getActiveFunds(rebalanceDate)) {
+            if (!selection.contains(symbol)) {
                 try {
-                    executor.sellAll(portfolio, fund, rebalanceDate);
+                    executor.sellAll(portfolio, symbol, rebalanceDate);
                 } catch (PortfolioException e) {
                     e.printStackTrace();
                     throw new StrategyException("Unable to sell losers " + selection +
@@ -137,19 +129,24 @@ public class MomentumStrategy2 {
         }
     }
 
-    private void buyWinners(Portfolio portfolio, MomentumStrategyParams params, LocalDate rebalanceDate,
-                            List<String> selection) throws StrategyException {
+    private void buyWinners(Portfolio portfolio, StrategyServlet.Strategy2Params params,
+                            LocalDate rebalanceDate, List<String> selection)
+            throws StrategyException {
 
-        BigDecimal numEmpty = new BigDecimal(params.getPortfolioSize() - portfolio.openPositionCount(rebalanceDate));
+        int numEmpty = params.getPortfolioSize() - portfolio.openPositionCount(rebalanceDate);
         BigDecimal availableCash = portfolio.getCash(rebalanceDate).
                 subtract(portfolio.getTransactionCost().
-                        multiply(numEmpty));
-        for (String fund : selection) {
-            if (!portfolio.contains(fund, rebalanceDate)) {
+                        multiply(new BigDecimal(numEmpty)));
+
+        int added = 0;
+        for (String symbol : selection) {
+            if (numEmpty == added)
+                break;
+            if (!portfolio.contains(symbol, rebalanceDate)) {
                 BigDecimal allocation = availableCash
-                        .divide(numEmpty, MathContext.DECIMAL32);
+                        .divide(new BigDecimal(numEmpty), MathContext.DECIMAL32);
                 try {
-                    executor.buy(portfolio, fund, rebalanceDate, allocation);
+                    executor.buy(portfolio, symbol, rebalanceDate, allocation);
                 } catch (PortfolioException e) {
                     e.printStackTrace();
                     throw new StrategyException("Unable to buy winners " + selection +
@@ -158,6 +155,7 @@ public class MomentumStrategy2 {
                             ", value: " + portfolio.marketValue(rebalanceDate), e);
                 }
             }
+            added++;
         }
     }
 

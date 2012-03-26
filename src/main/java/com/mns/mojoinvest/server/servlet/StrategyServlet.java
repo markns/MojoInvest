@@ -9,6 +9,7 @@ import com.mns.mojoinvest.server.engine.portfolio.PortfolioFactory;
 import com.mns.mojoinvest.server.engine.result.StrategyResultBuilder;
 import com.mns.mojoinvest.server.engine.strategy.MomentumStrategy2;
 import com.mns.mojoinvest.server.engine.strategy.StrategyException;
+import com.mns.mojoinvest.server.servlet.util.ParameterParser;
 import com.mns.mojoinvest.shared.params.BacktestParams;
 import com.mns.mojoinvest.shared.params.PortfolioParams;
 import org.joda.time.LocalDate;
@@ -19,6 +20,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.Collection;
+import java.util.Date;
 
 @Singleton
 public class StrategyServlet extends HttpServlet {
@@ -42,13 +44,25 @@ public class StrategyServlet extends HttpServlet {
     protected void doGet(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
 
-        Portfolio portfolio = portfolioFactory.create(new PortfolioParams(10000d, 10d));
+        ParameterParser parser = new ParameterParser(req);
 
-        BacktestParams params = new BacktestParams(new LocalDate("2000-01-01").toDateMidnight().toDate(),
-                new LocalDate("2012-03-22").toDateMidnight().toDate());
+        Date fromDate = new LocalDate("2000-01-01").toDateMidnight().toDate();
+        Date toDate = new LocalDate("2012-03-22").toDateMidnight().toDate();
+
+        double cash = parser.getDoubleParameter("cash", 10000d);
+        double transactionCost = parser.getDoubleParameter("txcost", 10d);
+        int portfolioSize = parser.getIntParameter("portfolio", 3);
+        int holdingPeriod = parser.getIntParameter("holding", 1);
+        int ma1 = parser.getIntParameter("ma1", 12);
+        int ma2 = parser.getIntParameter("ma2", 26);
+        int castOff = parser.getIntParameter("castoff", 8);
+
+        Portfolio portfolio = portfolioFactory.create(new PortfolioParams(cash, transactionCost, fromDate));
+
+        BacktestParams params = new BacktestParams(fromDate, toDate);
 
         //4, 12, 26, 40, 52
-        Strategy2Params strategyParams = new Strategy2Params(3, 1, 12, 26);
+        Strategy2Params strategyParams = new Strategy2Params(portfolioSize, holdingPeriod, ma1, ma2, castOff);
 
         Collection<Fund> universe = fundDao.getAll();
 
@@ -66,12 +80,14 @@ public class StrategyServlet extends HttpServlet {
         private final int rebalanceFrequency;
         private final int ma1;
         private final int ma2;
+        private final int castOff;
 
-        private Strategy2Params(int portfolioSize, int rebalanceFrequency, int ma1, int ma2) {
+        private Strategy2Params(int portfolioSize, int rebalanceFrequency, int ma1, int ma2, int castOff) {
             this.portfolioSize = portfolioSize;
             this.rebalanceFrequency = rebalanceFrequency;
             this.ma1 = ma1;
             this.ma2 = ma2;
+            this.castOff = castOff;
         }
 
         public int getPortfolioSize() {
@@ -88,6 +104,10 @@ public class StrategyServlet extends HttpServlet {
 
         public int getMa2() {
             return ma2;
+        }
+
+        public int getCastOff() {
+            return castOff;
         }
     }
 }
