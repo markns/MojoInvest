@@ -112,6 +112,9 @@ public class Position {
             throws PortfolioException {
 
         for (Lot lot : lots) {
+            if (lot.getCloseDate() != null) {
+                continue;
+            }
             BigDecimal remainingQuantity = lot.getRemainingQuantity(transaction.getDate());
             BigDecimal difference = remainingQuantity.subtract(transaction.getQuantity());
             if (difference.compareTo(BigDecimal.ZERO) < 0) {

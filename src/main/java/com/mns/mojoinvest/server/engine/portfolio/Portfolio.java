@@ -50,4 +50,8 @@ public interface Portfolio {
     BigDecimal returnsGain(LocalDate date);
 
     List<BigDecimal> marketValue(List<LocalDate> dates);
+
+    Portfolio createShadow();
+
+//    void storeMarketValue(LocalDate date, BigDecimal value);
 }

@@ -6,8 +6,6 @@ import com.google.common.collect.Ordering;
 import com.google.inject.Inject;
 import com.mns.mojoinvest.server.engine.execution.Executor;
 import com.mns.mojoinvest.server.engine.model.Fund;
-import com.mns.mojoinvest.server.engine.model.dao.FundDao;
-import com.mns.mojoinvest.server.engine.model.dao.QuoteDao;
 import com.mns.mojoinvest.server.engine.portfolio.Lot;
 import com.mns.mojoinvest.server.engine.portfolio.Portfolio;
 import com.mns.mojoinvest.server.engine.portfolio.PortfolioException;
@@ -15,6 +13,7 @@ import com.mns.mojoinvest.server.engine.portfolio.Position;
 import com.mns.mojoinvest.server.servlet.StrategyServlet;
 import com.mns.mojoinvest.server.util.TradingDayUtils;
 import com.mns.mojoinvest.shared.params.BacktestParams;
+import org.apache.commons.math.stat.descriptive.DescriptiveStatistics;
 import org.joda.time.LocalDate;
 
 import java.math.BigDecimal;
@@ -29,19 +28,14 @@ public class MomentumStrategy2 {
 
     private static final Logger log = Logger.getLogger(MomentumStrategy2.class.getName());
 
-    private final Executor executor;
-    private final QuoteDao quoteDao;
-    private final FundDao fundDao;
-
     private final RelativeStrengthCalculator relativeStrengthCalculator;
+    private final Executor executor;
 
     @Inject
     public MomentumStrategy2(RelativeStrengthCalculator relativeStrengthCalculator,
-                             Executor executor, QuoteDao quoteDao, FundDao fundDao) {
+                             Executor executor) {
         this.relativeStrengthCalculator = relativeStrengthCalculator;
         this.executor = executor;
-        this.quoteDao = quoteDao;
-        this.fundDao = fundDao;
     }
 
     public void execute(Portfolio portfolio, BacktestParams backtestParams,
@@ -66,25 +60,80 @@ public class MomentumStrategy2 {
 //            //Should be possible to do a cache warming load here
 //        }
 
+
+        //TODO:
+        //1. Implement strategy with ROC Calculator
+        //2. Test strategy with asset alloc and sector universes
+        //3. Test strategy with UK ishares ETFs
+        //4.
+
+        Portfolio realPortfolio = portfolio;
+        boolean belowEquityCurve = false;
+
+        DescriptiveStatistics equityCurve = new DescriptiveStatistics(strategyParams.getEquityCurveWindow());
+
+
         for (int i = 0; i < rebalanceDates.size(); i++) {
 
             LocalDate rebalanceDate = rebalanceDates.get(i);
             Map<String, BigDecimal> rs = strengths.get(i);
 
+            BigDecimal marketValue = portfolio.marketValue(rebalanceDate);
+
+
+            equityCurve.addValue(marketValue.doubleValue());
+            BigDecimal equityCurveMA = null;
+            if (equityCurve.getN() >= strategyParams.getEquityCurveWindow()) {
+                equityCurveMA = new BigDecimal(equityCurve.getMean(), MathContext.DECIMAL32);
+            }
+
+            log.info(rebalanceDate + " " + portfolio.getActiveFunds(rebalanceDate) + " " +
+                    portfolio.marketValue(rebalanceDate) + " " + realPortfolio.marketValue(rebalanceDate)
+                    + " " + equityCurveMA);
+
+            //Be careful of where the market value is stored, we might miss it after cloning
+//            portfolio.storeMarketValue(rebalanceDate, marketValue);
+
+            if (strategyParams.isEquityCurveTrading() && equityCurveMA != null) {
+                if (!belowEquityCurve && marketValue.compareTo(equityCurveMA) < 0) {
+                    log.info("Below equity curve");
+                    portfolio = portfolio.createShadow();
+                    for (String symbol : realPortfolio.getActiveFunds(rebalanceDate)) {
+                        try {
+                            executor.sellAll(realPortfolio, symbol, rebalanceDate);
+                        } catch (PortfolioException e) {
+                            throw new StrategyException("Unable to sell funds when portfolio value " +
+                                    "moved under equity curve", e);
+                        }
+                    }
+                    belowEquityCurve = true;
+                } else if (belowEquityCurve && marketValue.compareTo(equityCurveMA) > 0) {
+                    log.info("Above equity curve");
+                    portfolio = realPortfolio;
+                    belowEquityCurve = false;
+                }
+
+            }
+
             List<String> selection = getSelection(rs, strategyParams);
-
-
-            //if portfolio.marketValue(rebalanceDate) is below the x period moving average (equity curve)
-            //  Portfolio realPortfolio = portfolio
-            //  Portfolio portfolio = realPortfolio.clone();
 
             sellLosers(portfolio, rebalanceDate, selection);
             buyWinners(portfolio, strategyParams, rebalanceDate, selection);
 
-            log.info(rebalanceDate + " " + portfolio.getActiveFunds(rebalanceDate) + " " +
-                    portfolio.marketValue(rebalanceDate));
+
         }
-        logNumTrades(portfolio);
+        logNumTrades(realPortfolio);
+        logCAGR(realPortfolio, rebalanceDates.get(rebalanceDates.size() - 1));
+
+    }
+
+    private void logCAGR(Portfolio portfolio, LocalDate date) {
+        //                                (1 / # of years)
+
+        double CAGR = Math.pow(portfolio.marketValue(date)
+                .divide(new BigDecimal("10000")).doubleValue(), 1.0d / 12.0d);
+        log.info("CAGR: " + CAGR + "%");
+
     }
 
     private void logNumTrades(Portfolio portfolio) {
@@ -118,7 +167,6 @@ public class MomentumStrategy2 {
                 try {
                     executor.sellAll(portfolio, symbol, rebalanceDate);
                 } catch (PortfolioException e) {
-                    e.printStackTrace();
                     throw new StrategyException("Unable to sell losers " + selection +
                             " on " + rebalanceDate +
                             ", current portfolio: " + portfolio.getActiveFunds(rebalanceDate) +
@@ -148,7 +196,6 @@ public class MomentumStrategy2 {
                     executor.buy(portfolio, symbol, rebalanceDate, allocation);
                     added++;
                 } catch (PortfolioException e) {
-                    e.printStackTrace();
                     throw new StrategyException("Unable to buy winners " + selection +
                             " on " + rebalanceDate +
                             ", current portfolio: " + portfolio.getActiveFunds(rebalanceDate) +

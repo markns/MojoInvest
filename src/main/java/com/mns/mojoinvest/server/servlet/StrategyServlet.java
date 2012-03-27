@@ -57,13 +57,16 @@ public class StrategyServlet extends HttpServlet {
         int ma2 = parser.getIntParameter("ma2", 26);
         int castOff = parser.getIntParameter("castoff", 8);
         int stddev = parser.getIntParameter("stddev", 26);
+        boolean equityCurveTrading = parser.getBooleanParameter("equitycurve", true);
+        int equityCurveWindow = parser.getIntParameter("ecwindow", 50);
 
         Portfolio portfolio = portfolioFactory.create(new PortfolioParams(cash, transactionCost, fromDate));
 
         BacktestParams params = new BacktestParams(fromDate, toDate);
 
         //4, 12, 26, 40, 52
-        Strategy2Params strategyParams = new Strategy2Params(portfolioSize, holdingPeriod, ma1, ma2, castOff, stddev);
+        Strategy2Params strategyParams = new Strategy2Params(portfolioSize, holdingPeriod, ma1, ma2,
+                castOff, stddev, equityCurveTrading, equityCurveWindow);
 
         Collection<Fund> universe = fundDao.getAll();
 
@@ -83,14 +86,19 @@ public class StrategyServlet extends HttpServlet {
         private final int ma2;
         private final int castOff;
         private final int stddev;
+        private final boolean equityCurveTrading;
+        private final int equityCurveWindow;
 
-        private Strategy2Params(int portfolioSize, int rebalanceFrequency, int ma1, int ma2, int castOff, int stddev) {
+        private Strategy2Params(int portfolioSize, int rebalanceFrequency, int ma1, int ma2, int castOff, int stddev, boolean equityCurveTrading, int equityCurveWindow) {
+
             this.portfolioSize = portfolioSize;
             this.rebalanceFrequency = rebalanceFrequency;
             this.ma1 = ma1;
             this.ma2 = ma2;
             this.castOff = castOff;
             this.stddev = stddev;
+            this.equityCurveTrading = equityCurveTrading;
+            this.equityCurveWindow = equityCurveWindow;
         }
 
         public int getPortfolioSize() {
@@ -115,6 +123,14 @@ public class StrategyServlet extends HttpServlet {
 
         public int getStdDev() {
             return stddev;
+        }
+
+        public boolean isEquityCurveTrading() {
+            return equityCurveTrading;
+        }
+
+        public int getEquityCurveWindow() {
+            return equityCurveWindow;
         }
     }
 }

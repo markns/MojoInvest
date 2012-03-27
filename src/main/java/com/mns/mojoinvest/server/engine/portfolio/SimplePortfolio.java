@@ -42,22 +42,35 @@ public class SimplePortfolio implements Portfolio {
 
     private static final Logger log = Logger.getLogger(SimplePortfolio.class.getName());
 
+    private boolean shadow;
+
     private Map<String, Position> positions;
     private FundDao fundDao;
     private QuoteDao quoteDao;
+    private List<Transaction> transactions;
     private NavigableMap<LocalDate, BigDecimal> cashFlows;
     private BigDecimal transactionCost;
+    private PortfolioParams portfolioParams;
+
 
     @Inject
     public SimplePortfolio(FundDao fundDao, QuoteDao quoteDao, @Assisted PortfolioParams params) {
+        this(fundDao, quoteDao, params, false);
+    }
+
+    public SimplePortfolio(FundDao fundDao, QuoteDao quoteDao, PortfolioParams params, boolean shadow) {
         this.fundDao = fundDao;
         this.quoteDao = quoteDao;
         this.positions = new HashMap<String, Position>();
+        this.transactions = new ArrayList<Transaction>();
+        this.portfolioParams = params;
         this.cashFlows = new TreeMap<LocalDate, BigDecimal>();
         this.cashFlows.put(new LocalDate(params.getCreationDate()),
                 BigDecimal.valueOf(params.getInitialInvestment()));
         this.transactionCost = BigDecimal.valueOf(params.getTransactionCost());
+        this.shadow = shadow;
     }
+
 
     @Override
     public BigDecimal getCash(LocalDate date) {
@@ -103,7 +116,7 @@ public class SimplePortfolio implements Portfolio {
                 .compareTo(getCash(transaction.getDate())) > 0)
             throw new PortfolioException("Not enough cash in portfolio to buy "
                     + transaction);
-
+        transactions.add(transaction);
         if (!positions.containsKey(transaction.getFund())) {
             positions.put(transaction.getFund(), new Position(quoteDao, fundDao.get(transaction.getFund())));
         }
@@ -116,6 +129,7 @@ public class SimplePortfolio implements Portfolio {
         if (!positions.containsKey(transaction.getFund())) {
             throw new PortfolioException("Cannot sell a fund that is not held");
         }
+        transactions.add(transaction);
         addCashFlow(transaction.getDate(), transaction.getCashValue());
         positions.get(transaction.getFund()).add(transaction);
     }
@@ -274,4 +288,30 @@ public class SimplePortfolio implements Portfolio {
     }
 
 
+//    //TODO: Add equity curve window to portfolio constructor
+//    private final Map<LocalDate, BigDecimal> marketValues = new HashMap<LocalDate, BigDecimal>();
+//
+//    @Override
+//    public void storeMarketValue(LocalDate date, BigDecimal value) {
+//        marketValues.put(date, value);
+//    }
+
+    public Portfolio createShadow() {
+
+        Portfolio shadow = new SimplePortfolio(fundDao, quoteDao, portfolioParams, true);
+
+        for (Transaction transaction : transactions) {
+            try {
+                shadow.add(transaction);
+            } catch (PortfolioException e) {
+                log.severe("Unable to create portfolio shadow copy");
+                e.printStackTrace();
+            }
+        }
+//        for (Map.Entry<LocalDate, BigDecimal> entry : marketValues.entrySet()) {
+//            shadow.storeMarketValue(entry.getKey(), entry.getValue());
+//        }
+
+        return shadow;
+    }
 }
