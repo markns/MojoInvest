@@ -1,7 +1,6 @@
 package com.mns.mojoinvest.server.engine.portfolio;
 
 import com.mns.mojoinvest.server.engine.model.Fund;
-import com.mns.mojoinvest.server.engine.model.Quote;
 import com.mns.mojoinvest.server.engine.model.dao.QuoteDao;
 import com.mns.mojoinvest.server.engine.transaction.BuyTransaction;
 import com.mns.mojoinvest.server.engine.transaction.SellTransaction;
@@ -35,12 +34,9 @@ import java.util.logging.Logger;
  */
 public class Position {
 
-    private QuoteDao quoteDao;
-
-    private Fund fund;
-
-    private List<Lot> lots;
-
+    private final QuoteDao quoteDao;
+    private final Fund fund;
+    private final List<Lot> lots;
     private final List<Transaction> transactions;
 
     private static final Logger log = Logger.getLogger(Position.class.getName());
@@ -56,9 +52,9 @@ public class Position {
         return fund;
     }
 
-    private Quote getQuote(LocalDate date) {
+    private BigDecimal getClose(LocalDate date) {
         //TODO: cache here?
-        return quoteDao.get(fund, date);
+        return quoteDao.get(fund, date).getAdjClose();
     }
 
     public List<Lot> getLots() {
@@ -194,7 +190,7 @@ public class Position {
         BigDecimal marketValue = BigDecimal.ZERO;
         for (Lot lot : lots) {
             if (!lot.openedAfter(date)) {
-                marketValue = marketValue.add(lot.marketValue(date, getQuote(date).getClose()));
+                marketValue = marketValue.add(lot.marketValue(date, getClose(date)));
             }
         }
         return marketValue;
@@ -204,7 +200,7 @@ public class Position {
         BigDecimal gain = BigDecimal.ZERO;
         for (Lot lot : lots) {
             if (!lot.openedAfter(date)) {
-                gain = gain.add(lot.gain(date, getQuote(date).getClose()));
+                gain = gain.add(lot.gain(date, getClose(date)));
             }
         }
         return gain;
@@ -225,7 +221,7 @@ public class Position {
         BigDecimal returnsGain = BigDecimal.ZERO;
         for (Lot lot : lots) {
             if (!lot.openedAfter(date)) {
-                returnsGain = returnsGain.add(lot.returnsGain(date, getQuote(date).getClose()));
+                returnsGain = returnsGain.add(lot.returnsGain(date, getClose(date)));
             }
         }
         return returnsGain;
