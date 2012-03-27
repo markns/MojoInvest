@@ -54,8 +54,10 @@ public class MomentumStrategy2 {
 
         log.info("Starting load of calculated values");
         //TODO: Factor calculation of RS to separate class
-        Collection<CalculatedValue> ma1s = calculatedValueDao.get(rebalanceDates, universe, "SMA", strategyParams.getMa1());
-        Collection<CalculatedValue> ma2s = calculatedValueDao.get(rebalanceDates, universe, "SMA", strategyParams.getMa2());
+        Collection<CalculatedValue> ma1s = calculatedValueDao.get(rebalanceDates, universe,
+                "SMA", strategyParams.getMa1());
+        Collection<CalculatedValue> ma2s = calculatedValueDao.get(rebalanceDates, universe,
+                "SMA", strategyParams.getMa2());
 
         log.info("Building intermediate data structures");
         //CalculatedValue -> Data|Symbol|Type|Period
@@ -74,9 +76,15 @@ public class MomentumStrategy2 {
             }
             ma2Map.get(ma2.getDate()).put(ma2.getSymbol(), ma2.getValue());
         }
-        //TODO: Bug - did all funds start on the same date?
+
 
         for (LocalDate rebalanceDate : rebalanceDates) {
+
+            //if portfolio.marketValue(rebalanceDate) is below the x period moving average (equity curve)
+            //  Portfolio realPortfolio = portfolio
+            //  Portfolio portfolio = realPortfolio.clone();
+
+
             if (ma1Map.containsKey(rebalanceDate) && ma2Map.containsKey(rebalanceDate)) {
                 Map<String, BigDecimal> ma1vals = ma1Map.get(rebalanceDate);
                 Map<String, BigDecimal> ma2vals = ma2Map.get(rebalanceDate);
@@ -88,7 +96,6 @@ public class MomentumStrategy2 {
                         //Divide by Std Dev
                     }
                 }
-//                log.info(rebalanceDate + " " +ImmutableSortedMap.copyOf(rs, valueComparator));
 
                 List<String> selection = getSelection(rs, strategyParams);
                 sellLosers(portfolio, rebalanceDate, selection);
@@ -108,7 +115,6 @@ public class MomentumStrategy2 {
 
         List<String> rank = new ArrayList<String>(ImmutableSortedMap.copyOf(rs, valueComparator).keySet());
         return rank.subList(0, params.getCastOff());
-
     }
 
     private void sellLosers(Portfolio portfolio, LocalDate rebalanceDate, List<String> selection)
