@@ -101,7 +101,8 @@ public class MomentumStrategy2 {
                 sellLosers(portfolio, rebalanceDate, selection);
                 buyWinners(portfolio, strategyParams, rebalanceDate, selection);
 
-                log.info(rebalanceDate + " " + portfolio.getActiveFunds(rebalanceDate) + " " + portfolio.marketValue(rebalanceDate));
+                log.info(rebalanceDate + " " + portfolio.getActiveFunds(rebalanceDate) + " " +
+                        portfolio.marketValue(rebalanceDate));
             }
         }
     }
