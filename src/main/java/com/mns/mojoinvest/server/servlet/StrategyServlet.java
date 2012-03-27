@@ -56,13 +56,14 @@ public class StrategyServlet extends HttpServlet {
         int ma1 = parser.getIntParameter("ma1", 12);
         int ma2 = parser.getIntParameter("ma2", 26);
         int castOff = parser.getIntParameter("castoff", 8);
+        int stddev = parser.getIntParameter("stddev", 26);
 
         Portfolio portfolio = portfolioFactory.create(new PortfolioParams(cash, transactionCost, fromDate));
 
         BacktestParams params = new BacktestParams(fromDate, toDate);
 
         //4, 12, 26, 40, 52
-        Strategy2Params strategyParams = new Strategy2Params(portfolioSize, holdingPeriod, ma1, ma2, castOff);
+        Strategy2Params strategyParams = new Strategy2Params(portfolioSize, holdingPeriod, ma1, ma2, castOff, stddev);
 
         Collection<Fund> universe = fundDao.getAll();
 
@@ -81,13 +82,15 @@ public class StrategyServlet extends HttpServlet {
         private final int ma1;
         private final int ma2;
         private final int castOff;
+        private final int stddev;
 
-        private Strategy2Params(int portfolioSize, int rebalanceFrequency, int ma1, int ma2, int castOff) {
+        private Strategy2Params(int portfolioSize, int rebalanceFrequency, int ma1, int ma2, int castOff, int stddev) {
             this.portfolioSize = portfolioSize;
             this.rebalanceFrequency = rebalanceFrequency;
             this.ma1 = ma1;
             this.ma2 = ma2;
             this.castOff = castOff;
+            this.stddev = stddev;
         }
 
         public int getPortfolioSize() {
@@ -108,6 +111,10 @@ public class StrategyServlet extends HttpServlet {
 
         public int getCastOff() {
             return castOff;
+        }
+
+        public int getStdDev() {
+            return stddev;
         }
     }
 }

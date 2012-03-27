@@ -1,39 +1,48 @@
 package com.mns.mojoinvest.server.engine.calculator;
 
-import com.google.inject.Inject;
 import com.mns.mojoinvest.server.engine.model.CalculatedValue;
-import com.mns.mojoinvest.server.engine.model.Fund;
 import com.mns.mojoinvest.server.engine.model.Quote;
-import com.mns.mojoinvest.server.engine.model.dao.QuoteDao;
-import com.mns.mojoinvest.server.util.TradingDayUtils;
-import org.joda.time.LocalDate;
+import org.apache.commons.math.stat.descriptive.DescriptiveStatistics;
 
-import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
 public class CalculationService {
 
-    private final QuoteDao quoteDao;
-
-    @Inject
-    public CalculationService(QuoteDao quoteDao) {
-        this.quoteDao = quoteDao;
-    }
-
-    public List<CalculatedValue> calculateSMA(Fund fund, LocalDate fromDate, LocalDate toDate, int period) {
+    public List<CalculatedValue> calculateSMA(List<Quote> quotes, int period) {
         List<CalculatedValue> cvs = new ArrayList<CalculatedValue>();
-        List<LocalDate> dates = TradingDayUtils.getWeeklySeries(fromDate, toDate, 1, true);
-        SMACalculator calculator = new SMACalculator(period);
-        for (Quote quote : quoteDao.get(fund, dates)) {
-            calculator.newNum(quote.getAdjClose());
-            BigDecimal avg = calculator.getAvg();
-            if (avg != null) {
+        DescriptiveStatistics stats = new DescriptiveStatistics();
+        stats.setWindowSize(period);
+        for (Quote quote : quotes) {
+            stats.addValue(quote.getAdjClose().doubleValue());
+            if (stats.getN() >= period) {
                 CalculatedValue cv = new CalculatedValue(quote.getDate(), quote.getSymbol(),
-                        "SMA", period, avg);
+                        "SMA", period, stats.getMean());
                 cvs.add(cv);
             }
         }
+        return cvs;
+    }
+
+    public List<CalculatedValue> calculateStandardDeviation(List<Quote> quotes, int period) {
+        List<CalculatedValue> cvs = new ArrayList<CalculatedValue>();
+        DescriptiveStatistics stats = new DescriptiveStatistics();
+        stats.setWindowSize(period);
+        for (Quote quote : quotes) {
+            stats.addValue(quote.getAdjClose().doubleValue());
+            if (stats.getN() >= period) {
+                CalculatedValue cv = new CalculatedValue(quote.getDate(), quote.getSymbol(),
+                        "STDDEV", period, stats.getStandardDeviation());
+                cvs.add(cv);
+            }
+        }
+        return cvs;
+    }
+
+    public List<CalculatedValue> calculateROC(List<Quote> quotes, int period) {
+        List<CalculatedValue> cvs = new ArrayList<CalculatedValue>();
+
+
         return cvs;
     }
 

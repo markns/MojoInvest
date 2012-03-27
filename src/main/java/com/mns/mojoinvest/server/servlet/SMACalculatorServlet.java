@@ -42,7 +42,7 @@ public class SMACalculatorServlet extends HttpServlet {
     protected void doGet(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
 
-        CalculationService service = new CalculationService(quoteDao);
+        CalculationService service = new CalculationService();
 
         for (Fund fund : fundDao.getAll()) {
 
@@ -54,11 +54,11 @@ public class SMACalculatorServlet extends HttpServlet {
 
             List<CalculatedValue> cvs = new ArrayList<CalculatedValue>();
             for (int period : Arrays.asList(4, 8, 12, 16, 20, 24, 28, 32, 36, 40, 44, 48, 52)) {
-                cvs.addAll(service.calculateSMA(fund, earliest, latest, period));
-                cvs.addAll(service.calculateSMA(fund, earliest, latest.minusDays(1), period));
-                cvs.addAll(service.calculateSMA(fund, earliest, latest.minusDays(2), period));
-                cvs.addAll(service.calculateSMA(fund, earliest, latest.minusDays(3), period));
-                cvs.addAll(service.calculateSMA(fund, earliest, latest.minusDays(4), period));
+//                cvs.addAll(service.calculateSMA(fund, earliest, latest, period));
+//                cvs.addAll(service.calculateSMA(fund, earliest, latest.minusDays(1), period));
+//                cvs.addAll(service.calculateSMA(fund, earliest, latest.minusDays(2), period));
+//                cvs.addAll(service.calculateSMA(fund, earliest, latest.minusDays(3), period));
+//                cvs.addAll(service.calculateSMA(fund, earliest, latest.minusDays(4), period));
             }
             calculatedValueDao.put(cvs);
         }

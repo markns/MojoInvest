@@ -46,10 +46,10 @@ public class RunCalculationsJob extends Job2<Void, LocalDate, Fund> {
 //        Standard Deviation - 1, 3, 6, 9, 12 month
 
 
-        CalculationService calculationService = new CalculationService(dao);
+        CalculationService calculationService = new CalculationService();
         List<CalculatedValue> cvs = new ArrayList<CalculatedValue>();
         for (int period : Arrays.asList(4, 8, 12, 16, 20, 24, 28, 32, 36, 40, 44, 48, 52)) {
-            cvs.addAll(calculationService.calculateSMA(fund, date.minusWeeks(period), date, period));
+//            cvs.addAll(calculationService.calculateSMA(fund, date.minusWeeks(period), date, period));
         }
         cvDao.put(cvs);
 

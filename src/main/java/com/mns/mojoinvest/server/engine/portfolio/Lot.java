@@ -277,7 +277,7 @@ public class Lot {
                 lotValues.add(BigDecimal.ZERO);
             } else {
                 Quote quote = quoteDao.get(openingTransaction.getFund(), dates.get(i));
-                lotValues.add(quantities.get(i).multiply(quote.getClose()));
+                lotValues.add(quantities.get(i).multiply(quote.getAdjClose()));
             }
         }
         return lotValues;

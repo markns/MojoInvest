@@ -29,16 +29,5 @@ public class SMACalculator {
         return new BigDecimal(sum / window.size(), MathContext.DECIMAL32);
     }
 
-    public static void main(String[] args) {
-        double[] testData = {1, 2, 3, 4, 5, 5, 4, 3, 2, 1};
-        int[] windowSizes = {3, 5};
-        for (int windSize : windowSizes) {
-            SMACalculator SMA = new SMACalculator(windSize);
-            for (double x : testData) {
-                SMA.newNum(new BigDecimal(x));
-                System.out.println("Next number = " + x + ", SMA = " + SMA.getAvg());
-            }
-            System.out.println();
-        }
-    }
+
 }

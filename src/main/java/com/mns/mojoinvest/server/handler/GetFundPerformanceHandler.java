@@ -69,7 +69,7 @@ public class GetFundPerformanceHandler implements
 
         for (Quote quote : quotes) {
             dto.addRow(new DataTableDto.DateValue(quote.getDate().toDateMidnight().toDate()),
-                    new DataTableDto.DoubleValue(quote.getClose().doubleValue()));
+                    new DataTableDto.DoubleValue(quote.getAdjClose().doubleValue()));
 
         }
         return dto;

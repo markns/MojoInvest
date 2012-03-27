@@ -99,7 +99,7 @@ public class StrategyResultBuilder {
             if (!quoteMap.containsKey(quote.getSymbol())) {
                 quoteMap.put(quote.getSymbol(), new HashMap<LocalDate, BigDecimal>());
             }
-            quoteMap.get(quote.getSymbol()).put(quote.getDate(), quote.getClose());
+            quoteMap.get(quote.getSymbol()).put(quote.getDate(), quote.getAdjClose());
         }
 
         for (int i = 0; i < marketValues.size(); i++) {

@@ -182,6 +182,7 @@ public class SimplePortfolio implements Portfolio {
     public BigDecimal marketValue(LocalDate date) {
         BigDecimal marketValue = BigDecimal.ZERO;
         for (Position position : positions.values()) {
+
             //adjust for currency
             marketValue = marketValue.add(position.marketValue(date));
         }
