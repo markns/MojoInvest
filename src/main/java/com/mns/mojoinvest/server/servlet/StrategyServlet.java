@@ -46,7 +46,8 @@ public class StrategyServlet extends HttpServlet {
 
         ParameterParser parser = new ParameterParser(req);
 
-        Date fromDate = new LocalDate("2000-01-01").toDateMidnight().toDate();
+        //TODO: java.lang.IndexOutOfBoundsException when start date set to 1996-04-01
+        Date fromDate = new LocalDate("1997-04-01").toDateMidnight().toDate();
         Date toDate = new LocalDate("2012-03-22").toDateMidnight().toDate();
 
         double cash = parser.getDoubleParameter("cash", 10000d);
@@ -55,10 +56,10 @@ public class StrategyServlet extends HttpServlet {
         int holdingPeriod = parser.getIntParameter("holding", 1);
         int ma1 = parser.getIntParameter("ma1", 12);
         int ma2 = parser.getIntParameter("ma2", 26);
-        int castOff = parser.getIntParameter("castoff", 8);
+        int castOff = parser.getIntParameter("castoff", 5);
         int stddev = parser.getIntParameter("stddev", 26);
         boolean equityCurveTrading = parser.getBooleanParameter("equitycurve", true);
-        int equityCurveWindow = parser.getIntParameter("ecwindow", 50);
+        int equityCurveWindow = parser.getIntParameter("ecwindow", 60);
 
         Portfolio portfolio = portfolioFactory.create(new PortfolioParams(cash, transactionCost, fromDate));
 

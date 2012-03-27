@@ -65,7 +65,7 @@ public class MomentumStrategy2 {
         //1. Implement strategy with ROC Calculator
         //2. Test strategy with asset alloc and sector universes
         //3. Test strategy with UK ishares ETFs
-        //4.
+        //4. Make it faster!
 
         Portfolio realPortfolio = portfolio;
         boolean belowEquityCurve = false;
