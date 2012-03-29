@@ -7,6 +7,7 @@ import com.googlecode.objectify.ObjectifyFactory;
 import com.googlecode.objectify.ObjectifyService;
 import com.mns.mojoinvest.server.engine.model.*;
 import com.mns.mojoinvest.server.engine.model.dao.FundDao;
+import com.mns.mojoinvest.server.engine.model.dao.ObjectifyFundDao;
 
 import java.util.*;
 import java.util.logging.Logger;
@@ -20,7 +21,7 @@ public class FundUpdaterJob extends Job1<String, List<Fund>> {
 
         //TODO: Figure out how to inject and serialize DAOs
         ObjectifyFactory factory = ObjectifyService.factory();
-        FundDao dao = new FundDao(factory);
+        FundDao dao = new ObjectifyFundDao(factory);
         dao.registerObjects(factory);
         //
 

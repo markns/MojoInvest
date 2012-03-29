@@ -18,10 +18,7 @@ import org.joda.time.LocalDate;
 
 import java.math.BigDecimal;
 import java.math.MathContext;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.logging.Logger;
 
 public class MomentumStrategy2 {
@@ -60,12 +57,14 @@ public class MomentumStrategy2 {
 //            //Should be possible to do a cache warming load here
 //        }
 
-
         //TODO:
         //1. Implement strategy with ROC Calculator
         //2. Test strategy with asset alloc and sector universes
-        //3. Test strategy with UK ishares ETFs
+        //3. Create InMemoryDaos
         //4. Make it faster!
+        //5. Fix equity curve calc
+        //5. Fix CAGR calculation
+        //6. Add maximum drawdown value
 
         Portfolio realPortfolio = portfolio;
         boolean belowEquityCurve = false;
@@ -77,6 +76,11 @@ public class MomentumStrategy2 {
 
             LocalDate rebalanceDate = rebalanceDates.get(i);
             Map<String, BigDecimal> rs = strengths.get(i);
+
+            if (rs.size() < strategyParams.getCastOff()) {
+                log.warning(rebalanceDate + " Not enough funds in universe to make selection");
+                continue;
+            }
 
             BigDecimal marketValue = portfolio.marketValue(rebalanceDate);
 
@@ -90,9 +94,6 @@ public class MomentumStrategy2 {
             log.info(rebalanceDate + " " + portfolio.getActiveFunds(rebalanceDate) + " " +
                     portfolio.marketValue(rebalanceDate) + " " + realPortfolio.marketValue(rebalanceDate)
                     + " " + equityCurveMA);
-
-            //Be careful of where the market value is stored, we might miss it after cloning
-//            portfolio.storeMarketValue(rebalanceDate, marketValue);
 
             if (strategyParams.isEquityCurveTrading() && equityCurveMA != null) {
                 if (!belowEquityCurve && marketValue.compareTo(equityCurveMA) < 0) {
@@ -122,16 +123,24 @@ public class MomentumStrategy2 {
 
 
         }
+
+        logParams(strategyParams);
         logNumTrades(realPortfolio);
         logCAGR(realPortfolio, rebalanceDates.get(rebalanceDates.size() - 1));
 
     }
 
+    private void logParams(StrategyServlet.Strategy2Params strategyParams) {
+        log.info("Params: " + strategyParams);
+    }
+
     private void logCAGR(Portfolio portfolio, LocalDate date) {
         //                                (1 / # of years)
 
-        double CAGR = Math.pow(portfolio.marketValue(date)
-                .divide(new BigDecimal("10000")).doubleValue(), 1.0d / 12.0d);
+        BigDecimal marketValue = portfolio.marketValue(date);
+        log.info("Final portfolio value: " + marketValue);
+        double CAGR = Math.pow(marketValue.divide(new BigDecimal("10000"), MathContext.DECIMAL32).doubleValue(),
+                1.0d / 12.0d);
         log.info("CAGR: " + CAGR + "%");
 
     }
@@ -154,8 +163,9 @@ public class MomentumStrategy2 {
                 .reverse()
                 .onResultOf(Functions.forMap(rs))
                 .compound(Ordering.natural());
-
-        List<String> rank = new ArrayList<String>(ImmutableSortedMap.copyOf(rs, valueComparator).keySet());
+        SortedMap<String, BigDecimal> sorted = ImmutableSortedMap.copyOf(rs, valueComparator);
+        log.info("RS map: " + sorted);
+        List<String> rank = new ArrayList<String>(sorted.keySet());
         return rank.subList(0, params.getCastOff());
     }
 

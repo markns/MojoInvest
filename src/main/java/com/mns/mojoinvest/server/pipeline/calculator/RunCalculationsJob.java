@@ -8,6 +8,7 @@ import com.mns.mojoinvest.server.engine.calculator.CalculationService;
 import com.mns.mojoinvest.server.engine.model.CalculatedValue;
 import com.mns.mojoinvest.server.engine.model.Fund;
 import com.mns.mojoinvest.server.engine.model.dao.CalculatedValueDao;
+import com.mns.mojoinvest.server.engine.model.dao.ObjectifyCalculatedValueDao;
 import com.mns.mojoinvest.server.engine.model.dao.ObjectifyQuoteDao;
 import com.mns.mojoinvest.server.engine.model.dao.QuoteDao;
 import org.joda.time.LocalDate;
@@ -32,7 +33,7 @@ public class RunCalculationsJob extends Job2<Void, LocalDate, Fund> {
         this.dao = new ObjectifyQuoteDao(factory);
         this.dao.registerObjects(factory);
 
-        this.cvDao = new CalculatedValueDao(factory);
+        this.cvDao = new ObjectifyCalculatedValueDao(factory);
         this.cvDao.registerObjects(factory);
 
         messages = new ArrayList<String>();

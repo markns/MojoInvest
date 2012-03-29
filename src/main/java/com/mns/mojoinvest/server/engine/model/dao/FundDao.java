@@ -1,124 +1,42 @@
 package com.mns.mojoinvest.server.engine.model.dao;
 
-import com.google.inject.Inject;
 import com.googlecode.objectify.Key;
 import com.googlecode.objectify.ObjectifyFactory;
 import com.mns.mojoinvest.server.engine.model.*;
 
-import java.util.*;
-import java.util.logging.Logger;
+import java.util.Collection;
+import java.util.Map;
+import java.util.Set;
 
-public class FundDao extends DAOBase {
+public interface FundDao {
 
-    private static final Logger log = Logger.getLogger(FundDao.class.getName());
+    void registerObjects(ObjectifyFactory ofyFactory);
 
-    private static boolean objectsRegistered;
+    Collection<Fund> list();
 
-    @Inject
-    public FundDao(final ObjectifyFactory objectifyFactory) {
-        super(objectifyFactory);
-    }
+    Collection<Fund> getAll();
 
-    @Override
-    protected boolean areObjectsRegistered() {
-        return objectsRegistered;
-    }
+    Fund get(String symbol);
 
-    @Override
-    public void registerObjects(ObjectifyFactory ofyFactory) {
-        objectsRegistered = true;
-        ofyFactory.register(Fund.class);
-        ofyFactory.register(Symbols.class);
-        ofyFactory.register(Provider.class);
-        ofyFactory.register(ProviderSet.class);
-        ofyFactory.register(Category.class);
-        ofyFactory.register(CategorySet.class);
-        ofyFactory.getConversions().add(new MyTypeConverters());
-    }
+    Collection<Fund> get(Collection<String> symbols);
 
-    public Collection<Fund> list() {
-        return ofy().query(Fund.class).list();
-    }
+    Set<String> getByCategory(String categoryName);
 
-    public Collection<Fund> getAll() {
-        Key<Symbols> key = new Key<Symbols>(Symbols.class, "symbols");
-        Symbols symbols = ofy().get(key);
+    Set<String> getByProvider(String providerName);
 
-        List<Key<Fund>> keys = new ArrayList<Key<Fund>>();
-        for (String symbol : symbols.getSymbols()) {
-            keys.add(new Key<Fund>(Fund.class, symbol));
-        }
-        return ofy().get(keys).values();
-    }
+    Map<Key<Fund>, Fund> put(Set<Fund> funds);
 
-    public Fund get(String symbol) {
-        Key<Fund> key = new Key<Fund>(Fund.class, symbol);
-        return ofy().get(key);
-    }
+    Key<Symbols> put(Symbols symbols);
 
-    public Collection<Fund> get(Collection<String> symbols) {
-        List<Key<Fund>> keys = new ArrayList<Key<Fund>>();
-        for (String symbol : symbols) {
-            keys.add(new Key<Fund>(Fund.class, symbol));
-        }
-        return ofy().get(keys).values();
-    }
+    void put(ProviderSet providerSet);
 
-    public Set<String> getByCategory(String categoryName) {
-        Key<Category> key = new Key<Category>(Category.class, categoryName);
-        Category category = ofy().get(key);
-        return category.getSymbols();
+    Map<Key<Provider>, Provider> putProviders(Collection<Provider> providers);
 
-//        List<Key<Fund>> keys = new ArrayList<Key<Fund>>();
-//        for (String symbol : category.getSymbols()) {
-//            keys.add(new Key<Fund>(Fund.class, symbol));
-//        }
-//        return ofy().get(keys).values();
-    }
+    Key<CategorySet> put(CategorySet categorySet);
 
-    public Set<String> getByProvider(String providerName) {
-        Key<Provider> key = new Key<Provider>(Provider.class, providerName);
-        Provider provider = ofy().get(key);
-        return provider.getSymbols();
+    Map<Key<Category>, Category> putCategories(Collection<Category> values);
 
-//        List<Key<Fund>> keys = new ArrayList<Key<Fund>>();
-//        for (String symbol : provider.getSymbols()) {
-//            keys.add(new Key<Fund>(Fund.class, symbol));
-//        }
-//        return ofy().get(keys).values();
-    }
+    Set<String> getProviderSet();
 
-    //*************
-
-    public Map<Key<Fund>, Fund> put(Set<Fund> funds) {
-        return ofy().put(funds);
-    }
-
-    public Key<Symbols> put(Symbols symbols) {
-        return ofy().put(symbols);
-    }
-
-    public void put(ProviderSet providerSet) {
-        ofy().put(providerSet);
-    }
-
-    public Map<Key<Provider>, Provider> putProviders(Collection<Provider> providers) {
-        return ofy().put(providers);
-    }
-
-    public Key<CategorySet> put(CategorySet categorySet) {
-        return ofy().put(categorySet);
-    }
-
-    public Map<Key<Category>, Category> putCategories(Collection<Category> values) {
-        return ofy().put(values);
-    }
-
-    public Set<String> getProviderSet() {
-        return ofy().get(new Key<ProviderSet>(ProviderSet.class, "providers")).getProviders();
-    }
-
-    public Set<String> getCategorySet() {
-        return ofy().get(new Key<CategorySet>(CategorySet.class, "categories")).getCategories();
-    }
+    Set<String> getCategorySet();
 }

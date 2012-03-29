@@ -18,6 +18,7 @@ package com.mns.mojoinvest.server.guice;
 
 import com.gwtplatform.dispatch.server.guice.HandlerModule;
 import com.mns.mojoinvest.server.UserInfoProvider;
+import com.mns.mojoinvest.server.engine.model.dao.*;
 import com.mns.mojoinvest.server.handler.*;
 import com.mns.mojoinvest.shared.action.BatchAction;
 import com.mns.mojoinvest.shared.dispatch.*;
@@ -32,6 +33,10 @@ public class ServerModule extends HandlerModule {
 
     @Override
     protected void configureHandlers() {
+
+        bind(QuoteDao.class).to(ObjectifyQuoteDao.class);
+        bind(FundDao.class).to(ObjectifyFundDao.class);
+        bind(CalculatedValueDao.class).to(ObjectifyCalculatedValueDao.class);
 
         bind(UserInfo.class).toProvider(UserInfoProvider.class);
 

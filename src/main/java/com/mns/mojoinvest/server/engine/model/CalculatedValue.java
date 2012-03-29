@@ -10,6 +10,7 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import java.math.BigDecimal;
 import java.math.MathContext;
+import java.math.RoundingMode;
 import java.util.List;
 
 @Cached
@@ -36,13 +37,17 @@ public class CalculatedValue {
     }
 
     public CalculatedValue(LocalDate date, String symbol, String type, int period, BigDecimal value) {
-        this.key = date + "|" + symbol + "|" + type + "|" + period;
+        this.key = getCalculatedValueKey(date, symbol, type, period);
         this.value = value;
     }
 
     public CalculatedValue(LocalDate date, String symbol, String type, int period, double value) {
-        this.key = date + "|" + symbol + "|" + type + "|" + period;
-        this.value = new BigDecimal(value, MathContext.DECIMAL32);
+        this.key = getCalculatedValueKey(date, symbol, type, period);
+        this.value = new BigDecimal(value, MathContext.DECIMAL32).setScale(3, RoundingMode.HALF_EVEN);
+    }
+
+    public static String getCalculatedValueKey(LocalDate date, String symbol, String type, int period) {
+        return date + "|" + symbol + "|" + type + "|" + period;
     }
 
     public LocalDate getDate() {
@@ -109,5 +114,9 @@ public class CalculatedValue {
         return new String[]{
                 key,
                 value + ""};
+    }
+
+    public String getKey() {
+        return key;
     }
 }

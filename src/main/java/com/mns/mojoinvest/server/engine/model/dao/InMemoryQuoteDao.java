@@ -1,9 +1,9 @@
 package com.mns.mojoinvest.server.engine.model.dao;
 
 import au.com.bytecode.opencsv.CSVReader;
-import com.google.common.base.Predicate;
-import com.google.common.collect.Iterables;
-import com.google.common.collect.Lists;
+import com.google.common.base.Predicates;
+import com.google.common.collect.Maps;
+import com.google.inject.Singleton;
 import com.googlecode.objectify.Key;
 import com.googlecode.objectify.ObjectifyFactory;
 import com.mns.mojoinvest.server.engine.model.Fund;
@@ -17,11 +17,12 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.*;
 
+@Singleton
 public class InMemoryQuoteDao implements QuoteDao {
 
-    private final Map<String, List<Quote>> map = new HashMap<String, List<Quote>>();
+    private final Map<String, Map<LocalDate, Quote>> map = new HashMap<String, Map<LocalDate, Quote>>();
 
-    public InMemoryQuoteDao(String... filenames) {
+    public void init(String... filenames) {
         try {
             for (String file : filenames) {
                 readQuotesFromFile(file);
@@ -31,7 +32,6 @@ public class InMemoryQuoteDao implements QuoteDao {
         }
     }
 
-
     private void readQuotesFromFile(String file) throws IOException {
         CSVReader reader = new CSVReader(new BufferedReader(new FileReader(file)));
         for (String[] row : reader.readAll()) {
@@ -39,22 +39,18 @@ public class InMemoryQuoteDao implements QuoteDao {
                 continue;
             String symbol = row[0];
             if (!map.containsKey(symbol)) {
-                map.put(symbol, new ArrayList<Quote>());
+                map.put(symbol, new HashMap<LocalDate, Quote>());
             }
             Quote quote = QuoteUtils.fromStringArray(row);
-            map.get(symbol).add(quote);
+            if (quote != null)
+                map.get(symbol).put(quote.getDate(), quote);
         }
         reader.close();
     }
 
     public List<Quote> get(Fund fund, final Collection<LocalDate> dates) {
-        List<Quote> quotes = map.get(fund.getSymbol());
-        return Lists.newArrayList(Iterables.filter(quotes, new Predicate<Quote>() {
-            @Override
-            public boolean apply(Quote input) {
-                return dates.contains(input.getDate());
-            }
-        }));
+        Map<LocalDate, Quote> quotes = map.get(fund.getSymbol());
+        return new ArrayList<Quote>(Maps.filterKeys(quotes, Predicates.in(dates)).values());
     }
 
     @Override
@@ -84,12 +80,13 @@ public class InMemoryQuoteDao implements QuoteDao {
 
     @Override
     public List<Quote> query(Fund fund) {
-        return map.get(fund.getSymbol());
+        return new ArrayList<Quote>(map.get(fund.getSymbol()).values());
+
     }
 
     @Override
     public List<Quote> query(String symbol) {
-        return map.get(symbol);
+        return new ArrayList<Quote>(map.get(symbol).values());
     }
 
     @Override
@@ -129,12 +126,13 @@ public class InMemoryQuoteDao implements QuoteDao {
 
     @Override
     public Quote get(String symbol, LocalDate date) {
-        throw new NotImplementedException();
+        return map.get(symbol).get(date);
     }
 
     @Override
     public Quote get(Fund fund, LocalDate date) {
-        throw new NotImplementedException();
+        return map.get(fund.getSymbol()).get(date);
+
     }
 }
 
