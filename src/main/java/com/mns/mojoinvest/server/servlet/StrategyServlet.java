@@ -67,6 +67,7 @@ public class StrategyServlet extends HttpServlet {
         int stddev = parser.getIntParameter("stddev", 26);
         boolean equityCurveTrading = parser.getBooleanParameter("equitycurve", true);
         int equityCurveWindow = parser.getIntParameter("ecwindow", 60);
+        String relativeStrengthStyle = parser.getStringParameter("rsstyle", "MA");
 
         String funds = parser.getStringParameter("funds", null);
         Collection<Fund> universe;
@@ -81,7 +82,7 @@ public class StrategyServlet extends HttpServlet {
 
         //4, 12, 26, 40, 52
         Strategy2Params strategyParams = new Strategy2Params(portfolioSize, holdingPeriod, ma1, ma2, roc,
-                castOff, stddev, equityCurveTrading, equityCurveWindow);
+                castOff, stddev, equityCurveTrading, equityCurveWindow, relativeStrengthStyle);
 
 
         try {
@@ -109,9 +110,11 @@ public class StrategyServlet extends HttpServlet {
         private final int stddev;
         private final boolean equityCurveTrading;
         private final int equityCurveWindow;
+        private String relativeStrengthStyle;
 
         public Strategy2Params(int portfolioSize, int rebalanceFrequency, int ma1, int ma2, int roc,
-                               int castOff, int stddev, boolean equityCurveTrading, int equityCurveWindow) {
+                               int castOff, int stddev, boolean equityCurveTrading, int equityCurveWindow,
+                               String relativeStrengthStyle) {
 
             this.portfolioSize = portfolioSize;
             this.rebalanceFrequency = rebalanceFrequency;
@@ -122,6 +125,7 @@ public class StrategyServlet extends HttpServlet {
             this.stddev = stddev;
             this.equityCurveTrading = equityCurveTrading;
             this.equityCurveWindow = equityCurveWindow;
+            this.relativeStrengthStyle = relativeStrengthStyle;
         }
 
         public int getPortfolioSize() {
@@ -160,6 +164,10 @@ public class StrategyServlet extends HttpServlet {
             return equityCurveWindow;
         }
 
+        public String getRelativeStrengthStyle() {
+            return relativeStrengthStyle;
+        }
+
         @Override
         public String toString() {
             return "{" +
@@ -172,6 +180,7 @@ public class StrategyServlet extends HttpServlet {
                     ", stddev=" + stddev +
                     ", equityCurveTrading=" + equityCurveTrading +
                     ", equityCurveWindow=" + equityCurveWindow +
+                    ", relativeStrengthStyle=" + relativeStrengthStyle +
                     '}';
         }
     }

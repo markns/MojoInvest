@@ -76,7 +76,7 @@ public class RelativeStrengthCalculator {
     }
 
 
-    public List<Map<String, BigDecimal>> getRelativeStrengths(Collection<Fund> funds, StrategyServlet.Strategy2Params params, List<LocalDate> dates) {
+    public List<Map<String, BigDecimal>> getRelativeStrengthsROC(Collection<Fund> funds, StrategyServlet.Strategy2Params params, List<LocalDate> dates) {
 
         List<Map<String, BigDecimal>> allRs = new ArrayList<Map<String, BigDecimal>>(dates.size());
         Collection<CalculatedValue> rocs = calculatedValueDao.get(dates, funds, "ROC", params.getRoc());

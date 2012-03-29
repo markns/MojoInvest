@@ -17,10 +17,10 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class SMACalculatorTool {
+public class OfflineCalculatorTool {
 
     public static void main(String[] args) throws IOException {
-        SMACalculatorTool tool = new SMACalculatorTool();
+        OfflineCalculatorTool tool = new OfflineCalculatorTool();
         tool.run();
     }
 
@@ -29,12 +29,18 @@ public class SMACalculatorTool {
 
     private final CalculationService calculationService = new CalculationService();
 
-    private static final String outfile = "data/etf_international_cvs.csv";
+    //    private static final String outfile = "data/etf_international_cvs.csv";
+//    private static final String outfile = "data/etf_sector_cvs.csv";
+    private static final String outfile = "data/etf_asset_alloc_cvs.csv";
 
     private void run() throws IOException {
 
-        quoteDao.init("data/etf_international_quotes.csv");
-        fundDao.init("data/etf_international_funds.csv");
+//        quoteDao.init("data/etf_international_quotes.csv");
+//        fundDao.init("data/etf_international_funds.csv");
+//        quoteDao.init("data/etf_sector_quotes.csv");
+//        fundDao.init("data/etf_sector_funds.csv");
+        quoteDao.init("data/etf_asset_alloc_quotes.csv");
+        fundDao.init("data/etf_asset_alloc_funds.csv");
 
         CSVWriter writer = new CSVWriter(new FileWriter(outfile));
 
@@ -50,31 +56,31 @@ public class SMACalculatorTool {
             List<CalculatedValue> cvs = new ArrayList<CalculatedValue>();
 
             //Moving averages
-//            for (int period : Arrays.asList(4, 12, 26, 40, 52)) {
+            for (int period : Arrays.asList(4, 13, 26, 39, 52)) {
 //            for (int period : Arrays.asList(12, 26)) {
-//                List<LocalDate> dates = TradingDayUtils.getWeeklySeries(earliest, latest, 1, true);
-//                List<Quote> weeklySeries = new ArrayList<Quote>(quoteDao.get(fund, dates));
-//                cvs.addAll(calculationService.calculateSMA(weeklySeries, period));
-//
-//                dates = TradingDayUtils.getWeeklySeries(earliest, latest.minusDays(1), 1, true);
-//                weeklySeries = new ArrayList<Quote>(quoteDao.get(fund, dates));
-//                cvs.addAll(calculationService.calculateSMA(weeklySeries, period));
-//
-//                dates = TradingDayUtils.getWeeklySeries(earliest, latest.minusDays(2), 1, true);
-//                weeklySeries = new ArrayList<Quote>(quoteDao.get(fund, dates));
-//                cvs.addAll(calculationService.calculateSMA(weeklySeries, period));
-//
-//                dates = TradingDayUtils.getWeeklySeries(earliest, latest.minusDays(3), 1, true);
-//                weeklySeries = new ArrayList<Quote>(quoteDao.get(fund, dates));
-//                cvs.addAll(calculationService.calculateSMA(weeklySeries, period));
-//
-//                dates = TradingDayUtils.getWeeklySeries(earliest, latest.minusDays(4), 1, true);
-//                weeklySeries = new ArrayList<Quote>(quoteDao.get(fund, dates));
-//                cvs.addAll(calculationService.calculateSMA(weeklySeries, period));
-//            }
+                List<LocalDate> dates = TradingDayUtils.getWeeklySeries(earliest, latest, 1, true);
+                List<Quote> weeklySeries = new ArrayList<Quote>(quoteDao.get(fund, dates));
+                cvs.addAll(calculationService.calculateSMA(weeklySeries, period));
+
+                dates = TradingDayUtils.getWeeklySeries(earliest, latest.minusDays(1), 1, true);
+                weeklySeries = new ArrayList<Quote>(quoteDao.get(fund, dates));
+                cvs.addAll(calculationService.calculateSMA(weeklySeries, period));
+
+                dates = TradingDayUtils.getWeeklySeries(earliest, latest.minusDays(2), 1, true);
+                weeklySeries = new ArrayList<Quote>(quoteDao.get(fund, dates));
+                cvs.addAll(calculationService.calculateSMA(weeklySeries, period));
+
+                dates = TradingDayUtils.getWeeklySeries(earliest, latest.minusDays(3), 1, true);
+                weeklySeries = new ArrayList<Quote>(quoteDao.get(fund, dates));
+                cvs.addAll(calculationService.calculateSMA(weeklySeries, period));
+
+                dates = TradingDayUtils.getWeeklySeries(earliest, latest.minusDays(4), 1, true);
+                weeklySeries = new ArrayList<Quote>(quoteDao.get(fund, dates));
+                cvs.addAll(calculationService.calculateSMA(weeklySeries, period));
+            }
 
             //Standard deviations
-            for (int period : Arrays.asList(26)) {
+            for (int period : Arrays.asList(4, 13, 26, 39, 52)) {
                 List<LocalDate> dates = TradingDayUtils.getWeeklySeries(earliest, latest, 1, true);
                 List<Quote> weeklySeries = new ArrayList<Quote>(quoteDao.get(fund, dates));
                 cvs.addAll(calculationService.calculateStandardDeviation(weeklySeries, period));
@@ -97,7 +103,7 @@ public class SMACalculatorTool {
             }
 
             //Standardized ROC
-            for (int period : Arrays.asList(13, 26, 39, 52)) {
+            for (int period : Arrays.asList(4, 13, 26, 39, 52)) {
                 LocalDate toDate = new LocalDate(latest);
                 while (!toDate.isBefore(earliest.plusDays(period))) {
                     Quote fromQuote = quoteDao.get(fund, TradingDayUtils.rollBack(toDate.minusWeeks(period)));

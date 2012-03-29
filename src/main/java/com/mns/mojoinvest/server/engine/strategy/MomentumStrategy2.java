@@ -47,21 +47,9 @@ public class MomentumStrategy2 {
 
         List<LocalDate> rebalanceDates = getRebalanceDates(fromDate, toDate, strategyParams);
 
-        List<Map<String, BigDecimal>> strengths = relativeStrengthCalculator
-                .getRelativeStrengths(universe, strategyParams, rebalanceDates);
-
-//        for (int i = 0; i < rebalanceDates.size(); i++) {
-//            LocalDate rebalanceDate = rebalanceDates.get(i);
-//            Map<String, BigDecimal> rs = strengths.get(i);
-//            List<String> selection = getSelection(rs, strategyParams);
-//            //Should be possible to do a cache warming load here
-//        }
+        List<Map<String, BigDecimal>> strengths = getRelativeStrengths(universe, strategyParams, rebalanceDates);
 
         //TODO:
-        //1. Implement strategy with ROC Calculator
-        //2. Test strategy with asset alloc and sector universes
-        //3. Create InMemoryDaos
-        //4. Make it faster!
         //5. Fix equity curve calc
         //5. Fix CAGR calculation
         //6. Add maximum drawdown value
@@ -70,7 +58,6 @@ public class MomentumStrategy2 {
         boolean belowEquityCurve = false;
 
         DescriptiveStatistics equityCurve = new DescriptiveStatistics(strategyParams.getEquityCurveWindow());
-
 
         for (int i = 0; i < rebalanceDates.size(); i++) {
 
@@ -83,7 +70,6 @@ public class MomentumStrategy2 {
             }
 
             BigDecimal marketValue = portfolio.marketValue(rebalanceDate);
-
 
             equityCurve.addValue(marketValue.doubleValue());
             BigDecimal equityCurveMA = null;
@@ -130,6 +116,19 @@ public class MomentumStrategy2 {
 
     }
 
+    private List<Map<String, BigDecimal>> getRelativeStrengths(Collection<Fund> universe, StrategyServlet.Strategy2Params strategyParams, List<LocalDate> rebalanceDates)
+            throws StrategyException {
+        if ("MA".equals(strategyParams.getRelativeStrengthStyle())) {
+            return relativeStrengthCalculator
+                    .getRelativeStrengthsMA(universe, strategyParams, rebalanceDates);
+        } else if ("ROC".equals(strategyParams.getRelativeStrengthStyle())) {
+            return relativeStrengthCalculator
+                    .getRelativeStrengthsROC(universe, strategyParams, rebalanceDates);
+        } else {
+            throw new StrategyException("Relative strength style " + strategyParams);
+        }
+    }
+
     private void logParams(StrategyServlet.Strategy2Params strategyParams) {
         log.info("Params: " + strategyParams);
     }
@@ -164,7 +163,7 @@ public class MomentumStrategy2 {
                 .onResultOf(Functions.forMap(rs))
                 .compound(Ordering.natural());
         SortedMap<String, BigDecimal> sorted = ImmutableSortedMap.copyOf(rs, valueComparator);
-        log.info("RS map: " + sorted);
+        log.fine("RS map: " + sorted);
         List<String> rank = new ArrayList<String>(sorted.keySet());
         return rank.subList(0, params.getCastOff());
     }
