@@ -13,15 +13,19 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.*;
+import java.util.logging.Logger;
 
 @Singleton
 public class InMemoryCalculatedValueDao implements CalculatedValueDao {
+
+    private static final Logger log = Logger.getLogger(InMemoryCalculatedValueDao.class.getName());
 
     Map<String, CalculatedValue> calculatedValues = new HashMap<String, CalculatedValue>();
 
     public void init(String... filenames) {
         try {
             for (String filename : filenames) {
+                log.info("Reading " + filename);
                 readCVFile(filename);
             }
         } catch (IOException e) {

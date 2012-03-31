@@ -51,7 +51,7 @@ public class Lot {
     private QuoteDao quoteDao;
 
     public Lot(QuoteDao quoteDao, BuyTransaction openingTransaction) {
-        log.fine("Creating new lot from " + openingTransaction);
+        log.fine(openingTransaction.getDate() + " Creating new lot from " + openingTransaction);
         this.quoteDao = quoteDao;
         this.openingTransaction = openingTransaction;
         this.openDate = openingTransaction.getDate();

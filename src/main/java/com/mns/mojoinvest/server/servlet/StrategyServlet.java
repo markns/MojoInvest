@@ -156,7 +156,7 @@ public class StrategyServlet extends HttpServlet {
             return stddev;
         }
 
-        public boolean isEquityCurveTrading() {
+        public boolean tradeEquityCurve() {
             return equityCurveTrading;
         }
 

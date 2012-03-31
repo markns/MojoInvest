@@ -44,7 +44,7 @@ public class RelativeStrengthCalculator {
         for (LocalDate date : dates) {
 
             Map<String, BigDecimal> rs = new HashMap<String, BigDecimal>();
-            if (ma1Map.containsKey(date) && ma2Map.containsKey(date)) {
+            if (ma1Map.containsKey(date) && ma2Map.containsKey(date) && stddevMap.containsKey(date)) {
                 Map<String, BigDecimal> ma1vals = ma1Map.get(date);
                 Map<String, BigDecimal> ma2vals = ma2Map.get(date);
                 Map<String, BigDecimal> stddevVals = stddevMap.get(date);
@@ -57,7 +57,7 @@ public class RelativeStrengthCalculator {
                     } else if (!stddevVals.containsKey(symbol)) {
                         log.fine("Unable to calculate RS for " + symbol + " on " + date + " no STDDEV|" + params.getStdDev());
                     } else {
-                        log.fine("Calculating RS for " + symbol + " as (" + ma1vals.get(symbol) + " / " +
+                        log.fine("Calculating RS(MA) for " + symbol + " as (" + ma1vals.get(symbol) + " / " +
                                 ma2vals.get(symbol) + ") / " + stddevVals.get(symbol));
                         BigDecimal maRatio = ma1vals.get(symbol).divide(ma2vals.get(symbol), RoundingMode.HALF_EVEN);
 
@@ -108,7 +108,7 @@ public class RelativeStrengthCalculator {
                 } else if (!stddevVals.containsKey(symbol)) {
                     log.fine("Unable to calculate RS for " + symbol + " on " + date + " no STDDEV|" + params.getStdDev());
                 } else {
-                    log.fine("Calculating RS for " + symbol + " as " + rocVals.get(symbol) + " / " + stddevVals.get(symbol));
+                    log.fine("Calculating RS(ROC) for " + symbol + " as " + rocVals.get(symbol) + " / " + stddevVals.get(symbol));
                     BigDecimal roc = rocVals.get(symbol);
 
                     if (stddevVals.get(symbol).compareTo(BigDecimal.ZERO) != 0) {

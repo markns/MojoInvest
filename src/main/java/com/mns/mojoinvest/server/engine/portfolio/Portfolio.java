@@ -11,6 +11,8 @@ import java.util.List;
 import java.util.Map;
 
 public interface Portfolio {
+    boolean isShadow();
+
     BigDecimal getCash(LocalDate date);
 
     BigDecimal getTransactionCost();

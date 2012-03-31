@@ -73,6 +73,11 @@ public class SimplePortfolio implements Portfolio {
 
 
     @Override
+    public boolean isShadow() {
+        return shadow;
+    }
+
+    @Override
     public BigDecimal getCash(LocalDate date) {
         BigDecimal cash = BigDecimal.ZERO;
         for (BigDecimal cashFlow : cashFlows.headMap(date, true).values()) {

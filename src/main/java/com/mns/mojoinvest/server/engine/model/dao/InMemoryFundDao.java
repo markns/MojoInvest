@@ -14,16 +14,19 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
+import java.util.logging.Logger;
 
 @Singleton
 public class InMemoryFundDao implements FundDao {
+
+    private static final Logger log = Logger.getLogger(InMemoryFundDao.class.getName());
 
     Map<String, Fund> funds = new HashMap<String, Fund>();
 
     public void init(String... filenames) {
         try {
             for (String filename : filenames) {
-
+                log.info("Reading " + filename);
                 readFundFile(filename);
             }
         } catch (IOException e) {

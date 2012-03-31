@@ -16,15 +16,20 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.*;
+import java.util.logging.Logger;
 
 @Singleton
 public class InMemoryQuoteDao implements QuoteDao {
+
+    private static final Logger log = Logger.getLogger(InMemoryQuoteDao.class.getName());
+
 
     private final Map<String, Map<LocalDate, Quote>> map = new HashMap<String, Map<LocalDate, Quote>>();
 
     public void init(String... filenames) {
         try {
             for (String file : filenames) {
+                log.info("Reading " + file);
                 readQuotesFromFile(file);
             }
         } catch (IOException e) {
@@ -50,7 +55,9 @@ public class InMemoryQuoteDao implements QuoteDao {
 
     public List<Quote> get(Fund fund, final Collection<LocalDate> dates) {
         Map<LocalDate, Quote> quotes = map.get(fund.getSymbol());
-        return new ArrayList<Quote>(Maps.filterKeys(quotes, Predicates.in(dates)).values());
+        List<Quote> filtered = new ArrayList<Quote>(Maps.filterKeys(quotes, Predicates.in(dates)).values());
+        QuoteUtils.sortByDateAsc(filtered);
+        return filtered;
     }
 
     @Override

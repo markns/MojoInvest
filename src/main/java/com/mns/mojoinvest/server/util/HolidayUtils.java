@@ -12,6 +12,49 @@ public class HolidayUtils {
 
     static {
         Map<LocalDate, String> aMap = new HashMap<LocalDate, String>();
+
+        //TODO: Holidays for 1990, 1991, 1992
+//        New Year: Monday, January 01. 1990
+//        Epiphany: Saturday, January 06. 1990
+//        Martin Luther King Day (US): Monday, January 15. 1990
+//        May Day: Tuesday, May 01. 1990
+//        Memorial Day (US): Wednesday, May 30. 1990
+//        Independence Day (US): Wednesday, July 04. 1990
+//        All Saints (All Hallows): Thursday, November 01. 1990
+//        All Souls Day: Friday, November 02. 1990
+//        Christmas Eve: Monday, December 24. 1990
+//        Christmas Day: Tuesday, December 25. 1990
+//        Boxing Day: Wednesday, December 26. 1990
+//        New Year's Eve: Monday, December 31. 1990
+//
+//
+//        aMap.put(new LocalDate("1990-01-01"), "New Year's Day");
+//        aMap.put(new LocalDate("1991-01-15"), "Martin Luther King, Jr. Day");
+//        aMap.put(new LocalDate("1990-02-15"), "Washington's Birthday");
+//        aMap.put(new LocalDate("1990-04-09"), "Good Friday");
+//        aMap.put(new LocalDate("1990-05-31"), "Memorial Day");
+//        aMap.put(new LocalDate("1990-07-05"), "Independence Day");
+//        aMap.put(new LocalDate("1990-09-06"), "Labor Day");
+//        aMap.put(new LocalDate("1990-11-25"), "Thanksgiving Day");
+//        aMap.put(new LocalDate("1990-12-24"), "Christmas Day");
+//        aMap.put(new LocalDate("1991-02-21"), "Martin Luther King, Jr. Day");
+//        aMap.put(new LocalDate("1991-04-01"), "Good Friday");
+//        aMap.put(new LocalDate("1991-04-27"), "Closed for funeral of former President Richard M. Nixon");
+//        aMap.put(new LocalDate("1991-05-30"), "Memorial Day");
+//        aMap.put(new LocalDate("1991-07-04"), "Independence Day");
+//        aMap.put(new LocalDate("1991-09-05"), "Labor Day");
+//        aMap.put(new LocalDate("1991-11-24"), "Thanksgiving Day");
+//        aMap.put(new LocalDate("1991-12-26"), "Christmas Day");
+//        aMap.put(new LocalDate("1992-01-02"), "New Year's Day");
+//        aMap.put(new LocalDate("1992-02-20"), "Martin Luther King, Jr. Day");
+//        aMap.put(new LocalDate("1992-04-14"), "Good Friday");
+//        aMap.put(new LocalDate("1992-05-29"), "Memorial Day");
+//        aMap.put(new LocalDate("1992-07-04"), "Independence Day");
+//        aMap.put(new LocalDate("1992-09-04"), "Labor Day");
+//        aMap.put(new LocalDate("1992-11-23"), "Thanksgiving Day");
+//        aMap.put(new LocalDate("1992-12-25"), "Christmas Day");
+
+
         aMap.put(new LocalDate("1993-02-15"), "Washington's Birthday");
         aMap.put(new LocalDate("1993-04-09"), "Good Friday");
         aMap.put(new LocalDate("1993-05-31"), "Memorial Day");

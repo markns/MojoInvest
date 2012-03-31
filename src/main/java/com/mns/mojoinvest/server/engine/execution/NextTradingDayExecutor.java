@@ -8,6 +8,7 @@ import com.mns.mojoinvest.server.engine.portfolio.PortfolioException;
 import com.mns.mojoinvest.server.engine.portfolio.Position;
 import com.mns.mojoinvest.server.engine.transaction.BuyTransaction;
 import com.mns.mojoinvest.server.engine.transaction.SellTransaction;
+import com.mns.mojoinvest.server.util.TradingDayUtils;
 import org.joda.time.LocalDate;
 
 import java.math.BigDecimal;
@@ -29,10 +30,12 @@ public class NextTradingDayExecutor implements Executor {
             throws PortfolioException {
         //TODO: getRanking execution price should be mid between open and close of next days quote
 
-        Quote executionQuote = quoteDao.get(fund, date);
+        LocalDate executionDate = TradingDayUtils.rollForward(date.plusDays(1));
+        Quote executionQuote = quoteDao.get(fund, executionDate);
         BigDecimal shares = allocation.divide(executionQuote.getAdjClose(), 0, BigDecimal.ROUND_DOWN);
-        log.info("Buying " + shares + " " + fund + " on " + date + " at " + executionQuote.getAdjClose());
-        BuyTransaction tx = new BuyTransaction(fund, date, shares,
+        if (!portfolio.isShadow())
+            log.info(executionDate + " Buy " + shares + " " + fund + " at " + executionQuote.getAdjClose());
+        BuyTransaction tx = new BuyTransaction(fund, executionDate, shares,
                 executionQuote.getAdjClose(), portfolio.getTransactionCost());
         portfolio.add(tx);
     }
@@ -41,10 +44,12 @@ public class NextTradingDayExecutor implements Executor {
     public void sellAll(Portfolio portfolio, String fund, LocalDate date)
             throws PortfolioException {
         //TODO: getRanking execution price should be mid between open and close of next days quote
-        Quote executionQuote = quoteDao.get(fund, date);
+        LocalDate executionDate = TradingDayUtils.rollForward(date.plusDays(1));
+        Quote executionQuote = quoteDao.get(fund, executionDate);
         Position position = portfolio.getPosition(fund);
-        log.info("Selling " + fund + " on " + date + " at " + executionQuote.getAdjClose());
-        SellTransaction tx = new SellTransaction(fund, date, position.shares(date),
+        if (!portfolio.isShadow())
+            log.info(executionDate + " Sell " + position.shares(executionDate) + " " + fund + " at " + executionQuote.getAdjClose());
+        SellTransaction tx = new SellTransaction(fund, executionDate, position.shares(executionDate),
                 executionQuote.getAdjClose(), portfolio.getTransactionCost());
         portfolio.add(tx);
     }

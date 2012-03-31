@@ -92,4 +92,17 @@ public class TradingDayUtils {
         else
             return date;
     }
+
+    public static LocalDate rollForward(LocalDate date) {
+        if (date.dayOfWeek().get() == DateTimeConstants.SATURDAY)
+            //Recursion is to check that we haven't rolled into a non-weekend holiday
+            return rollForward(date.plusDays(2));
+        else if (date.dayOfWeek().get() == DateTimeConstants.SUNDAY)
+            return rollForward(date.plusDays(1));
+        else if (HolidayUtils.isHoliday(date))
+            //Recursion is to check for multi-day non-weekend closures eg. 7/11
+            return rollBack(date.plusDays(1));
+        else
+            return date;
+    }
 }
