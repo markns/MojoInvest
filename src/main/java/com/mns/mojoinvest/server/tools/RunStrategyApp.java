@@ -84,14 +84,14 @@ public class RunStrategyApp {
         double transactionCost = 10d;
         int portfolioSize = 1;
         int holdingPeriod = 1;
-        int ma1 = 13;
-        int ma2 = 26;
+        int ma1 = 26;
+        int ma2 = 39;
         int roc = 39;
-        int castOff = 8;
+        int castOff = 9;
         int stddev = 26;
         boolean equityCurveTrading = true;
         int equityCurveWindow = 60;
-        String relativeStrengthStyle = "MA";
+        String relativeStrengthStyle = "ROC";
 
         String funds = null;
         Collection<Fund> universe;

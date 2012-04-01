@@ -80,7 +80,7 @@ public class MomentumStrategy2 {
 
             if (strategyParams.tradeEquityCurve() && equityCurveMA != null) {
                 if (shadowPortfolioValue.compareTo(equityCurveMA) < 0) {
-                    log.info("Below equity curve");
+                    log.fine("Below equity curve");
 
                     for (String symbol : portfolio.getActiveFunds(rebalanceDate)) {
                         try {
@@ -165,7 +165,7 @@ public class MomentumStrategy2 {
                 .onResultOf(Functions.forMap(rs))
                 .compound(Ordering.natural());
         SortedMap<String, BigDecimal> sorted = ImmutableSortedMap.copyOf(rs, valueComparator);
-        log.info(date + " RS(" + params.getRelativeStrengthStyle() + "): " + rs);
+        log.fine(date + " RS(" + params.getRelativeStrengthStyle() + "): " + rs);
         List<String> rank = new ArrayList<String>(sorted.keySet());
         return rank.subList(0, params.getCastOff());
     }
