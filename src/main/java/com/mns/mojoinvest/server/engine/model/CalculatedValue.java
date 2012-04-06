@@ -43,7 +43,11 @@ public class CalculatedValue {
 
     public CalculatedValue(LocalDate date, String symbol, String type, int period, double value) {
         this.key = getCalculatedValueKey(date, symbol, type, period);
-        this.value = new BigDecimal(value, MathContext.DECIMAL32).setScale(3, RoundingMode.HALF_EVEN);
+        if (Double.isNaN(value) || Double.isInfinite(value)) {
+            this.value = BigDecimal.ZERO;
+        } else {
+            this.value = new BigDecimal(value, MathContext.DECIMAL32).setScale(3, RoundingMode.HALF_EVEN);
+        }
     }
 
     public static String getCalculatedValueKey(LocalDate date, String symbol, String type, int period) {
@@ -118,5 +122,25 @@ public class CalculatedValue {
 
     public String getKey() {
         return key;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        CalculatedValue that = (CalculatedValue) o;
+
+        if (!key.equals(that.key)) return false;
+        if (!value.equals(that.value)) return false;
+
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = key.hashCode();
+        result = 31 * result + value.hashCode();
+        return result;
     }
 }

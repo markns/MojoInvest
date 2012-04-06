@@ -30,7 +30,7 @@ public class TradingDayUtilsTests {
         List<LocalDate> sl = loadAList(dtStrs);
         LocalDate queryDate = new LocalDate(2011, 7, 30);
         List<LocalDate> dates = TradingDayUtils.getMonthlySeries(queryDate.minusYears(1), queryDate, 1, false);
-        assertEquals(dates, sl);
+        assertEquals(sl, dates);
     }
 
 
@@ -54,7 +54,7 @@ public class TradingDayUtilsTests {
         };
         List<LocalDate> sl = loadAList(dtStrs);
         List<LocalDate> dates = TradingDayUtils.getDailySeries(new LocalDate(2011, 7, 1), new LocalDate(2011, 7, 20), false);
-        assertEquals(dates, sl);
+        assertEquals(sl, dates);
     }
 
     @Test
@@ -76,7 +76,7 @@ public class TradingDayUtilsTests {
         int numDays = 10;
         boolean includeToday = false;
         List<LocalDate> dates = TradingDayUtils.getPreviousDays(queryDate, numDays, includeToday);
-        assertEquals(dates, sl);
+        assertEquals(sl, dates);
     }
 
     @Test
@@ -98,7 +98,7 @@ public class TradingDayUtilsTests {
         int numDays = 10;
         boolean includeToday = true;
         List<LocalDate> dates = TradingDayUtils.getPreviousDays(queryDate, numDays, includeToday);
-        assertEquals(dates, sl);
+        assertEquals(sl, dates);
     }
 
     @Test
@@ -114,7 +114,37 @@ public class TradingDayUtilsTests {
 
         List<LocalDate> sl = loadAList(dtStrs);
         List<LocalDate> dates = TradingDayUtils.getDailySeries(new LocalDate(2011, 4, 19), new LocalDate(2011, 4, 26), false);
-        assertEquals(dates, sl);
+        assertEquals(sl, dates);
+    }
+
+    @Test
+    public void testGetEndOfWeekSeries() {
+
+        String[] dtStrs = {
+                "2012-04-05", //Good Friday
+                "2012-04-13",
+                "2012-04-20"
+        };
+
+        List<LocalDate> sl = loadAList(dtStrs);
+        List<LocalDate> dates = TradingDayUtils.getEndOfWeekSeries(new LocalDate(2012, 4, 1), new LocalDate(2012, 4, 21), 1);
+        assertEquals(sl, dates);
+
+    }
+
+    @Test
+    public void testGetEndOfWeekSeriesStartsOnHoliday() {
+
+        String[] dtStrs = {
+//                "2012-04-06", Good Friday
+                "2012-04-13",
+                "2012-04-20"
+        };
+
+        List<LocalDate> sl = loadAList(dtStrs);
+        List<LocalDate> dates = TradingDayUtils.getEndOfWeekSeries(new LocalDate(2012, 4, 6), new LocalDate(2012, 4, 21), 1);
+        assertEquals(sl, dates);
+
     }
 
 

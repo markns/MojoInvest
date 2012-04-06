@@ -59,41 +59,48 @@ public class RunStrategyApp {
 
     public void initDaos() {
         log.info("Loading in-memory dao's");
-        ((InMemoryQuoteDao) quoteDao).init("data/etf_international_quotes.csv");
-        ((InMemoryFundDao) fundDao).init("data/etf_international_funds.csv");
-        ((InMemoryCalculatedValueDao) calculatedValueDao).init("data/etf_international_cvs.csv");
-//        ((InMemoryQuoteDao) quoteDao).init("data/etf_sector_quotes.csv");
+//        ((InMemoryQuoteDao) quoteDao).init("data/etf_international_quotes.csv", "data/etf_quotes_compare.csv");
+//        ((InMemoryFundDao) fundDao).init("data/etf_international_funds.csv");
+//        ((InMemoryCalculatedValueDao) calculatedValueDao).init("data/etf_international_cvs.csv");
+//        ((InMemoryQuoteDao) quoteDao).init("data/etf_sector_quotes.csv", "data/etf_quotes_compare.csv");
 //        ((InMemoryFundDao) fundDao).init("data/etf_sector_funds.csv");
-//        ((InMemoryCalculatedValueDao) calculatedValueDao).in#it("data/etf_sector_cvs.csv");
-//        ((InMemoryQuoteDao) quoteDao).init("data/etf_asset_alloc_quotes.csv");
+//        ((InMemoryCalculatedValueDao) calculatedValueDao).init("data/etf_sector_cvs.csv");
+//        ((InMemoryQuoteDao) quoteDao).init("data/etf_asset_alloc_quotes.csv", "data/etf_quotes_compare.csv");
 //        ((InMemoryFundDao) fundDao).init("data/etf_asset_alloc_funds.csv");
 //        ((InMemoryCalculatedValueDao) calculatedValueDao).init("data/etf_asset_alloc_cvs.csv");
-//        ((InMemoryQuoteDao) quoteDao).init("data/fidelity_quotes.csv", "data/fidelity_quotes_missing.csv");
-//        ((InMemoryFundDao) fundDao).init("data/fidelity_funds.csv");
-//        ((InMemoryCalculatedValueDao) calculatedValueDao).init("data/fidelity_cvs3.csv");
+//        ((InMemoryQuoteDao) quoteDao).init("data/ishares_quotes.csv", "data/ishares_quotes_missing.csv","data/etf_quotes_compare.csv");
+//        ((InMemoryFundDao) fundDao).init("data/ishares_funds.csv");
+//        ((InMemoryCalculatedValueDao) calculatedValueDao).init("data/ishares_cvs.csv");
+        ((InMemoryQuoteDao) quoteDao).init("data/fidelity_quotes.csv", "data/fidelity_quotes_missing.csv");
+        ((InMemoryFundDao) fundDao).init("data/fidelity_funds.csv");
+        ((InMemoryCalculatedValueDao) calculatedValueDao).init("data/fidelity_cvs.csv");
     }
 
     private void run() {
 
         LocalDate fDate = new LocalDate("1990-01-01");
-        LocalDate tDate = new LocalDate("2012-03-01");
+        LocalDate tDate = new LocalDate("2007-12-31");
+//        LocalDate tDate = new LocalDate("2012-03-01");
         Date fromDate = fDate.toDateMidnight().toDate();
         Date toDate = tDate.toDateMidnight().toDate();
 
         double cash = 10000d;
         double transactionCost = 10d;
-        int portfolioSize = 1;
+        int portfolioSize = 3;
         int holdingPeriod = 1;
-        int ma1 = 26;
-        int ma2 = 39;
-        int roc = 39;
-        int castOff = 9;
+        int ma1 = 12;
+        int ma2 = 26;
+        int roc = 26;
+        int castOff = 17;
         int stddev = 26;
-        boolean equityCurveTrading = true;
-        int equityCurveWindow = 60;
+        boolean equityCurveTrading = false;
+        int equityCurveWindow = 50;
         String relativeStrengthStyle = "ROC";
 
-        String funds = null;
+//        String funds = "EUE|IAEX|ISF|MIDD|ISFE|SAUS|SCAN|IJPE|ISJP|IJPN|INAA|IPXJ|BRIC|FXC|ISFE|IFFF|IBZL|LTAM|IEER|IGCC|IKOR|SMEX|SPOL|RUSS|SRSA|ITWN|ITKY|NFTY";
+//        String funds = "SAUS|SCAN|IJPE|ISJP|IJPN|IPXJ|BRIC|FXC|ISFE|IFFF|IBZL|LTAM|IEER|IGCC|IKOR|SMEX|SPOL|RUSS|SRSA|ITWN|ITKY|NFTY|IGLO";
+        String funds = "ISF|EUN|IEUR|EUE|IJPN|FXC|IAPD|IBZL|ISFE|IUSP|ITKY|SRSA|INXG|MIDD";
+        funds = null;
         Collection<Fund> universe;
         if (funds != null) {
             universe = fundDao.get(toList(Splitter.on("|").split(funds)));
@@ -121,9 +128,10 @@ public class RunStrategyApp {
     }
 
     //International
-    //INFO: Params: {portfolioSize=1, rebalanceFrequency=1, ma1=26, ma2=39, roc=39, castOff=8, stddev=26, equityCurveTrading=true, equityCurveWindow=60, relativeStrengthStyle=ROC}
-    //INFO: Number of trades: 41
-    //INFO: Final portfolio value: 30482.03
+//    [INFO|main|6:55:17]: Params: {portfolioSize=1, rebalanceFrequency=1, ma1=26, ma2=39, roc=39, castOff=9, stddev=26, equityCurveTrading=true, equityCurveWindow=50, relativeStrengthStyle=ROC}
+//    [INFO|main|6:55:17]: Number of trades: 34
+//            [INFO|main|6:55:17]: Final portfolio value: 108830.36
+//            [INFO|main|6:55:18]: CAGR: 11.461530717275558%
 
     //Sector
     //INFO: Params: {portfolioSize=1, rebalanceFrequency=1, ma1=26, ma2=39, roc=39, castOff=8, stddev=26, equityCurveTrading=true, equityCurveWindow=60, relativeStrengthStyle=ROC}

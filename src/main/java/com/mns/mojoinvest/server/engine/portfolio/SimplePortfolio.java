@@ -106,6 +106,10 @@ public class SimplePortfolio implements Portfolio {
         return positions.get(fund);
     }
 
+    public PortfolioParams getParams() {
+        return portfolioParams;
+    }
+
     @Override
     public void add(Transaction transaction) throws PortfolioException {
         if (transaction instanceof BuyTransaction) {
@@ -292,8 +296,11 @@ public class SimplePortfolio implements Portfolio {
         return portfolioValues;
     }
 
+    public List<Transaction> getTransactions() {
+        return transactions;
+    }
 
-//    //TODO: Add equity curve window to portfolio constructor
+    //    //TODO: Add equity curve window to portfolio constructor
 //    private final Map<LocalDate, BigDecimal> marketValues = new HashMap<LocalDate, BigDecimal>();
 //
 //    @Override

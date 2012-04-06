@@ -3,6 +3,7 @@ package com.mns.mojoinvest.server.engine.portfolio;
 import com.mns.mojoinvest.server.engine.transaction.BuyTransaction;
 import com.mns.mojoinvest.server.engine.transaction.SellTransaction;
 import com.mns.mojoinvest.server.engine.transaction.Transaction;
+import com.mns.mojoinvest.shared.params.PortfolioParams;
 import org.joda.time.LocalDate;
 
 import java.math.BigDecimal;
@@ -55,5 +56,9 @@ public interface Portfolio {
 
     Portfolio createShadow();
 
+    List<Transaction> getTransactions();
+
 //    void storeMarketValue(LocalDate date, BigDecimal value);
+
+    PortfolioParams getParams();
 }

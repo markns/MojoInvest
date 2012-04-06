@@ -93,7 +93,10 @@ public class InMemoryQuoteDao implements QuoteDao {
 
     @Override
     public List<Quote> query(String symbol) {
-        return new ArrayList<Quote>(map.get(symbol).values());
+        Map<LocalDate, Quote> quoteMap = map.get(symbol);
+        if (quoteMap == null)
+            return new ArrayList<Quote>(0);
+        return new ArrayList<Quote>(quoteMap.values());
     }
 
     @Override
@@ -133,6 +136,9 @@ public class InMemoryQuoteDao implements QuoteDao {
 
     @Override
     public Quote get(String symbol, LocalDate date) {
+        if (map.get(symbol) == null)
+            return null;
+
         return map.get(symbol).get(date);
     }
 

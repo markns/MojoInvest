@@ -49,6 +49,26 @@ public class TradingDayUtils {
         return dates;
     }
 
+    public static List<LocalDate> getEndOfWeekSeries(LocalDate fromDate, LocalDate toDate, int frequency) {
+
+        List<LocalDate> dates = new ArrayList<LocalDate>();
+        LocalDate friday = fromDate.withDayOfWeek(DateTimeConstants.FRIDAY);
+
+        //Check that rolling holidays for the first date didn't roll before the start date.
+        if (rollHoliday(friday).isBefore(fromDate)) {
+            friday = friday.plusWeeks(frequency);
+        }
+
+        while (!rollHoliday(friday).isAfter(toDate)) {
+            dates.add(rollHoliday(friday));
+            friday = friday.plusWeeks(frequency);
+
+        }
+
+        return dates;
+    }
+
+
     public static List<LocalDate> getDailySeries(LocalDate fromDate, LocalDate toDate, boolean forwards) {
         List<LocalDate> dates = new ArrayList<LocalDate>();
         while (!rollBack(toDate).isBefore(fromDate)) {
@@ -102,6 +122,14 @@ public class TradingDayUtils {
         else if (HolidayUtils.isHoliday(date))
             //Recursion is to check for multi-day non-weekend closures eg. 7/11
             return rollBack(date.plusDays(1));
+        else
+            return date;
+    }
+
+    public static LocalDate rollHoliday(LocalDate date) {
+        if (HolidayUtils.isHoliday(date))
+            //Recursion is to check for multi-day non-weekend closures eg. 7/11
+            return rollBack(date.minusDays(1));
         else
             return date;
     }

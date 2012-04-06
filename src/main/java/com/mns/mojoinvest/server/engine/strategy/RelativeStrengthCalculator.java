@@ -32,8 +32,9 @@ public class RelativeStrengthCalculator {
                 "SMA", params.getMa1());
         Collection<CalculatedValue> ma2s = calculatedValueDao.get(dates, funds,
                 "SMA", params.getMa2());
-        Collection<CalculatedValue> stddevs = calculatedValueDao.get(dates, funds,
-                "STDDEV", params.getStdDev());
+//        Collection<CalculatedValue> stddevs = calculatedValueDao.get(dates, funds, "RSQUARED", params.getStdDev());
+
+        Collection<CalculatedValue> stddevs = calculatedValueDao.get(dates, funds, "STDDEV", params.getStdDev());
 
         log.info("Building intermediate data structures");
         Map<LocalDate, Map<String, BigDecimal>> ma1Map = buildDateCalcValueMap(ma1s);
@@ -64,7 +65,10 @@ public class RelativeStrengthCalculator {
                         if (stddevVals.get(symbol).compareTo(BigDecimal.ZERO) != 0) {
                             //If the fund price has been flat for the same period as was used to calculate
                             //the standard deviation, the std dev could be 0.
-                            rs.put(symbol, maRatio.divide(stddevVals.get(symbol), RoundingMode.HALF_EVEN));
+//                            rs.put(symbol, maRatio.divide(stddevVals.get(symbol), RoundingMode.HALF_EVEN));
+//                            rs.put(symbol, maRatio.multiply(stddevVals.get(symbol)));
+                            rs.put(symbol, maRatio);
+
                         }
                     }
 
@@ -81,6 +85,7 @@ public class RelativeStrengthCalculator {
         List<Map<String, BigDecimal>> allRs = new ArrayList<Map<String, BigDecimal>>(dates.size());
         Collection<CalculatedValue> rocs = calculatedValueDao.get(dates, funds, "ROC", params.getRoc());
         Map<LocalDate, Map<String, BigDecimal>> rocMap = buildDateCalcValueMap(rocs);
+//        Collection<CalculatedValue> stddevs = calculatedValueDao.get(dates, funds, "RSQUARED", params.getStdDev());
         Collection<CalculatedValue> stddevs = calculatedValueDao.get(dates, funds, "STDDEV", params.getStdDev());
         Map<LocalDate, Map<String, BigDecimal>> stddevMap = buildDateCalcValueMap(stddevs);
 
@@ -114,7 +119,9 @@ public class RelativeStrengthCalculator {
                     if (stddevVals.get(symbol).compareTo(BigDecimal.ZERO) != 0) {
                         //If the fund price has been flat for the same period as was used to calculate
                         //the standard deviation, the std dev will be 0.
-                        rs.put(symbol, roc.divide(stddevVals.get(symbol), RoundingMode.HALF_EVEN));
+//                        rs.put(symbol, roc.divide(stddevVals.get(symbol), RoundingMode.HALF_EVEN));
+//                        rs.put(symbol, roc.multiply(stddevVals.get(symbol)));
+                        rs.put(symbol, roc);
                     }
                 }
             }

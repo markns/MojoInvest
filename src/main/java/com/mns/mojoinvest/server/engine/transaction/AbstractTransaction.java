@@ -49,7 +49,7 @@ public abstract class AbstractTransaction implements Transaction {
 
     @Override
     public String toString() {
-        return this.getClass().getSimpleName() +
+        return this.getClass().getSimpleName().replace("Transaction", "") +
                 "{fund=" + fund +
                 ", date=" + date +
                 ", units=" + units +

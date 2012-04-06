@@ -1,6 +1,8 @@
 package com.mns.mojoinvest.server.engine.model.dao;
 
 import au.com.bytecode.opencsv.CSVReader;
+import com.google.common.base.Predicates;
+import com.google.common.collect.Maps;
 import com.google.inject.Singleton;
 import com.googlecode.objectify.Key;
 import com.googlecode.objectify.ObjectifyFactory;
@@ -10,10 +12,7 @@ import org.apache.commons.lang.NotImplementedException;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.logging.Logger;
 
 @Singleton
@@ -62,7 +61,7 @@ public class InMemoryFundDao implements FundDao {
 
     @Override
     public Collection<Fund> get(Collection<String> symbols) {
-        throw new NotImplementedException();
+        return new ArrayList<Fund>(Maps.filterKeys(funds, Predicates.in(symbols)).values());
     }
 
     @Override
