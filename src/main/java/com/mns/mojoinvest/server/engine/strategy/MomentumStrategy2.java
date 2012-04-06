@@ -12,9 +12,9 @@ import com.mns.mojoinvest.server.engine.model.dao.QuoteDao;
 import com.mns.mojoinvest.server.engine.portfolio.Portfolio;
 import com.mns.mojoinvest.server.engine.portfolio.PortfolioException;
 import com.mns.mojoinvest.server.engine.transaction.Transaction;
-import com.mns.mojoinvest.server.servlet.StrategyServlet;
 import com.mns.mojoinvest.server.util.TradingDayUtils;
 import com.mns.mojoinvest.shared.params.BacktestParams;
+import com.mns.mojoinvest.shared.params.Strategy2Params;
 import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.math.stat.descriptive.DescriptiveStatistics;
 import org.joda.time.LocalDate;
@@ -45,7 +45,7 @@ public class MomentumStrategy2 {
     }
 
     public void execute(Portfolio portfolio, BacktestParams backtestParams,
-                        Collection<Fund> universe, StrategyServlet.Strategy2Params strategyParams)
+                        Collection<Fund> universe, Strategy2Params strategyParams)
             throws StrategyException {
 
         LocalDate fromDate = new LocalDate(backtestParams.getFromDate());
@@ -81,6 +81,8 @@ public class MomentumStrategy2 {
         Map<String, BigDecimal> initCompares = new HashMap<String, BigDecimal>();
         Map<String, BigDecimal> portfolioCompares = new HashMap<String, BigDecimal>();
 
+        List<DrawDown> drawDowns = new ArrayList<DrawDown>();
+        DrawDown currentDD = null;
 
         for (int i = 0; i < rebalanceDates.size(); i++) {
 
@@ -93,36 +95,63 @@ public class MomentumStrategy2 {
                 continue;
             }
 
-            //for each fund in universe
-            //check if an initial quote exists already
-            //if not, try to retrieve
-            //if not null store in initCompares
-            for (Fund fund : universe) {
-                if (!initCompares.containsKey(fund.getSymbol())) {
-                    Quote q = quoteDao.get(fund.getSymbol(), rebalanceDate);
-                    if (q != null) {
-                        initCompares.put(fund.getSymbol(), q.getAdjClose());
-                        portfolioCompares.put(fund.getSymbol(), portfolio.marketValue(rebalanceDate));
-                    }
-                }
-            }
 
-
-            BigDecimal shadowPortfolioValue = shadowPortfolio.marketValue(rebalanceDate);
-
-            equityCurve.addValue(shadowPortfolioValue.doubleValue());
-
+            //Shadow portfolio and equity curve calculation stuff
+            BigDecimal marketValue = portfolio.marketValue(rebalanceDate);
+            BigDecimal shadowMarketValue = shadowPortfolio.marketValue(rebalanceDate);
+            equityCurve.addValue(shadowMarketValue.doubleValue());
             BigDecimal equityCurveMA = null;
-
             if (equityCurve.getN() >= strategyParams.getEquityCurveWindow()) {
                 equityCurveMA = new BigDecimal(equityCurve.getMean(), MathContext.DECIMAL32);
             }
 
             log.info(rebalanceDate.dayOfWeek().getAsShortText() + " " + rebalanceDate + " " +
                     portfolio.getActiveFunds(rebalanceDate) + " " +
-                    portfolio.marketValue(rebalanceDate) + " " +
-                    shadowPortfolio.marketValue(rebalanceDate) + " " + equityCurveMA);
+                    marketValue + " " +
+                    shadowMarketValue + " " + equityCurveMA);
 
+            //Calculation of draw downs
+            if (currentDD == null) {
+                currentDD = new DrawDown(rebalanceDate, marketValue);
+            }
+            //Curve is going up, and min has not been set
+            if (marketValue.compareTo(currentDD.getMax()) > 0 &&
+                    currentDD.getMin() == null) {
+                currentDD.setMaxDate(rebalanceDate);
+                currentDD.setMax(marketValue);
+            }
+            //Curve is going down
+            else if (marketValue.compareTo(currentDD.getMax()) < 0) {
+                //Min has not been set
+                if (currentDD.getMin() == null) {
+                    currentDD.setMinDate(rebalanceDate);
+                    currentDD.setMin(marketValue);
+                }
+                //New value is lower than min stored currently
+                else if (marketValue.compareTo(currentDD.getMin()) < 0) {
+                    currentDD.setMinDate(rebalanceDate);
+                    currentDD.setMin(marketValue);
+                }
+            }
+            //New value is higher than current max - create new drawdown
+            else if (marketValue.compareTo(currentDD.getMax()) > 0) {
+                drawDowns.add(currentDD);
+                currentDD = new DrawDown(rebalanceDate, marketValue);
+            }
+
+
+            //Initialisation of comparison to portfolio results 
+            for (Fund fund : universe) {
+                if (!initCompares.containsKey(fund.getSymbol())) {
+                    Quote q = quoteDao.get(fund.getSymbol(), rebalanceDate);
+                    if (q != null) {
+                        initCompares.put(fund.getSymbol(), q.getAdjClose());
+                        portfolioCompares.put(fund.getSymbol(), marketValue);
+                    }
+                }
+            }
+
+            //Calculate % change for all the funds in universe for later comparison
             int p = 0;
             String[] compares = new String[universe.size()];
             for (Fund fund : universe) {
@@ -138,15 +167,15 @@ public class MomentumStrategy2 {
             }
 
             String[] bodyStrat = new String[]{rebalanceDate + "",
-                    portfolio.marketValue(rebalanceDate) + " ",
-                    shadowPortfolio.marketValue(rebalanceDate) + " ",
+                    marketValue + " ",
+                    shadowMarketValue + " ",
                     equityCurveMA == null ? "" : equityCurveMA + ""
             };
 
             writer.writeNext((String[]) ArrayUtils.addAll(bodyStrat, compares));
 
             if (strategyParams.tradeEquityCurve()) {
-                if (equityCurveMA != null && shadowPortfolioValue.compareTo(equityCurveMA) < 0) {
+                if (equityCurveMA != null && shadowMarketValue.compareTo(equityCurveMA) < 0) {
                     log.fine("Below equity curve");
 
                     for (String symbol : portfolio.getActiveFunds(rebalanceDate)) {
@@ -184,16 +213,14 @@ public class MomentumStrategy2 {
             e.printStackTrace();
         }
 
-        //TODO:
-        //Add maximum drawdown value
-
         logParams(strategyParams);
         logTrades(portfolio);
+        logDrawDowns(drawDowns);
         logCAGR(portfolio, fromDate, toDate);
 
     }
 
-    private List<Map<String, BigDecimal>> getRelativeStrengths(Collection<Fund> universe, StrategyServlet.Strategy2Params strategyParams, List<LocalDate> rebalanceDates)
+    private List<Map<String, BigDecimal>> getRelativeStrengths(Collection<Fund> universe, Strategy2Params strategyParams, List<LocalDate> rebalanceDates)
             throws StrategyException {
         if ("MA".equals(strategyParams.getRelativeStrengthStyle())) {
             return relativeStrengthCalculator
@@ -206,8 +233,18 @@ public class MomentumStrategy2 {
         }
     }
 
-    private void logParams(StrategyServlet.Strategy2Params strategyParams) {
+    private void logParams(Strategy2Params strategyParams) {
         log.info("Params: " + strategyParams);
+    }
+
+    private void logDrawDowns(List<DrawDown> drawDowns) {
+        BigDecimal maxDD = BigDecimal.ZERO;
+        for (DrawDown drawDown : drawDowns) {
+            if (drawDown.getPctValue().compareTo(maxDD) > 0) {
+                maxDD = drawDown.getPctValue();
+            }
+        }
+        log.info("MaxDD: " + maxDD + "%");
     }
 
     private void logCAGR(Portfolio portfolio, LocalDate fromDate, LocalDate toDate) {
@@ -228,7 +265,7 @@ public class MomentumStrategy2 {
         log.info("Number of trades: " + portfolio.getTransactions().size());
     }
 
-    private List<String> getSelection(Map<String, BigDecimal> rs, StrategyServlet.Strategy2Params params, LocalDate date) {
+    private List<String> getSelection(Map<String, BigDecimal> rs, Strategy2Params params, LocalDate date) {
         //Rank order
         Ordering<String> valueComparator = Ordering.natural()
                 .reverse()
@@ -257,7 +294,7 @@ public class MomentumStrategy2 {
         }
     }
 
-    private void buyWinners(Portfolio portfolio, StrategyServlet.Strategy2Params params,
+    private void buyWinners(Portfolio portfolio, Strategy2Params params,
                             LocalDate rebalanceDate, List<String> selection)
             throws StrategyException {
 
@@ -288,7 +325,7 @@ public class MomentumStrategy2 {
         }
     }
 
-    private List<LocalDate> getRebalanceDates(LocalDate fromDate, LocalDate toDate, StrategyServlet.Strategy2Params params) {
+    private List<LocalDate> getRebalanceDates(LocalDate fromDate, LocalDate toDate, Strategy2Params params) {
         return TradingDayUtils.getEndOfWeekSeries(fromDate, toDate, params.getRebalanceFrequency());
     }
 
@@ -297,4 +334,5 @@ public class MomentumStrategy2 {
         BigDecimal change = to.subtract(from);
         return change.divide(from, MathContext.DECIMAL32);
     }
+
 }

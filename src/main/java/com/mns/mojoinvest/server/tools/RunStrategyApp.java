@@ -15,9 +15,9 @@ import com.mns.mojoinvest.server.guice.DispatchServletModule;
 import com.mns.mojoinvest.server.guice.EngineModule;
 import com.mns.mojoinvest.server.guice.StandaloneModule;
 import com.mns.mojoinvest.server.guice.TradingStrategyModule;
-import com.mns.mojoinvest.server.servlet.StrategyServlet;
 import com.mns.mojoinvest.shared.params.BacktestParams;
 import com.mns.mojoinvest.shared.params.PortfolioParams;
+import com.mns.mojoinvest.shared.params.Strategy2Params;
 import org.joda.time.LocalDate;
 
 import java.util.Collection;
@@ -79,8 +79,8 @@ public class RunStrategyApp {
     private void run() {
 
         LocalDate fDate = new LocalDate("1990-01-01");
-        LocalDate tDate = new LocalDate("2007-12-31");
-//        LocalDate tDate = new LocalDate("2012-03-01");
+//        LocalDate tDate = new LocalDate("2007-12-31");
+        LocalDate tDate = new LocalDate("2012-03-01");
         Date fromDate = fDate.toDateMidnight().toDate();
         Date toDate = tDate.toDateMidnight().toDate();
 
@@ -111,7 +111,7 @@ public class RunStrategyApp {
 
         BacktestParams params = new BacktestParams(fromDate, toDate);
 
-        StrategyServlet.Strategy2Params strategyParams = new StrategyServlet.Strategy2Params(portfolioSize, holdingPeriod, ma1, ma2, roc,
+        Strategy2Params strategyParams = new Strategy2Params(portfolioSize, holdingPeriod, ma1, ma2, roc,
                 castOff, stddev, equityCurveTrading, equityCurveWindow, relativeStrengthStyle);
 
         try {
@@ -126,6 +126,12 @@ public class RunStrategyApp {
                 ? (List<E>) iterable
                 : Lists.newArrayList(iterable.iterator());
     }
+
+    //Fidelity
+//    [INFO|main|10:49:07]: Params: {portfolioSize=3, rebalanceFrequency=1, ma1=12, ma2=26, roc=26, castOff=17, stddev=26, equityCurveTrading=false, equityCurveWindow=50, relativeStrengthStyle=ROC}
+//    [INFO|main|10:49:08]: Number of trades: 139
+//            [INFO|main|10:49:08]: Final portfolio value: 222868.34
+//            [INFO|main|10:49:08]: CAGR: 20.031978154377427%
 
     //International
 //    [INFO|main|6:55:17]: Params: {portfolioSize=1, rebalanceFrequency=1, ma1=26, ma2=39, roc=39, castOff=9, stddev=26, equityCurveTrading=true, equityCurveWindow=50, relativeStrengthStyle=ROC}

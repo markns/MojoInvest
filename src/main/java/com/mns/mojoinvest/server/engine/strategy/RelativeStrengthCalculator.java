@@ -4,7 +4,7 @@ import com.google.inject.Inject;
 import com.mns.mojoinvest.server.engine.model.CalculatedValue;
 import com.mns.mojoinvest.server.engine.model.Fund;
 import com.mns.mojoinvest.server.engine.model.dao.CalculatedValueDao;
-import com.mns.mojoinvest.server.servlet.StrategyServlet;
+import com.mns.mojoinvest.shared.params.Strategy2Params;
 import org.joda.time.LocalDate;
 
 import java.math.BigDecimal;
@@ -24,7 +24,7 @@ public class RelativeStrengthCalculator {
     }
 
 
-    public List<Map<String, BigDecimal>> getRelativeStrengthsMA(Collection<Fund> funds, StrategyServlet.Strategy2Params params, List<LocalDate> dates) {
+    public List<Map<String, BigDecimal>> getRelativeStrengthsMA(Collection<Fund> funds, Strategy2Params params, List<LocalDate> dates) {
 
         log.info("Starting load of calculated values");
         //TODO: Factor calculation of RS to separate class
@@ -32,9 +32,8 @@ public class RelativeStrengthCalculator {
                 "SMA", params.getMa1());
         Collection<CalculatedValue> ma2s = calculatedValueDao.get(dates, funds,
                 "SMA", params.getMa2());
-//        Collection<CalculatedValue> stddevs = calculatedValueDao.get(dates, funds, "RSQUARED", params.getStdDev());
-
-        Collection<CalculatedValue> stddevs = calculatedValueDao.get(dates, funds, "STDDEV", params.getStdDev());
+        Collection<CalculatedValue> stddevs = calculatedValueDao.get(dates, funds, "RSQUARED", params.getStdDev());
+//        Collection<CalculatedValue> stddevs = calculatedValueDao.get(dates, funds, "STDDEV", params.getStdDev());
 
         log.info("Building intermediate data structures");
         Map<LocalDate, Map<String, BigDecimal>> ma1Map = buildDateCalcValueMap(ma1s);
@@ -66,8 +65,8 @@ public class RelativeStrengthCalculator {
                             //If the fund price has been flat for the same period as was used to calculate
                             //the standard deviation, the std dev could be 0.
 //                            rs.put(symbol, maRatio.divide(stddevVals.get(symbol), RoundingMode.HALF_EVEN));
-//                            rs.put(symbol, maRatio.multiply(stddevVals.get(symbol)));
-                            rs.put(symbol, maRatio);
+                            rs.put(symbol, maRatio.multiply(stddevVals.get(symbol)));
+//                            rs.put(symbol, maRatio);
 
                         }
                     }
@@ -80,13 +79,13 @@ public class RelativeStrengthCalculator {
     }
 
 
-    public List<Map<String, BigDecimal>> getRelativeStrengthsROC(Collection<Fund> funds, StrategyServlet.Strategy2Params params, List<LocalDate> dates) {
+    public List<Map<String, BigDecimal>> getRelativeStrengthsROC(Collection<Fund> funds, Strategy2Params params, List<LocalDate> dates) {
 
         List<Map<String, BigDecimal>> allRs = new ArrayList<Map<String, BigDecimal>>(dates.size());
         Collection<CalculatedValue> rocs = calculatedValueDao.get(dates, funds, "ROC", params.getRoc());
         Map<LocalDate, Map<String, BigDecimal>> rocMap = buildDateCalcValueMap(rocs);
-//        Collection<CalculatedValue> stddevs = calculatedValueDao.get(dates, funds, "RSQUARED", params.getStdDev());
-        Collection<CalculatedValue> stddevs = calculatedValueDao.get(dates, funds, "STDDEV", params.getStdDev());
+        Collection<CalculatedValue> stddevs = calculatedValueDao.get(dates, funds, "RSQUARED", params.getStdDev());
+//        Collection<CalculatedValue> stddevs = calculatedValueDao.get(dates, funds, "STDDEV", params.getStdDev());
         Map<LocalDate, Map<String, BigDecimal>> stddevMap = buildDateCalcValueMap(stddevs);
 
         for (LocalDate date : dates) {

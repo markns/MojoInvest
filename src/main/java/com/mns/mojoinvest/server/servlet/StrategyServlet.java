@@ -14,6 +14,7 @@ import com.mns.mojoinvest.server.engine.strategy.StrategyException;
 import com.mns.mojoinvest.server.servlet.util.ParameterParser;
 import com.mns.mojoinvest.shared.params.BacktestParams;
 import com.mns.mojoinvest.shared.params.PortfolioParams;
+import com.mns.mojoinvest.shared.params.Strategy2Params;
 import org.joda.time.LocalDate;
 
 import javax.servlet.ServletException;
@@ -100,88 +101,4 @@ public class StrategyServlet extends HttpServlet {
                 : Lists.newArrayList(iterable.iterator());
     }
 
-    public static class Strategy2Params {
-        private final int portfolioSize;
-        private final int rebalanceFrequency;
-        private final int ma1;
-        private final int ma2;
-        private final int roc;
-        private final int castOff;
-        private final int stddev;
-        private final boolean equityCurveTrading;
-        private final int equityCurveWindow;
-        private String relativeStrengthStyle;
-
-        public Strategy2Params(int portfolioSize, int rebalanceFrequency, int ma1, int ma2, int roc,
-                               int castOff, int stddev, boolean equityCurveTrading, int equityCurveWindow,
-                               String relativeStrengthStyle) {
-
-            this.portfolioSize = portfolioSize;
-            this.rebalanceFrequency = rebalanceFrequency;
-            this.ma1 = ma1;
-            this.ma2 = ma2;
-            this.roc = roc;
-            this.castOff = castOff;
-            this.stddev = stddev;
-            this.equityCurveTrading = equityCurveTrading;
-            this.equityCurveWindow = equityCurveWindow;
-            this.relativeStrengthStyle = relativeStrengthStyle;
-        }
-
-        public int getPortfolioSize() {
-            return portfolioSize;
-        }
-
-        public int getRebalanceFrequency() {
-            return rebalanceFrequency;
-        }
-
-        public int getMa1() {
-            return ma1;
-        }
-
-        public int getMa2() {
-            return ma2;
-        }
-
-        public int getRoc() {
-            return roc;
-        }
-
-        public int getCastOff() {
-            return castOff;
-        }
-
-        public int getStdDev() {
-            return stddev;
-        }
-
-        public boolean tradeEquityCurve() {
-            return equityCurveTrading;
-        }
-
-        public int getEquityCurveWindow() {
-            return equityCurveWindow;
-        }
-
-        public String getRelativeStrengthStyle() {
-            return relativeStrengthStyle;
-        }
-
-        @Override
-        public String toString() {
-            return "{" +
-                    "portfolioSize=" + portfolioSize +
-                    ", rebalanceFrequency=" + rebalanceFrequency +
-                    ", ma1=" + ma1 +
-                    ", ma2=" + ma2 +
-                    ", roc=" + roc +
-                    ", castOff=" + castOff +
-                    ", stddev=" + stddev +
-                    ", equityCurveTrading=" + equityCurveTrading +
-                    ", equityCurveWindow=" + equityCurveWindow +
-                    ", relativeStrengthStyle=" + relativeStrengthStyle +
-                    '}';
-        }
-    }
 }

@@ -32,8 +32,8 @@ public class OfflineCalculatorTool {
     //    private static final String outfile = "data/etf_international_cvs.csv";
 //    private static final String outfile = "data/etf_sector_cvs.csv";
 //    private static final String outfile = "data/etf_asset_alloc_cvs.csv";
-//    private static final String outfile = "data/ishares_cvs.csv";
-    private static final String outfile = "data/fidelity_cvs.csv";
+    private static final String outfile = "data/ishares_cvs.csv";
+//    private static final String outfile = "data/fidelity_cvs.csv";
 
     private void run() throws IOException {
 
@@ -43,10 +43,10 @@ public class OfflineCalculatorTool {
 //        fundDao.init("data/etf_sector_funds.csv");
 //        quoteDao.init("data/etf_asset_alloc_quotes.csv");
 //        fundDao.init("data/etf_asset_alloc_funds.csv");
-//        quoteDao.init("data/ishares_quotes.csv");
-//        fundDao.init("data/ishares_funds.csv");
-        quoteDao.init("data/fidelity_quotes.csv", "data/fidelity_quotes_missing.csv");
-        fundDao.init("data/fidelity_funds.csv");
+        quoteDao.init("data/ishares_quotes.csv");
+        fundDao.init("data/ishares_funds.csv");
+//        quoteDao.init("data/fidelity_quotes.csv", "data/fidelity_quotes_missing.csv");
+//        fundDao.init("data/fidelity_funds.csv");
 
         CSVWriter writer = new CSVWriter(new FileWriter(outfile));
 
