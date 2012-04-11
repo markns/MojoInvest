@@ -11,10 +11,12 @@ public class Strategy2Params {
     private final boolean equityCurveTrading;
     private final int equityCurveWindow;
     private String relativeStrengthStyle;
+    private boolean useSafeAsset;
+    private String safeAsset;
 
     public Strategy2Params(int portfolioSize, int rebalanceFrequency, int ma1, int ma2, int roc,
                            int castOff, int stddev, boolean equityCurveTrading, int equityCurveWindow,
-                           String relativeStrengthStyle) {
+                           String relativeStrengthStyle, boolean useSafeAsset, String safeAsset) {
 
         this.portfolioSize = portfolioSize;
         this.rebalanceFrequency = rebalanceFrequency;
@@ -26,6 +28,8 @@ public class Strategy2Params {
         this.equityCurveTrading = equityCurveTrading;
         this.equityCurveWindow = equityCurveWindow;
         this.relativeStrengthStyle = relativeStrengthStyle;
+        this.useSafeAsset = useSafeAsset;
+        this.safeAsset = safeAsset;
     }
 
     public int getPortfolioSize() {
@@ -68,9 +72,17 @@ public class Strategy2Params {
         return relativeStrengthStyle;
     }
 
+    public boolean useSafeAsset() {
+        return useSafeAsset;
+    }
+
+    public String getSafeAsset() {
+        return safeAsset;
+    }
+
     @Override
     public String toString() {
-        return "{" +
+        return "Params: {" +
                 "portfolioSize=" + portfolioSize +
                 ", rebalanceFrequency=" + rebalanceFrequency +
                 ", ma1=" + ma1 +
@@ -80,7 +92,9 @@ public class Strategy2Params {
                 ", stddev=" + stddev +
                 ", equityCurveTrading=" + equityCurveTrading +
                 ", equityCurveWindow=" + equityCurveWindow +
-                ", relativeStrengthStyle=" + relativeStrengthStyle +
+                ", relativeStrengthStyle='" + relativeStrengthStyle + '\'' +
+                ", useSafeAsset=" + useSafeAsset +
+                ", safeAsset='" + safeAsset + '\'' +
                 '}';
     }
 }

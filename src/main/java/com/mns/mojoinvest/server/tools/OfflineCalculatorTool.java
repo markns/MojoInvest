@@ -29,24 +29,25 @@ public class OfflineCalculatorTool {
 
     private final CalculationService calculationService = new CalculationService();
 
-    //    private static final String outfile = "data/etf_international_cvs.csv";
-//    private static final String outfile = "data/etf_sector_cvs.csv";
-//    private static final String outfile = "data/etf_asset_alloc_cvs.csv";
-    private static final String outfile = "data/ishares_cvs.csv";
-//    private static final String outfile = "data/fidelity_cvs.csv";
 
     private void run() throws IOException {
 
 //        quoteDao.init("data/etf_international_quotes.csv");
 //        fundDao.init("data/etf_international_funds.csv");
+        //    String outfile = "data/etf_international_cvs.csv";
+
 //        quoteDao.init("data/etf_sector_quotes.csv");
 //        fundDao.init("data/etf_sector_funds.csv");
+//  String outfile = "data/etf_sector_cvs.csv";
 //        quoteDao.init("data/etf_asset_alloc_quotes.csv");
 //        fundDao.init("data/etf_asset_alloc_funds.csv");
+//  String outfile = "data/etf_asset_alloc_cvs.csv";
         quoteDao.init("data/ishares_quotes.csv");
         fundDao.init("data/ishares_funds.csv");
+        String outfile = "data/ishares_cvs.csv";
 //        quoteDao.init("data/fidelity_quotes.csv", "data/fidelity_quotes_missing.csv");
 //        fundDao.init("data/fidelity_funds.csv");
+//        String outfile = "data/fidelity_cvs.csv";
 
         CSVWriter writer = new CSVWriter(new FileWriter(outfile));
 
@@ -69,7 +70,7 @@ public class OfflineCalculatorTool {
             List<CalculatedValue> cvs = new ArrayList<CalculatedValue>();
 
             //Moving averages
-            for (int period : Arrays.asList(4, 8, 12, 15, 26, 39, 52)) {
+            for (int period : Arrays.asList(4, 8, 12, 26, 39, 52)) {
                 List<LocalDate> dates = TradingDayUtils.getEndOfWeekSeries(earliest, latest, 1);
                 List<Quote> weeklySeries = new ArrayList<Quote>(quoteDao.get(fund, dates));
                 cvs.addAll(calculationService.calculateSMA(weeklySeries, period));
@@ -77,7 +78,7 @@ public class OfflineCalculatorTool {
 
 
             //Standardized ROC
-            for (int period : Arrays.asList(4, 12, 26, 39, 52)) {
+            for (int period : Arrays.asList(4, 8, 12, 26, 39, 52)) {
                 List<LocalDate> dates = TradingDayUtils.getEndOfWeekSeries(earliest, latest, 1);
                 List<Quote> weeklySeries = new ArrayList<Quote>(quoteDao.get(fund, dates));
                 cvs.addAll(calculationService.calculateROC(weeklySeries, period));
@@ -96,6 +97,7 @@ public class OfflineCalculatorTool {
                 List<Quote> weeklySeries = new ArrayList<Quote>(quoteDao.get(fund, dates));
                 cvs.addAll(calculationService.calculateRSquared(weeklySeries, period));
             }
+
 
             System.out.println(fund + " " + earliest + " " + latest + " " + cvs.size());
 //

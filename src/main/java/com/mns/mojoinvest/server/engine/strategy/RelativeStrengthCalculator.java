@@ -51,13 +51,13 @@ public class RelativeStrengthCalculator {
                 for (Fund fund : funds) {
                     String symbol = fund.getSymbol();
                     if (!ma1vals.containsKey(symbol)) {
-                        log.fine("Unable to calculate RS for " + symbol + " on " + date + " no SMA|" + params.getMa1());
+                        log.fine(date + " Unable to calculate RS for " + symbol + " on " + date + " no SMA|" + params.getMa1());
                     } else if (!ma2vals.containsKey(symbol)) {
-                        log.fine("Unable to calculate RS for " + symbol + " on " + date + " no SMA|" + params.getMa2());
+                        log.fine(date + " Unable to calculate RS for " + symbol + " on " + date + " no SMA|" + params.getMa2());
                     } else if (!stddevVals.containsKey(symbol)) {
-                        log.fine("Unable to calculate RS for " + symbol + " on " + date + " no STDDEV|" + params.getStdDev());
+                        log.fine(date + " Unable to calculate RS for " + symbol + " on " + date + " no STDDEV|" + params.getStdDev());
                     } else {
-                        log.fine("Calculating RS(MA) for " + symbol + " as (" + ma1vals.get(symbol) + " / " +
+                        log.fine(date + " Calculating RS(MA) for " + symbol + " as (" + ma1vals.get(symbol) + " / " +
                                 ma2vals.get(symbol) + ") / " + stddevVals.get(symbol));
                         BigDecimal maRatio = ma1vals.get(symbol).divide(ma2vals.get(symbol), RoundingMode.HALF_EVEN);
 
@@ -65,8 +65,8 @@ public class RelativeStrengthCalculator {
                             //If the fund price has been flat for the same period as was used to calculate
                             //the standard deviation, the std dev could be 0.
 //                            rs.put(symbol, maRatio.divide(stddevVals.get(symbol), RoundingMode.HALF_EVEN));
-                            rs.put(symbol, maRatio.multiply(stddevVals.get(symbol)));
-//                            rs.put(symbol, maRatio);
+//                            rs.put(symbol, maRatio.multiply(stddevVals.get(symbol)));
+                            rs.put(symbol, maRatio);
 
                         }
                     }
@@ -95,12 +95,12 @@ public class RelativeStrengthCalculator {
             Map<String, BigDecimal> stddevVals = stddevMap.get(date);
 
             if (rocVals == null) {
-                log.warning("No ROC values calculated for " + date);
+                log.warning(date + " No ROC values calculated");
                 allRs.add(rs);
                 continue;
             }
             if (stddevVals == null) {
-                log.warning("No STDDEV values calculated for " + date);
+                log.warning(date + " No STDDEV values calculated");
                 allRs.add(rs);
                 continue;
             }
@@ -108,11 +108,11 @@ public class RelativeStrengthCalculator {
             for (Fund fund : funds) {
                 String symbol = fund.getSymbol();
                 if (!rocVals.containsKey(symbol)) {
-                    log.fine("Unable to calculate RS for " + symbol + " on " + date + " no ROC|" + params.getRoc());
+                    log.fine(date + " Unable to calculate RS(ROC) for " + symbol + " on " + date + " no ROC|" + params.getRoc());
                 } else if (!stddevVals.containsKey(symbol)) {
-                    log.fine("Unable to calculate RS for " + symbol + " on " + date + " no STDDEV|" + params.getStdDev());
+                    log.fine(date + " Unable to calculate RS(ROC) for " + symbol + " on " + date + " no STDDEV|" + params.getStdDev());
                 } else {
-                    log.fine("Calculating RS(ROC) for " + symbol + " as " + rocVals.get(symbol) + " / " + stddevVals.get(symbol));
+                    log.fine(date + " Calculating RS(ROC) for " + symbol + " as " + rocVals.get(symbol) + " / " + stddevVals.get(symbol));
                     BigDecimal roc = rocVals.get(symbol);
 
                     if (stddevVals.get(symbol).compareTo(BigDecimal.ZERO) != 0) {

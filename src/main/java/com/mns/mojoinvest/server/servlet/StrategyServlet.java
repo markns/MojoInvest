@@ -80,10 +80,12 @@ public class StrategyServlet extends HttpServlet {
         Portfolio portfolio = portfolioFactory.create(new PortfolioParams(cash, transactionCost, fromDate));
 
         BacktestParams params = new BacktestParams(fromDate, toDate);
-
+        boolean useSafeAsset = true;
+        String safeAsset = "IUTX";
         //4, 12, 26, 40, 52
+
         Strategy2Params strategyParams = new Strategy2Params(portfolioSize, holdingPeriod, ma1, ma2, roc,
-                castOff, stddev, equityCurveTrading, equityCurveWindow, relativeStrengthStyle);
+                castOff, stddev, equityCurveTrading, equityCurveWindow, relativeStrengthStyle, useSafeAsset, safeAsset);
 
 
         try {

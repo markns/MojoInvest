@@ -32,6 +32,9 @@ public class NextTradingDayExecutor implements Executor {
 
         LocalDate executionDate = TradingDayUtils.rollForward(date.plusDays(1));
         Quote executionQuote = quoteDao.get(fund, executionDate);
+        if (executionQuote == null) {
+            throw new PortfolioException(date + " Unable to buy " + fund + " - quote was null");
+        }
         BigDecimal shares = allocation.divide(executionQuote.getAdjClose(), 0, BigDecimal.ROUND_DOWN);
         if (!portfolio.isShadow())
             log.info(executionDate.dayOfWeek().getAsShortText() + " " + executionDate +
@@ -47,6 +50,9 @@ public class NextTradingDayExecutor implements Executor {
         //TODO: getRanking execution price should be mid between open and close of next days quote
         LocalDate executionDate = TradingDayUtils.rollForward(date.plusDays(1));
         Quote executionQuote = quoteDao.get(fund, executionDate);
+        if (executionQuote == null) {
+            throw new PortfolioException(date + " Unable to sell " + fund + " - quote was null");
+        }
         Position position = portfolio.getPosition(fund);
         if (!portfolio.isShadow())
             log.info(executionDate.dayOfWeek().getAsShortText() + " " + executionDate +
