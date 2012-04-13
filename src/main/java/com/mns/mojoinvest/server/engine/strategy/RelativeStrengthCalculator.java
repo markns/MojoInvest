@@ -130,6 +130,44 @@ public class RelativeStrengthCalculator {
         return allRs;
     }
 
+    public List<Map<String, BigDecimal>> getRelativeStrengthAlpha(Collection<Fund> funds, Strategy2Params params, List<LocalDate> dates) {
+
+        List<Map<String, BigDecimal>> allRs = new ArrayList<Map<String, BigDecimal>>(dates.size());
+        Collection<CalculatedValue> rocs = calculatedValueDao.get(dates, funds, "ALPHA", params.getRoc());
+        Map<LocalDate, Map<String, BigDecimal>> rocMap = buildDateCalcValueMap(rocs);
+
+        for (LocalDate date : dates) {
+
+            Map<String, BigDecimal> rs = new HashMap<String, BigDecimal>();
+            Map<String, BigDecimal> rocVals = rocMap.get(date);
+
+            if (rocVals == null) {
+                log.warning(date + " No ALPHA values calculated");
+                allRs.add(rs);
+                continue;
+            }
+
+            for (Fund fund : funds) {
+                String symbol = fund.getSymbol();
+                if (!rocVals.containsKey(symbol)) {
+                    log.fine(date + " Unable to calculate RS(ALPHA) for " + symbol + " on " + date + " no ROC|" + params.getRoc());
+                } else {
+//                    log.fine(date + " Calculating RS(ALPHA) for " + symbol + " as " + rocVals.get(symbol) + " / " + stddevVals.get(symbol));
+                    BigDecimal alpha = rocVals.get(symbol);
+
+                    //If the fund price has been flat for the same period as was used to calculate
+                    //the standard deviation, the std dev will be 0.
+//                        rs.put(symbol, roc.divide(stddevVals.get(symbol), RoundingMode.HALF_EVEN));
+//                        rs.put(symbol, roc.multiply(stddevVals.get(symbol)));
+                    rs.put(symbol, alpha);
+                }
+            }
+            allRs.add(rs);
+        }
+
+        return allRs;
+    }
+
     private Map<LocalDate, Map<String, BigDecimal>> buildDateCalcValueMap(Collection<CalculatedValue> vals) {
         Map<LocalDate, Map<String, BigDecimal>> valMap = new HashMap<LocalDate, Map<String, BigDecimal>>();
         for (CalculatedValue val : vals) {

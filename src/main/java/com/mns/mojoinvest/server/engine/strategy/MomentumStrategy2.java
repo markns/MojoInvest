@@ -259,6 +259,9 @@ public class MomentumStrategy2 {
         } else if ("ROC".equals(strategyParams.getRelativeStrengthStyle())) {
             return relativeStrengthCalculator
                     .getRelativeStrengthsROC(universe, strategyParams, rebalanceDates);
+        } else if ("ALPHA".equals(strategyParams.getRelativeStrengthStyle())) {
+            return relativeStrengthCalculator
+                    .getRelativeStrengthAlpha(universe, strategyParams, rebalanceDates);
         } else {
             throw new StrategyException("Relative strength style " + strategyParams);
         }

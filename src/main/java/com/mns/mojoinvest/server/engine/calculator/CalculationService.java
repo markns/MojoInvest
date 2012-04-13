@@ -47,16 +47,6 @@ public class CalculationService {
 
     private static BigDecimal HUNDRED = BigDecimal.TEN.multiply(BigDecimal.TEN);
 
-    public CalculatedValue calculateROC(Quote fromQuote, Quote toQuote, int period) {
-//        cv = 100 * ((toQuote - fromQuote) / fromQuote)
-
-        BigDecimal roc = toQuote.getAdjClose().subtract(fromQuote.getAdjClose())
-                .divide(fromQuote.getAdjClose(), MathContext.DECIMAL32)
-                .multiply(HUNDRED).setScale(3, RoundingMode.HALF_EVEN);
-        return new CalculatedValue(toQuote.getDate(), toQuote.getSymbol(), "ROC", period,
-                roc);
-    }
-
     public List<CalculatedValue> calculateROC(List<Quote> quotes, int period) {
 //        cv = 100 * ((toQuote - fromQuote) / fromQuote)
         List<CalculatedValue> cvs = new ArrayList<CalculatedValue>();
