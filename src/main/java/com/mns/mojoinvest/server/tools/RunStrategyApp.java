@@ -59,9 +59,9 @@ public class RunStrategyApp {
 
     public void initDaos() {
         log.info("Loading in-memory dao's");
-        ((InMemoryQuoteDao) quoteDao).init("data/etf_international_quotes.csv", "data/etf_quotes_compare.csv");
-        ((InMemoryFundDao) fundDao).init("data/etf_international_funds.csv");
-        ((InMemoryCalculatedValueDao) calculatedValueDao).init("data/etf_international_cvs.csv");
+//        ((InMemoryQuoteDao) quoteDao).init("data/etf_international_quotes.csv", "data/etf_quotes_compare.csv");
+//        ((InMemoryFundDao) fundDao).init("data/etf_international_funds.csv");
+//        ((InMemoryCalculatedValueDao) calculatedValueDao).init("data/etf_international_cvs.csv");
 //        ((InMemoryQuoteDao) quoteDao).init("data/etf_sector_quotes.csv", "data/etf_quotes_compare.csv");
 //        ((InMemoryFundDao) fundDao).init("data/etf_sector_funds.csv");
 //        ((InMemoryCalculatedValueDao) calculatedValueDao).init("data/etf_sector_cvs.csv");
@@ -71,34 +71,35 @@ public class RunStrategyApp {
 //        ((InMemoryQuoteDao) quoteDao).init("data/ishares_quotes.csv", "data/ishares_quotes_missing.csv", "data/etf_quotes_compare.csv");
 //        ((InMemoryFundDao) fundDao).init("data/ishares_funds.csv");
 //        ((InMemoryCalculatedValueDao) calculatedValueDao).init("data/ishares_cvs.csv");
-//        ((InMemoryQuoteDao) quoteDao).init("data/fidelity_quotes.csv", "data/fidelity_quotes_missing.csv");
-//        ((InMemoryFundDao) fundDao).init("data/fidelity_funds.csv");
-//        ((InMemoryCalculatedValueDao) calculatedValueDao).init("data/fidelity_cvs.csv");
+        ((InMemoryQuoteDao) quoteDao).init("data/fidelity_quotes.csv", "data/fidelity_quotes_missing.csv", "data/etf_quotes_compare.csv");
+        ((InMemoryFundDao) fundDao).init("data/fidelity_funds.csv");
+        ((InMemoryCalculatedValueDao) calculatedValueDao).init("data/fidelity_cvs.csv");
     }
 
     private void run() {
 
         LocalDate fDate = new LocalDate("1990-01-01");
-//        LocalDate tDate = new LocalDate("2007-12-31");
-        LocalDate tDate = new LocalDate("2012-03-01");
+        LocalDate tDate = new LocalDate("2007-12-31");
+//        LocalDate tDate = new LocalDate("2012-03-01");
         Date fromDate = fDate.toDateMidnight().toDate();
         Date toDate = tDate.toDateMidnight().toDate();
 
         double cash = 10000d;
         double transactionCost = 10d;
-        int portfolioSize = 1;
+        int portfolioSize = 3;
         int holdingPeriod = 1;
         int ma1 = 12;
         int ma2 = 26;
         int roc = 26;
-        int castOff = 5;
+        int alpha = 100;
+        int castOff = 17;
         int stddev = 26;
         boolean equityCurveTrading = false;
         int equityCurveWindow = 52;
         boolean useSafeAsset = false;
-//        String safeAsset = "FSUTX";
-        String safeAsset = "IBTS";
-        String relativeStrengthStyle = "ALPHA";
+        String safeAsset = "FSUTX";
+//        String safeAsset = "GSPC";
+        String relativeStrengthStyle = "MA";
 
         String funds = "IUSA|IEEM|IWRD|EUE|ISF|IBCX|INAA|IJPN|IFFF|IWDP|SEMB|IMEU|BRIC|FXC|IGLT|IBZL|IKOR|IEUX|MIDD|EUN|LTAM|ITWN|IEER|IPXJ|IEMS|ISP6|SSAM|SAUS|SRSA|RUSS|NFTY";
         funds = null;
@@ -112,7 +113,7 @@ public class RunStrategyApp {
 
         BacktestParams params = new BacktestParams(fromDate, toDate);
 
-        Strategy2Params strategyParams = new Strategy2Params(portfolioSize, holdingPeriod, ma1, ma2, roc,
+        Strategy2Params strategyParams = new Strategy2Params(portfolioSize, holdingPeriod, ma1, ma2, roc, alpha,
                 castOff, stddev, equityCurveTrading, equityCurveWindow, relativeStrengthStyle, useSafeAsset, safeAsset);
 
         try {

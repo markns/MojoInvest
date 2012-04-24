@@ -33,26 +33,26 @@ public class OfflineCalculatorTool {
 
     private void run() throws IOException {
 
-        quoteDao.init("data/etf_international_quotes.csv", "data/etf_quotes_compare.csv");
-        fundDao.init("data/etf_international_funds.csv");
-        String outfile = "data/etf_international_cvs.csv";
+//        quoteDao.init("data/etf_international_quotes.csv", "data/etf_quotes_compare.csv");
+//        fundDao.init("data/etf_international_funds.csv");
+//        String outfile = "data/etf_international_cvs.csv";
 
 //        quoteDao.init("data/etf_sector_quotes.csv", "data/etf_quotes_compare.csv");
 //        fundDao.init("data/etf_sector_funds.csv");
 //        String outfile = "data/etf_sector_cvs.csv";
-//        quoteDao.init("data/etf_asset_alloc_quotes.csv");
+//        quoteDao.init("data/etf_asset_alloc_quotes.csv", "data/etf_quotes_compare.csv");
 //        fundDao.init("data/etf_asset_alloc_funds.csv");
 //  String outfile = "data/etf_asset_alloc_cvs.csv";
-//        quoteDao.init("data/ishares_quotes.csv");
+//        quoteDao.init("data/ishares_quotes.csv", "data/ishares_quotes_missing.csv", "data/etf_quotes_compare.csv");
 //        fundDao.init("data/ishares_funds.csv");
 //        String outfile = "data/ishares_cvs.csv";
-//        quoteDao.init("data/fidelity_quotes.csv", "data/fidelity_quotes_missing.csv");
-//        fundDao.init("data/fidelity_funds.csv");
-//        String outfile = "data/fidelity_cvs.csv";
+        quoteDao.init("data/fidelity_quotes.csv", "data/fidelity_quotes_missing.csv", "data/etf_quotes_compare.csv");
+        fundDao.init("data/fidelity_funds.csv");
+        String outfile = "data/fidelity_cvs.csv";
 
         CSVWriter writer = new CSVWriter(new FileWriter(outfile));
 
-        NavigableMap<LocalDate, BigDecimal> idxReturns = getIndexReturns("SPY");
+        NavigableMap<LocalDate, BigDecimal> idxReturns = getIndexReturns("GSPC");
 
         for (Fund fund : fundDao.getAll()) {
 
@@ -71,24 +71,24 @@ public class OfflineCalculatorTool {
             List<Quote> weeklySeries = new ArrayList<Quote>(quoteDao.get(fund, dates));
 
 //            //Moving averages
-//            for (int period : Arrays.asList(4, 8, 12, 26, 39, 52)) {
-//                cvs.addAll(calculationService.calculateSMA(weeklySeries, period));
-//            }
+            for (int period : Arrays.asList(4, 8, 12, 26, 39, 52)) {
+                cvs.addAll(calculationService.calculateSMA(weeklySeries, period));
+            }
 //
 //            //Standardized ROC
-//            for (int period : Arrays.asList(4, 8, 12, 26, 39, 52)) {
-//                cvs.addAll(calculationService.calculateROC(weeklySeries, period));
-//            }
+            for (int period : Arrays.asList(4, 8, 12, 26, 39, 52)) {
+                cvs.addAll(calculationService.calculateROC(weeklySeries, period));
+            }
 //
 //            //Standard deviations
-//            for (int period : Arrays.asList(12, 26, 39, 52)) {
-//                cvs.addAll(calculationService.calculateStandardDeviation(weeklySeries, period));
-//            }
+            for (int period : Arrays.asList(12, 26, 39, 52)) {
+                cvs.addAll(calculationService.calculateStandardDeviation(weeklySeries, period));
+            }
 //
 //            //RSquared - coefficient of determination
-//            for (int period : Arrays.asList(12, 26, 39, 52)) {
-//                cvs.addAll(calculationService.calculateRSquared(weeklySeries, period));
-//            }
+            for (int period : Arrays.asList(12, 26, 39, 52)) {
+                cvs.addAll(calculationService.calculateRSquared(weeklySeries, period));
+            }
 
             //Alpha
             NavigableMap<LocalDate, BigDecimal> returns = new TreeMap<LocalDate, BigDecimal>();
@@ -99,7 +99,7 @@ public class OfflineCalculatorTool {
                 }
                 from = to;
             }
-            int period = 26;
+            int period = 100;
             for (int i = 1; i + period < weeklySeries.size(); i++) {
                 NavigableMap<LocalDate, BigDecimal> returnsPeriod = returns.subMap(weeklySeries.get(i).getDate(), true,
                         weeklySeries.get(i + period).getDate(), false);

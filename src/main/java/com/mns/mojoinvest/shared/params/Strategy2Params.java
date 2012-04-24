@@ -1,11 +1,13 @@
 package com.mns.mojoinvest.shared.params;
 
 public class Strategy2Params {
+
     private final int portfolioSize;
     private final int rebalanceFrequency;
     private final int ma1;
     private final int ma2;
     private final int roc;
+    private final int alpha;
     private final int castOff;
     private final int stddev;
     private final boolean equityCurveTrading;
@@ -14,7 +16,7 @@ public class Strategy2Params {
     private boolean useSafeAsset;
     private String safeAsset;
 
-    public Strategy2Params(int portfolioSize, int rebalanceFrequency, int ma1, int ma2, int roc,
+    public Strategy2Params(int portfolioSize, int rebalanceFrequency, int ma1, int ma2, int roc, int alpha,
                            int castOff, int stddev, boolean equityCurveTrading, int equityCurveWindow,
                            String relativeStrengthStyle, boolean useSafeAsset, String safeAsset) {
 
@@ -23,6 +25,7 @@ public class Strategy2Params {
         this.ma1 = ma1;
         this.ma2 = ma2;
         this.roc = roc;
+        this.alpha = alpha;
         this.castOff = castOff;
         this.stddev = stddev;
         this.equityCurveTrading = equityCurveTrading;
@@ -96,5 +99,9 @@ public class Strategy2Params {
                 ", useSafeAsset=" + useSafeAsset +
                 ", safeAsset='" + safeAsset + '\'' +
                 '}';
+    }
+
+    public int getAlpha() {
+        return alpha;
     }
 }

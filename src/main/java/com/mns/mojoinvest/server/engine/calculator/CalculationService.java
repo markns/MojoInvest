@@ -10,7 +10,6 @@ import java.math.MathContext;
 import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
 
 public class CalculationService {
@@ -50,12 +49,12 @@ public class CalculationService {
     public List<CalculatedValue> calculateROC(List<Quote> quotes, int period) {
 //        cv = 100 * ((toQuote - fromQuote) / fromQuote)
         List<CalculatedValue> cvs = new ArrayList<CalculatedValue>();
-        Collections.reverse(quotes);
+//        Collections.reverse(quotes);
 
 
         for (int i = 0; i + period < quotes.size(); i++) {
-            Quote toQuote = quotes.get(i);
-            Quote fromQuote = quotes.get(i + period);
+            Quote fromQuote = quotes.get(i);
+            Quote toQuote = quotes.get(i + period);
             BigDecimal roc = toQuote.getAdjClose().subtract(fromQuote.getAdjClose())
                     .divide(fromQuote.getAdjClose(), MathContext.DECIMAL32)
                     .multiply(HUNDRED).setScale(3, RoundingMode.HALF_EVEN);

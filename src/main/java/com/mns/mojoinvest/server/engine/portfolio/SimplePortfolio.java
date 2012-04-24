@@ -71,6 +71,39 @@ public class SimplePortfolio implements Portfolio {
         this.shadow = shadow;
     }
 
+    public SimplePortfolio(Portfolio portfolio) {
+
+        this.fundDao = portfolio.getFundDao();
+        portfolio.getQuoteDao(), portfolio.getParams(), true);
+        this.quoteDao = portfolio.getQuoteDao();
+        this.positions = new HashMap<String, Position>();
+        this.transactions = new ArrayList<Transaction>();
+        this.portfolioParams = portfolio.getParams();
+        this.cashFlows = new TreeMap<LocalDate, BigDecimal>();
+        PortfolioParams params = portfolio.getParams();
+        this.cashFlows.put(new LocalDate(params.getCreationDate()),
+                BigDecimal.valueOf(params.getInitialInvestment()));
+        this.transactionCost = BigDecimal.valueOf(params.getTransactionCost());
+        this.shadow = true;
+        for (Transaction transaction : portfolio.getTransactions()) {
+            try {
+                this.add(transaction);
+            } catch (PortfolioException e) {
+                log.severe("Unable to create portfolio shadow copy");
+                e.printStackTrace();
+            }
+        }
+    }
+
+    @Override
+    public FundDao getFundDao() {
+        return fundDao;
+    }
+
+    @Override
+    public QuoteDao getQuoteDao() {
+        return quoteDao;
+    }
 
     @Override
     public boolean isShadow() {
@@ -308,22 +341,5 @@ public class SimplePortfolio implements Portfolio {
 //        marketValues.put(date, value);
 //    }
 
-    public Portfolio createShadow() {
 
-        Portfolio shadow = new SimplePortfolio(fundDao, quoteDao, portfolioParams, true);
-
-        for (Transaction transaction : transactions) {
-            try {
-                shadow.add(transaction);
-            } catch (PortfolioException e) {
-                log.severe("Unable to create portfolio shadow copy");
-                e.printStackTrace();
-            }
-        }
-//        for (Map.Entry<LocalDate, BigDecimal> entry : marketValues.entrySet()) {
-//            shadow.storeMarketValue(entry.getKey(), entry.getValue());
-//        }
-
-        return shadow;
-    }
 }

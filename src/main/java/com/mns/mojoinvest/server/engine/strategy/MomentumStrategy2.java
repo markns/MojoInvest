@@ -11,6 +11,7 @@ import com.mns.mojoinvest.server.engine.model.Quote;
 import com.mns.mojoinvest.server.engine.model.dao.QuoteDao;
 import com.mns.mojoinvest.server.engine.portfolio.Portfolio;
 import com.mns.mojoinvest.server.engine.portfolio.PortfolioException;
+import com.mns.mojoinvest.server.engine.portfolio.SimplePortfolio;
 import com.mns.mojoinvest.server.engine.transaction.Transaction;
 import com.mns.mojoinvest.server.util.TradingDayUtils;
 import com.mns.mojoinvest.shared.params.BacktestParams;
@@ -36,6 +37,11 @@ public class MomentumStrategy2 {
     private final Executor executor;
     private final QuoteDao quoteDao;
 
+
+    Map<String, BigDecimal> initCompares = new HashMap<String, BigDecimal>();
+    Map<String, BigDecimal> portfolioCompares = new HashMap<String, BigDecimal>();
+
+
     @Inject
     public MomentumStrategy2(RelativeStrengthCalculator relativeStrengthCalculator,
                              Executor executor, QuoteDao dao) {
@@ -45,7 +51,7 @@ public class MomentumStrategy2 {
     }
 
     public void execute(Portfolio portfolio, BacktestParams backtestParams,
-                        Collection<Fund> universe, Strategy2Params strategyParams)
+                        Collection<Fund> universe, Strategy2Params params)
             throws StrategyException {
 
         LocalDate fromDate = new LocalDate(backtestParams.getFromDate());
@@ -54,32 +60,15 @@ public class MomentumStrategy2 {
         if (fromDate.isAfter(toDate))
             throw new StrategyException("From date cannot be after to date");
 
-        List<LocalDate> rebalanceDates = getRebalanceDates(fromDate, toDate, strategyParams);
-        List<Map<String, BigDecimal>> strengths = getRelativeStrengths(universe, strategyParams, rebalanceDates);
+        List<LocalDate> rebalanceDates = getRebalanceDates(fromDate, toDate, params);
+        List<Map<String, BigDecimal>> strengths = getRelativeStrengths(universe, params, rebalanceDates);
 
-        DescriptiveStatistics equityCurve = new DescriptiveStatistics(strategyParams.getEquityCurveWindow());
+        DescriptiveStatistics equityCurve = new DescriptiveStatistics(params.getEquityCurveWindow());
 
-        Portfolio shadowPortfolio = portfolio.createShadow();
+        Portfolio shadowPortfolio = new SimplePortfolio(portfolio);
 
-        CSVWriter writer = null;
-        try {
-            writer = new CSVWriter(new FileWriter("data/strategy_runs/" + new LocalTime() + ".csv"));
-        } catch (IOException e) {
-            e.printStackTrace();
-            throw new StrategyException("", e);
-        }
-
-        String[] headCompare = new String[universe.size()];
-        int k = 0;
-        for (Fund fund : universe) {
-            headCompare[k] = fund.getSymbol();
-            k++;
-        }
-        String[] headStrat = new String[]{"Date", "Portfolio", "Portfolio Value", "Shadow", "Shadow Value", "Equity Curve"};
-        writer.writeNext((String[]) ArrayUtils.addAll(headStrat, headCompare));
-
-        Map<String, BigDecimal> initCompares = new HashMap<String, BigDecimal>();
-        Map<String, BigDecimal> portfolioCompares = new HashMap<String, BigDecimal>();
+        CSVWriter writer = initialiseCsv();
+        writeCsvHeader(universe, writer);
 
         List<DrawDown> drawDowns = new ArrayList<DrawDown>();
         DrawDown currentDD = null;
@@ -92,7 +81,7 @@ public class MomentumStrategy2 {
             Map<String, BigDecimal> rs = strengths.get(i);
 
 
-            if (rs.size() < strategyParams.getCastOff()) {
+            if (rs.size() < params.getCastOff()) {
                 log.warning(rebalanceDate + " Not enough funds in universe to make selection");
                 continue;
             }
@@ -103,87 +92,23 @@ public class MomentumStrategy2 {
             BigDecimal shadowMarketValue = shadowPortfolio.marketValue(rebalanceDate);
             equityCurve.addValue(shadowMarketValue.doubleValue());
             BigDecimal equityCurveMA = null;
-            if (equityCurve.getN() >= strategyParams.getEquityCurveWindow()) {
+            if (equityCurve.getN() >= params.getEquityCurveWindow()) {
                 equityCurveMA = new BigDecimal(equityCurve.getMean(), MathContext.DECIMAL32);
             }
 
-            log.info(
-//                    rebalanceDate.dayOfWeek().getAsShortText() + " " +
-                    rebalanceDate + " " +
-                            portfolio.getActiveFunds(rebalanceDate) + " " +
-                            marketValue + " " +
-                            shadowMarketValue + " " + equityCurveMA);
+            logPortfolio(portfolio, rebalanceDate, marketValue, shadowMarketValue, equityCurveMA);
 
-            //Calculation of draw downs
-            if (currentDD == null) {
-                currentDD = new DrawDown(rebalanceDate, marketValue);
-            }
-            //Curve is going up, and min has not been set
-            if (marketValue.compareTo(currentDD.getMax()) > 0 &&
-                    currentDD.getMin() == null) {
-                currentDD.setMaxDate(rebalanceDate);
-                currentDD.setMax(marketValue);
-            }
-            //Curve is going down
-            else if (marketValue.compareTo(currentDD.getMax()) < 0) {
-                //Min has not been set
-                if (currentDD.getMin() == null) {
-                    currentDD.setMinDate(rebalanceDate);
-                    currentDD.setMin(marketValue);
-                }
-                //New value is lower than min stored currently
-                else if (marketValue.compareTo(currentDD.getMin()) < 0) {
-                    currentDD.setMinDate(rebalanceDate);
-                    currentDD.setMin(marketValue);
-                }
-            }
-            //New value is higher than current max - create new drawdown
-            else if (marketValue.compareTo(currentDD.getMax()) > 0) {
-                drawDowns.add(currentDD);
-                currentDD = new DrawDown(rebalanceDate, marketValue);
-            }
+            currentDD = calculateDrawDowns(drawDowns, currentDD, rebalanceDate, marketValue);
+
+            initialiseComparisonsForCsv(universe, rebalanceDate, marketValue);
+            String[] compares = calculatePercentChangeForCsv(universe, rebalanceDate);
+            writeCsvRow(portfolio, shadowPortfolio, writer, rebalanceDate, marketValue, shadowMarketValue, equityCurveMA, compares);
 
 
-            //Initialisation of comparison to portfolio results 
-            for (Fund fund : universe) {
-                if (!initCompares.containsKey(fund.getSymbol())) {
-                    Quote q = quoteDao.get(fund.getSymbol(), rebalanceDate);
-                    if (q != null) {
-                        initCompares.put(fund.getSymbol(), q.getAdjClose());
-                        portfolioCompares.put(fund.getSymbol(), marketValue);
-                    }
-                }
-            }
-
-            //Calculate % change for all the funds in universe for later comparison
-            int p = 0;
-            String[] compares = new String[universe.size()];
-            for (Fund fund : universe) {
-                if (initCompares.containsKey(fund.getSymbol())) {
-                    double pct = (percentageChange(initCompares.get(fund.getSymbol()),
-                            quoteDao.get(fund.getSymbol(), rebalanceDate).getAdjClose()).doubleValue() + 1)
-                            * portfolioCompares.get(fund.getSymbol()).doubleValue();
-                    compares[p] = pct + "";
-                } else {
-                    compares[p] = "";
-                }
-                p++;
-            }
-
-            String[] bodyStrat = new String[]{rebalanceDate + "",
-                    portfolio.getActiveFunds(rebalanceDate) + "",
-                    marketValue + " ",
-                    shadowPortfolio.getActiveFunds(rebalanceDate) + "",
-                    shadowMarketValue + " ",
-                    equityCurveMA == null ? "" : equityCurveMA + ""
-            };
-
-            writer.writeNext((String[]) ArrayUtils.addAll(bodyStrat, compares));
-
-            List<String> selection = getSelection(rs, strategyParams, rebalanceDate);
-            if (strategyParams.tradeEquityCurve()) {
+            List<String> selection = getSelection(rs, params, rebalanceDate);
+            if (params.tradeEquityCurve()) {
                 sellLosers(shadowPortfolio, rebalanceDate, selection);
-                buyWinners(shadowPortfolio, strategyParams, rebalanceDate, selection);
+                buyWinners(shadowPortfolio, params, rebalanceDate, selection);
 
                 if (equityCurveMA != null && shadowMarketValue.compareTo(equityCurveMA) < 0) {
                     if (!belowEquityCurve) {
@@ -197,15 +122,15 @@ public class MomentumStrategy2 {
                                         "moved under equity curve", e);
                             }
                         }
-                        if (strategyParams.useSafeAsset()) {
-                            int numEmpty = strategyParams.getPortfolioSize() - portfolio.openPositionCount(
+                        if (params.useSafeAsset()) {
+                            int numEmpty = params.getPortfolioSize() - portfolio.openPositionCount(
                                     TradingDayUtils.rollForward(rebalanceDate.plusDays(1)));
                             BigDecimal availableCash = portfolio.getCash(
                                     TradingDayUtils.rollForward(rebalanceDate.plusDays(1))).
                                     subtract(portfolio.getTransactionCost().
                                             multiply(new BigDecimal(numEmpty)));
                             try {
-                                executor.buy(portfolio, strategyParams.getSafeAsset(),
+                                executor.buy(portfolio, params.getSafeAsset(),
                                         rebalanceDate, availableCash);
                             } catch (PortfolioException e) {
                                 log.warning(rebalanceDate + " Unable to move into safe asset");
@@ -215,10 +140,10 @@ public class MomentumStrategy2 {
                 } else {
                     if (belowEquityCurve) {
                         log.fine("Above equity curve");
-                        if (strategyParams.useSafeAsset() &&
-                                portfolio.contains(strategyParams.getSafeAsset(), rebalanceDate)) {
+                        if (params.useSafeAsset() &&
+                                portfolio.contains(params.getSafeAsset(), rebalanceDate)) {
                             try {
-                                executor.sellAll(portfolio, strategyParams.getSafeAsset(), rebalanceDate);
+                                executor.sellAll(portfolio, params.getSafeAsset(), rebalanceDate);
                             } catch (PortfolioException e) {
                                 throw new StrategyException(rebalanceDate + " Unable to move out of safe asset", e);
                             }
@@ -226,27 +151,55 @@ public class MomentumStrategy2 {
                         belowEquityCurve = false;
                     }
                     sellLosers(portfolio, rebalanceDate, selection);
-                    buyWinners(portfolio, strategyParams, rebalanceDate, selection);
+                    buyWinners(portfolio, params, rebalanceDate, selection);
                 }
             } else {
                 sellLosers(portfolio, rebalanceDate, selection);
-                buyWinners(portfolio, strategyParams, rebalanceDate, selection);
+                buyWinners(portfolio, params, rebalanceDate, selection);
             }
         }
 
 
-        try {
-            writer.flush();
-            writer.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        flushCsvWriter(writer);
 
-        logParams(strategyParams);
+        logParams(params);
         logTrades(portfolio);
         logDrawDowns(drawDowns);
         logCAGR(portfolio, fromDate, toDate);
 
+    }
+
+
+    private DrawDown calculateDrawDowns(List<DrawDown> drawDowns, DrawDown currentDD, LocalDate rebalanceDate, BigDecimal marketValue) {
+        //Calculation of draw downs
+        if (currentDD == null) {
+            currentDD = new DrawDown(rebalanceDate, marketValue);
+        }
+        //Curve is going up, and min has not been set
+        if (marketValue.compareTo(currentDD.getMax()) > 0 &&
+                currentDD.getMin() == null) {
+            currentDD.setMaxDate(rebalanceDate);
+            currentDD.setMax(marketValue);
+        }
+        //Curve is going down
+        else if (marketValue.compareTo(currentDD.getMax()) < 0) {
+            //Min has not been set
+            if (currentDD.getMin() == null) {
+                currentDD.setMinDate(rebalanceDate);
+                currentDD.setMin(marketValue);
+            }
+            //New value is lower than min stored currently
+            else if (marketValue.compareTo(currentDD.getMin()) < 0) {
+                currentDD.setMinDate(rebalanceDate);
+                currentDD.setMin(marketValue);
+            }
+        }
+        //New value is higher than current max - create new drawdown
+        else if (marketValue.compareTo(currentDD.getMax()) > 0) {
+            drawDowns.add(currentDD);
+            currentDD = new DrawDown(rebalanceDate, marketValue);
+        }
+        return currentDD;
     }
 
     private List<Map<String, BigDecimal>> getRelativeStrengths(Collection<Fund> universe,
@@ -265,6 +218,13 @@ public class MomentumStrategy2 {
         } else {
             throw new StrategyException("Relative strength style " + strategyParams);
         }
+    }
+
+    private void logPortfolio(Portfolio portfolio, LocalDate rebalanceDate, BigDecimal marketValue, BigDecimal shadowMarketValue, BigDecimal equityCurveMA) {
+        log.info(rebalanceDate + " " +
+                portfolio.getActiveFunds(rebalanceDate) + " " +
+                marketValue + " " +
+                shadowMarketValue + " " + equityCurveMA);
     }
 
     private void logParams(Strategy2Params strategyParams) {
@@ -363,10 +323,89 @@ public class MomentumStrategy2 {
         return TradingDayUtils.getEndOfWeekSeries(fromDate, toDate, params.getRebalanceFrequency());
     }
 
-
     private static BigDecimal percentageChange(BigDecimal from, BigDecimal to) {
         BigDecimal change = to.subtract(from);
         return change.divide(from, MathContext.DECIMAL32);
+    }
+
+
+    /*
+     * Csv writing stuff - non production
+    */
+
+    private CSVWriter initialiseCsv() throws StrategyException {
+        CSVWriter writer = null;
+        try {
+            writer = new CSVWriter(new FileWriter("data/strategy_runs/" + new LocalTime() + ".csv"));
+        } catch (IOException e) {
+            e.printStackTrace();
+            throw new StrategyException("", e);
+        }
+        return writer;
+    }
+
+
+    private void writeCsvHeader(Collection<Fund> universe, CSVWriter writer) {
+        String[] headCompare = new String[universe.size()];
+        int k = 0;
+        for (Fund fund : universe) {
+            headCompare[k] = fund.getSymbol();
+            k++;
+        }
+        String[] headStrat = new String[]{"Date", "Portfolio", "Portfolio Value", "Shadow", "Shadow Value", "Equity Curve"};
+        writer.writeNext((String[]) ArrayUtils.addAll(headStrat, headCompare));
+    }
+
+    private void initialiseComparisonsForCsv(Collection<Fund> universe, LocalDate rebalanceDate, BigDecimal marketValue) {
+        //Initialisation of comparison to portfolio results
+        for (Fund fund : universe) {
+            if (!initCompares.containsKey(fund.getSymbol())) {
+                Quote q = quoteDao.get(fund.getSymbol(), rebalanceDate);
+                if (q != null) {
+                    initCompares.put(fund.getSymbol(), q.getAdjClose());
+                    portfolioCompares.put(fund.getSymbol(), marketValue);
+                }
+            }
+        }
+    }
+
+    private String[] calculatePercentChangeForCsv(Collection<Fund> universe, LocalDate rebalanceDate) {
+        //Calculate % change for all the funds in universe for later comparison
+        String[] compares = new String[universe.size()];
+        int p = 0;
+        for (Fund fund : universe) {
+            if (initCompares.containsKey(fund.getSymbol())) {
+                double pct = (percentageChange(initCompares.get(fund.getSymbol()),
+                        quoteDao.get(fund.getSymbol(), rebalanceDate).getAdjClose()).doubleValue() + 1)
+                        * portfolioCompares.get(fund.getSymbol()).doubleValue();
+                compares[p] = pct + "";
+            } else {
+                compares[p] = "";
+            }
+            p++;
+        }
+        return compares;
+    }
+
+    private void writeCsvRow(Portfolio portfolio, Portfolio shadowPortfolio, CSVWriter writer, LocalDate rebalanceDate, BigDecimal marketValue, BigDecimal shadowMarketValue, BigDecimal equityCurveMA, String[] compares) {
+        String[] bodyStrat = new String[]{rebalanceDate + "",
+                portfolio.getActiveFunds(rebalanceDate) + "",
+                marketValue + " ",
+                shadowPortfolio.getActiveFunds(rebalanceDate) + "",
+                shadowMarketValue + " ",
+                equityCurveMA == null ? "" : equityCurveMA + ""
+        };
+
+        writer.writeNext((String[]) ArrayUtils.addAll(bodyStrat, compares));
+    }
+
+    private void flushCsvWriter(CSVWriter writer) {
+        try {
+            writer.flush();
+            writer.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
 }
