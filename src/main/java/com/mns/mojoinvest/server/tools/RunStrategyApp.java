@@ -5,6 +5,7 @@ import com.google.common.collect.Lists;
 import com.google.inject.Guice;
 import com.google.inject.Inject;
 import com.google.inject.Injector;
+import com.mns.mojoinvest.server.engine.Strategy2ResultBuilder;
 import com.mns.mojoinvest.server.engine.model.Fund;
 import com.mns.mojoinvest.server.engine.model.dao.*;
 import com.mns.mojoinvest.server.engine.portfolio.Portfolio;
@@ -46,15 +47,18 @@ public class RunStrategyApp {
     private MomentumStrategy2 strategy2;
     private final PortfolioFactory portfolioFactory;
 
+    private final Strategy2ResultBuilder resultBuilder;
 
     @Inject
     public RunStrategyApp(QuoteDao quoteDao, FundDao fundDao, CalculatedValueDao calculatedValueDao,
-                          PortfolioFactory portfolioFactory, MomentumStrategy2 strategy2) {
+                          PortfolioFactory portfolioFactory, MomentumStrategy2 strategy2,
+                          Strategy2ResultBuilder resultBuilder) {
         this.quoteDao = quoteDao;
         this.fundDao = fundDao;
         this.calculatedValueDao = calculatedValueDao;
         this.portfolioFactory = portfolioFactory;
         this.strategy2 = strategy2;
+        this.resultBuilder = resultBuilder;
     }
 
     public void initDaos() {
@@ -62,37 +66,37 @@ public class RunStrategyApp {
 //        ((InMemoryQuoteDao) quoteDao).init("data/etf_international_quotes.csv", "data/etf_quotes_compare.csv");
 //        ((InMemoryFundDao) fundDao).init("data/etf_international_funds.csv");
 //        ((InMemoryCalculatedValueDao) calculatedValueDao).init("data/etf_international_cvs.csv");
-//        ((InMemoryQuoteDao) quoteDao).init("data/etf_sector_quotes.csv", "data/etf_quotes_compare.csv");
-//        ((InMemoryFundDao) fundDao).init("data/etf_sector_funds.csv");
-//        ((InMemoryCalculatedValueDao) calculatedValueDao).init("data/etf_sector_cvs.csv");
+        ((InMemoryQuoteDao) quoteDao).init("data/etf_sector_quotes.csv", "data/etf_quotes_compare.csv");
+        ((InMemoryFundDao) fundDao).init("data/etf_sector_funds.csv");
+        ((InMemoryCalculatedValueDao) calculatedValueDao).init("data/etf_sector_cvs.csv");
 //        ((InMemoryQuoteDao) quoteDao).init("data/etf_asset_alloc_quotes.csv", "data/etf_quotes_compare.csv");
 //        ((InMemoryFundDao) fundDao).init("data/etf_asset_alloc_funds.csv");
 //        ((InMemoryCalculatedValueDao) calculatedValueDao).init("data/etf_asset_alloc_cvs.csv");
 //        ((InMemoryQuoteDao) quoteDao).init("data/ishares_quotes.csv", "data/ishares_quotes_missing.csv", "data/etf_quotes_compare.csv");
 //        ((InMemoryFundDao) fundDao).init("data/ishares_funds.csv");
 //        ((InMemoryCalculatedValueDao) calculatedValueDao).init("data/ishares_cvs.csv");
-        ((InMemoryQuoteDao) quoteDao).init("data/fidelity_quotes.csv", "data/fidelity_quotes_missing.csv", "data/etf_quotes_compare.csv");
-        ((InMemoryFundDao) fundDao).init("data/fidelity_funds.csv");
-        ((InMemoryCalculatedValueDao) calculatedValueDao).init("data/fidelity_cvs.csv");
+//        ((InMemoryQuoteDao) quoteDao).init("data/fidelity_quotes.csv", "data/fidelity_quotes_missing.csv", "data/etf_quotes_compare.csv");
+//        ((InMemoryFundDao) fundDao).init("data/fidelity_funds.csv");
+//        ((InMemoryCalculatedValueDao) calculatedValueDao).init("data/fidelity_cvs.csv");
     }
 
     private void run() {
 
         LocalDate fDate = new LocalDate("1990-01-01");
-        LocalDate tDate = new LocalDate("2007-12-31");
-//        LocalDate tDate = new LocalDate("2012-03-01");
+//        LocalDate tDate = new LocalDate("2007-12-31");
+        LocalDate tDate = new LocalDate("2012-03-01");
         Date fromDate = fDate.toDateMidnight().toDate();
         Date toDate = tDate.toDateMidnight().toDate();
 
         double cash = 10000d;
         double transactionCost = 10d;
-        int portfolioSize = 3;
+        int portfolioSize = 1;
         int holdingPeriod = 1;
         int ma1 = 12;
         int ma2 = 26;
         int roc = 26;
         int alpha = 100;
-        int castOff = 17;
+        int castOff = 8;
         int stddev = 26;
         boolean equityCurveTrading = false;
         int equityCurveWindow = 52;
@@ -109,7 +113,8 @@ public class RunStrategyApp {
         } else {
             universe = fundDao.getAll();
         }
-        Portfolio portfolio = portfolioFactory.create(new PortfolioParams(cash, transactionCost, fromDate));
+        Portfolio portfolio = portfolioFactory.create(new PortfolioParams(cash, transactionCost, fromDate), false);
+        Portfolio shadowPortfolio = portfolioFactory.create(new PortfolioParams(cash, transactionCost, fromDate), true);
 
         BacktestParams params = new BacktestParams(fromDate, toDate);
 
@@ -117,7 +122,14 @@ public class RunStrategyApp {
                 castOff, stddev, equityCurveTrading, equityCurveWindow, relativeStrengthStyle, useSafeAsset, safeAsset);
 
         try {
-            strategy2.execute(portfolio, params, universe, strategyParams);
+            strategy2.execute(portfolio, shadowPortfolio, params, universe, strategyParams);
+            //Should we use assisted inject here?
+            resultBuilder.setPortfolio(portfolio)
+                    .setShadowPortfolio(shadowPortfolio)
+                    .setBacktestParams(params)
+                    .setStrategyParams(strategyParams)
+                    .setUniverse(universe)
+                    .build();
         } catch (StrategyException e) {
             e.printStackTrace();
         }

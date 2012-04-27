@@ -4,6 +4,6 @@ import com.mns.mojoinvest.shared.params.PortfolioParams;
 
 public interface PortfolioFactory {
 
-    Portfolio create(PortfolioParams params);
+    Portfolio create(PortfolioParams params, boolean shadow);
 
 }

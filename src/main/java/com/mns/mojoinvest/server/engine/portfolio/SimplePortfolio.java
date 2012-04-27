@@ -71,30 +71,6 @@ public class SimplePortfolio implements Portfolio {
         this.shadow = shadow;
     }
 
-    public SimplePortfolio(Portfolio portfolio) {
-
-        this.fundDao = portfolio.getFundDao();
-        portfolio.getQuoteDao(), portfolio.getParams(), true);
-        this.quoteDao = portfolio.getQuoteDao();
-        this.positions = new HashMap<String, Position>();
-        this.transactions = new ArrayList<Transaction>();
-        this.portfolioParams = portfolio.getParams();
-        this.cashFlows = new TreeMap<LocalDate, BigDecimal>();
-        PortfolioParams params = portfolio.getParams();
-        this.cashFlows.put(new LocalDate(params.getCreationDate()),
-                BigDecimal.valueOf(params.getInitialInvestment()));
-        this.transactionCost = BigDecimal.valueOf(params.getTransactionCost());
-        this.shadow = true;
-        for (Transaction transaction : portfolio.getTransactions()) {
-            try {
-                this.add(transaction);
-            } catch (PortfolioException e) {
-                log.severe("Unable to create portfolio shadow copy");
-                e.printStackTrace();
-            }
-        }
-    }
-
     @Override
     public FundDao getFundDao() {
         return fundDao;
@@ -234,15 +210,21 @@ public class SimplePortfolio implements Portfolio {
         return cashOut;
     }
 
+    Map<LocalDate, BigDecimal> marketValueCache = new HashMap<LocalDate, BigDecimal>();
+
     @Override
     public BigDecimal marketValue(LocalDate date) {
+        if (marketValueCache.containsKey(date))
+            return marketValueCache.get(date);
+
         BigDecimal marketValue = BigDecimal.ZERO;
         for (Position position : positions.values()) {
-
             //adjust for currency
             marketValue = marketValue.add(position.marketValue(date));
         }
-        return marketValue.add(getCash(date));
+        marketValue = marketValue.add(getCash(date));
+        marketValueCache.put(date, marketValue);
+        return marketValue;
     }
 
     @Override

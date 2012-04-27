@@ -37,18 +37,18 @@ public class OfflineCalculatorTool {
 //        fundDao.init("data/etf_international_funds.csv");
 //        String outfile = "data/etf_international_cvs.csv";
 
-//        quoteDao.init("data/etf_sector_quotes.csv", "data/etf_quotes_compare.csv");
-//        fundDao.init("data/etf_sector_funds.csv");
-//        String outfile = "data/etf_sector_cvs.csv";
+        quoteDao.init("data/etf_sector_quotes.csv", "data/etf_quotes_compare.csv");
+        fundDao.init("data/etf_sector_funds.csv");
+        String outfile = "data/etf_sector_cvs.csv";
 //        quoteDao.init("data/etf_asset_alloc_quotes.csv", "data/etf_quotes_compare.csv");
 //        fundDao.init("data/etf_asset_alloc_funds.csv");
 //  String outfile = "data/etf_asset_alloc_cvs.csv";
 //        quoteDao.init("data/ishares_quotes.csv", "data/ishares_quotes_missing.csv", "data/etf_quotes_compare.csv");
 //        fundDao.init("data/ishares_funds.csv");
 //        String outfile = "data/ishares_cvs.csv";
-        quoteDao.init("data/fidelity_quotes.csv", "data/fidelity_quotes_missing.csv", "data/etf_quotes_compare.csv");
-        fundDao.init("data/fidelity_funds.csv");
-        String outfile = "data/fidelity_cvs.csv";
+//        quoteDao.init("data/fidelity_quotes.csv", "data/fidelity_quotes_missing.csv", "data/etf_quotes_compare.csv");
+//        fundDao.init("data/fidelity_funds.csv");
+//        String outfile = "data/fidelity_cvs.csv";
 
         CSVWriter writer = new CSVWriter(new FileWriter(outfile));
 

@@ -58,7 +58,7 @@ public class RunStrategyHandler implements
         params.getPortfolioParams().setCreationDate(params.getBacktestParams().getFromDate());
 
         //TODO: Does the portfolioFactory need to be synchronised?
-        Portfolio portfolio = portfolioFactory.create(params.getPortfolioParams());
+        Portfolio portfolio = portfolioFactory.create(params.getPortfolioParams(), false);
 
         //TODO: Abstract the getAcceptableFunds call to a separate class - why is it so slow!
         log.info("Getting set of acceptable funds");
