@@ -34,23 +34,18 @@ public class MomentumStrategy2 {
     }
 
     public void execute(Portfolio portfolio, Portfolio shadowPortfolio, BacktestParams backtestParams,
-                        Collection<Fund> universe, Strategy2Params params)
+                        Collection<Fund> universe, Strategy2Params strategyParams)
             throws StrategyException {
 
-        LocalDate fromDate = new LocalDate(backtestParams.getFromDate());
-        LocalDate toDate = new LocalDate(backtestParams.getToDate());
+        List<LocalDate> rebalanceDates = getRebalanceDates(backtestParams, strategyParams);
 
-        if (fromDate.isAfter(toDate))
-            throw new StrategyException("From date cannot be after to date");
-
-        List<LocalDate> rebalanceDates = getRebalanceDates(fromDate, toDate, params);
         //TODO: Return a Map<LocalDate, List<Map<String, BigDecimal> here. Prevents the faffing with the double iterators later
-        List<Map<String, BigDecimal>> strengths = getRelativeStrengths(universe, params, rebalanceDates);
+        List<Map<String, BigDecimal>> strengths = getRelativeStrengths(universe, strategyParams, rebalanceDates);
 
         assert rebalanceDates.size() == strengths.size() : "number of rebalance dates didn't match " +
                 "number of relative strength dates received";
 
-        DescriptiveStatistics equityCurve = new DescriptiveStatistics(params.getEquityCurveWindow());
+        DescriptiveStatistics equityCurve = new DescriptiveStatistics(strategyParams.getEquityCurveWindow());
         boolean belowEquityCurve = false;
 
         Iterator<LocalDate> rebalanceDateIter = rebalanceDates.iterator();
@@ -61,7 +56,7 @@ public class MomentumStrategy2 {
             LocalDate rebalanceDate = rebalanceDateIter.next();
             Map<String, BigDecimal> rs = strengthsIter.next();
 
-            if (rs.size() < params.getCastOff()) {
+            if (rs.size() < strategyParams.getCastOff()) {
                 log.warning(rebalanceDate + " Not enough funds in universe to make selection");
                 continue;
             }
@@ -69,7 +64,7 @@ public class MomentumStrategy2 {
             //Shadow portfolio and equity curve calculation stuff
             equityCurve.addValue(shadowPortfolio.marketValue(rebalanceDate).doubleValue());
             BigDecimal equityCurveMA = null;
-            if (equityCurve.getN() >= params.getEquityCurveWindow()) {
+            if (equityCurve.getN() >= strategyParams.getEquityCurveWindow()) {
                 equityCurveMA = new BigDecimal(equityCurve.getMean(), MathContext.DECIMAL32);
             }
 
@@ -79,11 +74,11 @@ public class MomentumStrategy2 {
                     shadowPortfolio.marketValue(rebalanceDate) + " " +
                     equityCurveMA);
 
-            List<String> selection = getSelection(rs, params, rebalanceDate);
+            List<String> selection = getSelection(rs, strategyParams, rebalanceDate);
 
-            if (params.tradeEquityCurve()) {
+            if (strategyParams.tradeEquityCurve()) {
 
-                rebalance(shadowPortfolio, params, rebalanceDate, selection);
+                rebalance(shadowPortfolio, strategyParams, rebalanceDate, selection);
 
                 if (equityCurveMA != null && shadowPortfolio.marketValue(rebalanceDate).compareTo(equityCurveMA) < 0) {
                     if (!belowEquityCurve) {
@@ -97,15 +92,15 @@ public class MomentumStrategy2 {
                                         "moved under equity curve", e);
                             }
                         }
-                        if (params.useSafeAsset()) {
-                            int numEmpty = params.getPortfolioSize() - portfolio.openPositionCount(
+                        if (strategyParams.useSafeAsset()) {
+                            int numEmpty = strategyParams.getPortfolioSize() - portfolio.openPositionCount(
                                     TradingDayUtils.rollForward(rebalanceDate.plusDays(1)));
                             BigDecimal availableCash = portfolio.getCash(
                                     TradingDayUtils.rollForward(rebalanceDate.plusDays(1))).
                                     subtract(portfolio.getTransactionCost().
                                             multiply(new BigDecimal(numEmpty)));
                             try {
-                                executor.buy(portfolio, params.getSafeAsset(),
+                                executor.buy(portfolio, strategyParams.getSafeAsset(),
                                         rebalanceDate, availableCash);
                             } catch (PortfolioException e) {
                                 log.warning(rebalanceDate + " Unable to move into safe asset");
@@ -115,20 +110,20 @@ public class MomentumStrategy2 {
                 } else {
                     if (belowEquityCurve) {
                         log.fine("Crossed above equity curve");
-                        if (params.useSafeAsset() &&
-                                portfolio.contains(params.getSafeAsset(), rebalanceDate)) {
+                        if (strategyParams.useSafeAsset() &&
+                                portfolio.contains(strategyParams.getSafeAsset(), rebalanceDate)) {
                             try {
-                                executor.sellAll(portfolio, params.getSafeAsset(), rebalanceDate);
+                                executor.sellAll(portfolio, strategyParams.getSafeAsset(), rebalanceDate);
                             } catch (PortfolioException e) {
                                 throw new StrategyException(rebalanceDate + " Unable to move out of safe asset", e);
                             }
                         }
                         belowEquityCurve = false;
                     }
-                    rebalance(portfolio, params, rebalanceDate, selection);
+                    rebalance(portfolio, strategyParams, rebalanceDate, selection);
                 }
             } else {
-                rebalance(portfolio, params, rebalanceDate, selection);
+                rebalance(portfolio, strategyParams, rebalanceDate, selection);
             }
         }
 
@@ -221,7 +216,14 @@ public class MomentumStrategy2 {
         }
     }
 
-    private List<LocalDate> getRebalanceDates(LocalDate fromDate, LocalDate toDate, Strategy2Params params) {
+    private List<LocalDate> getRebalanceDates(BacktestParams backtestParams, Strategy2Params params)
+            throws StrategyException {
+        LocalDate fromDate = new LocalDate(backtestParams.getFromDate());
+        LocalDate toDate = new LocalDate(backtestParams.getToDate());
+
+        if (fromDate.isAfter(toDate))
+            throw new StrategyException("From date cannot be after to date");
+
         return TradingDayUtils.getEndOfWeekSeries(fromDate, toDate, params.getRebalanceFrequency());
     }
 
