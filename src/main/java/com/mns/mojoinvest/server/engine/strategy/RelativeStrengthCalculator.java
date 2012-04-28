@@ -23,8 +23,8 @@ public class RelativeStrengthCalculator {
         this.calculatedValueDao = dao;
     }
 
-
-    public List<Map<String, BigDecimal>> getRelativeStrengthsMA(Collection<Fund> funds, Strategy2Params params, List<LocalDate> dates) {
+    public SortedMap<LocalDate, Map<String, BigDecimal>> getRelativeStrengthsMA(Collection<Fund> funds, Strategy2Params params,
+                                                                                List<LocalDate> dates) {
 
         log.info("Starting load of calculated values");
         //TODO: Factor calculation of RS to separate class
@@ -40,7 +40,7 @@ public class RelativeStrengthCalculator {
         Map<LocalDate, Map<String, BigDecimal>> ma2Map = buildDateCalcValueMap(ma2s);
         Map<LocalDate, Map<String, BigDecimal>> stddevMap = buildDateCalcValueMap(stddevs);
 
-        List<Map<String, BigDecimal>> allRs = new ArrayList<Map<String, BigDecimal>>(dates.size());
+        SortedMap<LocalDate, Map<String, BigDecimal>> allRs = new TreeMap<LocalDate, Map<String, BigDecimal>>();
         for (LocalDate date : dates) {
 
             Map<String, BigDecimal> rs = new HashMap<String, BigDecimal>();
@@ -73,21 +73,21 @@ public class RelativeStrengthCalculator {
 
                 }
             }
-            allRs.add(rs);
+            allRs.put(date, rs);
         }
         return allRs;
     }
 
 
-    public List<Map<String, BigDecimal>> getRelativeStrengthsROC(Collection<Fund> funds, Strategy2Params params, List<LocalDate> dates) {
+    public SortedMap<LocalDate, Map<String, BigDecimal>> getRelativeStrengthsROC(Collection<Fund> funds, Strategy2Params params, List<LocalDate> dates) {
 
-        List<Map<String, BigDecimal>> allRs = new ArrayList<Map<String, BigDecimal>>(dates.size());
         Collection<CalculatedValue> rocs = calculatedValueDao.get(dates, funds, "ROC", params.getRoc());
         Map<LocalDate, Map<String, BigDecimal>> rocMap = buildDateCalcValueMap(rocs);
 //        Collection<CalculatedValue> stddevs = calculatedValueDao.get(dates, funds, "RSQUARED", params.getStdDev());
         Collection<CalculatedValue> stddevs = calculatedValueDao.get(dates, funds, "STDDEV", params.getStdDev());
         Map<LocalDate, Map<String, BigDecimal>> stddevMap = buildDateCalcValueMap(stddevs);
 
+        SortedMap<LocalDate, Map<String, BigDecimal>> allRs = new TreeMap<LocalDate, Map<String, BigDecimal>>();
         for (LocalDate date : dates) {
 
             Map<String, BigDecimal> rs = new HashMap<String, BigDecimal>();
@@ -96,14 +96,14 @@ public class RelativeStrengthCalculator {
 
             if (rocVals == null) {
                 log.warning(date + " No ROC values calculated");
-                allRs.add(rs);
+                allRs.put(date, rs);
                 continue;
             }
-            if (stddevVals == null) {
-                log.warning(date + " No STDDEV values calculated");
-                allRs.add(rs);
-                continue;
-            }
+//            if (stddevVals == null) {
+//                log.warning(date + " No STDDEV values calculated");
+//                allRs.put(date, rs);
+//                continue;
+//            }
 
             for (Fund fund : funds) {
                 String symbol = fund.getSymbol();
@@ -124,18 +124,18 @@ public class RelativeStrengthCalculator {
                     }
                 }
             }
-            allRs.add(rs);
+            allRs.put(date, rs);
         }
 
         return allRs;
     }
 
-    public List<Map<String, BigDecimal>> getRelativeStrengthAlpha(Collection<Fund> funds, Strategy2Params params, List<LocalDate> dates) {
+    public SortedMap<LocalDate, Map<String, BigDecimal>> getRelativeStrengthAlpha(Collection<Fund> funds, Strategy2Params params, List<LocalDate> dates) {
 
-        List<Map<String, BigDecimal>> allRs = new ArrayList<Map<String, BigDecimal>>(dates.size());
         Collection<CalculatedValue> rocs = calculatedValueDao.get(dates, funds, "ALPHA", params.getAlpha());
         Map<LocalDate, Map<String, BigDecimal>> rocMap = buildDateCalcValueMap(rocs);
 
+        SortedMap<LocalDate, Map<String, BigDecimal>> allRs = new TreeMap<LocalDate, Map<String, BigDecimal>>();
         for (LocalDate date : dates) {
 
             Map<String, BigDecimal> rs = new HashMap<String, BigDecimal>();
@@ -143,7 +143,7 @@ public class RelativeStrengthCalculator {
 
             if (rocVals == null) {
                 log.warning(date + " No ALPHA values calculated");
-                allRs.add(rs);
+                allRs.put(date, rs);
                 continue;
             }
 
@@ -162,7 +162,7 @@ public class RelativeStrengthCalculator {
                     rs.put(symbol, alpha);
                 }
             }
-            allRs.add(rs);
+            allRs.put(date, rs);
         }
 
         return allRs;
