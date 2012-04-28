@@ -54,11 +54,7 @@ public class SimplePortfolio implements Portfolio {
 
 
     @Inject
-    public SimplePortfolio(FundDao fundDao, QuoteDao quoteDao, @Assisted PortfolioParams params) {
-        this(fundDao, quoteDao, params, false);
-    }
-
-    public SimplePortfolio(FundDao fundDao, QuoteDao quoteDao, PortfolioParams params, boolean shadow) {
+    public SimplePortfolio(FundDao fundDao, QuoteDao quoteDao, @Assisted PortfolioParams params, @Assisted boolean shadow) {
         this.fundDao = fundDao;
         this.quoteDao = quoteDao;
         this.positions = new HashMap<String, Position>();

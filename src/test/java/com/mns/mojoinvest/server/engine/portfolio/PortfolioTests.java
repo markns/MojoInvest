@@ -97,7 +97,7 @@ public class PortfolioTests {
 
     @Test
     public void testCreatePortfolio() {
-        Portfolio portfolio = new SimplePortfolio(fundDao, quoteDao, params);
+        Portfolio portfolio = new SimplePortfolio(fundDao, quoteDao, params, false);
         assertEquals(new BigDecimal("50000.0"), portfolio.getCash(buy100Date.minusDays(1)));
         assertEquals(new BigDecimal("15.0"), portfolio.getTransactionCost());
         assertEquals(0, portfolio.getPositions().size());
@@ -105,7 +105,7 @@ public class PortfolioTests {
 
     @Test
     public void testPortfolioContains() throws PortfolioException {
-        Portfolio portfolio = new SimplePortfolio(fundDao, quoteDao, params);
+        Portfolio portfolio = new SimplePortfolio(fundDao, quoteDao, params, false);
         portfolio.add(buyABC100);
         assertTrue(portfolio.contains("ABC", buy100Date));
         assertFalse(portfolio.contains("ABC", buy100Date.minusDays(1)));
@@ -114,7 +114,7 @@ public class PortfolioTests {
 
     @Test
     public void testAddAndGetPosition() throws PortfolioException {
-        Portfolio portfolio = new SimplePortfolio(fundDao, quoteDao, params);
+        Portfolio portfolio = new SimplePortfolio(fundDao, quoteDao, params, false);
         portfolio.add(buyABC100);
         Position position = portfolio.getPosition("ABC");
         assertEquals(ABC, position.getFund());
@@ -122,14 +122,14 @@ public class PortfolioTests {
 
     @Test(expected = PortfolioException.class)
     public void testAddTooLargeFails() throws PortfolioException {
-        Portfolio portfolio = new SimplePortfolio(fundDao, quoteDao, params);
+        Portfolio portfolio = new SimplePortfolio(fundDao, quoteDao, params, false);
         portfolio.add(buyABC100);
         portfolio.add(buyABC100); //Not enough cash to add the same transaction again
     }
 
     @Test
     public void testGetPositions() throws PortfolioException {
-        Portfolio portfolio = new SimplePortfolio(fundDao, quoteDao, loadsofcash);
+        Portfolio portfolio = new SimplePortfolio(fundDao, quoteDao, loadsofcash, false);
         portfolio.add(buyABC100);
         assertEquals(1, portfolio.getPositions().size());
         portfolio.add(buyDEF200);
@@ -143,7 +143,7 @@ public class PortfolioTests {
 
     @Test
     public void testOpenPositionCount() throws PortfolioException {
-        Portfolio portfolio = new SimplePortfolio(fundDao, quoteDao, loadsofcash);
+        Portfolio portfolio = new SimplePortfolio(fundDao, quoteDao, loadsofcash, false);
         portfolio.add(buyABC100);
         assertEquals(1, portfolio.openPositionCount(buy100Date));
         portfolio.add(buyDEF200);
@@ -156,7 +156,7 @@ public class PortfolioTests {
 
     @Test
     public void testGetActiveFunds() throws PortfolioException {
-        Portfolio portfolio = new SimplePortfolio(fundDao, quoteDao, loadsofcash);
+        Portfolio portfolio = new SimplePortfolio(fundDao, quoteDao, loadsofcash, false);
         portfolio.add(buyABC100);
         assertEquals(1, portfolio.getActiveFunds(buy100Date).size());
         portfolio.add(buyDEF200);
@@ -169,7 +169,7 @@ public class PortfolioTests {
 
     @Test
     public void testCostBasis() throws PortfolioException {
-        Portfolio portfolio = new SimplePortfolio(fundDao, quoteDao, loadsofcash);
+        Portfolio portfolio = new SimplePortfolio(fundDao, quoteDao, loadsofcash, false);
         portfolio.add(buyABC100);
         assertEquals(new BigDecimal("47124.00"), portfolio.costBasis(buy100Date));
         portfolio.add(buyDEF200);
@@ -182,7 +182,7 @@ public class PortfolioTests {
 
     @Test
     public void testCashOut() throws PortfolioException {
-        Portfolio portfolio = new SimplePortfolio(fundDao, quoteDao, loadsofcash);
+        Portfolio portfolio = new SimplePortfolio(fundDao, quoteDao, loadsofcash, false);
         portfolio.add(buyABC100);
         assertEquals(new BigDecimal("-47124.00"), portfolio.cashOut(buy100Date));
         portfolio.add(buyDEF200);
@@ -196,7 +196,7 @@ public class PortfolioTests {
 
     @Test
     public void testMarketValue() throws PortfolioException {
-        Portfolio portfolio = new SimplePortfolio(fundDao, quoteDao, loadsofcash);
+        Portfolio portfolio = new SimplePortfolio(fundDao, quoteDao, loadsofcash, false);
         portfolio.add(buyABC100);
         assertEquals(new BigDecimal("9992876.00"), portfolio.marketValue(buy100Date));
         assertEquals(new BigDecimal("10000000"), portfolio.marketValue(buy100Date.minusDays(1)));
@@ -210,7 +210,7 @@ public class PortfolioTests {
 
     @Test
     public void testGain() throws PortfolioException {
-        Portfolio portfolio = new SimplePortfolio(fundDao, quoteDao, loadsofcash);
+        Portfolio portfolio = new SimplePortfolio(fundDao, quoteDao, loadsofcash, false);
         portfolio.add(buyABC100);
         assertEquals(new BigDecimal("-7124.00"), portfolio.gain(buy100Date));
         assertEquals(new BigDecimal("0"), portfolio.gain(buy100Date.minusDays(1)));
@@ -224,7 +224,7 @@ public class PortfolioTests {
 
     @Test
     public void testGainPercentage() throws PortfolioException {
-        Portfolio portfolio = new SimplePortfolio(fundDao, quoteDao, loadsofcash);
+        Portfolio portfolio = new SimplePortfolio(fundDao, quoteDao, loadsofcash, false);
         portfolio.add(buyABC100);
         assertEquals(new BigDecimal("-15.1175600"), portfolio.gainPercentage(buy100Date));
         assertEquals(new BigDecimal("0"), portfolio.gainPercentage(buy100Date.minusDays(1)));
@@ -238,7 +238,7 @@ public class PortfolioTests {
 
     @Test
     public void testReturnsGain() throws PortfolioException {
-        Portfolio portfolio = new SimplePortfolio(fundDao, quoteDao, loadsofcash);
+        Portfolio portfolio = new SimplePortfolio(fundDao, quoteDao, loadsofcash, false);
         portfolio.add(buyABC100);
         assertEquals(new BigDecimal("-7124.00"), portfolio.returnsGain(buy100Date));
         assertEquals(new BigDecimal("0"), portfolio.returnsGain(buy100Date.minusDays(1)));
@@ -252,7 +252,7 @@ public class PortfolioTests {
 
     @Test
     public void testOverallReturn() throws PortfolioException {
-        Portfolio portfolio = new SimplePortfolio(fundDao, quoteDao, loadsofcash);
+        Portfolio portfolio = new SimplePortfolio(fundDao, quoteDao, loadsofcash, false);
         portfolio.add(buyABC100);
         assertEquals(new BigDecimal("-15.1175600"), portfolio.overallReturn(buy100Date));
         assertEquals(new BigDecimal("0"), portfolio.overallReturn(buy100Date.minusDays(1)));

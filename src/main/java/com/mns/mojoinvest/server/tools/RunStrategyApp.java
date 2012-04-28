@@ -75,7 +75,7 @@ public class RunStrategyApp {
 //        ((InMemoryCalculatedValueDao) calculatedValueDao).init("data/etf_asset_alloc_cvs.csv");
         ((InMemoryQuoteDao) quoteDao).init("data/ishares_quotes.csv", "data/ishares_quotes_missing.csv", "data/etf_quotes_compare.csv");
         ((InMemoryFundDao) fundDao).init("data/ishares_funds.csv");
-        ((InMemoryCalculatedValueDao) calculatedValueDao).init("data/ishares_cvs_av.csv");
+        ((InMemoryCalculatedValueDao) calculatedValueDao).init("data/ishares_cvs.csv");
 //        ((InMemoryQuoteDao) quoteDao).init("data/fidelity_quotes.csv", "data/fidelity_quotes_missing.csv", "data/etf_quotes_compare.csv");
 //        ((InMemoryFundDao) fundDao).init("data/fidelity_funds.csv");
 //        ((InMemoryCalculatedValueDao) calculatedValueDao).init("data/fidelity_cvs.csv");
@@ -96,9 +96,9 @@ public class RunStrategyApp {
         int holdingPeriod = 1;
         int ma1 = 12;
         int ma2 = 26;
-        int roc = 39;
+        int roc = 26;
         int alpha = 100;
-        int castOff = 8;
+        int castOff = 6;
         int stddev = 26;
         boolean equityCurveTrading = true;
         int equityCurveWindow = 52;

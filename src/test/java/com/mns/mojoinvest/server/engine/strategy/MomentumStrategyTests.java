@@ -91,7 +91,7 @@ public class MomentumStrategyTests {
         strategy = new OldMomentumStrategy(executor, rankingDao, quoteDao, fundDao);
 
         portfolio = new SimplePortfolio(fundDao, quoteDao, new PortfolioParams(10000.0, 12.95,
-                new LocalDate("2011-01-01").toDateMidnight().toDate()));
+                new LocalDate("2011-01-01").toDateMidnight().toDate()), false);
         backtestParams = new BacktestParams(new LocalDate("2011-09-01").toDateMidnight().toDate(),
                 new LocalDate("2012-01-01").toDateMidnight().toDate());
         strategyParams = new MomentumStrategyParams(9, 1, 3);
