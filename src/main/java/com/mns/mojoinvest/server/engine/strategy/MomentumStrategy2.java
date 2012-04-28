@@ -6,7 +6,6 @@ import com.google.common.collect.Ordering;
 import com.google.inject.Inject;
 import com.mns.mojoinvest.server.engine.execution.Executor;
 import com.mns.mojoinvest.server.engine.model.Fund;
-import com.mns.mojoinvest.server.engine.model.dao.QuoteDao;
 import com.mns.mojoinvest.server.engine.portfolio.Portfolio;
 import com.mns.mojoinvest.server.engine.portfolio.PortfolioException;
 import com.mns.mojoinvest.server.util.TradingDayUtils;
@@ -26,15 +25,12 @@ public class MomentumStrategy2 {
 
     private final RelativeStrengthCalculator relativeStrengthCalculator;
     private final Executor executor;
-    private final QuoteDao quoteDao;
-
 
     @Inject
     public MomentumStrategy2(RelativeStrengthCalculator relativeStrengthCalculator,
-                             Executor executor, QuoteDao dao) {
+                             Executor executor) {
         this.relativeStrengthCalculator = relativeStrengthCalculator;
         this.executor = executor;
-        this.quoteDao = dao;
     }
 
     public void execute(Portfolio portfolio, Portfolio shadowPortfolio, BacktestParams backtestParams,
@@ -48,22 +44,27 @@ public class MomentumStrategy2 {
             throw new StrategyException("From date cannot be after to date");
 
         List<LocalDate> rebalanceDates = getRebalanceDates(fromDate, toDate, params);
+        //TODO: Return a Map<LocalDate, List<Map<String, BigDecimal> here. Prevents the faffing with the double iterators later
         List<Map<String, BigDecimal>> strengths = getRelativeStrengths(universe, params, rebalanceDates);
 
-        DescriptiveStatistics equityCurve = new DescriptiveStatistics(params.getEquityCurveWindow());
+        assert rebalanceDates.size() == strengths.size() : "number of rebalance dates didn't match " +
+                "number of relative strength dates received";
 
+        DescriptiveStatistics equityCurve = new DescriptiveStatistics(params.getEquityCurveWindow());
         boolean belowEquityCurve = false;
 
-        for (int i = 0; i < rebalanceDates.size(); i++) {
+        Iterator<LocalDate> rebalanceDateIter = rebalanceDates.iterator();
+        Iterator<Map<String, BigDecimal>> strengthsIter = strengths.iterator();
 
-            LocalDate rebalanceDate = rebalanceDates.get(i);
-            Map<String, BigDecimal> rs = strengths.get(i);
+        while (rebalanceDateIter.hasNext() && strengthsIter.hasNext()) {
+
+            LocalDate rebalanceDate = rebalanceDateIter.next();
+            Map<String, BigDecimal> rs = strengthsIter.next();
 
             if (rs.size() < params.getCastOff()) {
                 log.warning(rebalanceDate + " Not enough funds in universe to make selection");
                 continue;
             }
-
 
             //Shadow portfolio and equity curve calculation stuff
             equityCurve.addValue(shadowPortfolio.marketValue(rebalanceDate).doubleValue());
@@ -75,12 +76,14 @@ public class MomentumStrategy2 {
             log.info(rebalanceDate + " " +
                     portfolio.getActiveFunds(rebalanceDate) + " " +
                     portfolio.marketValue(rebalanceDate) + " " +
-                    shadowPortfolio.marketValue(rebalanceDate) + " " + equityCurveMA);
+                    shadowPortfolio.marketValue(rebalanceDate) + " " +
+                    equityCurveMA);
 
             List<String> selection = getSelection(rs, params, rebalanceDate);
+
             if (params.tradeEquityCurve()) {
-                sellLosers(shadowPortfolio, rebalanceDate, selection);
-                buyWinners(shadowPortfolio, params, rebalanceDate, selection);
+
+                rebalance(shadowPortfolio, params, rebalanceDate, selection);
 
                 if (equityCurveMA != null && shadowPortfolio.marketValue(rebalanceDate).compareTo(equityCurveMA) < 0) {
                     if (!belowEquityCurve) {
@@ -122,16 +125,20 @@ public class MomentumStrategy2 {
                         }
                         belowEquityCurve = false;
                     }
-                    sellLosers(portfolio, rebalanceDate, selection);
-                    buyWinners(portfolio, params, rebalanceDate, selection);
+                    rebalance(portfolio, params, rebalanceDate, selection);
                 }
             } else {
-                sellLosers(portfolio, rebalanceDate, selection);
-                buyWinners(portfolio, params, rebalanceDate, selection);
+                rebalance(portfolio, params, rebalanceDate, selection);
             }
         }
 
 
+    }
+
+    private void rebalance(Portfolio portfolio, Strategy2Params params,
+                           LocalDate rebalanceDate, List<String> selection) throws StrategyException {
+        sellLosers(portfolio, rebalanceDate, selection);
+        buyWinners(portfolio, params, rebalanceDate, selection);
     }
 
 
