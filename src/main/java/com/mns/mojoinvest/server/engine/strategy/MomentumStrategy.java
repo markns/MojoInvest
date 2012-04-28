@@ -19,16 +19,16 @@ import java.math.MathContext;
 import java.util.*;
 import java.util.logging.Logger;
 
-public class MomentumStrategy3 {
+public class MomentumStrategy {
 
-    private static final Logger log = Logger.getLogger(MomentumStrategy3.class.getName());
+    private static final Logger log = Logger.getLogger(MomentumStrategy.class.getName());
 
     private final RelativeStrengthCalculator relativeStrengthCalculator;
     private final Executor executor;
 
     @Inject
-    public MomentumStrategy3(RelativeStrengthCalculator relativeStrengthCalculator,
-                             Executor executor) {
+    public MomentumStrategy(RelativeStrengthCalculator relativeStrengthCalculator,
+                            Executor executor) {
         this.relativeStrengthCalculator = relativeStrengthCalculator;
         this.executor = executor;
     }

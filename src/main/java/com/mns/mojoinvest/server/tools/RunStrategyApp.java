@@ -11,7 +11,7 @@ import com.mns.mojoinvest.server.engine.model.Fund;
 import com.mns.mojoinvest.server.engine.model.dao.*;
 import com.mns.mojoinvest.server.engine.portfolio.Portfolio;
 import com.mns.mojoinvest.server.engine.portfolio.PortfolioFactory;
-import com.mns.mojoinvest.server.engine.strategy.MomentumStrategy3;
+import com.mns.mojoinvest.server.engine.strategy.MomentumStrategy;
 import com.mns.mojoinvest.server.engine.strategy.StrategyException;
 import com.mns.mojoinvest.server.guice.DispatchServletModule;
 import com.mns.mojoinvest.server.guice.EngineModule;
@@ -45,14 +45,14 @@ public class RunStrategyApp {
     private final QuoteDao quoteDao;
     private final CalculatedValueDao calculatedValueDao;
     private final FundDao fundDao;
-    private final MomentumStrategy3 strategy;
+    private final MomentumStrategy strategy;
     private final PortfolioFactory portfolioFactory;
 
     private final Strategy2ResultBuilder resultBuilder;
 
     @Inject
     public RunStrategyApp(QuoteDao quoteDao, FundDao fundDao, CalculatedValueDao calculatedValueDao,
-                          PortfolioFactory portfolioFactory, MomentumStrategy3 strategy,
+                          PortfolioFactory portfolioFactory, MomentumStrategy strategy,
                           Strategy2ResultBuilder resultBuilder) {
         this.quoteDao = quoteDao;
         this.fundDao = fundDao;

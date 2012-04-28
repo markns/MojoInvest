@@ -6,7 +6,7 @@ import com.google.inject.Singleton;
 import com.mns.mojoinvest.server.engine.model.dao.FundDao;
 import com.mns.mojoinvest.server.engine.portfolio.PortfolioFactory;
 import com.mns.mojoinvest.server.engine.result.StrategyResultBuilder;
-import com.mns.mojoinvest.server.engine.strategy.MomentumStrategy3;
+import com.mns.mojoinvest.server.engine.strategy.MomentumStrategy;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -18,14 +18,14 @@ import java.util.List;
 @Singleton
 public class StrategyServlet extends HttpServlet {
 
-    private final MomentumStrategy3 strategy;
+    private final MomentumStrategy strategy;
 
     private final PortfolioFactory portfolioFactory;
     private final StrategyResultBuilder strategyResultBuilder;
     private final FundDao fundDao;
 
     @Inject
-    public StrategyServlet(MomentumStrategy3 strategy, PortfolioFactory portfolioFactory,
+    public StrategyServlet(MomentumStrategy strategy, PortfolioFactory portfolioFactory,
                            StrategyResultBuilder strategyResultBuilder, FundDao fundDao) {
         this.strategy = strategy;
         this.portfolioFactory = portfolioFactory;
