@@ -103,7 +103,7 @@ public class RunStrategyApp {
         boolean useSafeAsset = false;
         String safeAsset = "FSUTX";
 //        String safeAsset = "GSPC";
-        String relativeStrengthStyle = "MA";
+        String relativeStrengthStyle = "ALPHA";
 
         String funds = "IUSA|IEEM|IWRD|EUE|ISF|IBCX|INAA|IJPN|IFFF|IWDP|SEMB|IMEU|BRIC|FXC|IGLT|IBZL|IKOR|IEUX|MIDD|EUN|LTAM|ITWN|IEER|IPXJ|IEMS|ISP6|SSAM|SAUS|SRSA|RUSS|NFTY";
         funds = null;

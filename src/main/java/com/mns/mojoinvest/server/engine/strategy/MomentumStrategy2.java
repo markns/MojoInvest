@@ -75,7 +75,6 @@ public class MomentumStrategy2 {
             if (strategyParams.tradeEquityCurve()) {
 
                 rebalance(date, strategyParams, shadowPortfolio, selection);
-
                 if (equityCurveMA != null && shadowPortfolio.marketValue(date).compareTo(equityCurveMA) < 0) {
                     if (!belowEquityCurve) {
                         log.fine("Crossed below equity curve");
@@ -126,10 +125,15 @@ public class MomentumStrategy2 {
 
     }
 
-    private void rebalance(LocalDate rebalanceDate, Strategy2Params params, Portfolio portfolio,
-                           List<String> selection) throws StrategyException {
-        sellLosers(portfolio, rebalanceDate, selection);
-        buyWinners(portfolio, params, rebalanceDate, selection);
+    private List<LocalDate> getRebalanceDates(BacktestParams backtestParams, Strategy2Params params)
+            throws StrategyException {
+        LocalDate fromDate = new LocalDate(backtestParams.getFromDate());
+        LocalDate toDate = new LocalDate(backtestParams.getToDate());
+
+        if (fromDate.isAfter(toDate))
+            throw new StrategyException("From date cannot be after to date");
+
+        return TradingDayUtils.getEndOfWeekSeries(fromDate, toDate, params.getRebalanceFrequency());
     }
 
 
@@ -162,6 +166,12 @@ public class MomentumStrategy2 {
         log.fine(date + " RS(" + params.getRelativeStrengthStyle() + "): " + sorted);
         List<String> rank = new ArrayList<String>(sorted.keySet());
         return rank.subList(0, params.getCastOff());
+    }
+
+    private void rebalance(LocalDate rebalanceDate, Strategy2Params params, Portfolio portfolio,
+                           List<String> selection) throws StrategyException {
+        sellLosers(portfolio, rebalanceDate, selection);
+        buyWinners(portfolio, params, rebalanceDate, selection);
     }
 
     private void sellLosers(Portfolio portfolio, LocalDate rebalanceDate, List<String> selection)
@@ -210,17 +220,6 @@ public class MomentumStrategy2 {
                 }
             }
         }
-    }
-
-    private List<LocalDate> getRebalanceDates(BacktestParams backtestParams, Strategy2Params params)
-            throws StrategyException {
-        LocalDate fromDate = new LocalDate(backtestParams.getFromDate());
-        LocalDate toDate = new LocalDate(backtestParams.getToDate());
-
-        if (fromDate.isAfter(toDate))
-            throw new StrategyException("From date cannot be after to date");
-
-        return TradingDayUtils.getEndOfWeekSeries(fromDate, toDate, params.getRebalanceFrequency());
     }
 
 
