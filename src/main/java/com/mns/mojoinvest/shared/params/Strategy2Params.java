@@ -85,7 +85,7 @@ public class Strategy2Params {
 
     @Override
     public String toString() {
-        return "Params: {" +
+        return "StrategyParams: {" +
                 "portfolioSize=" + portfolioSize +
                 ", rebalanceFrequency=" + rebalanceFrequency +
                 ", ma1=" + ma1 +

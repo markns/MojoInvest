@@ -5,6 +5,7 @@ import com.google.common.collect.Lists;
 import com.google.inject.Guice;
 import com.google.inject.Inject;
 import com.google.inject.Injector;
+import com.mns.mojoinvest.server.engine.ResultBuilderException;
 import com.mns.mojoinvest.server.engine.Strategy2ResultBuilder;
 import com.mns.mojoinvest.server.engine.model.Fund;
 import com.mns.mojoinvest.server.engine.model.dao.*;
@@ -44,7 +45,7 @@ public class RunStrategyApp {
     private final QuoteDao quoteDao;
     private final CalculatedValueDao calculatedValueDao;
     private final FundDao fundDao;
-    private MomentumStrategy2 strategy2;
+    private final MomentumStrategy2 strategy2;
     private final PortfolioFactory portfolioFactory;
 
     private final Strategy2ResultBuilder resultBuilder;
@@ -63,12 +64,12 @@ public class RunStrategyApp {
 
     public void initDaos() {
         log.info("Loading in-memory dao's");
-//        ((InMemoryQuoteDao) quoteDao).init("data/etf_international_quotes.csv", "data/etf_quotes_compare.csv");
-//        ((InMemoryFundDao) fundDao).init("data/etf_international_funds.csv");
-//        ((InMemoryCalculatedValueDao) calculatedValueDao).init("data/etf_international_cvs.csv");
-        ((InMemoryQuoteDao) quoteDao).init("data/etf_sector_quotes.csv", "data/etf_quotes_compare.csv");
-        ((InMemoryFundDao) fundDao).init("data/etf_sector_funds.csv");
-        ((InMemoryCalculatedValueDao) calculatedValueDao).init("data/etf_sector_cvs.csv");
+        ((InMemoryQuoteDao) quoteDao).init("data/etf_international_quotes.csv", "data/etf_quotes_compare.csv");
+        ((InMemoryFundDao) fundDao).init("data/etf_international_funds.csv");
+        ((InMemoryCalculatedValueDao) calculatedValueDao).init("data/etf_international_cvs.csv");
+//        ((InMemoryQuoteDao) quoteDao).init("data/etf_sector_quotes.csv", "data/etf_quotes_compare.csv");
+//        ((InMemoryFundDao) fundDao).init("data/etf_sector_funds.csv");
+//        ((InMemoryCalculatedValueDao) calculatedValueDao).init("data/etf_sector_cvs.csv");
 //        ((InMemoryQuoteDao) quoteDao).init("data/etf_asset_alloc_quotes.csv", "data/etf_quotes_compare.csv");
 //        ((InMemoryFundDao) fundDao).init("data/etf_asset_alloc_funds.csv");
 //        ((InMemoryCalculatedValueDao) calculatedValueDao).init("data/etf_asset_alloc_cvs.csv");
@@ -83,6 +84,7 @@ public class RunStrategyApp {
     private void run() {
 
         LocalDate fDate = new LocalDate("1990-01-01");
+//        LocalDate fDate = new LocalDate("2000-01-01");
 //        LocalDate tDate = new LocalDate("2007-12-31");
         LocalDate tDate = new LocalDate("2012-03-01");
         Date fromDate = fDate.toDateMidnight().toDate();
@@ -103,7 +105,7 @@ public class RunStrategyApp {
         boolean useSafeAsset = false;
         String safeAsset = "FSUTX";
 //        String safeAsset = "GSPC";
-        String relativeStrengthStyle = "ALPHA";
+        String relativeStrengthStyle = "MA";
 
         String funds = "IUSA|IEEM|IWRD|EUE|ISF|IBCX|INAA|IJPN|IFFF|IWDP|SEMB|IMEU|BRIC|FXC|IGLT|IBZL|IKOR|IEUX|MIDD|EUN|LTAM|ITWN|IEER|IPXJ|IEMS|ISP6|SSAM|SAUS|SRSA|RUSS|NFTY";
         funds = null;
@@ -131,6 +133,8 @@ public class RunStrategyApp {
                     .setUniverse(universe)
                     .build();
         } catch (StrategyException e) {
+            e.printStackTrace();
+        } catch (ResultBuilderException e) {
             e.printStackTrace();
         }
     }

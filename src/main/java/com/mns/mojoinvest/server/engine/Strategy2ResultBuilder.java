@@ -39,7 +39,6 @@ public class Strategy2ResultBuilder {
     Map<String, BigDecimal> initCompares = new HashMap<String, BigDecimal>();
     Map<String, BigDecimal> portfolioCompares = new HashMap<String, BigDecimal>();
 
-
     @Inject
     public Strategy2ResultBuilder(QuoteDao quoteDao, FundDao fundDao) {
         this.quoteDao = quoteDao;
@@ -71,10 +70,9 @@ public class Strategy2ResultBuilder {
         return this;
     }
 
-    public void build() {
+    public void build() throws ResultBuilderException {
         LocalDate fromDate = new LocalDate(backtestParams.getFromDate());
         LocalDate toDate = new LocalDate(backtestParams.getToDate());
-
 
         CSVWriter writer = initialiseCsv();
         writeCsvHeader(universe, writer);
@@ -99,7 +97,7 @@ public class Strategy2ResultBuilder {
         logParams(backtestParams, strategyParams);
         logTrades(portfolio);
         logDrawDowns(drawDowns);
-        logCAGR(portfolio, fromDate, toDate);
+        logCAGR(portfolio, toDate);
 
 
     }
@@ -142,8 +140,8 @@ public class Strategy2ResultBuilder {
     }
 
     private void logParams(BacktestParams backtestParams, Strategy2Params strategyParams) {
-        log.info("BacktestParams: " + backtestParams);
-        log.info("StrategyParams: " + strategyParams);
+        log.info("" + backtestParams);
+        log.info("" + strategyParams);
     }
 
     private void logDrawDowns(List<DrawDown> drawDowns) {
@@ -156,14 +154,18 @@ public class Strategy2ResultBuilder {
         log.info("MaxDD: " + maxDD + "%");
     }
 
-    private void logCAGR(Portfolio portfolio, LocalDate fromDate, LocalDate toDate) {
+    private void logCAGR(Portfolio portfolio, LocalDate toDate)
+            throws ResultBuilderException {
+        if (portfolio.getTransactions().size() == 0)
+            throw new ResultBuilderException("No transactions in portfolio");
+        LocalDate fromDate = portfolio.getTransactions().get(0).getDate();
+
         BigDecimal marketValue = portfolio.marketValue(toDate);
         log.info("Final portfolio value: " + marketValue);
         double base = marketValue.divide(new BigDecimal(portfolio.getParams().getInitialInvestment())).doubleValue();
         double e = 1d / Years.yearsBetween(fromDate, toDate).getYears();
         double cagr = (1 - Math.pow(base, e)) * -100;
         log.info("CAGR: " + cagr + "%");
-
     }
 
 
