@@ -11,7 +11,7 @@ import com.mns.mojoinvest.server.engine.model.Fund;
 import com.mns.mojoinvest.server.engine.model.dao.*;
 import com.mns.mojoinvest.server.engine.portfolio.Portfolio;
 import com.mns.mojoinvest.server.engine.portfolio.PortfolioFactory;
-import com.mns.mojoinvest.server.engine.strategy.MomentumStrategy2;
+import com.mns.mojoinvest.server.engine.strategy.MomentumStrategy3;
 import com.mns.mojoinvest.server.engine.strategy.StrategyException;
 import com.mns.mojoinvest.server.guice.DispatchServletModule;
 import com.mns.mojoinvest.server.guice.EngineModule;
@@ -19,7 +19,7 @@ import com.mns.mojoinvest.server.guice.StandaloneModule;
 import com.mns.mojoinvest.server.guice.TradingStrategyModule;
 import com.mns.mojoinvest.shared.params.BacktestParams;
 import com.mns.mojoinvest.shared.params.PortfolioParams;
-import com.mns.mojoinvest.shared.params.Strategy2Params;
+import com.mns.mojoinvest.shared.params.StrategyParams;
 import org.joda.time.LocalDate;
 
 import java.util.Collection;
@@ -45,20 +45,20 @@ public class RunStrategyApp {
     private final QuoteDao quoteDao;
     private final CalculatedValueDao calculatedValueDao;
     private final FundDao fundDao;
-    private final MomentumStrategy2 strategy2;
+    private final MomentumStrategy3 strategy;
     private final PortfolioFactory portfolioFactory;
 
     private final Strategy2ResultBuilder resultBuilder;
 
     @Inject
     public RunStrategyApp(QuoteDao quoteDao, FundDao fundDao, CalculatedValueDao calculatedValueDao,
-                          PortfolioFactory portfolioFactory, MomentumStrategy2 strategy2,
+                          PortfolioFactory portfolioFactory, MomentumStrategy3 strategy,
                           Strategy2ResultBuilder resultBuilder) {
         this.quoteDao = quoteDao;
         this.fundDao = fundDao;
         this.calculatedValueDao = calculatedValueDao;
         this.portfolioFactory = portfolioFactory;
-        this.strategy2 = strategy2;
+        this.strategy = strategy;
         this.resultBuilder = resultBuilder;
     }
 
@@ -120,11 +120,11 @@ public class RunStrategyApp {
 
         BacktestParams params = new BacktestParams(fromDate, toDate);
 
-        Strategy2Params strategyParams = new Strategy2Params(portfolioSize, holdingPeriod, ma1, ma2, roc, alpha,
+        StrategyParams strategyParams = new StrategyParams(portfolioSize, holdingPeriod, ma1, ma2, roc, alpha,
                 castOff, stddev, equityCurveTrading, equityCurveWindow, relativeStrengthStyle, useSafeAsset, safeAsset);
 
         try {
-            strategy2.execute(portfolio, shadowPortfolio, params, universe, strategyParams);
+            strategy.execute(portfolio, shadowPortfolio, params, universe, strategyParams);
             //Should we use assisted inject here?
             resultBuilder.setPortfolio(portfolio)
                     .setShadowPortfolio(shadowPortfolio)

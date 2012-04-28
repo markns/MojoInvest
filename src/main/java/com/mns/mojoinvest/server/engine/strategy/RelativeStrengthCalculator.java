@@ -4,7 +4,7 @@ import com.google.inject.Inject;
 import com.mns.mojoinvest.server.engine.model.CalculatedValue;
 import com.mns.mojoinvest.server.engine.model.Fund;
 import com.mns.mojoinvest.server.engine.model.dao.CalculatedValueDao;
-import com.mns.mojoinvest.shared.params.Strategy2Params;
+import com.mns.mojoinvest.shared.params.StrategyParams;
 import org.joda.time.LocalDate;
 
 import java.math.BigDecimal;
@@ -23,7 +23,7 @@ public class RelativeStrengthCalculator {
         this.calculatedValueDao = dao;
     }
 
-    public SortedMap<LocalDate, Map<String, BigDecimal>> getRelativeStrengthsMA(Collection<Fund> funds, Strategy2Params params,
+    public SortedMap<LocalDate, Map<String, BigDecimal>> getRelativeStrengthsMA(Collection<Fund> funds, StrategyParams params,
                                                                                 List<LocalDate> dates) {
 
         log.info("Starting load of calculated values");
@@ -62,7 +62,7 @@ public class RelativeStrengthCalculator {
     }
 
 
-    public SortedMap<LocalDate, Map<String, BigDecimal>> getRelativeStrengthsROC(Collection<Fund> funds, Strategy2Params params, List<LocalDate> dates) {
+    public SortedMap<LocalDate, Map<String, BigDecimal>> getRelativeStrengthsROC(Collection<Fund> funds, StrategyParams params, List<LocalDate> dates) {
 
         Collection<CalculatedValue> rocs = calculatedValueDao.get(dates, funds, "ROC", params.getRoc());
 
@@ -95,7 +95,7 @@ public class RelativeStrengthCalculator {
         return allRs;
     }
 
-    public SortedMap<LocalDate, Map<String, BigDecimal>> getRelativeStrengthAlpha(Collection<Fund> funds, Strategy2Params params, List<LocalDate> dates) {
+    public SortedMap<LocalDate, Map<String, BigDecimal>> getRelativeStrengthAlpha(Collection<Fund> funds, StrategyParams params, List<LocalDate> dates) {
 
         Collection<CalculatedValue> alphas = calculatedValueDao.get(dates, funds, "ALPHA", params.getAlpha());
         //TODO: This step should be all that is required - no calculation necessary
@@ -128,7 +128,7 @@ public class RelativeStrengthCalculator {
     }
 
     private SortedMap<LocalDate, Map<String, BigDecimal>> adjustRelativeStrengths(SortedMap<LocalDate, Map<String, BigDecimal>> rs,
-                                                                                  Collection<Fund> funds, Strategy2Params params,
+                                                                                  Collection<Fund> funds, StrategyParams params,
                                                                                   List<LocalDate> dates) {
 
         Collection<CalculatedValue> stddevs = calculatedValueDao.get(dates, funds, "RSQUARED", params.getStdDev());

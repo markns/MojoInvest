@@ -10,7 +10,7 @@ import com.mns.mojoinvest.server.engine.portfolio.Portfolio;
 import com.mns.mojoinvest.server.engine.strategy.DrawDown;
 import com.mns.mojoinvest.server.util.TradingDayUtils;
 import com.mns.mojoinvest.shared.params.BacktestParams;
-import com.mns.mojoinvest.shared.params.Strategy2Params;
+import com.mns.mojoinvest.shared.params.StrategyParams;
 import org.apache.commons.lang.ArrayUtils;
 import org.joda.time.LocalDate;
 import org.joda.time.LocalTime;
@@ -33,7 +33,7 @@ public class Strategy2ResultBuilder {
     private Portfolio portfolio;
     private Portfolio shadowPortfolio;
     private BacktestParams backtestParams;
-    private Strategy2Params strategyParams;
+    private StrategyParams strategyParams;
     private Collection<Fund> universe;
 
     Map<String, BigDecimal> initCompares = new HashMap<String, BigDecimal>();
@@ -60,7 +60,7 @@ public class Strategy2ResultBuilder {
         return this;
     }
 
-    public Strategy2ResultBuilder setStrategyParams(Strategy2Params params) {
+    public Strategy2ResultBuilder setStrategyParams(StrategyParams params) {
         this.strategyParams = params;
         return this;
     }
@@ -102,7 +102,7 @@ public class Strategy2ResultBuilder {
 
     }
 
-    private List<LocalDate> getRebalanceDates(LocalDate fromDate, LocalDate toDate, Strategy2Params params) {
+    private List<LocalDate> getRebalanceDates(LocalDate fromDate, LocalDate toDate, StrategyParams params) {
         return TradingDayUtils.getEndOfWeekSeries(fromDate, toDate, params.getRebalanceFrequency());
     }
 
@@ -139,7 +139,7 @@ public class Strategy2ResultBuilder {
         return currentDD;
     }
 
-    private void logParams(BacktestParams backtestParams, Strategy2Params strategyParams) {
+    private void logParams(BacktestParams backtestParams, StrategyParams strategyParams) {
         log.info("" + backtestParams);
         log.info("" + strategyParams);
     }

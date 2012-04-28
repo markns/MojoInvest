@@ -25,9 +25,9 @@ import java.util.List;
 import java.util.Set;
 import java.util.logging.Logger;
 
-public class MomentumStrategy {
+public class OldMomentumStrategy {
 
-    private static final Logger log = Logger.getLogger(MomentumStrategy.class.getName());
+    private static final Logger log = Logger.getLogger(OldMomentumStrategy.class.getName());
 
     private final Executor executor;
     private final RankingDao rankingDao;
@@ -35,7 +35,7 @@ public class MomentumStrategy {
     private final FundDao fundDao;
 
     @Inject
-    public MomentumStrategy(Executor executor, RankingDao rankingDao, QuoteDao quoteDao, FundDao fundDao) {
+    public OldMomentumStrategy(Executor executor, RankingDao rankingDao, QuoteDao quoteDao, FundDao fundDao) {
         this.executor = executor;
         this.rankingDao = rankingDao;
         this.quoteDao = quoteDao;

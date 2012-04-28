@@ -76,7 +76,7 @@ public class MomentumStrategyTests {
             new Ranking(new LocalDate("2011-12-30"), rankingParams, "J|A|B|C|D|E|F|G|H|I")
     );
 
-    private MomentumStrategy strategy;
+    private OldMomentumStrategy strategy;
     private Portfolio portfolio;
     private BacktestParams backtestParams;
     private MomentumStrategyParams strategyParams;
@@ -88,7 +88,7 @@ public class MomentumStrategyTests {
         rankingDao.put(rankings);
         Executor executor = new NextTradingDayExecutor(quoteDao);
         when(quoteDao.get(anyFund(), anyLocalDate())).thenReturn(dummyQuote);
-        strategy = new MomentumStrategy(executor, rankingDao, quoteDao, fundDao);
+        strategy = new OldMomentumStrategy(executor, rankingDao, quoteDao, fundDao);
 
         portfolio = new SimplePortfolio(fundDao, quoteDao, new PortfolioParams(10000.0, 12.95,
                 new LocalDate("2011-01-01").toDateMidnight().toDate()));

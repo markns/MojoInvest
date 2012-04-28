@@ -6,7 +6,7 @@ import com.google.inject.Singleton;
 import com.mns.mojoinvest.server.engine.model.dao.FundDao;
 import com.mns.mojoinvest.server.engine.portfolio.PortfolioFactory;
 import com.mns.mojoinvest.server.engine.result.StrategyResultBuilder;
-import com.mns.mojoinvest.server.engine.strategy.MomentumStrategy2;
+import com.mns.mojoinvest.server.engine.strategy.MomentumStrategy3;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -18,16 +18,16 @@ import java.util.List;
 @Singleton
 public class StrategyServlet extends HttpServlet {
 
-    private final MomentumStrategy2 strategy2;
+    private final MomentumStrategy3 strategy;
 
     private final PortfolioFactory portfolioFactory;
     private final StrategyResultBuilder strategyResultBuilder;
     private final FundDao fundDao;
 
     @Inject
-    public StrategyServlet(MomentumStrategy2 strategy2, PortfolioFactory portfolioFactory,
+    public StrategyServlet(MomentumStrategy3 strategy, PortfolioFactory portfolioFactory,
                            StrategyResultBuilder strategyResultBuilder, FundDao fundDao) {
-        this.strategy2 = strategy2;
+        this.strategy = strategy;
         this.portfolioFactory = portfolioFactory;
         this.strategyResultBuilder = strategyResultBuilder;
         this.fundDao = fundDao;
@@ -73,12 +73,12 @@ public class StrategyServlet extends HttpServlet {
 //        String safeAsset = "IUTX";
 //        //4, 12, 26, 40, 52
 //
-//        Strategy2Params strategyParams = new Strategy2Params(portfolioSize, holdingPeriod, ma1, ma2, roc,
+//        StrategyParams strategyParams = new StrategyParams(portfolioSize, holdingPeriod, ma1, ma2, roc,
 //                castOff, stddev, equityCurveTrading, equityCurveWindow, relativeStrengthStyle, useSafeAsset, safeAsset);
 //
 //
 //        try {
-//            strategy2.execute(portfolio, params, universe, strategyParams);
+//            strategy.execute(portfolio, params, universe, strategyParams);
 //        } catch (StrategyException e) {
 //            e.printStackTrace();
 //        }

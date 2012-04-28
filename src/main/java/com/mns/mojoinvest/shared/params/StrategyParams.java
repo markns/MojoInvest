@@ -1,6 +1,6 @@
 package com.mns.mojoinvest.shared.params;
 
-public class Strategy2Params {
+public class StrategyParams {
 
     private final int portfolioSize;
     private final int rebalanceFrequency;
@@ -16,9 +16,9 @@ public class Strategy2Params {
     private boolean useSafeAsset;
     private String safeAsset;
 
-    public Strategy2Params(int portfolioSize, int rebalanceFrequency, int ma1, int ma2, int roc, int alpha,
-                           int castOff, int stddev, boolean equityCurveTrading, int equityCurveWindow,
-                           String relativeStrengthStyle, boolean useSafeAsset, String safeAsset) {
+    public StrategyParams(int portfolioSize, int rebalanceFrequency, int ma1, int ma2, int roc, int alpha,
+                          int castOff, int stddev, boolean equityCurveTrading, int equityCurveWindow,
+                          String relativeStrengthStyle, boolean useSafeAsset, String safeAsset) {
 
         this.portfolioSize = portfolioSize;
         this.rebalanceFrequency = rebalanceFrequency;

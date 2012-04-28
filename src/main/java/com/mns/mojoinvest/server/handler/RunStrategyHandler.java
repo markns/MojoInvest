@@ -11,7 +11,7 @@ import com.mns.mojoinvest.server.engine.portfolio.Portfolio;
 import com.mns.mojoinvest.server.engine.portfolio.PortfolioFactory;
 import com.mns.mojoinvest.server.engine.portfolio.Position;
 import com.mns.mojoinvest.server.engine.result.StrategyResultBuilder;
-import com.mns.mojoinvest.server.engine.strategy.MomentumStrategy;
+import com.mns.mojoinvest.server.engine.strategy.OldMomentumStrategy;
 import com.mns.mojoinvest.server.engine.strategy.StrategyException;
 import com.mns.mojoinvest.server.engine.transaction.SellTransaction;
 import com.mns.mojoinvest.shared.dispatch.RunStrategyAction;
@@ -32,13 +32,13 @@ public class RunStrategyHandler implements
 
     private static final Logger log = Logger.getLogger(RunStrategyHandler.class.getName());
 
-    private MomentumStrategy strategy;
+    private OldMomentumStrategy strategy;
     private final PortfolioFactory portfolioFactory;
     private final StrategyResultBuilder strategyResultBuilder;
     private final FundDao fundDao;
 
     @Inject
-    public RunStrategyHandler(MomentumStrategy strategy,
+    public RunStrategyHandler(OldMomentumStrategy strategy,
                               PortfolioFactory portfolioFactory,
                               StrategyResultBuilder strategyResultBuilder,
                               FundDao fundDao) {
