@@ -37,15 +37,15 @@ public class OfflineCalculatorTool {
 //        fundDao.init("data/etf_international_funds.csv");
 //        String outfile = "data/etf_international_cvs.csv";
 
-        quoteDao.init("data/etf_sector_quotes.csv", "data/etf_quotes_compare.csv");
-        fundDao.init("data/etf_sector_funds.csv");
-        String outfile = "data/etf_sector_cvs.csv";
+//        quoteDao.init("data/etf_sector_quotes.csv", "data/etf_quotes_compare.csv");
+//        fundDao.init("data/etf_sector_funds.csv");
+//        String outfile = "data/etf_sector_cvs.csv";
 //        quoteDao.init("data/etf_asset_alloc_quotes.csv", "data/etf_quotes_compare.csv");
 //        fundDao.init("data/etf_asset_alloc_funds.csv");
 //  String outfile = "data/etf_asset_alloc_cvs.csv";
-//        quoteDao.init("data/ishares_quotes.csv", "data/ishares_quotes_missing.csv", "data/etf_quotes_compare.csv");
-//        fundDao.init("data/ishares_funds.csv");
-//        String outfile = "data/ishares_cvs.csv";
+        quoteDao.init("data/ishares_quotes.csv", "data/ishares_quotes_missing.csv", "data/etf_quotes_compare.csv");
+        fundDao.init("data/ishares_funds.csv");
+        String outfile = "data/ishares_cvs.csv";
 //        quoteDao.init("data/fidelity_quotes.csv", "data/fidelity_quotes_missing.csv", "data/etf_quotes_compare.csv");
 //        fundDao.init("data/fidelity_funds.csv");
 //        String outfile = "data/fidelity_cvs.csv";
@@ -68,43 +68,67 @@ public class OfflineCalculatorTool {
             LocalDate latest = new LocalDate("2012-03-30");
             List<CalculatedValue> cvs = new ArrayList<CalculatedValue>();
             List<LocalDate> dates = TradingDayUtils.getEndOfWeekSeries(earliest, latest, 1);
-            List<Quote> weeklySeries = new ArrayList<Quote>(quoteDao.get(fund, dates));
+            List<Quote> quoteSeries = new ArrayList<Quote>(quoteDao.get(fund, dates));
+
+//            List<Quote> quoteSeries = new ArrayList<Quote>(dates.size());
+//            for (LocalDate date : dates) {
+//                List<LocalDate> thisWeek = new ArrayList<LocalDate>(5);
+//                while (date.getDayOfWeek() != DateTimeConstants.SUNDAY) {
+//                    if (!HolidayUtils.isHoliday(date))
+//                        thisWeek.add(date);
+//                    date = date.minusDays(1);
+//                }
+//                List<Quote> weeklySeries = new ArrayList<Quote>(quoteDao.get(fund, thisWeek));
+//                QuoteUtils.sortByDateDesc(weeklySeries);
+//
+//                if (weeklySeries.size() > 0) {
+//                    BigDecimal avClose = BigDecimal.ZERO;
+//                    for (Quote quote : weeklySeries) {
+//                        avClose = avClose.add(quote.getAdjClose());
+//                    }
+//                    avClose = avClose.divide(new BigDecimal(weeklySeries.size()), MathContext.DECIMAL32);
+//                    Quote copy = weeklySeries.get(0);
+//                    quoteSeries.add(new Quote(copy.getSymbol(), copy.getDate(), copy.getOpen(), copy.getHigh(), copy.getLow(),
+//                            copy.getClose(), null, null, copy.getVolume(), avClose, copy.isRolled()));
+//                }
+//            }
+
 
 //            //Moving averages
             for (int period : Arrays.asList(4, 8, 12, 26, 39, 52)) {
-                cvs.addAll(calculationService.calculateSMA(weeklySeries, period));
+                cvs.addAll(calculationService.calculateSMA(quoteSeries, period));
             }
 //
 //            //Standardized ROC
             for (int period : Arrays.asList(4, 8, 12, 26, 39, 52)) {
-                cvs.addAll(calculationService.calculateROC(weeklySeries, period));
+                cvs.addAll(calculationService.calculateROC(quoteSeries, period));
             }
 //
 //            //Standard deviations
             for (int period : Arrays.asList(12, 26, 39, 52)) {
-                cvs.addAll(calculationService.calculateStandardDeviation(weeklySeries, period));
+                cvs.addAll(calculationService.calculateStandardDeviation(quoteSeries, period));
             }
 //
 //            //RSquared - coefficient of determination
             for (int period : Arrays.asList(12, 26, 39, 52)) {
-                cvs.addAll(calculationService.calculateRSquared(weeklySeries, period));
+                cvs.addAll(calculationService.calculateRSquared(quoteSeries, period));
             }
 
             //Alpha
             NavigableMap<LocalDate, BigDecimal> returns = new TreeMap<LocalDate, BigDecimal>();
             Quote from = null;
-            for (Quote to : weeklySeries) {
+            for (Quote to : quoteSeries) {
                 if (from != null) {
                     returns.put(to.getDate(), percentageReturn(from.getAdjClose(), to.getAdjClose()));
                 }
                 from = to;
             }
             int period = 100;
-            for (int i = 1; i + period < weeklySeries.size(); i++) {
-                NavigableMap<LocalDate, BigDecimal> returnsPeriod = returns.subMap(weeklySeries.get(i).getDate(), true,
-                        weeklySeries.get(i + period).getDate(), false);
-                NavigableMap<LocalDate, BigDecimal> idxReturnsPeriod = idxReturns.subMap(weeklySeries.get(i).getDate(), true,
-                        weeklySeries.get(i + period).getDate(), false);
+            for (int i = 1; i + period < quoteSeries.size(); i++) {
+                NavigableMap<LocalDate, BigDecimal> returnsPeriod = returns.subMap(quoteSeries.get(i).getDate(), true,
+                        quoteSeries.get(i + period).getDate(), false);
+                NavigableMap<LocalDate, BigDecimal> idxReturnsPeriod = idxReturns.subMap(quoteSeries.get(i).getDate(), true,
+                        quoteSeries.get(i + period).getDate(), false);
                 if (returnsPeriod.size() != idxReturnsPeriod.size()) {
                     throw new RuntimeException(returnsPeriod.size() + " " + idxReturnsPeriod.size());
                 }

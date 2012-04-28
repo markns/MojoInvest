@@ -98,14 +98,11 @@ public class Strategy2ResultBuilder {
         logTrades(portfolio);
         logDrawDowns(drawDowns);
         logCAGR(portfolio, toDate);
-
-
     }
 
     private List<LocalDate> getRebalanceDates(LocalDate fromDate, LocalDate toDate, StrategyParams params) {
         return TradingDayUtils.getEndOfWeekSeries(fromDate, toDate, params.getRebalanceFrequency());
     }
-
 
     private DrawDown calculateDrawDowns(List<DrawDown> drawDowns, DrawDown currentDD, LocalDate rebalanceDate, BigDecimal marketValue) {
         //Calculation of draw downs
