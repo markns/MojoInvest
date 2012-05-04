@@ -37,22 +37,25 @@ public class OfflineCalculatorTool {
 //        fundDao.init("data/etf_international_funds.csv");
 //        String outfile = "data/etf_international_cvs.csv";
 
-//        quoteDao.init("data/etf_sector_quotes.csv", "data/etf_quotes_compare.csv");
-//        fundDao.init("data/etf_sector_funds.csv");
-//        String outfile = "data/etf_sector_cvs.csv";
+        quoteDao.init("data/etf_sector_quotes.csv", "data/etf_quotes_compare.csv");
+        fundDao.init("data/etf_sector_funds.csv");
+        String outfile = "data/etf_sector_cvs.csv";
 //        quoteDao.init("data/etf_asset_alloc_quotes.csv", "data/etf_quotes_compare.csv");
 //        fundDao.init("data/etf_asset_alloc_funds.csv");
 //  String outfile = "data/etf_asset_alloc_cvs.csv";
-        quoteDao.init("data/ishares_quotes.csv", "data/ishares_quotes_missing.csv", "data/etf_quotes_compare.csv");
-        fundDao.init("data/ishares_funds.csv");
-        String outfile = "data/ishares_cvs.csv";
+//        quoteDao.init("data/ishares_quotes.csv", "data/ishares_quotes_missing.csv", "data/GSPC.csv");
+//        fundDao.init("data/ishares_funds.csv");
+//        String outfile = "data/ishares_cvs.csv";
 //        quoteDao.init("data/fidelity_quotes.csv", "data/fidelity_quotes_missing.csv", "data/etf_quotes_compare.csv");
 //        fundDao.init("data/fidelity_funds.csv");
-//        String outfile = "data/fidelity_cvs.csv";
+//        String outfile = "data/fidelity_cvs_av.csv";
 
         CSVWriter writer = new CSVWriter(new FileWriter(outfile));
 
-        NavigableMap<LocalDate, BigDecimal> idxReturns = getIndexReturns("GSPC");
+        LocalDate latest = new LocalDate("2012-03-30");
+//        LocalDate latest = new LocalDate("2012-05-02");
+        NavigableMap<LocalDate, BigDecimal> idxReturns = getIndexReturns("GSPC", latest);
+
 
         for (Fund fund : fundDao.getAll()) {
 
@@ -65,7 +68,7 @@ public class OfflineCalculatorTool {
                 continue;
 
             LocalDate earliest = quotes.get(0).getDate();
-            LocalDate latest = new LocalDate("2012-03-30");
+
             List<CalculatedValue> cvs = new ArrayList<CalculatedValue>();
             List<LocalDate> dates = TradingDayUtils.getEndOfWeekSeries(earliest, latest, 1);
             List<Quote> quoteSeries = new ArrayList<Quote>(quoteDao.get(fund, dates));
@@ -159,14 +162,13 @@ public class OfflineCalculatorTool {
 
     }
 
-    private NavigableMap<LocalDate, BigDecimal> getIndexReturns(String idx) {
+    private NavigableMap<LocalDate, BigDecimal> getIndexReturns(String idx, LocalDate latest) {
 
         Fund index = new Fund(idx, "", "", "", true, "", "", "", new LocalDate());
         List<Quote> idxQuotes = quoteDao.query(index);
         QuoteUtils.sortByDateAsc(idxQuotes);
 
         LocalDate earliest = idxQuotes.get(0).getDate();
-        LocalDate latest = new LocalDate("2012-03-30");
 
         List<LocalDate> dates = TradingDayUtils.getEndOfWeekSeries(earliest, latest, 1);
         List<Quote> weeklySeries = new ArrayList<Quote>(quoteDao.get(index, dates));

@@ -26,7 +26,7 @@ public class MissingQuoteUtil {
     }
 
     private static Map<String, List<Quote>> readQuotes() throws IOException {
-        CSVReader reader = new CSVReader(new BufferedReader(new FileReader("data/ishares_quotes.csv")));
+        CSVReader reader = new CSVReader(new BufferedReader(new FileReader("data/GSPC.csv")));
 
         Map<String, List<Quote>> quoteMap = new HashMap<String, List<Quote>>();
 
@@ -44,7 +44,7 @@ public class MissingQuoteUtil {
     }
 
     private static void writeMissingQuotes(List<Quote> missing) throws IOException {
-        CSVWriter writer = new CSVWriter(new BufferedWriter(new FileWriter("data/ishares_quotes_missing.csv")));
+        CSVWriter writer = new CSVWriter(new BufferedWriter(new FileWriter("data/GSPC_missing.csv")));
         for (Quote quote : missing) {
             writer.writeNext(QuoteUtils.toStringArray(quote));
         }
