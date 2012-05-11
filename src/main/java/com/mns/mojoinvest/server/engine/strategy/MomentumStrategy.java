@@ -79,8 +79,7 @@ public class MomentumStrategy {
             List<String> selection = getSelection(date, strategyParams, strengths);
 
             if (strategyParams.tradeEquityCurve()) {
-
-                rebalance(date, strategyParams, shadowPortfolio, selection);
+                rebalance(shadowPortfolio, date, selection, strategyParams);
                 if (equityCurveMA != null && shadowPortfolio.marketValue(date).compareTo(equityCurveMA) < 0) {
                     if (!belowEquityCurve) {
                         log.fine("Crossed below equity curve");
@@ -96,10 +95,10 @@ public class MomentumStrategy {
                         sellSafeAsset(portfolio, strategyParams, date);
                         belowEquityCurve = false;
                     }
-                    rebalance(date, strategyParams, portfolio, selection);
+                    rebalance(portfolio, date, selection, strategyParams);
                 }
             } else {
-                rebalance(date, strategyParams, portfolio, selection);
+                rebalance(portfolio, date, selection, strategyParams);
             }
         }
 
@@ -186,8 +185,7 @@ public class MomentumStrategy {
         return rank.subList(0, params.getCastOff());
     }
 
-    private void rebalance(LocalDate rebalanceDate, StrategyParams params, Portfolio portfolio,
-                           List<String> selection) throws StrategyException {
+    private void rebalance(Portfolio portfolio, LocalDate rebalanceDate, List<String> selection, StrategyParams params) throws StrategyException {
         sellLosers(portfolio, rebalanceDate, selection);
         buyWinners(portfolio, params, rebalanceDate, selection);
     }
