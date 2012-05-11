@@ -4,20 +4,19 @@ import com.mns.mojoinvest.server.engine.model.CalculatedValue;
 import com.mns.mojoinvest.server.engine.model.Quote;
 import org.apache.commons.math.stat.descriptive.DescriptiveStatistics;
 import org.apache.commons.math.stat.regression.SimpleRegression;
+import org.joda.time.LocalDate;
 
 import java.math.BigDecimal;
 import java.math.MathContext;
 import java.math.RoundingMode;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
+import java.util.*;
 
+//TODO: Consider splitting this class into a set of calculator classes
 public class CalculationService {
 
     public List<CalculatedValue> calculateSMA(List<Quote> quotes, int period) {
         List<CalculatedValue> cvs = new ArrayList<CalculatedValue>();
-        DescriptiveStatistics stats = new DescriptiveStatistics();
-        stats.setWindowSize(period);
+        DescriptiveStatistics stats = new DescriptiveStatistics(period);
         for (Quote quote : quotes) {
             stats.addValue(quote.getAdjClose().doubleValue());
             if (stats.getN() >= period) {
@@ -31,8 +30,7 @@ public class CalculationService {
 
     public List<CalculatedValue> calculateStandardDeviation(List<Quote> quotes, int period) {
         List<CalculatedValue> cvs = new ArrayList<CalculatedValue>();
-        DescriptiveStatistics stats = new DescriptiveStatistics();
-        stats.setWindowSize(period);
+        DescriptiveStatistics stats = new DescriptiveStatistics(period);
         for (Quote quote : quotes) {
             stats.addValue(quote.getAdjClose().doubleValue());
             if (stats.getN() >= period) {
@@ -65,10 +63,8 @@ public class CalculationService {
         return cvs;
     }
 
-    public Collection<? extends CalculatedValue> calculateRSquared(List<Quote> quotes, int period) {
+    public List<CalculatedValue> calculateRSquared(List<Quote> quotes, int period) {
         List<CalculatedValue> cvs = new ArrayList<CalculatedValue>();
-
-
         int i = 0;
         while (i + period < quotes.size()) {
             SimpleRegression regression = new SimpleRegression();
@@ -89,6 +85,45 @@ public class CalculationService {
         }
 
         return cvs;
+    }
+
+    public List<CalculatedValue> calculateAlpha(List<Quote> quotes, NavigableMap<LocalDate, BigDecimal> idxReturns,
+                                                int period) {
+        List<CalculatedValue> cvs = new ArrayList<CalculatedValue>();
+        NavigableMap<LocalDate, BigDecimal> returns = new TreeMap<LocalDate, BigDecimal>();
+        Quote from = null;
+        for (Quote to : quotes) {
+            if (from != null) {
+                returns.put(to.getDate(), percentageReturn(from.getAdjClose(), to.getAdjClose()));
+            }
+            from = to;
+        }
+        for (int i = 1; i + period < quotes.size(); i++) {
+            NavigableMap<LocalDate, BigDecimal> returnsPeriod = returns.subMap(quotes.get(i).getDate(), true,
+                    quotes.get(i + period).getDate(), false);
+            NavigableMap<LocalDate, BigDecimal> idxReturnsPeriod = idxReturns.subMap(quotes.get(i).getDate(), true,
+                    quotes.get(i + period).getDate(), false);
+            if (returnsPeriod.size() != idxReturnsPeriod.size()) {
+                throw new RuntimeException(returnsPeriod.size() + " " + idxReturnsPeriod.size());
+            }
+            Iterator<BigDecimal> returnsIter = returnsPeriod.values().iterator();
+            Iterator<BigDecimal> idxReturnsIter = idxReturnsPeriod.values().iterator();
+
+            SimpleRegression regression = new SimpleRegression();
+            while (returnsIter.hasNext() && idxReturnsIter.hasNext()) {
+                regression.addData(returnsIter.next().doubleValue(), idxReturnsIter.next().doubleValue());
+            }
+            double intercept = regression.getIntercept();
+            cvs.add(new CalculatedValue(returnsPeriod.lastEntry().getKey(), quotes.get(0).getSymbol(),
+                    "ALPHA", period, intercept));
+        }
+        return cvs;
+    }
+
+
+    private BigDecimal percentageReturn(BigDecimal from, BigDecimal to) {
+        BigDecimal change = to.subtract(from);
+        return change.divide(from, MathContext.DECIMAL32);
     }
 
 

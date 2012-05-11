@@ -67,15 +67,15 @@ public class RunStrategyApp {
 //        ((InMemoryQuoteDao) quoteDao).init("data/etf_international_quotes.csv", "data/etf_quotes_compare.csv");
 //        ((InMemoryFundDao) fundDao).init("data/etf_international_funds.csv");
 //        ((InMemoryCalculatedValueDao) calculatedValueDao).init("data/etf_international_cvs.csv");
-        ((InMemoryQuoteDao) quoteDao).init("data/etf_sector_quotes.csv", "data/etf_quotes_compare.csv");
-        ((InMemoryFundDao) fundDao).init("data/etf_sector_funds.csv");
-        ((InMemoryCalculatedValueDao) calculatedValueDao).init("data/etf_sector_cvs.csv");
+//        ((InMemoryQuoteDao) quoteDao).init("data/etf_sector_quotes.csv", "data/etf_quotes_compare.csv");
+//        ((InMemoryFundDao) fundDao).init("data/etf_sector_funds.csv");
+//        ((InMemoryCalculatedValueDao) calculatedValueDao).init("data/etf_sector_cvs.csv");
 //        ((InMemoryQuoteDao) quoteDao).init("data/etf_asset_alloc_quotes.csv", "data/etf_quotes_compare.csv");
 //        ((InMemoryFundDao) fundDao).init("data/etf_asset_alloc_funds.csv");
 //        ((InMemoryCalculatedValueDao) calculatedValueDao).init("data/etf_asset_alloc_cvs.csv");
-//        ((InMemoryQuoteDao) quoteDao).init("data/ishares_quotes.csv", "data/ishares_quotes_missing.csv", "data/etf_quotes_compare.csv");
-//        ((InMemoryFundDao) fundDao).init("data/ishares_funds.csv");
-//        ((InMemoryCalculatedValueDao) calculatedValueDao).init("data/ishares_cvs.csv");
+        ((InMemoryQuoteDao) quoteDao).init("data/ishares_quotes.csv", "data/ishares_quotes_missing.csv", "data/etf_quotes_compare.csv");
+        ((InMemoryFundDao) fundDao).init("data/ishares_funds.csv");
+        ((InMemoryCalculatedValueDao) calculatedValueDao).init("data/ishares_cvs.csv");
 //        ((InMemoryQuoteDao) quoteDao).init("data/fidelity_quotes.csv", "data/fidelity_quotes_missing.csv", "data/etf_quotes_compare.csv");
 //        ((InMemoryFundDao) fundDao).init("data/fidelity_funds.csv");
 //        ((InMemoryCalculatedValueDao) calculatedValueDao).init("data/fidelity_cvs.csv");
@@ -99,18 +99,18 @@ public class RunStrategyApp {
         int ma2 = 26;
         int roc = 26;
         int alpha = 100;
-        int castOff = 6;
+        int castOff = 8;
         int stddev = 26;
-        boolean equityCurveTrading = false;
-        int equityCurveWindow = 52;
+        boolean equityCurveTrading = true;
+        int equityCurveWindow = 26;
         boolean useSafeAsset = false;
 //        String safeAsset = "FSUTX"; //fidelity
         String safeAsset = "IGLT"; //ishares
 //        String safeAsset = "GSPC";
-        String relativeStrengthStyle = "ROC";
+        String relativeStrengthStyle = "MA";
 
         String funds = "IUSA|IEEM|IWRD|EUE|ISF|IBCX|INAA|IJPN|IFFF|IWDP|SEMB|IMEU|BRIC|FXC|IGLT|IBZL|IKOR|IEUX|MIDD|EUN|LTAM|ITWN|IEER|IPXJ|IEMS|ISP6|SSAM|SAUS|SRSA|RUSS|NFTY";
-        funds = null;
+//        funds = null;
         Collection<Fund> universe;
         if (funds != null) {
             universe = fundDao.get(toList(Splitter.on("|").split(funds)));

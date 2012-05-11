@@ -9,7 +9,6 @@ import com.mns.mojoinvest.server.engine.model.dao.InMemoryFundDao;
 import com.mns.mojoinvest.server.engine.model.dao.InMemoryQuoteDao;
 import com.mns.mojoinvest.server.util.QuoteUtils;
 import com.mns.mojoinvest.server.util.TradingDayUtils;
-import org.apache.commons.math.stat.regression.SimpleRegression;
 import org.joda.time.LocalDate;
 
 import java.io.FileWriter;
@@ -73,6 +72,7 @@ public class OfflineCalculatorTool {
             List<LocalDate> dates = TradingDayUtils.getEndOfWeekSeries(earliest, latest, 1);
             List<Quote> quoteSeries = new ArrayList<Quote>(quoteDao.get(fund, dates));
 
+            QuoteUtils.sortByDateAsc(quoteSeries);
 //            List<Quote> quoteSeries = new ArrayList<Quote>(dates.size());
 //            for (LocalDate date : dates) {
 //                List<LocalDate> thisWeek = new ArrayList<LocalDate>(5);
@@ -118,34 +118,9 @@ public class OfflineCalculatorTool {
             }
 
             //Alpha
-            NavigableMap<LocalDate, BigDecimal> returns = new TreeMap<LocalDate, BigDecimal>();
-            Quote from = null;
-            for (Quote to : quoteSeries) {
-                if (from != null) {
-                    returns.put(to.getDate(), percentageReturn(from.getAdjClose(), to.getAdjClose()));
-                }
-                from = to;
+            for (int period : Arrays.asList(100)) {
+                cvs.addAll(calculationService.calculateAlpha(quoteSeries, idxReturns, period));
             }
-            int period = 100;
-            for (int i = 1; i + period < quoteSeries.size(); i++) {
-                NavigableMap<LocalDate, BigDecimal> returnsPeriod = returns.subMap(quoteSeries.get(i).getDate(), true,
-                        quoteSeries.get(i + period).getDate(), false);
-                NavigableMap<LocalDate, BigDecimal> idxReturnsPeriod = idxReturns.subMap(quoteSeries.get(i).getDate(), true,
-                        quoteSeries.get(i + period).getDate(), false);
-                if (returnsPeriod.size() != idxReturnsPeriod.size()) {
-                    throw new RuntimeException(returnsPeriod.size() + " " + idxReturnsPeriod.size());
-                }
-                Iterator<BigDecimal> returnsIter = returnsPeriod.values().iterator();
-                Iterator<BigDecimal> idxReturnsIter = idxReturnsPeriod.values().iterator();
-
-                SimpleRegression regression = new SimpleRegression();
-                while (returnsIter.hasNext() && idxReturnsIter.hasNext()) {
-                    regression.addData(returnsIter.next().doubleValue(), idxReturnsIter.next().doubleValue());
-                }
-                double intercept = regression.getIntercept();
-                cvs.add(new CalculatedValue(returnsPeriod.lastEntry().getKey(), fund.getSymbol(), "ALPHA", period, intercept));
-            }
-
 
             System.out.println(fund + " " + earliest + " " + latest + " " + cvs.size());
 
