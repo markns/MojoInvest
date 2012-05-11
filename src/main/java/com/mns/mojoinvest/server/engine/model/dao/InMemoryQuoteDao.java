@@ -56,7 +56,6 @@ public class InMemoryQuoteDao implements QuoteDao {
     public List<Quote> get(Fund fund, final Collection<LocalDate> dates) {
         Map<LocalDate, Quote> quotes = map.get(fund.getSymbol());
         List<Quote> filtered = new ArrayList<Quote>(Maps.filterKeys(quotes, Predicates.in(dates)).values());
-        QuoteUtils.sortByDateAsc(filtered);
         return filtered;
     }
 
