@@ -41,7 +41,7 @@ public class OfflineCalculatorTool {
         String outfile = "data/etf_sector_cvs.csv";
 //        quoteDao.init("data/etf_asset_alloc_quotes.csv", "data/etf_quotes_compare.csv");
 //        fundDao.init("data/etf_asset_alloc_funds.csv");
-//  String outfile = "data/etf_asset_alloc_cvs.csv";
+//        String outfile = "data/etf_asset_alloc_cvs.csv";
 //        quoteDao.init("data/ishares_quotes.csv", "data/ishares_quotes_missing.csv", "data/GSPC.csv");
 //        fundDao.init("data/ishares_funds.csv");
 //        String outfile = "data/ishares_cvs.csv";
