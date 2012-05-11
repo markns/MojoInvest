@@ -120,17 +120,17 @@ public class RunStrategyApp {
         Portfolio portfolio = portfolioFactory.create(new PortfolioParams(cash, transactionCost, fromDate), false);
         Portfolio shadowPortfolio = portfolioFactory.create(new PortfolioParams(cash, transactionCost, fromDate), true);
 
-        BacktestParams params = new BacktestParams(fromDate, toDate);
+        BacktestParams backtestParams = new BacktestParams(fromDate, toDate);
 
         StrategyParams strategyParams = new StrategyParams(portfolioSize, holdingPeriod, ma1, ma2, roc, alpha,
                 castOff, stddev, equityCurveTrading, equityCurveWindow, relativeStrengthStyle, useSafeAsset, safeAsset);
 
         try {
-            strategy.execute(portfolio, shadowPortfolio, params, universe, strategyParams);
+            strategy.execute(portfolio, shadowPortfolio, backtestParams, universe, strategyParams);
             //Should we use assisted inject here?
             resultBuilder.setPortfolio(portfolio)
                     .setShadowPortfolio(shadowPortfolio)
-                    .setBacktestParams(params)
+                    .setBacktestParams(backtestParams)
                     .setStrategyParams(strategyParams)
                     .setUniverse(universe)
                     .build();
