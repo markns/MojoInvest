@@ -8,6 +8,7 @@ import com.mns.mojoinvest.server.engine.model.dao.FundDao;
 import com.mns.mojoinvest.server.engine.model.dao.QuoteDao;
 import com.mns.mojoinvest.server.engine.portfolio.Portfolio;
 import com.mns.mojoinvest.server.engine.strategy.DrawDown;
+import com.mns.mojoinvest.server.engine.strategy.MomentumStrategy;
 import com.mns.mojoinvest.server.util.TradingDayUtils;
 import com.mns.mojoinvest.shared.params.BacktestParams;
 import com.mns.mojoinvest.shared.params.StrategyParams;
@@ -32,12 +33,13 @@ public class Strategy2ResultBuilder {
 
     private Portfolio portfolio;
     private Portfolio shadowPortfolio;
+    private Map<String, Map<LocalDate, BigDecimal>> additionalResults;
     private BacktestParams backtestParams;
     private StrategyParams strategyParams;
-    private Collection<Fund> universe;
 
-    Map<String, BigDecimal> initCompares = new HashMap<String, BigDecimal>();
-    Map<String, BigDecimal> portfolioCompares = new HashMap<String, BigDecimal>();
+    private Collection<Fund> universe;
+    private Map<String, BigDecimal> initCompares = new HashMap<String, BigDecimal>();
+    private Map<String, BigDecimal> portfolioCompares = new HashMap<String, BigDecimal>();
 
     @Inject
     public Strategy2ResultBuilder(QuoteDao quoteDao, FundDao fundDao) {
@@ -65,6 +67,11 @@ public class Strategy2ResultBuilder {
         return this;
     }
 
+    public Strategy2ResultBuilder setAdditionalResults(Map<String, Map<LocalDate, BigDecimal>> additionalResults) {
+        this.additionalResults = additionalResults;
+        return this;
+    }
+
     public Strategy2ResultBuilder setUniverse(Collection<Fund> universe) {
         this.universe = universe;
         return this;
@@ -89,7 +96,9 @@ public class Strategy2ResultBuilder {
             initialiseComparisonsForCsv(universe, rebalanceDate, portfolio.marketValue(rebalanceDate));
             String[] compares = calculatePercentChangeForCsv(universe, rebalanceDate);
             writeCsvRow(portfolio, shadowPortfolio, writer, rebalanceDate, portfolio.marketValue(rebalanceDate),
-                    shadowPortfolio.marketValue(rebalanceDate), null /*equityCurveMA*/, compares);
+                    shadowPortfolio.marketValue(rebalanceDate),
+                    additionalResults.get(MomentumStrategy.SHADOW_EQUITY_CURVE).get(rebalanceDate),
+                    compares);
         }
 
         flushCsvWriter(writer);
@@ -151,6 +160,7 @@ public class Strategy2ResultBuilder {
         log.info("MaxDD: " + maxDD + "%");
     }
 
+
     private void logCAGR(Portfolio portfolio, LocalDate toDate)
             throws ResultBuilderException {
         if (portfolio.getTransactions().size() == 0)
@@ -165,7 +175,6 @@ public class Strategy2ResultBuilder {
         log.info("CAGR: " + cagr + "%");
     }
 
-
     private void logTrades(Portfolio portfolio) {
 //        for (Transaction transaction : portfolio.getTransactions()) {
 //
@@ -174,10 +183,10 @@ public class Strategy2ResultBuilder {
         log.info("Number of trades: " + portfolio.getTransactions().size());
     }
 
+
     /*
      * Csv writing stuff - non production
     */
-
 
     private CSVWriter initialiseCsv() {
         CSVWriter writer = null;
@@ -201,6 +210,7 @@ public class Strategy2ResultBuilder {
         writer.writeNext((String[]) ArrayUtils.addAll(headStrat, headCompare));
     }
 
+
     private void initialiseComparisonsForCsv(Collection<Fund> universe, LocalDate rebalanceDate, BigDecimal marketValue) {
         //Initialisation of comparison to portfolio results
         for (Fund fund : universe) {
@@ -213,7 +223,6 @@ public class Strategy2ResultBuilder {
             }
         }
     }
-
 
     private String[] calculatePercentChangeForCsv(Collection<Fund> universe, LocalDate rebalanceDate) {
         //Calculate % change for all the funds in universe for later comparison
@@ -238,6 +247,7 @@ public class Strategy2ResultBuilder {
         return change.divide(from, MathContext.DECIMAL32);
     }
 
+
     private void writeCsvRow(Portfolio portfolio, Portfolio shadowPortfolio, CSVWriter writer, LocalDate rebalanceDate, BigDecimal marketValue, BigDecimal shadowMarketValue, BigDecimal equityCurveMA, String[] compares) {
         String[] bodyStrat = new String[]{rebalanceDate + "",
                 portfolio.getActiveFunds(rebalanceDate) + "",
@@ -249,7 +259,6 @@ public class Strategy2ResultBuilder {
 
         writer.writeNext((String[]) ArrayUtils.addAll(bodyStrat, compares));
     }
-
 
     private void flushCsvWriter(CSVWriter writer) {
         try {

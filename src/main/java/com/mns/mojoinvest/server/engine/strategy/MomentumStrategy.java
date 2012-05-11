@@ -22,6 +22,7 @@ import java.util.logging.Logger;
 public class MomentumStrategy {
 
     private static final Logger log = Logger.getLogger(MomentumStrategy.class.getName());
+    public static final String SHADOW_EQUITY_CURVE = "Shadow Equity Curve";
 
     private final RelativeStrengthCalculator relativeStrengthCalculator;
     private final Executor executor;
@@ -33,8 +34,8 @@ public class MomentumStrategy {
         this.executor = executor;
     }
 
-    public void execute(Portfolio portfolio, Portfolio shadowPortfolio, BacktestParams backtestParams,
-                        StrategyParams strategyParams, Collection<Fund> universe)
+    public Map<String, Map<LocalDate, BigDecimal>> execute(Portfolio portfolio, Portfolio shadowPortfolio, BacktestParams backtestParams,
+                                                           StrategyParams strategyParams, Collection<Fund> universe)
             throws StrategyException {
 
         List<LocalDate> rebalanceDates = getRebalanceDates(backtestParams, strategyParams);
@@ -50,8 +51,11 @@ public class MomentumStrategy {
                     strategyParams, rebalanceDates);
         }
 
-        DescriptiveStatistics equityCurve = new DescriptiveStatistics(strategyParams.getEquityCurveWindow());
+        DescriptiveStatistics shadowPortfolioEquityCurve = new DescriptiveStatistics(strategyParams.getEquityCurveWindow());
         boolean belowEquityCurve = false;
+
+        Map<String, Map<LocalDate, BigDecimal>> additionalResults = new HashMap<String, Map<LocalDate, BigDecimal>>();
+        additionalResults.put(SHADOW_EQUITY_CURVE, new HashMap<LocalDate, BigDecimal>(relativeStrengthsMap.size()));
 
         for (LocalDate date : relativeStrengthsMap.keySet()) {
 
@@ -62,23 +66,20 @@ public class MomentumStrategy {
                 continue;
             }
 
-            //Shadow portfolio and equity curve calculation stuff
-            equityCurve.addValue(shadowPortfolio.marketValue(date).doubleValue());
-            BigDecimal equityCurveMA = null;
-            if (equityCurve.getN() >= strategyParams.getEquityCurveWindow()) {
-                equityCurveMA = new BigDecimal(equityCurve.getMean(), MathContext.DECIMAL32);
-            }
-
-
-            log.info(date + " " +
-                    portfolio.getActiveFunds(date) + " " +
-                    portfolio.marketValue(date) + " " +
-                    shadowPortfolio.marketValue(date) + " " +
-                    equityCurveMA);
-
             List<String> selection = getSelection(date, strategyParams, strengths);
 
             if (strategyParams.tradeEquityCurve()) {
+                //Shadow portfolio and equity curve calculation stuff
+                shadowPortfolioEquityCurve.addValue(shadowPortfolio.marketValue(date).doubleValue());
+                BigDecimal equityCurveMA = null;
+                if (shadowPortfolioEquityCurve.getN() >= strategyParams.getEquityCurveWindow()) {
+                    equityCurveMA = new BigDecimal(shadowPortfolioEquityCurve.getMean(), MathContext.DECIMAL32);
+                }
+                additionalResults.get(SHADOW_EQUITY_CURVE).put(date, equityCurveMA);
+
+                log.info(date + " " + portfolio.getActiveFunds(date) + " " + portfolio.marketValue(date) + " " +
+                        shadowPortfolio.marketValue(date) + " " + equityCurveMA);
+
                 rebalance(shadowPortfolio, date, selection, strategyParams);
                 if (equityCurveMA != null && shadowPortfolio.marketValue(date).compareTo(equityCurveMA) < 0) {
                     if (!belowEquityCurve) {
@@ -98,11 +99,12 @@ public class MomentumStrategy {
                     rebalance(portfolio, date, selection, strategyParams);
                 }
             } else {
+                log.info(date + " " + portfolio.getActiveFunds(date) + " " + portfolio.marketValue(date));
                 rebalance(portfolio, date, selection, strategyParams);
             }
         }
 
-
+        return additionalResults;
     }
 
     private void sellSafeAsset(Portfolio portfolio, StrategyParams strategyParams, LocalDate date) throws StrategyException {

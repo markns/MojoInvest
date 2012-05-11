@@ -22,9 +22,11 @@ import com.mns.mojoinvest.shared.params.PortfolioParams;
 import com.mns.mojoinvest.shared.params.StrategyParams;
 import org.joda.time.LocalDate;
 
+import java.math.BigDecimal;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import java.util.logging.Logger;
 
 public class RunStrategyApp {
@@ -110,7 +112,7 @@ public class RunStrategyApp {
 //        String safeAsset = "GSPC";
         String relativeStrengthStyle = "MA";
 
-        String funds = "IUSA|IEEM|IWRD|EUE|ISF|IBCX|INAA|IJPN|IFFF|IWDP|SEMB|IMEU|BRIC|FXC|IGLT|IBZL|IKOR|IEUX|MIDD|EUN|LTAM|ITWN|IEER|IPXJ|IEMS|ISP6|SSAM|SAUS|SRSA|RUSS|NFTY";
+        String funds = "IUSA|IEEM|IWRD|EUE|ISF|IBCX|INAA|IJPN|IFFF|IWDP|SEMB|IMEU|BRIC|FXC|IBZL|IKOR|IEUX|MIDD|EUN|LTAM|ITWN|IEER|IPXJ|IEMS|ISP6|SSAM|SAUS|SRSA|RUSS|NFTY";
 //        funds = null;
         Collection<Fund> universe;
         if (funds != null) {
@@ -127,10 +129,12 @@ public class RunStrategyApp {
                 relativeStrengthStyle, useSafeAsset, safeAsset);
 
         try {
-            strategy.execute(portfolio, shadowPortfolio, backtestParams, strategyParams, universe);
+            Map<String, Map<LocalDate, BigDecimal>> additionalResults =
+                    strategy.execute(portfolio, shadowPortfolio, backtestParams, strategyParams, universe);
             //Should we use assisted inject here?
             resultBuilder.setPortfolio(portfolio)
                     .setShadowPortfolio(shadowPortfolio)
+                    .setAdditionalResults(additionalResults)
                     .setBacktestParams(backtestParams)
                     .setStrategyParams(strategyParams)
                     .setUniverse(universe)
