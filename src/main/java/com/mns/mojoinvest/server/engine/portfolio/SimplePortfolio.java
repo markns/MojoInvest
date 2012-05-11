@@ -311,13 +311,4 @@ public class SimplePortfolio implements Portfolio {
         return transactions;
     }
 
-    //    //TODO: Add equity curve window to portfolio constructor
-//    private final Map<LocalDate, BigDecimal> marketValues = new HashMap<LocalDate, BigDecimal>();
-//
-//    @Override
-//    public void storeMarketValue(LocalDate date, BigDecimal value) {
-//        marketValues.put(date, value);
-//    }
-
-
 }
