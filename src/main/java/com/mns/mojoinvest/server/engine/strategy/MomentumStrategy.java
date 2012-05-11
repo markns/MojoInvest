@@ -69,6 +69,7 @@ public class MomentumStrategy {
                 equityCurveMA = new BigDecimal(equityCurve.getMean(), MathContext.DECIMAL32);
             }
 
+
             log.info(date + " " +
                     portfolio.getActiveFunds(date) + " " +
                     portfolio.marketValue(date) + " " +
@@ -84,40 +85,15 @@ public class MomentumStrategy {
                     if (!belowEquityCurve) {
                         log.fine("Crossed below equity curve");
                         belowEquityCurve = true;
-                        for (String symbol : portfolio.getActiveFunds(date)) {
-                            try {
-                                executor.sellAll(portfolio, symbol, date);
-                            } catch (PortfolioException e) {
-                                throw new StrategyException("Unable to sell funds when portfolio value " +
-                                        "moved under equity curve", e);
-                            }
-                        }
+                        sellEverything(portfolio, date);
                         if (strategyParams.useSafeAsset()) {
-                            int numEmpty = strategyParams.getPortfolioSize() - portfolio.openPositionCount(
-                                    TradingDayUtils.rollForward(date.plusDays(1)));
-                            BigDecimal availableCash = portfolio.getCash(
-                                    TradingDayUtils.rollForward(date.plusDays(1))).
-                                    subtract(portfolio.getTransactionCost().
-                                            multiply(new BigDecimal(numEmpty)));
-                            try {
-                                executor.buy(portfolio, strategyParams.getSafeAsset(),
-                                        date, availableCash);
-                            } catch (PortfolioException e) {
-                                log.warning(date + " Unable to move into safe asset");
-                            }
+                            buySafeAsset(portfolio, strategyParams, date);
                         }
                     }
                 } else {
                     if (belowEquityCurve) {
                         log.fine("Crossed above equity curve");
-                        if (strategyParams.useSafeAsset() &&
-                                portfolio.contains(strategyParams.getSafeAsset(), date)) {
-                            try {
-                                executor.sellAll(portfolio, strategyParams.getSafeAsset(), date);
-                            } catch (PortfolioException e) {
-                                throw new StrategyException(date + " Unable to move out of safe asset", e);
-                            }
-                        }
+                        sellSafeAsset(portfolio, strategyParams, date);
                         belowEquityCurve = false;
                     }
                     rebalance(date, strategyParams, portfolio, selection);
@@ -128,6 +104,43 @@ public class MomentumStrategy {
         }
 
 
+    }
+
+    private void sellSafeAsset(Portfolio portfolio, StrategyParams strategyParams, LocalDate date) throws StrategyException {
+        if (strategyParams.useSafeAsset() &&
+                portfolio.contains(strategyParams.getSafeAsset(), date)) {
+            try {
+                executor.sellAll(portfolio, strategyParams.getSafeAsset(), date);
+            } catch (PortfolioException e) {
+                throw new StrategyException(date + " Unable to move out of safe asset", e);
+            }
+        }
+    }
+
+    private void buySafeAsset(Portfolio portfolio, StrategyParams strategyParams, LocalDate date) {
+        int numEmpty = strategyParams.getPortfolioSize() - portfolio.openPositionCount(
+                TradingDayUtils.rollForward(date.plusDays(1)));
+        BigDecimal availableCash = portfolio.getCash(
+                TradingDayUtils.rollForward(date.plusDays(1))).
+                subtract(portfolio.getTransactionCost().
+                        multiply(new BigDecimal(numEmpty)));
+        try {
+            executor.buy(portfolio, strategyParams.getSafeAsset(),
+                    date, availableCash);
+        } catch (PortfolioException e) {
+            log.warning(date + " Unable to move into safe asset");
+        }
+    }
+
+    private void sellEverything(Portfolio portfolio, LocalDate date) throws StrategyException {
+        for (String symbol : portfolio.getActiveFunds(date)) {
+            try {
+                executor.sellAll(portfolio, symbol, date);
+            } catch (PortfolioException e) {
+                throw new StrategyException("Unable to sell funds when portfolio value " +
+                        "moved under equity curve", e);
+            }
+        }
     }
 
     private List<LocalDate> getRebalanceDates(BacktestParams backtestParams, StrategyParams params)
