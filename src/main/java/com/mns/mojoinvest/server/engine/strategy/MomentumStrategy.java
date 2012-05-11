@@ -34,7 +34,7 @@ public class MomentumStrategy {
     }
 
     public void execute(Portfolio portfolio, Portfolio shadowPortfolio, BacktestParams backtestParams,
-                        Collection<Fund> universe, StrategyParams strategyParams)
+                        StrategyParams strategyParams, Collection<Fund> universe)
             throws StrategyException {
 
         List<LocalDate> rebalanceDates = getRebalanceDates(backtestParams, strategyParams);
