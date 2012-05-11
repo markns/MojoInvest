@@ -63,68 +63,27 @@ public class RelativeStrengthCalculator {
 
 
     public SortedMap<LocalDate, Map<String, BigDecimal>> getRelativeStrengthsROC(Collection<Fund> funds, StrategyParams params, List<LocalDate> dates) {
-
         Collection<CalculatedValue> rocs = calculatedValueDao.get(dates, funds, "ROC", params.getRoc());
-
-        //TODO: This step should be all that is required - no calculation necessary
-        Map<LocalDate, Map<String, BigDecimal>> rocMap = buildDateCalcValueMap(rocs);
-
-        SortedMap<LocalDate, Map<String, BigDecimal>> allRs = new TreeMap<LocalDate, Map<String, BigDecimal>>();
+        SortedMap<LocalDate, Map<String, BigDecimal>> strengths = buildDateCalcValueMap(rocs);
         for (LocalDate date : dates) {
-
-            Map<String, BigDecimal> rs = new HashMap<String, BigDecimal>();
-            Map<String, BigDecimal> rocVals = rocMap.get(date);
-
-            if (rocVals == null) {
+            if (strengths.get(date) == null) {
                 log.warning(date + " No ROC values calculated");
-                allRs.put(date, rs);
-                continue;
+                strengths.put(date, new HashMap<String, BigDecimal>());
             }
-
-            for (Fund fund : funds) {
-                String symbol = fund.getSymbol();
-                if (!rocVals.containsKey(symbol)) {
-                    log.fine(date + " Unable to calculate RS(ROC) for " + symbol + " on " + date + " no ROC|" + params.getRoc());
-                } else {
-                    rs.put(symbol, rocVals.get(symbol));
-                }
-            }
-            allRs.put(date, rs);
         }
-
-        return allRs;
+        return strengths;
     }
 
     public SortedMap<LocalDate, Map<String, BigDecimal>> getRelativeStrengthAlpha(Collection<Fund> funds, StrategyParams params, List<LocalDate> dates) {
-
         Collection<CalculatedValue> alphas = calculatedValueDao.get(dates, funds, "ALPHA", params.getAlpha());
-        //TODO: This step should be all that is required - no calculation necessary
-        Map<LocalDate, Map<String, BigDecimal>> alphaMap = buildDateCalcValueMap(alphas);
-
-        SortedMap<LocalDate, Map<String, BigDecimal>> allRs = new TreeMap<LocalDate, Map<String, BigDecimal>>();
+        SortedMap<LocalDate, Map<String, BigDecimal>> strengths = buildDateCalcValueMap(alphas);
         for (LocalDate date : dates) {
-
-            Map<String, BigDecimal> rs = new HashMap<String, BigDecimal>();
-            Map<String, BigDecimal> alphaVals = alphaMap.get(date);
-
-            if (alphaVals == null) {
+            if (strengths.get(date) == null) {
                 log.warning(date + " No ALPHA values calculated");
-                allRs.put(date, rs);
-                continue;
+                strengths.put(date, new HashMap<String, BigDecimal>());
             }
-
-            for (Fund fund : funds) {
-                String symbol = fund.getSymbol();
-                if (!alphaVals.containsKey(symbol)) {
-                    log.fine(date + " Unable to calculate RS(ALPHA) for " + symbol + " on " + date + " no ALPHA|" + params.getAlpha());
-                } else {
-                    rs.put(symbol, alphaVals.get(symbol));
-                }
-            }
-            allRs.put(date, rs);
         }
-
-        return allRs;
+        return strengths;
     }
 
     private SortedMap<LocalDate, Map<String, BigDecimal>> adjustRelativeStrengths(SortedMap<LocalDate, Map<String, BigDecimal>> rs,
@@ -159,8 +118,8 @@ public class RelativeStrengthCalculator {
     }
 
 
-    private Map<LocalDate, Map<String, BigDecimal>> buildDateCalcValueMap(Collection<CalculatedValue> vals) {
-        Map<LocalDate, Map<String, BigDecimal>> valMap = new HashMap<LocalDate, Map<String, BigDecimal>>();
+    private SortedMap<LocalDate, Map<String, BigDecimal>> buildDateCalcValueMap(Collection<CalculatedValue> vals) {
+        SortedMap<LocalDate, Map<String, BigDecimal>> valMap = new TreeMap<LocalDate, Map<String, BigDecimal>>();
         for (CalculatedValue val : vals) {
             if (!valMap.containsKey(val.getDate())) {
                 valMap.put(val.getDate(), new HashMap<String, BigDecimal>());
