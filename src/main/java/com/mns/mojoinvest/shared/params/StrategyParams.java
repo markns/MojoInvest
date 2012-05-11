@@ -9,6 +9,7 @@ public class StrategyParams {
     private final int roc;
     private final int alpha;
     private final int castOff;
+    private boolean riskAdjust;
     private final int stddev;
     private final boolean equityCurveTrading;
     private final int equityCurveWindow;
@@ -17,7 +18,7 @@ public class StrategyParams {
     private String safeAsset;
 
     public StrategyParams(int portfolioSize, int rebalanceFrequency, int ma1, int ma2, int roc, int alpha,
-                          int castOff, int stddev, boolean equityCurveTrading, int equityCurveWindow,
+                          int castOff, boolean riskAdjust, int stddev, boolean equityCurveTrading, int equityCurveWindow,
                           String relativeStrengthStyle, boolean useSafeAsset, String safeAsset) {
 
         this.portfolioSize = portfolioSize;
@@ -27,6 +28,7 @@ public class StrategyParams {
         this.roc = roc;
         this.alpha = alpha;
         this.castOff = castOff;
+        this.riskAdjust = riskAdjust;
         this.stddev = stddev;
         this.equityCurveTrading = equityCurveTrading;
         this.equityCurveWindow = equityCurveWindow;
@@ -57,6 +59,10 @@ public class StrategyParams {
 
     public int getCastOff() {
         return castOff;
+    }
+
+    public boolean riskAdjusted() {
+        return riskAdjust;
     }
 
     public int getStdDev() {

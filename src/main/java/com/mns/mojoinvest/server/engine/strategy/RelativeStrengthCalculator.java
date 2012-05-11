@@ -86,35 +86,26 @@ public class RelativeStrengthCalculator {
         return strengths;
     }
 
-    private SortedMap<LocalDate, Map<String, BigDecimal>> adjustRelativeStrengths(SortedMap<LocalDate, Map<String, BigDecimal>> rs,
-                                                                                  Collection<Fund> funds, StrategyParams params,
-                                                                                  List<LocalDate> dates) {
+    public SortedMap<LocalDate, Map<String, BigDecimal>> adjustRelativeStrengths(SortedMap<LocalDate, Map<String, BigDecimal>> unadjusted,
+                                                                                 Collection<Fund> funds, StrategyParams params,
+                                                                                 List<LocalDate> dates) {
 
-        Collection<CalculatedValue> stddevs = calculatedValueDao.get(dates, funds, "RSQUARED", params.getStdDev());
-//        Collection<CalculatedValue> stddevs = calculatedValueDao.get(dates, funds, "STDDEV", params.getStdDev());
+        SortedMap<LocalDate, Map<String, BigDecimal>> adjusted = new TreeMap<LocalDate, Map<String, BigDecimal>>();
+        Collection<CalculatedValue> stddevs = calculatedValueDao.get(dates, funds, "STDDEV", params.getStdDev());
         Map<LocalDate, Map<String, BigDecimal>> stddevMap = buildDateCalcValueMap(stddevs);
-
-
-        for (LocalDate date : dates) {
-            if (stddevMap.containsKey(date)) {
-                Map<String, BigDecimal> stddevVals = stddevMap.get(date);
-                for (Fund fund : funds) {
-                    String symbol = fund.getSymbol();
-                    if (!stddevVals.containsKey(symbol)) {
-                        log.fine(date + " Unable to calculate RS for " + symbol + " on " + date + " no STDDEV|" + params.getStdDev());
-
-                    }
-                    if (stddevVals.get(symbol).compareTo(BigDecimal.ZERO) != 0) {
-                        //If the fund price has been flat for the same period as was used to calculate
-                        //the standard deviation, the std dev could be 0.
-//                            rs.put(symbol, maRatio.divide(stddevVals.get(symbol), RoundingMode.HALF_EVEN));
-//                            rs.put(symbol, maRatio.multiply(stddevVals.get(symbol)));
-
-                    }
+        for (LocalDate date : unadjusted.keySet()) {
+            Map<String, BigDecimal> adjustedDate = new HashMap<String, BigDecimal>();
+            for (String symbol : unadjusted.get(date).keySet()) {
+                if (stddevMap.containsKey(date) && stddevMap.get(date).containsKey(symbol)) {
+                    adjustedDate.put(symbol, unadjusted.get(date).get(symbol)
+                            .divide(stddevMap.get(date).get(symbol), RoundingMode.HALF_EVEN));
+                } else {
+                    log.warning(date + " Unable to calculate adjusted RS for " + symbol + " on " + date + " no STDDEV|" + params.getStdDev());
                 }
             }
+            adjusted.put(date, adjustedDate);
         }
-        return rs;
+        return adjusted;
     }
 
 

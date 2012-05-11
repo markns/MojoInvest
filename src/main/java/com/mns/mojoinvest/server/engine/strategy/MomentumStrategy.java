@@ -45,6 +45,11 @@ public class MomentumStrategy {
         assert rebalanceDates.size() == relativeStrengthsMap.size() : "number of rebalance dates didn't match " +
                 "number of relative strength dates received";
 
+        if (strategyParams.riskAdjusted()) {
+            relativeStrengthsMap = relativeStrengthCalculator.adjustRelativeStrengths(relativeStrengthsMap, universe,
+                    strategyParams, rebalanceDates);
+        }
+
         DescriptiveStatistics equityCurve = new DescriptiveStatistics(strategyParams.getEquityCurveWindow());
         boolean belowEquityCurve = false;
 
