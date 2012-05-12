@@ -89,8 +89,13 @@ public class Strategy2ResultBuilder {
 
         List<LocalDate> rebalanceDates = getRebalanceDates(fromDate, toDate, strategyParams);
 
+        LocalDate earliestTransactionDate = portfolio.getTransactions().get(0).getDate();
+
         for (LocalDate rebalanceDate : rebalanceDates) {
 
+            if (rebalanceDate.isBefore(earliestTransactionDate.minusWeeks(2))) {
+                continue;
+            }
             currentDD = calculateDrawDowns(drawDowns, currentDD, rebalanceDate, portfolio.marketValue(rebalanceDate));
 
             initialiseComparisonsForCsv(universe, rebalanceDate, portfolio.marketValue(rebalanceDate));
