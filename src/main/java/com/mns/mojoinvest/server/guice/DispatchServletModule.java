@@ -26,6 +26,7 @@ import com.gwtplatform.crawler.server.ServiceUrl;
 import com.gwtplatform.dispatch.server.guice.DispatchServiceImpl;
 import com.gwtplatform.dispatch.shared.ActionImpl;
 import com.mns.mojoinvest.server.servlet.*;
+import com.mns.mojoinvest.test.SimpleBoatServlet;
 
 /**
  * @author Mark Nuttall-Smith
@@ -51,6 +52,7 @@ public class DispatchServletModule extends ServletModule {
         serve("/clearcache").with(ClearCacheServlet.class);
         serve("/fundindexes").with(UpdateFundIndexesServlet.class);
         serve("/test2").with(Test2Servlet.class);
+        serve("/test").with(SimpleBoatServlet.class);
 
         bindConstant().annotatedWith(ServiceKey.class).to("123456");
         bindConstant().annotatedWith(ServiceUrl.class).to("http://crawlservice.appspot.com/");

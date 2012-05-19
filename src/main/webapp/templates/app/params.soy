@@ -1,0 +1,34 @@
+{namespace app}
+/**
+* Page template for sail boats.
+* @param name The boat's name.
+* @param lengthOverAll The boat's LOA.
+*/
+{template .params}
+    {call shared.header /}
+    <h1>Boat Details</h1>
+    <table>
+        <tr>
+          <td>Name:</td>
+          <td>{$name}</td>
+        </tr>
+        <tr>
+          <td>Length Over All (LOA):</td>
+          <td>{$lengthOverAll}m</td>
+        </tr>
+        <tr>
+          <td>Length Over All (LOA):</td>
+          <td>{$lengthOverAll}m</td>
+        </tr>
+    </table>
+    {call shared.footer /}
+{/template}
+
+/**
+* @param greeting
+* @param year
+*/
+{template .welcome}
+<h1 id="greeting">{$greeting}</h1>
+The year is {$year} innit aye.
+{/template}
