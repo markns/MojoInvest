@@ -1,4 +1,75 @@
-{namespace app}
+{namespace app.params}
+
+
+/**
+*/
+{template .options}
+
+
+//    <div class="row">
+//      <div class="column grid_4">gfgdf</div>
+//      <div class="column grid_4">fdfdsfds</div>
+//      <div class="column grid_4">fddfss</div>
+//    </div>
+//
+//    <div class="row">
+//      <div class="column grid_8">fdsfsd</div>
+//      <div class="column grid_4">fsdfds</div>
+//    </div>
+
+    <div class="row">
+      <div class="column grid_3">
+        {call app.params.risk /}
+      </div>
+      <div class="column grid_3">
+        {call app.params.backtest /}
+      </div>
+      <div class="column grid_3">
+        {call app.params.backtest /}
+      </div>
+      <div class="column grid_3">
+        {call app.params.backtest /}
+      </div>
+    </div>
+{/template}
+
+
+/**
+*/
+{template .risk}
+     <fieldset>
+            <legend>Risk</legend>
+            <ol>
+                <li>
+                    <label>From date:</label>
+                    <d:DateBox ui:field='fromDate'/>
+                </li>
+                <li>
+                    <label>To date:</label>
+                    <d:DateBox ui:field='toDate'/>
+                </li>
+            </ol>
+        </fieldset>
+{/template}
+
+/**
+*/
+{template .backtest}
+     <fieldset>
+            <legend>Backtest</legend>
+            <ol>
+                <li>
+                    <label>From date:</label>
+                    <d:DateBox ui:field='fromDate'/>
+                </li>
+                <li>
+                    <label>To date:</label>
+                    <d:DateBox ui:field='toDate'/>
+                </li>
+            </ol>
+        </fieldset>
+{/template}
+
 /**
 * Page template for sail boats.
 * @param name The boat's name.

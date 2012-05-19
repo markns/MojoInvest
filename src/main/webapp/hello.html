@@ -2,12 +2,50 @@
 <html>
 <head>
     <title>Example: Hello World</title>
+
+    <link href="content/style/mojo.css" rel="stylesheet" type="text/css"/>
 </head>
+
 <body>
-<div id="hello"></div>
+
+<div id="back">
+
+    <div id="head">
+        <div class="main">
+            <a class="left" href="index.html"><img src="content/images/mojo_logo.png" alt="Mojoinvest"/></a>
+            <ul id="menu">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="app.html">App</a></li>
+                <li><a href="index.html">Tools</a></li>
+                <li><a href="index.html">Help</a></li>
+            </ul>
+        </div>
+        <div class="clear"></div>
+    </div>
+
+    <div id="hello" class="main"></div>
+
+    <div id="footer">
+        <div class="main">
+            <ul class="left">
+                <li><a href="About/index.html">About</a></li>
+                <li><a href="Help/index.html">Help</a></li>
+                <li><a href="Terms/index.html">Terms</a></li>
+            </ul>
+                <span class="right">
+                    &copy; 2012 Mojoinvest Ltd.
+                </span>
+
+            <div class="clear"></div>
+        </div>
+    </div>
+</div>
+
 <script src="http://localhost:9810/compile?id=mojoinvest"></script>
 <script>
     example.sayHello('Hello World!');
 </script>
+
 </body>
+
 </html>
