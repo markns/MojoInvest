@@ -35,8 +35,6 @@
         <gae.version>1.6.4</gae.version>
         <gin.version>1.5.0</gin.version>
         <guice.version>3.0</guice.version>
-        <gwt.version>2.4.0</gwt.version>
-        <gwtp.version>0.7</gwtp.version>
         <json.version>20090211</json.version>
         <jsr107cache.version>1.1</jsr107cache.version>
         <junit.version>4.8.1</junit.version>
@@ -46,7 +44,6 @@
         <joda-time.version>1.6.2</joda-time.version>
 
         <!-- Plugin properties -->
-        <gwt-maven-plugin.version>2.3.0-1</gwt-maven-plugin.version>
         <hibernate-validator.version>4.0.2.GA</hibernate-validator.version>
         <maven-assembly-plugin.version>2.2.1</maven-assembly-plugin.version>
         <maven-checkstyle-plugin.version>2.6</maven-checkstyle-plugin.version>
@@ -61,8 +58,6 @@
         <maven-gae-plugin.version>0.8.1</maven-gae-plugin.version>
         <validation-api.version>1.0.0.GA</validation-api.version>
 
-        <!-- Other configuration -->
-        <gwt.style>PRETTY</gwt.style>
         <!-- PRETTY style during development, <profiles> used to configure other styles -->
         <gae.home>
             ${settings.localRepository}/com/google/appengine/appengine-java-sdk/${gae.version}/appengine-java-sdk-${gae.version}
@@ -70,7 +65,6 @@
     </properties>
 
     <repositories>
-        <!-- For GWT-platform snapshots -->
         <repository>
             <id>sonatype.snapshots</id>
             <name>Sonatype snapshot repository</name>
@@ -107,6 +101,14 @@
     </repositories>
 
     <dependencies>
+
+
+        <dependency>
+            <groupId>javax.servlet</groupId>
+            <artifactId>servlet-api</artifactId>
+            <version>2.5</version>
+            <scope>provided</scope>
+        </dependency>
 
         <dependency>
             <groupId>com.github.spullara.mustache.java</groupId>
@@ -217,97 +219,6 @@
             <scope>compile</scope>
         </dependency>
 
-        <!-- GWT dependencies -->
-        <dependency>
-            <groupId>com.google.gwt</groupId>
-            <artifactId>gwt-servlet</artifactId>
-            <version>${gwt.version}</version>
-            <scope>runtime</scope>
-        </dependency>
-        <dependency>
-            <groupId>com.google.gwt</groupId>
-            <artifactId>gwt-user</artifactId>
-            <version>${gwt.version}</version>
-            <scope>provided</scope>
-        </dependency>
-        <!--  Don't declare gwt-dev as a project dependency. This may introduce complex dependency conflicts -->
-        <!--<dependency>-->
-        <!--<groupId>com.google.gwt</groupId>-->
-        <!--<artifactId>gwt-dev</artifactId>-->
-        <!--<version>${gwt.version}</version>-->
-        <!--<scope>provided</scope>-->
-        <!--</dependency>-->
-        <dependency>
-            <groupId>com.google.gwt.visualization</groupId>
-            <artifactId>gwt-visualization</artifactId>
-            <version>1.1.2</version>
-        </dependency>
-
-        <!-- Required for GWT RequestFactory -->
-        <dependency>
-            <groupId>org.json</groupId>
-            <artifactId>json</artifactId>
-            <version>${json.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>javax.validation</groupId>
-            <artifactId>validation-api</artifactId>
-            <version>${validation-api.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>javax.validation</groupId>
-            <artifactId>validation-api</artifactId>
-            <version>${validation-api.version}</version>
-            <classifier>sources</classifier>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.hibernate</groupId>
-            <artifactId>hibernate-validator</artifactId>
-            <version>${hibernate-validator.version}</version>
-            <exclusions>
-                <exclusion>
-                    <groupId>javax.xml.bind</groupId>
-                    <artifactId>jaxb-api</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>com.sun.xml.bind</groupId>
-                    <artifactId>jaxb-impl</artifactId>
-                </exclusion>
-            </exclusions>
-            <scope>runtime</scope>
-        </dependency>
-
-        <!-- GWT-Platform dependencies -->
-        <dependency>
-            <groupId>com.gwtplatform</groupId>
-            <artifactId>gwtp-mvp-client</artifactId>
-            <version>${gwtp.version}</version>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>com.gwtplatform</groupId>
-            <artifactId>gwtp-dispatch-client</artifactId>
-            <version>${gwtp.version}</version>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>com.gwtplatform</groupId>
-            <artifactId>gwtp-dispatch-server-guice</artifactId>
-            <version>${gwtp.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.gwtplatform</groupId>
-            <artifactId>gwtp-processors</artifactId>
-            <version>${gwtp.version}</version>
-            <!--<scope>provided</scope>-->
-        </dependency>
-        <dependency>
-            <groupId>com.gwtplatform</groupId>
-            <artifactId>gwtp-crawler</artifactId>
-            <version>${gwtp.version}</version>
-        </dependency>
-
         <!-- Objectify dependencies -->
         <dependency>
             <groupId>com.googlecode.objectify</groupId>
@@ -340,12 +251,6 @@
             <groupId>aopalliance</groupId>
             <artifactId>aopalliance</artifactId>
             <version>${aopalliance.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.google.gwt.inject</groupId>
-            <artifactId>gin</artifactId>
-            <version>${gin.version}</version>
-            <scope>provided</scope>
         </dependency>
 
         <!--Jodatime dependencies-->
@@ -458,7 +363,6 @@
                         <configuration>
                             <sources>
                                 <source>${project.build.directory}/generated</source>
-                                <!--<source>${project.build.directory}/generated-sources/gwt</source>-->
                             </sources>
                         </configuration>
                     </execution>
@@ -498,51 +402,6 @@
                     <skip>true</skip>
                 </configuration>
             </plugin>
-
-            <!-- GWT configuration -->
-            <!--<plugin>-->
-            <!--<groupId>org.codehaus.mojo</groupId>-->
-            <!--<artifactId>gwt-maven-plugin</artifactId>-->
-            <!--<version>${gwt-maven-plugin.version}</version>-->
-            <!--<configuration>-->
-            <!--<server>com.google.appengine.tools.development.gwt.AppEngineLauncher</server>-->
-            <!--<hostedWebapp>${webappDirectory}</hostedWebapp>-->
-            <!--<copyWebapp>true</copyWebapp>-->
-            <!--<runTarget>app.html</runTarget>-->
-            <!--<appEngineVersion>${gae.version}</appEngineVersion>-->
-            <!--<appEngineHome>${gae.home}</appEngineHome>-->
-            <!--<testTimeOut>180</testTimeOut>-->
-
-            <!--</configuration>-->
-            <!--<executions>-->
-            <!--<execution>-->
-            <!--<configuration>-->
-            <!--<extraJvmArgs>-Xss1024k -Xmx512M</extraJvmArgs>-->
-            <!--</configuration>-->
-            <!--<goals>-->
-            <!--<goal>compile</goal>-->
-            <!--</goals>-->
-            <!--</execution>-->
-            <!--</executions>-->
-            <!--<dependencies>-->
-            <!--<dependency>-->
-            <!--<groupId>com.google.gwt</groupId>-->
-            <!--<artifactId>gwt-user</artifactId>-->
-            <!--<version>${gwt.version}</version>-->
-            <!--</dependency>-->
-            <!--<dependency>-->
-            <!--<groupId>com.google.gwt</groupId>-->
-            <!--<artifactId>gwt-dev</artifactId>-->
-            <!--<version>${gwt.version}</version>-->
-            <!--</dependency>-->
-            <!--<dependency>-->
-            <!--<groupId>com.google.gwt</groupId>-->
-            <!--<artifactId>gwt-servlet</artifactId>-->
-            <!--<version>${gwt.version}</version>-->
-            <!--</dependency>-->
-            <!--</dependencies>-->
-            <!--</plugin>-->
-
 
             <!-- AppEngine configuration -->
             <plugin>
@@ -619,44 +478,5 @@
         <outputDirectory>${webapp.directory}/WEB-INF/classes</outputDirectory>
     </build>
 
-    <profiles>
-
-        <!--
-          Profile for an integration build.
-           * The GWT compilation will produce pretty and detailed JS
-           * `mvn gae:deploy` will deploy the application to
-                http://stage.latest.<applicationName>.appspot.com
-          -->
-        <profile>
-            <id>integration-build</id>
-            <properties>
-                <!-- TODO The `gae.application.version` property has no impact? -->
-                <gae.application.version>stage</gae.application.version>
-                <gwt.style>DETAILED</gwt.style>
-            </properties>
-        </profile>
-
-        <!--
-          Profile for a release build.
-           * `mvn release:perform` activates this profile automatically.
-           * The GWT compilation will produce compressed and obfuscated JS
-           * `mvn gae:deploy` will deploy the application to
-                http://stage.latest.<applicationName>.appspot.com
-          -->
-        <profile>
-            <id>release-build</id>
-            <activation>
-                <property>
-                    <name>performRelease</name>
-                    <value>true</value>
-                </property>
-            </activation>
-
-            <properties>
-                <gae.application.version>release</gae.application.version>
-                <gwt.style>OBFUSCATED</gwt.style>
-            </properties>
-        </profile>
-    </profiles>
 
 </project>

@@ -20,11 +20,7 @@ import com.google.appengine.tools.mapreduce.InjectingMapReduceServlet;
 import com.google.inject.Singleton;
 import com.google.inject.servlet.ServletModule;
 import com.googlecode.objectify.ObjectifyFactory;
-import com.gwtplatform.crawler.server.CrawlFilter;
-import com.gwtplatform.crawler.server.ServiceKey;
-import com.gwtplatform.crawler.server.ServiceUrl;
-import com.gwtplatform.dispatch.server.guice.DispatchServiceImpl;
-import com.gwtplatform.dispatch.shared.ActionImpl;
+import com.mns.mojoinvest.server.engine.model.dao.*;
 import com.mns.mojoinvest.server.servlet.*;
 import com.mustachelet.MustacheletService;
 
@@ -39,15 +35,17 @@ public class DispatchServletModule extends ServletModule {
         // Model object managers
         bind(ObjectifyFactory.class).in(Singleton.class);
 
+        bind(QuoteDao.class).to(ObjectifyQuoteDao.class);
+        bind(FundDao.class).to(ObjectifyFundDao.class);
+        bind(CalculatedValueDao.class).to(ObjectifyCalculatedValueDao.class);
+
         serve("/mapreduce/*").with(InjectingMapReduceServlet.class);
         bind(InjectingMapReduceServlet.class).in(Singleton.class);
-
 
         serve("/pipeline").with(PipelineServlet.class);
         serve("/quoteviewer").with(QuoteViewerServlet.class);
         serve("/fundviewer").with(FundViewerServlet.class);
         serve("/rankingviewer").with(RankingViewerServlet.class);
-        serve("/strategy").with(StrategyServlet.class);
         serve("/calculator").with(SMACalculatorServlet.class);
         serve("/clearcache").with(ClearCacheServlet.class);
         serve("/fundindexes").with(UpdateFundIndexesServlet.class);
@@ -55,13 +53,6 @@ public class DispatchServletModule extends ServletModule {
 
         serve("/").with(MustacheletService.class);
 
-        bindConstant().annotatedWith(ServiceKey.class).to("123456");
-        bindConstant().annotatedWith(ServiceUrl.class).to("http://crawlservice.appspot.com/");
-        filter("/*").through(CrawlFilter.class);
-
-
-        serve("/" + ActionImpl.DEFAULT_SERVICE_NAME + "*").with(
-                DispatchServiceImpl.class);
     }
 
 }

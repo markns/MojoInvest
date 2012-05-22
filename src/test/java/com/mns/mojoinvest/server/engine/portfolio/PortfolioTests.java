@@ -12,7 +12,7 @@ import com.mns.mojoinvest.server.engine.model.dao.ObjectifyQuoteDao;
 import com.mns.mojoinvest.server.engine.model.dao.QuoteDao;
 import com.mns.mojoinvest.server.engine.transaction.BuyTransaction;
 import com.mns.mojoinvest.server.engine.transaction.SellTransaction;
-import com.mns.mojoinvest.shared.params.PortfolioParams;
+import com.mns.mojoinvest.server.params.PortfolioParams;
 import org.joda.time.LocalDate;
 import org.junit.Before;
 import org.junit.Test;

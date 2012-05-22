@@ -17,9 +17,9 @@ import com.mns.mojoinvest.server.guice.DispatchServletModule;
 import com.mns.mojoinvest.server.guice.EngineModule;
 import com.mns.mojoinvest.server.guice.StandaloneModule;
 import com.mns.mojoinvest.server.guice.TradingStrategyModule;
-import com.mns.mojoinvest.shared.params.BacktestParams;
-import com.mns.mojoinvest.shared.params.PortfolioParams;
-import com.mns.mojoinvest.shared.params.StrategyParams;
+import com.mns.mojoinvest.server.params.BacktestParams;
+import com.mns.mojoinvest.server.params.PortfolioParams;
+import com.mns.mojoinvest.server.params.StrategyParams;
 import org.joda.time.LocalDate;
 
 import java.math.BigDecimal;

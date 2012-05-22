@@ -7,7 +7,7 @@ import com.mns.mojoinvest.server.engine.model.dao.QuoteDao;
 import com.mns.mojoinvest.server.engine.transaction.BuyTransaction;
 import com.mns.mojoinvest.server.engine.transaction.SellTransaction;
 import com.mns.mojoinvest.server.engine.transaction.Transaction;
-import com.mns.mojoinvest.shared.params.PortfolioParams;
+import com.mns.mojoinvest.server.params.PortfolioParams;
 import org.joda.time.LocalDate;
 
 import java.math.BigDecimal;

@@ -12,9 +12,9 @@ import com.mns.mojoinvest.server.engine.model.dao.QuoteDao;
 import com.mns.mojoinvest.server.engine.model.dao.RankingDao;
 import com.mns.mojoinvest.server.engine.portfolio.Portfolio;
 import com.mns.mojoinvest.server.engine.portfolio.PortfolioException;
+import com.mns.mojoinvest.server.params.BacktestParams;
+import com.mns.mojoinvest.server.params.MomentumStrategyParams;
 import com.mns.mojoinvest.server.util.TradingDayUtils;
-import com.mns.mojoinvest.shared.params.BacktestParams;
-import com.mns.mojoinvest.shared.params.MomentumStrategyParams;
 import org.joda.time.LocalDate;
 
 import java.math.BigDecimal;

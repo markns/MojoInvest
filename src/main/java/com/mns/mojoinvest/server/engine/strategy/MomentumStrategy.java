@@ -8,9 +8,9 @@ import com.mns.mojoinvest.server.engine.execution.Executor;
 import com.mns.mojoinvest.server.engine.model.Fund;
 import com.mns.mojoinvest.server.engine.portfolio.Portfolio;
 import com.mns.mojoinvest.server.engine.portfolio.PortfolioException;
+import com.mns.mojoinvest.server.params.BacktestParams;
+import com.mns.mojoinvest.server.params.StrategyParams;
 import com.mns.mojoinvest.server.util.TradingDayUtils;
-import com.mns.mojoinvest.shared.params.BacktestParams;
-import com.mns.mojoinvest.shared.params.StrategyParams;
 import org.apache.commons.math.stat.descriptive.DescriptiveStatistics;
 import org.joda.time.LocalDate;
 
