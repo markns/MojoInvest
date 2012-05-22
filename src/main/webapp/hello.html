@@ -2,48 +2,416 @@
 <html>
 <head>
     <title>Example: Hello World</title>
+    <link rel="stylesheet" href="content/style/mojo.css">
+    <link rel="stylesheet" href="goog/css/common.css">
+    <link rel="stylesheet" href="goog/css/datepicker.css">
+    <link rel="stylesheet" href="goog/css/inputdatepicker.css">
 
-    <link href="content/style/mojo.css" rel="stylesheet" type="text/css"/>
+    <script src="scripts/sorttable.js"></script>
 </head>
 
 <body>
 
 <div id="back">
 
-    <div id="head">
-        <div class="main">
-            <a class="left" href="index.html"><img src="content/images/mojo_logo.png" alt="Mojoinvest"/></a>
-            <ul id="menu">
-                <li><a href="index.html">Home</a></li>
-                <li><a href="app.html">App</a></li>
-                <li><a href="index.html">Tools</a></li>
-                <li><a href="index.html">Help</a></li>
-            </ul>
-        </div>
-        <div class="clear"></div>
+<div id="head">
+    <div class="main">
+        <a class="left" href="index.html"><img src="content/images/mojo_logo.png" alt="Mojoinvest"/></a>
+        <ul id="menu">
+            <li><a href="index.html">Home</a></li>
+            <li><a href="app.html">App</a></li>
+            <li><a href="index.html">Tools</a></li>
+            <li><a href="index.html">Help</a></li>
+        </ul>
     </div>
+    <div class="clear"></div>
+</div>
 
-    <div id="hello" class="main"></div>
+<div id="hello" class="main"></div>
 
-    <div id="footer">
-        <div class="main">
-            <ul class="left">
-                <li><a href="About/index.html">About</a></li>
-                <li><a href="Help/index.html">Help</a></li>
-                <li><a href="Terms/index.html">Terms</a></li>
-            </ul>
+<form>
+<div class="row">
+<div class="column grid_3">
+    <fieldset>
+        <legend>Portfolio</legend>
+        <ol>
+            <li>
+                <label for=initInvest>Initial Investment</label>
+                <input id=initInvest name=initInvest type=number min=1
+                       placeholder="ghgfd" required>
+            </li>
+            <li>
+                <label for=transCost>Transaction Cost</label>
+                <input id=transCost name=transCost type=number min="0">
+            </li>
+            <li>
+                <label for=portSize>Portfolio Size</label>
+                <input id=portSize name=portSize type=number min="1">
+            </li>
+            <li>
+                <label for=holdingPeriod>Holding Period</label>
+                <input id=holdingPeriod name=holdingPeriod type=number min="1">
+            </li>
+        </ol>
+    </fieldset>
+</div>
+<div class="column grid_3">
+    <fieldset>
+        <legend>Relative Strength</legend>
+        <ol>
+            <li>
+                <input id="maRatioRadio" type="radio" name="rsRadio" value="maRatioRadio"
+                       checked/>
+                <label for="maRatioRadio">MA Ratio</label>
+                <select id="ma1" name=Óma1Ó>
+                    <option value=Ó4Ó>4</option>
+                    <option value=Ó8Ó>8</option>
+                    <option value=Ó12Ó selected>12</option>
+                    <option value=Ó26Ó>26</option>
+                    <option value=Ó39Ó>39</option>
+                    <option value=Ó52Ó>52</option>
+                </select>
+                <select id="ma2" name=Óma2Ó>
+                    <option value=Ó4Ó>4</option>
+                    <option value=Ó8Ó>8</option>
+                    <option value=Ó12Ó>12</option>
+                    <option value=Ó26Ó selected>26</option>
+                    <option value=Ó39Ó>39</option>
+                    <option value=Ó52Ó>52</option>
+                </select>
+            </li>
+            <li>
+                <input id="rocRadio" type="radio" name="rsRadio" value="rocRadio"/>
+                <label for="rocRadio">Rate of Change</label>
+                <select id="roc" name=ÓrocÓ disabled>
+                    <option value=Ó4Ó>4</option>
+                    <option value=Ó8Ó>8</option>
+                    <option value=Ó12Ó>12</option>
+                    <option value=Ó26Ó selected>26</option>
+                    <option value=Ó39Ó>39</option>
+                    <option value=Ó52Ó>52</option>
+                </select>
+            </li>
+            <li>
+                <input id="alphaRadio" type="radio" name="rsRadio" value="alphaRadio"/>
+                <label for="alphaRadio">Alpha</label>
+                <select id="alpha" name=ÓalphaÓ disabled>
+                    <option value=Ó100Ó selected>100</option>
+                </select>
+            </li>
+        </ol>
+
+    </fieldset>
+</div>
+<div class="column grid_3">
+    <fieldset>
+        <legend>Risk</legend>
+        <ol>
+            <li>
+                <label for="stdDevLabel">Adjust by Std Dev</label>
+                <input type="checkbox" id="stdDevLabel" name="stdDevLabel"
+                       onclick="goog.dom.getElement('stdDev').disabled =
+                                   !goog.dom.getElement('stdDev').disabled"/>
+                <select id="stdDev" name=ÓrocÓ disabled>
+                    <option value=Ó4Ó>4</option>
+                    <option value=Ó8Ó>8</option>
+                    <option value=Ó12Ó>12</option>
+                    <option value=Ó26Ó selected>26</option>
+                    <option value=Ó39Ó>39</option>
+                    <option value=Ó52Ó>52</option>
+                </select>
+            </li>
+            <li>
+                <label>Trade Equity Curve</label>
+                <input type="checkbox" id="tradeEquityLabel" name="tradeEquityLabel"
+                       onclick="goog.dom.getElement('tradeEquity').disabled =
+                                   !goog.dom.getElement('tradeEquity').disabled"/>
+                <input id="tradeEquity" name=portSize type=number min="4" disabled value="52">
+            </li>
+            <li>
+                <label>Use Safe Asset</label>
+                <input type="checkbox" id="safeAssetCheck" name="safeAssetCheck"
+                       onclick="goog.dom.getElement('safeAsset').disabled =
+                                   !goog.dom.getElement('safeAsset').disabled"/>
+                <input id=safeAsset name=safeAsset type=text disabled>
+            </li>
+        </ol>
+    </fieldset>
+</div>
+<div class="column grid_3">
+    <fieldset>
+        <legend>Portfolio</legend>
+        <ol>
+            <li>
+                <div>
+                    <label for="fromDateContainer">From Date</label>
+                    <span id="fromDateContainer"></span>
+                </div>
+            </li>
+            <li>
+                <div>
+                    <label for="toDateContainer">To Date</label>
+                    <span id="toDateContainer"></span>
+                </div>
+            </li>
+        </ol>
+    </fieldset>
+</div>
+
+
+<div class="column grid_12">
+<fieldset>
+<legend>Universe</legend>
+<!-- Table markup-->
+<table id="universe-table" summary="Employee Pay Sheet" class="sortable">
+<thead>
+<tr>
+    <th scope="col"></th>
+    <th scope="col">Ticker</th>
+    <th scope="col">Name</th>
+    <th scope="col">Category</th>
+    <th scope="col">Provider</th>
+    <th scope="col">Country</th>
+    <!--<th scope="col">Index</th>-->
+    <!--<th scope="col">Overview</th>-->
+    <th scope="col">Inception Date</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+    <td class="center"><input type="checkbox" name="query_myTextEditBox"></td>
+    <td>EWM</td>
+    <td>iShares MSCI Malaysia Index</td>
+    <td>Pacific Stock</td>
+    <td>iShares</td>
+    <td>true</td>
+    <td>US</td>
+    <!--<td></td>-->
+    <!--<td></td>-->
+    <td>1996-04-01"</td>
+</tr>
+<tr>
+    <td class="center"><input type="checkbox" name="query_myTextEditBox"></td>
+    <td>EWW</td>
+    <td>iShares MSCI Mexico Investable Mkt Idx</td>
+    <td>Diversified Emerging Markets</td>
+    <td>iShares</td>
+    <td>true</td>
+    <td>US</td>
+    <!--<td></td>-->
+    <!--<td></td>-->
+    <td>1996-04-01"</td>
+</tr>
+<tr>
+    <td class="center"><input type="checkbox" name="query_myTextEditBox"></td>
+    <td>EWL</td>
+    <td>iShares MSCI Switzerland Index</td>
+    <td>Europe Stock</td>
+    <td>iShares</td>
+    <td>true</td>
+    <td>US</td>
+    <!--<td></td>-->
+    <!--<td></td>-->
+    <td>1996-04-01"</td>
+</tr>
+<tr>
+    <td class="center"><input type="checkbox" name="query_myTextEditBox"></td>
+    <td>EWU</td>
+    <td>iShares MSCI United Kingdom Index</td>
+    <td>Europe Stock</td>
+    <td>iShares</td>
+    <td>true</td>
+    <td>US</td>
+    <!--<td></td>-->
+    <!--<td></td>-->
+    <td>1996-04-01"</td>
+</tr>
+<tr>
+    <td class="center"><input type="checkbox" name="query_myTextEditBox"></td>
+    <td>EWS</td>
+    <td>iShares MSCI Singapore Index</td>
+    <td>Pacific Stock</td>
+    <td>iShares</td>
+    <td>true</td>
+    <td>US</td>
+    <!--<td></td>-->
+    <!--<td></td>-->
+    <td>1996-04-01"</td>
+</tr>
+<tr>
+    <td class="center"><input type="checkbox" name="query_myTextEditBox"></td>
+    <td>EWH</td>
+    <td>iShares MSCI Hong Kong Index</td>
+    <td>Pacific Stock</td>
+    <td>iShares</td>
+    <td>true</td>
+    <td>US</td>
+    <!--<td></td>-->
+    <!--<td></td>-->
+    <td>1996-04-01"</td>
+</tr>
+<tr>
+    <td class="center"><input type="checkbox" name="query_myTextEditBox"></td>
+    <td>EWA</td>
+    <td>iShares MSCI Australia Index</td>
+    <td>Pacific Stock</td>
+    <td>iShares</td>
+    <td>true</td>
+    <td>US</td>
+    <!--<td></td>-->
+    <!--<td></td>-->
+    <td>1996-04-01"</td>
+</tr>
+<tr>
+    <td class="center"><input type="checkbox" name="query_myTextEditBox"></td>
+    <td>EWJ</td>
+    <td>iShares MSCI Japan Index</td>
+    <td>Pacific Stock</td>
+    <td>iShares</td>
+    <td>true</td>
+    <td>US</td>
+    <!--<td></td>-->
+    <!--<td></td>-->
+    <td>1996-04-01"</td>
+</tr>
+<tr>
+    <td class="center"><input type="checkbox" name="query_myTextEditBox"></td>
+    <td>EWG</td>
+    <td>iShares MSCI Germany Index</td>
+    <td>Europe Stock</td>
+    <td>iShares</td>
+    <td>true</td>
+    <td>US</td>
+    <!--<td></td>-->
+    <!--<td></td>-->
+    <td>1996-04-01"</td>
+</tr>
+<tr>
+    <td class="center"><input type="checkbox" name="query_myTextEditBox"></td>
+    <td>EWD</td>
+    <td>iShares MSCI Sweden Index</td>
+    <td>Europe Stock</td>
+    <td>iShares</td>
+    <td>true</td>
+    <td>US</td>
+    <!--<td></td>-->
+    <!--<td></td>-->
+    <td>1996-04-01"</td>
+</tr>
+<tr>
+    <td class="center"><input type="checkbox" name="query_myTextEditBox"></td>
+    <td>EWK</td>
+    <td>iShares MSCI Belgium Investable Mkt Idx</td>
+    <td>Europe Stock</td>
+    <td>iShares</td>
+    <td>true</td>
+    <td>US</td>
+    <!--<td></td>-->
+    <!--<td></td>-->
+    <td>1996-04-01"</td>
+</tr>
+<tr>
+    <td class="center"><input type="checkbox" name="query_myTextEditBox"></td>
+    <td>EWQ</td>
+    <td>iShares MSCI France Index</td>
+    <td>Europe Stock</td>
+    <td>iShares</td>
+    <td>true</td>
+    <td>US</td>
+    <!--<td></td>-->
+    <!--<td></td>-->
+    <td>1996-04-01"</td>
+</tr>
+<tr>
+    <td class="center"><input type="checkbox" name="query_myTextEditBox"></td>
+    <td>EWC</td>
+    <td>iShares MSCI Canada Index</td>
+    <td>Foreign Stock</td>
+    <td>iShares</td>
+    <td>true</td>
+    <td>US</td>
+    <!--<td></td>-->
+    <!--<td></td>-->
+    <td>1996-04-01"</td>
+</tr>
+<tr>
+    <td class="center"><input type="checkbox" name="query_myTextEditBox"></td>
+    <td>EWN</td>
+    <td>iShares MSCI Netherlands Invstbl Mkt Idx</td>
+    <td>Europe Stock</td>
+    <td>iShares</td>
+    <td>true</td>
+    <td>US</td>
+    <!--<td></td>-->
+    <!--<td></td>-->
+    <td>1996-04-01"</td>
+</tr>
+<tr>
+    <td class="center"><input type="checkbox" name="query_myTextEditBox"></td>
+    <td>EWP</td>
+    <td>iShares MSCI Spain Index</td>
+    <td>Europe Stock</td>
+    <td>iShares</td>
+    <td>true</td>
+    <td>US</td>
+    <!--<td></td>-->
+    <!--<td></td>-->
+    <td>1996-04-01"</td>
+</tr>
+<tr>
+    <td class="center"><input type="checkbox" name="query_myTextEditBox"></td>
+    <td>EWI</td>
+    <td>iShares MSCI Italy Index</td>
+    <td>Europe Stock</td>
+    <td>iShares</td>
+    <td>true</td>
+    <td>US</td>
+    <!--<td></td>-->
+    <!--<td></td>-->
+    <td>1996-04-01"</td>
+</tr>
+<tr>
+    <td class="center"><input type="checkbox" name="query_myTextEditBox"></td>
+    <td>EWO</td>
+    <td>iShares MSCI Austria Investable Mkt Idx</td>
+    <td>Europe Stock</td>
+    <td>iShares</td>
+    <td>true</td>
+    <td>US</td>
+    <!--<td></td>-->
+    <!--<td></td>-->
+    <td>1996-04-01"</td>
+</tr>
+</tbody>
+</table>
+
+</fieldset>
+</div>
+
+
+</div>
+
+</form>
+
+<div id="footer">
+    <div class="main">
+        <ul class="left">
+            <li><a href="About/index.html">About</a></li>
+            <li><a href="Help/index.html">Help</a></li>
+            <li><a href="Terms/index.html">Terms</a></li>
+        </ul>
                 <span class="right">
                     &copy; 2012 Mojoinvest Ltd.
                 </span>
 
-            <div class="clear"></div>
-        </div>
+        <div class="clear"></div>
     </div>
+</div>
 </div>
 
 <script src="http://localhost:9810/compile?id=mojoinvest"></script>
 <script>
-    example.sayHello('Hello World!');
+    example.main();
 </script>
 
 </body>

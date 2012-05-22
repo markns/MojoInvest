@@ -1,5 +1,5 @@
 {
     "id":"mojoinvest",
-    "inputs":"scripts/hello.js",
+    "inputs":"scripts/main.js",
     "paths":["templates/app", "templates/shared"]
 }

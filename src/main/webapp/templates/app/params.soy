@@ -19,20 +19,57 @@
 
     <div class="row">
       <div class="column grid_3">
+        {call app.params.portfolio /}
+      </div>
+      <div class="column grid_3">
+        {call app.params.relativeStrengthStyle /}
+      </div>
+      <div class="column grid_3">
         {call app.params.risk /}
       </div>
       <div class="column grid_3">
         {call app.params.backtest /}
       </div>
-      <div class="column grid_3">
-        {call app.params.backtest /}
-      </div>
-      <div class="column grid_3">
-        {call app.params.backtest /}
-      </div>
     </div>
+
 {/template}
 
+
+/**
+*/
+{template .portfolio}
+     <fieldset>
+            <legend>Portfolio</legend>
+            <ol>
+                <li>
+                    <label>Initial Investment:</label>
+                    <textfield />
+                </li>
+                <li>
+                    <label>To date:</label>
+                    <d:DateBox ui:field='toDate'/>
+                </li>
+            </ol>
+        </fieldset>
+{/template}
+
+/**
+*/
+{template .relativeStrengthStyle}
+     <fieldset>
+            <legend>Relative Strength Style</legend>
+            <ol>
+                <li>
+                    <label>From date:</label>
+                    <d:DateBox ui:field='fromDate'/>
+                </li>
+                <li>
+                    <label>To date:</label>
+                    <d:DateBox ui:field='toDate'/>
+                </li>
+            </ol>
+        </fieldset>
+{/template}
 
 /**
 */
