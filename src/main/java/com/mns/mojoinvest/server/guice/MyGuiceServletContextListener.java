@@ -14,6 +14,7 @@ public class MyGuiceServletContextListener extends GuiceServletContextListener {
         return Guice.createInjector(new DispatchServletModule(),
                 new ServerModule(),
                 new EngineModule(),
+                new MustacheModule(),
                 new TradingStrategyModule());
     }
 
