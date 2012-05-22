@@ -47,7 +47,7 @@
          filter(String).through(Class<? extends Filter)
      -->
     <listener>
-        <listener-class>com.mns.mojoinvest.server.guice.MyGuiceServletContextListener</listener-class>
+        <listener-class>com.mns.mojoinvest.server.guice.MojoGuiceServletContextListener</listener-class>
     </listener>
 
     <!--SERVLETS-->

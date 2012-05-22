@@ -7,7 +7,7 @@ import com.google.inject.servlet.GuiceServletContextListener;
 /**
  * @author Mark Nuttall-Smith
  */
-public class MyGuiceServletContextListener extends GuiceServletContextListener {
+public class MojoGuiceServletContextListener extends GuiceServletContextListener {
 
     @Override
     protected Injector getInjector() {
