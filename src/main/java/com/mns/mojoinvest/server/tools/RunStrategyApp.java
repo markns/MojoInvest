@@ -13,8 +13,8 @@ import com.mns.mojoinvest.server.engine.portfolio.Portfolio;
 import com.mns.mojoinvest.server.engine.portfolio.PortfolioFactory;
 import com.mns.mojoinvest.server.engine.strategy.MomentumStrategy;
 import com.mns.mojoinvest.server.engine.strategy.StrategyException;
-import com.mns.mojoinvest.server.guice.DispatchServletModule;
 import com.mns.mojoinvest.server.guice.EngineModule;
+import com.mns.mojoinvest.server.guice.MojoServletModule;
 import com.mns.mojoinvest.server.guice.StandaloneModule;
 import com.mns.mojoinvest.server.guice.TradingStrategyModule;
 import com.mns.mojoinvest.server.params.BacktestParams;
@@ -34,7 +34,7 @@ public class RunStrategyApp {
     private static final Logger log = Logger.getLogger(RunStrategyApp.class.getName());
 
     public static void main(String[] args) {
-        Injector injector = Guice.createInjector(new DispatchServletModule(),
+        Injector injector = Guice.createInjector(new MojoServletModule(),
                 new StandaloneModule(),
                 new EngineModule(),
                 new TradingStrategyModule());

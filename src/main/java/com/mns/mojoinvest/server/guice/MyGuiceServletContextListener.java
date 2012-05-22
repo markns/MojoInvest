@@ -11,7 +11,7 @@ public class MyGuiceServletContextListener extends GuiceServletContextListener {
 
     @Override
     protected Injector getInjector() {
-        return Guice.createInjector(new DispatchServletModule(),
+        return Guice.createInjector(new MojoServletModule(),
                 new EngineModule(),
                 new MustacheModule(),
                 new TradingStrategyModule());

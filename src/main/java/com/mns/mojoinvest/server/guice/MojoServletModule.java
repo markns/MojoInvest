@@ -16,6 +16,7 @@
 
 package com.mns.mojoinvest.server.guice;
 
+import com.google.appengine.tools.appstats.AppstatsServlet;
 import com.google.appengine.tools.mapreduce.InjectingMapReduceServlet;
 import com.google.inject.Singleton;
 import com.google.inject.servlet.ServletModule;
@@ -27,7 +28,7 @@ import com.mustachelet.MustacheletService;
 /**
  * @author Mark Nuttall-Smith
  */
-public class DispatchServletModule extends ServletModule {
+public class MojoServletModule extends ServletModule {
 
     @Override
     public void configureServlets() {
@@ -52,6 +53,10 @@ public class DispatchServletModule extends ServletModule {
         serve("/test2").with(Test2Servlet.class);
 
         serve("/").with(MustacheletService.class);
+
+        serve("/appstats/*").with(AppstatsServlet.class);
+        bind(AppstatsServlet.class).in(Singleton.class);
+
 
     }
 

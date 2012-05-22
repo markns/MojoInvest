@@ -22,6 +22,8 @@
         </init-param>
     </filter>
 
+    <!--TODO: Move all the configuration here to MojoServletModule-->
+
     <filter-mapping>
         <filter-name>appstats</filter-name>
         <url-pattern>/dispatch/*</url-pattern>
@@ -96,16 +98,6 @@
         <url-pattern>/upload-success</url-pattern>
     </servlet-mapping>
 
-    <!--Appstats Console Path-->
-    <servlet>
-        <servlet-name>appstats</servlet-name>
-        <servlet-class>com.google.appengine.tools.appstats.AppstatsServlet</servlet-class>
-    </servlet>
-
-    <servlet-mapping>
-        <servlet-name>appstats</servlet-name>
-        <url-pattern>/appstats/*</url-pattern>
-    </servlet-mapping>
 
     <!--Security Constraints-->
     <security-constraint>
