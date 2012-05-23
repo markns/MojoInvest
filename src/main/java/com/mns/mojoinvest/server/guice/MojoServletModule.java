@@ -21,17 +21,23 @@ import com.google.appengine.tools.appstats.AppstatsServlet;
 import com.google.appengine.tools.mapreduce.MapReduceServlet;
 import com.google.apphosting.utils.remoteapi.RemoteApiServlet;
 import com.google.common.collect.Maps;
+import com.google.inject.Inject;
+import com.google.inject.Provider;
 import com.google.inject.Singleton;
-import com.google.inject.name.Names;
 import com.google.inject.servlet.ServletModule;
 import com.googlecode.objectify.ObjectifyFactory;
 import com.mns.mojoinvest.server.engine.model.dao.*;
 import com.mns.mojoinvest.server.servlet.*;
 import com.mns.mojoinvest.server.servlet.blob.SuccessfulUploadServlet;
 import com.mns.mojoinvest.server.servlet.blob.UploadBlobServlet;
-import com.mustachelet.MustacheletService;
+import com.sun.jersey.api.json.JSONConfiguration;
+import com.sun.jersey.guice.spi.container.servlet.GuiceContainer;
+import com.test.MustacheViewProcessor;
+import freemarker.cache.TemplateLoader;
+import freemarker.cache.WebappTemplateLoader;
 
-import java.io.File;
+import javax.servlet.ServletContext;
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -83,9 +89,35 @@ public class MojoServletModule extends ServletModule {
         serve("/appstats/*").with(AppstatsServlet.class);
         bind(AppstatsServlet.class).in(Singleton.class);
 
-        serve("/m/*").with(MustacheletService.class);
-        bind(File.class).annotatedWith(Names.named("root"))
-                .toInstance(new File("m"));
+        bind(TemplateLoader.class).toProvider(TemplateLoaderProvider.class);
+
+        Map<String, String> params = new HashMap<String, String>();
+        params.put(JSONConfiguration.FEATURE_POJO_MAPPING, "true");
+        params.put("com.sun.jersey.config.property.packages", "com.test");
+//        params.put("com.sun.jersey.freemarker.templateBasePath", "freemarker");
+
+//        bind(MustacheViewProcessor.class).toProvider(MustacheViewProcessorProvider.class)
+//        .in(Singleton.class);
+
+        bind(MustacheViewProcessor.class)
+                // TODO request scoped if live?
+                .toInstance(new MustacheViewProcessor("mustache", false));
+
+        serve("/*").with(GuiceContainer.class, params);
+
+//        serve("/*").with(GuiceContainer.class, params);
+
+
+    }
+
+    public static class TemplateLoaderProvider implements Provider<WebappTemplateLoader> {
+
+        @Inject
+        ServletContext servletContext;
+
+        public WebappTemplateLoader get() {
+            return new WebappTemplateLoader(servletContext);
+        }
 
     }
 

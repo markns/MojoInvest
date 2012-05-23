@@ -31,16 +31,13 @@
 
         <!-- Dependencies versions -->
         <aopalliance.version>1.0</aopalliance.version>
-        <dyuproject-openid.version>1.1.7</dyuproject-openid.version>
         <gae.version>1.6.4</gae.version>
-        <gin.version>1.5.0</gin.version>
         <guice.version>3.0</guice.version>
         <json.version>20090211</json.version>
         <jsr107cache.version>1.1</jsr107cache.version>
         <junit.version>4.8.1</junit.version>
         <objectify.version>3.1</objectify.version>
         <persistence-api.version>1.0</persistence-api.version>
-        <slf4f.version>1.6.1</slf4f.version>
         <joda-time.version>1.6.2</joda-time.version>
 
         <!-- Plugin properties -->
@@ -85,13 +82,6 @@
             <url>http://objectify-appengine.googlecode.com/svn/maven</url>
         </repository>
 
-        <!-- For OpenID -->
-        <repository>
-            <id>dyuproject-repo</id>
-            <name>dyuproject-repo</name>
-            <url>http://dyuproject.googlecode.com/svn/repos/maven2</url>
-        </repository>
-
         <repository>
             <id>bedatadriven-thirdparty</id>
             <url>http://nexus.bedatadriven.com/content/repositories/thirdparty</url>
@@ -101,6 +91,39 @@
     </repositories>
 
     <dependencies>
+
+        <dependency>
+            <groupId>com.sun.jersey</groupId>
+            <artifactId>jersey-bundle</artifactId>
+            <version>1.12</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.sun.jersey.contribs</groupId>
+            <artifactId>jersey-guice</artifactId>
+            <version>1.12</version>
+        </dependency>
+        <!--<dependency>-->
+        <!--<groupId>com.sun.jersey</groupId>-->
+        <!--<artifactId>jersey-core</artifactId>-->
+        <!--<version>1.8</version>-->
+        <!--</dependency>-->
+        <!--<dependency>-->
+        <!--<groupId>com.sun.jersney</groupId>-->
+        <!--<artifactId>jersey-client</artifactId>-->
+        <!--<version>1.8</version>-->
+        <!--</dependency>-->
+        <!--<dependency>-->
+        <!--<groupId>com.sun.jersey</groupId>-->
+        <!--<artifactId>jersey-json</artifactId>-->
+        <!--<version>1.8</version>-->
+        <!--</dependency>-->
+
+        <dependency>
+            <groupId>org.freemarker</groupId>
+            <artifactId>freemarker</artifactId>
+            <version>2.3.14</version>
+        </dependency>
 
 
         <dependency>
@@ -306,24 +329,6 @@
             <version>2.1</version>
         </dependency>
 
-        <!-- SLF4J logging dependencies -->
-        <!--        <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-log4j12</artifactId>
-            <version>${slf4f.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-api</artifactId>
-            <version>${slf4f.version}</version>
-        </dependency>-->
-
-        <!-- OpenID dependencies -->
-        <dependency>
-            <groupId>com.dyuproject</groupId>
-            <artifactId>dyuproject-openid</artifactId>
-            <version>${dyuproject-openid.version}</version>
-        </dependency>
         <dependency>
             <groupId>com.thoughtworks.xstream</groupId>
             <artifactId>xstream</artifactId>
