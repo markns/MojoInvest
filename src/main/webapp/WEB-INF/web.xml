@@ -20,6 +20,7 @@
         <url-pattern>/*</url-pattern>
     </filter-mapping>
 
+
     <!--
         This Guice listener hijacks all further filters and servlets. Extra
         filters and servlets have to be configured in your
@@ -30,6 +31,16 @@
     <listener>
         <listener-class>com.mns.mojoinvest.server.guice.MojoGuiceServletContextListener</listener-class>
     </listener>
+
+    <servlet>
+        <servlet-name>upload</servlet-name>
+        <jsp-file>/jsp/upload.jsp</jsp-file>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>upload</servlet-name>
+        <url-pattern>/uploader</url-pattern>
+    </servlet-mapping>
 
     <!--Security Constraints-->
     <security-constraint>

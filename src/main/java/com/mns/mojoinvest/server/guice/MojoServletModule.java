@@ -22,6 +22,7 @@ import com.google.appengine.tools.mapreduce.MapReduceServlet;
 import com.google.apphosting.utils.remoteapi.RemoteApiServlet;
 import com.google.common.collect.Maps;
 import com.google.inject.Singleton;
+import com.google.inject.name.Names;
 import com.google.inject.servlet.ServletModule;
 import com.googlecode.objectify.ObjectifyFactory;
 import com.mns.mojoinvest.server.engine.model.dao.*;
@@ -30,6 +31,7 @@ import com.mns.mojoinvest.server.servlet.blob.SuccessfulUploadServlet;
 import com.mns.mojoinvest.server.servlet.blob.UploadBlobServlet;
 import com.mustachelet.MustacheletService;
 
+import java.io.File;
 import java.util.Map;
 
 /**
@@ -82,7 +84,8 @@ public class MojoServletModule extends ServletModule {
         bind(AppstatsServlet.class).in(Singleton.class);
 
         serve("/m/*").with(MustacheletService.class);
-
+        bind(File.class).annotatedWith(Names.named("root"))
+                .toInstance(new File("m"));
 
     }
 

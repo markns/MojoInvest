@@ -11,9 +11,9 @@ import com.mustachelet.annotations.Template;
  * Date: 12/21/10
  * Time: 2:22 PM
  */
-@Path("/")
-@Template("index.mustache")
-public class Index {
+@Path("/m/home")
+@Template("/home.mustache")
+public class Home {
 
     @Controller
     boolean exists() {

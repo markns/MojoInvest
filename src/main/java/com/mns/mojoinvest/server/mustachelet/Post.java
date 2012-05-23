@@ -21,8 +21,8 @@ import static com.mustachelet.annotations.HttpMethod.Type.POST;
  * Date: 12/21/10
  * Time: 3:49 PM
  */
-@Path("/post(/(.*))?")
-@Template("post.html")
+@Path("/m/post(/(.*))?")
+@Template("/post.mustache")
 @HttpMethod({GET, POST})
 public class Post {
     @Inject
@@ -33,7 +33,7 @@ public class Post {
 
     @Controller(POST)
     boolean redirectPostData() throws IOException {
-        response.sendRedirect("/post/" + request.getParameter("value"));
+        response.sendRedirect("/m/post/" + request.getParameter("value"));
         return false;
     }
 

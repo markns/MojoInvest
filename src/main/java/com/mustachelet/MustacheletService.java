@@ -56,6 +56,7 @@ public class MustacheletService extends HttpServlet implements Filter {
 
     @Override
     protected void service(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        log(req.getRequestURI());
         if (execute(resp, req)) return;
         resp.sendError(404, "Not found");
     }

@@ -9,8 +9,8 @@ import com.mustachelet.annotations.Template;
 
 import java.util.Collection;
 
-@Path("/app")
-@Template("app.mustache")
+@Path("/m/app")
+@Template("/app.mustache")
 public class App {
 
     private FundDao fundDao;
