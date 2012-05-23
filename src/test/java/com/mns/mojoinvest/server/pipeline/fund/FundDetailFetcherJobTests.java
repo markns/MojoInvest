@@ -12,9 +12,9 @@ public class FundDetailFetcherJobTests {
 
     @Test
     public void scrapeDetails() throws IOException {
-        String html = Files.toString(new File("src/test/resources/TNDQ.html"), Charset.defaultCharset());
-        String symbol = "TDNQ";
-        FundDetailFetcherJob job = new FundDetailFetcherJob();
+        String html = Files.toString(new File("src/test/resources/EIRL.html"), Charset.defaultCharset());
+        String symbol = "EIRL";
+        FundDetailFetcherBatchJob job = new FundDetailFetcherBatchJob();
         job.scrapeDetails(html, symbol);
     }
 }

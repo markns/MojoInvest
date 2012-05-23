@@ -2,6 +2,7 @@ package com.mns.mojoinvest.server.pipeline.fund;
 
 import com.google.appengine.tools.pipeline.Job1;
 import com.google.appengine.tools.pipeline.Value;
+import com.google.common.annotations.VisibleForTesting;
 import com.mns.mojoinvest.server.engine.model.Fund;
 import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.WebResource;
@@ -61,12 +62,12 @@ public class FundDetailFetcherBatchJob extends Job1<List<Fund>, List<String>> {
         return r.queryParams(params).get(String.class);
     }
 
-    private Details scrapeDetails(String html, String symbol) {
+    @VisibleForTesting
+    protected Details scrapeDetails(String html, String symbol) {
         Details details = new Details(symbol);
         Document doc = Jsoup.parse(html);
 
-
-        details.name = doc.getElementById("quickquote").getElementsByClass("cn").get(0).child(0).text();
+        details.name = doc.getElementsByClass("cn").text();
 
         for (Element element : doc.select("span")) {
             if ("QUICK STATS".equals(element.text())) {

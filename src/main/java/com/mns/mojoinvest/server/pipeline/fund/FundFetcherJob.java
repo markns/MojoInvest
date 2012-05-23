@@ -53,11 +53,16 @@ public class FundFetcherJob extends Job0<List<Fund>> {
         c.setReadTimeout(60000);
         c.setConnectTimeout(60000);
 
+//        http://investing.money.msn.com/investments/etf-performance-tracker?cat=Europe%2BStock&page=0&view=View&fam=iShares
+//        http://investing.money.msn.com/investments/etf-performance-tracker?fam=iShares&cat=Europe+Stock&view=View
+
         WebResource r = c.resource("http://investing.money.msn.com/investments/etf-performance-tracker");
         MultivaluedMap<String, String> params = new MultivaluedMapImpl();
-        params.add("page", "0");
+        //TODO: msn throws internal service error when less than 20 funds and page = 0
+//        params.add("page", "0");
         params.add("fam", "iShares");
-        params.add("cat", "All");
+//        params.add("cat", "All");
+        params.add("cat", "Europe+Stock");
         params.add("view", "View");
 
         log.info("Attempting to fetch all funds html");

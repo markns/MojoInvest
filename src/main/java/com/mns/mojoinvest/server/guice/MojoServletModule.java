@@ -16,14 +16,21 @@
 
 package com.mns.mojoinvest.server.guice;
 
+import com.google.appengine.tools.appstats.AppstatsFilter;
 import com.google.appengine.tools.appstats.AppstatsServlet;
-import com.google.appengine.tools.mapreduce.InjectingMapReduceServlet;
+import com.google.appengine.tools.mapreduce.MapReduceServlet;
+import com.google.apphosting.utils.remoteapi.RemoteApiServlet;
+import com.google.common.collect.Maps;
 import com.google.inject.Singleton;
 import com.google.inject.servlet.ServletModule;
 import com.googlecode.objectify.ObjectifyFactory;
 import com.mns.mojoinvest.server.engine.model.dao.*;
 import com.mns.mojoinvest.server.servlet.*;
+import com.mns.mojoinvest.server.servlet.blob.SuccessfulUploadServlet;
+import com.mns.mojoinvest.server.servlet.blob.UploadBlobServlet;
 import com.mustachelet.MustacheletService;
+
+import java.util.Map;
 
 /**
  * @author Mark Nuttall-Smith
@@ -33,15 +40,34 @@ public class MojoServletModule extends ServletModule {
     @Override
     public void configureServlets() {
 
+        //TODO: Move this stuff to another module
         // Model object managers
         bind(ObjectifyFactory.class).in(Singleton.class);
-
         bind(QuoteDao.class).to(ObjectifyQuoteDao.class);
         bind(FundDao.class).to(ObjectifyFundDao.class);
         bind(CalculatedValueDao.class).to(ObjectifyCalculatedValueDao.class);
 
-        serve("/mapreduce/*").with(InjectingMapReduceServlet.class);
-        bind(InjectingMapReduceServlet.class).in(Singleton.class);
+        //Filters
+        Map<String, String> appstatsInit = Maps.newHashMap();
+        appstatsInit.put("logMessage", "Appstats available: /appstats/details?time={ID}");
+        filter("/dispatch/*").through(AppstatsFilter.class, appstatsInit);
+        bind(AppstatsFilter.class).in(Singleton.class);
+
+        //Servlets
+        serve("/remote_api").with(RemoteApiServlet.class);
+        bind(RemoteApiServlet.class).in(Singleton.class);
+
+        serve("/_ah/pipeline/*").with(com.google.appengine.tools.pipeline.impl.servlets.PipelineServlet.class);
+        bind(com.google.appengine.tools.pipeline.impl.servlets.PipelineServlet.class).in(Singleton.class);
+
+        serve("/mapreduce/*").with(MapReduceServlet.class);
+        bind(MapReduceServlet.class).in(Singleton.class);
+
+        serve("/upload").with(UploadBlobServlet.class);
+        bind(UploadBlobServlet.class).in(Singleton.class);
+
+        serve("/upload-success").with(SuccessfulUploadServlet.class);
+        bind(SuccessfulUploadServlet.class).in(Singleton.class);
 
         serve("/pipeline").with(PipelineServlet.class);
         serve("/quoteviewer").with(QuoteViewerServlet.class);
@@ -52,10 +78,10 @@ public class MojoServletModule extends ServletModule {
         serve("/fundindexes").with(UpdateFundIndexesServlet.class);
         serve("/test2").with(Test2Servlet.class);
 
-        serve("/").with(MustacheletService.class);
-
         serve("/appstats/*").with(AppstatsServlet.class);
         bind(AppstatsServlet.class).in(Singleton.class);
+
+        serve("/m/*").with(MustacheletService.class);
 
 
     }
