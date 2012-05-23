@@ -43,7 +43,6 @@ public class MustacheletService extends HttpServlet implements Filter {
     List<Class<?>> mustachelets;
 
     @Inject(optional = true)
-//  @Nullable
     @Named("root")
     File root;
 
@@ -104,8 +103,6 @@ public class MustacheletService extends HttpServlet implements Filter {
                     @Override
                     public void configure(Binder binder) {
                         binder.bind(Matcher.class).toInstance(matcher);
-                        binder.bind(HttpServletRequest.class).toInstance(req);
-                        binder.bind(HttpServletResponse.class).toInstance(resp);
                     }
                 });
 

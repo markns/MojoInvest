@@ -6,28 +6,9 @@
     <display-name>MojoInvest</display-name>
 
     <!-- Default page to serve -->
-    <welcome-file-list>
-        <welcome-file>index.html</welcome-file>
-    </welcome-file-list>
-
-    <!--FILTERS-->
-
-    <!--Appstats Event Recorder-->
-    <filter>
-        <filter-name>appstats</filter-name>
-        <filter-class>com.google.appengine.tools.appstats.AppstatsFilter</filter-class>
-        <init-param>
-            <param-name>logMessage</param-name>
-            <param-value>Appstats available: /appstats/details?time={ID}</param-value>
-        </init-param>
-    </filter>
-
-    <!--TODO: Move all the configuration here to MojoServletModule-->
-
-    <filter-mapping>
-        <filter-name>appstats</filter-name>
-        <url-pattern>/dispatch/*</url-pattern>
-    </filter-mapping>
+    <!--<welcome-file-list>-->
+    <!--<welcome-file>index.html</welcome-file>-->
+    <!--</welcome-file-list>-->
 
     <filter>
         <filter-name>guiceFilter</filter-name>
@@ -36,68 +17,19 @@
 
     <filter-mapping>
         <filter-name>guiceFilter</filter-name>
-        <url-pattern>*</url-pattern>
+        <url-pattern>/*</url-pattern>
     </filter-mapping>
 
     <!--
-         This Guice listener hijacks all further filters and servlets. Extra
-         filters and servlets have to be configured in your
-         ServletModule#configureServlets() by calling
-         serve(String).with(Class<? extends HttpServlet>) and
-         filter(String).through(Class<? extends Filter)
-     -->
+        This Guice listener hijacks all further filters and servlets. Extra
+        filters and servlets have to be configured in your
+        ServletModule#configureServlets() by calling
+        serve(String).with(Class<? extends HttpServlet>) and
+        filter(String).through(Class<? extends Filter)
+    -->
     <listener>
         <listener-class>com.mns.mojoinvest.server.guice.MojoGuiceServletContextListener</listener-class>
     </listener>
-
-    <!--SERVLETS-->
-
-    <!--Remote Api -->
-    <servlet>
-        <servlet-name>RemoteApi</servlet-name>
-        <servlet-class>com.google.apphosting.utils.remoteapi.RemoteApiServlet</servlet-class>
-    </servlet>
-    <servlet-mapping>
-        <servlet-name>RemoteApi</servlet-name>
-        <url-pattern>/remote_api</url-pattern>
-    </servlet-mapping>
-
-    <!--Pipeline Servlet-->
-    <servlet>
-        <servlet-name>PipelineServlet</servlet-name>
-        <servlet-class>com.google.appengine.tools.pipeline.impl.servlets.PipelineServlet</servlet-class>
-    </servlet>
-    <servlet-mapping>
-        <servlet-name>PipelineServlet</servlet-name>
-        <url-pattern>/_ah/pipeline/*</url-pattern>
-    </servlet-mapping>
-
-    <!--Mapper servlet for uploading data-->
-    <servlet>
-        <servlet-name>mapreduce</servlet-name>
-        <servlet-class>com.google.appengine.tools.mapreduce.MapReduceServlet</servlet-class>
-    </servlet>
-    <servlet-mapping>
-        <servlet-name>mapreduce</servlet-name>
-        <url-pattern>/mapreduce/*</url-pattern>
-    </servlet-mapping>
-    <servlet>
-        <servlet-name>Upload</servlet-name>
-        <servlet-class>com.mns.mojoinvest.server.servlet.blob.UploadBlobServlet</servlet-class>
-    </servlet>
-    <servlet-mapping>
-        <servlet-name>Upload</servlet-name>
-        <url-pattern>/upload</url-pattern>
-    </servlet-mapping>
-    <servlet>
-        <servlet-name>SuccessfulUpload</servlet-name>
-        <servlet-class>com.mns.mojoinvest.server.servlet.blob.SuccessfulUploadServlet</servlet-class>
-    </servlet>
-    <servlet-mapping>
-        <servlet-name>SuccessfulUpload</servlet-name>
-        <url-pattern>/upload-success</url-pattern>
-    </servlet-mapping>
-
 
     <!--Security Constraints-->
     <security-constraint>

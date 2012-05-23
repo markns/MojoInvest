@@ -1,0 +1,49 @@
+<html>
+<head>
+    <title>{{$title}}Default Title{{/title}}</title>
+    {{$head}}{{/head}}
+    <link href="content/style/mojo.css" rel="stylesheet" type="text/css"/>
+    <script src="jquery.min.js"></script>
+</head>
+<body>
+<div id="back">
+
+    <div id="head">
+        {{$head}}
+        <div class="main">
+            <a class="left" href=""><img src="content/images/mojo_logo.png" alt="Mojoinvest"/></a>
+            <ul id="menu">
+                <li><a href="">Home</a></li>
+                <li><a href="app">App</a></li>
+                <li><a href="">Tools</a></li>
+                <li><a href="">Help</a></li>
+            </ul>
+        </div>
+        <div class="clear"></div>
+        {{/head}}
+    </div>
+
+    <div id="content" class="main">
+        {{$body}}Default Body{{/body}}
+    </div>
+
+    <div id="footer">
+        {{$footer}}
+        <div class="main">
+            <ul class="left">
+                <li><a href="About/index.html">About</a></li>
+                <li><a href="Help/index.html">Help</a></li>
+                <li><a href="Terms/index.html">Terms</a></li>
+            </ul>
+                <span class="right">
+                    &copy; 2012 Mojoinvest Ltd.
+                </span>
+
+            <div class="clear"></div>
+        </div>
+        {{/footer}}
+    </div>
+</div>
+
+</body>
+</html>
