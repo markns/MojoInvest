@@ -93,20 +93,14 @@ public class MojoServletModule extends ServletModule {
 
         Map<String, String> params = new HashMap<String, String>();
         params.put(JSONConfiguration.FEATURE_POJO_MAPPING, "true");
-        params.put("com.sun.jersey.config.property.packages", "com.test");
-//        params.put("com.sun.jersey.freemarker.templateBasePath", "freemarker");
+        params.put("com.sun.jersey.config.property.packages", "com.mns.mojoinvest.server.resource");
 
-//        bind(MustacheViewProcessor.class).toProvider(MustacheViewProcessorProvider.class)
-//        .in(Singleton.class);
-
+        // TODO request scoped if live?
         bind(MustacheViewProcessor.class)
-                // TODO request scoped if live?
-                .toInstance(new MustacheViewProcessor("mustache", false));
+//                .toInstance(new MustacheViewProcessor("mustache", false));
+                .toInstance(new MustacheViewProcessor("mustache", true));
 
         serve("/*").with(GuiceContainer.class, params);
-
-//        serve("/*").with(GuiceContainer.class, params);
-
 
     }
 
