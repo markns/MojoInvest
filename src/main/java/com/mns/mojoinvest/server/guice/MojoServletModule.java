@@ -60,7 +60,7 @@ public class MojoServletModule extends ServletModule {
         params.put(JSONConfiguration.FEATURE_POJO_MAPPING, "true");
         params.put("com.sun.jersey.config.property.packages", "com.mns.mojoinvest.server.resource");
         params.put(ServletContainer.PROPERTY_WEB_PAGE_CONTENT_REGEX,
-                "/(_ah|jsp|css|images|js|lib|mustache|pipeline|upload.*|tools)/.*");
+                "/(_ah|jsp|css|images|js|lib|mustache|mapreduce|pipeline|upload.*|tools|appstats)/.*");
         params.put(ServletContainer.FEATURE_FILTER_FORWARD_ON_404, "true");
         filter("/*").through(GuiceContainer.class, params);
 
@@ -78,13 +78,13 @@ public class MojoServletModule extends ServletModule {
         bind(SuccessfulUploadServlet.class).in(Singleton.class);
 
         serve("/pipeline").with(PipelineServlet.class);
-        serve("/quoteviewer").with(QuoteViewerServlet.class);
-        serve("/fundviewer").with(FundViewerServlet.class);
-        serve("/rankingviewer").with(RankingViewerServlet.class);
-        serve("/calculator").with(SMACalculatorServlet.class);
-        serve("/clearcache").with(ClearCacheServlet.class);
-        serve("/fundindexes").with(UpdateFundIndexesServlet.class);
-        serve("/test2").with(Test2Servlet.class);
+        serve("/tools/quoteviewer").with(QuoteViewerServlet.class);
+        serve("/tools/fundviewer").with(FundViewerServlet.class);
+        serve("/tools/rankingviewer").with(RankingViewerServlet.class);
+        serve("/tools/calculator").with(SMACalculatorServlet.class);
+        serve("/tools/clearcache").with(ClearCacheServlet.class);
+        serve("/tools/fundindexes").with(UpdateFundIndexesServlet.class);
+        serve("/tools/test2").with(Test2Servlet.class);
 
         serve("/appstats/*").with(AppstatsServlet.class);
         bind(AppstatsServlet.class).in(Singleton.class);

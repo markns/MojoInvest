@@ -32,6 +32,7 @@
     </listener>
 
     <!--Blob upload servlet doesn't work when configured in Guice ServletModule-->
+    <!--Error thrown: Must be called from a blob upload callback request-->
     <servlet>
         <servlet-name>Upload</servlet-name>
         <servlet-class>com.mns.mojoinvest.server.servlet.blob.UploadBlobServlet</servlet-class>
