@@ -1,4 +1,4 @@
-package com.test;
+package com.mns.mojoinvest.server.mustache;
 
 import com.github.mustachejava.DefaultMustacheFactory;
 import com.github.mustachejava.Mustache;

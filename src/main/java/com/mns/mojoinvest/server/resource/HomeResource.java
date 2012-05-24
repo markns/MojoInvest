@@ -1,4 +1,4 @@
-package com.test;
+package com.mns.mojoinvest.server.resource;
 
 import com.sun.jersey.api.view.Viewable;
 import org.joda.time.DateTime;

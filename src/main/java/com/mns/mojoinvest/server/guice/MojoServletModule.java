@@ -27,12 +27,12 @@ import com.google.inject.Singleton;
 import com.google.inject.servlet.ServletModule;
 import com.googlecode.objectify.ObjectifyFactory;
 import com.mns.mojoinvest.server.engine.model.dao.*;
+import com.mns.mojoinvest.server.mustache.MustacheViewProcessor;
 import com.mns.mojoinvest.server.servlet.*;
 import com.mns.mojoinvest.server.servlet.blob.SuccessfulUploadServlet;
 import com.mns.mojoinvest.server.servlet.blob.UploadBlobServlet;
 import com.sun.jersey.api.json.JSONConfiguration;
 import com.sun.jersey.guice.spi.container.servlet.GuiceContainer;
-import com.test.MustacheViewProcessor;
 import freemarker.cache.TemplateLoader;
 import freemarker.cache.WebappTemplateLoader;
 

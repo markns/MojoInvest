@@ -1,4 +1,4 @@
-package com.test;
+package com.mns.mojoinvest.server.resource;
 
 import com.google.inject.Inject;
 import com.mns.mojoinvest.server.engine.model.dao.FundDao;
