@@ -60,8 +60,7 @@ public class MojoServletModule extends ServletModule {
         params.put(JSONConfiguration.FEATURE_POJO_MAPPING, "true");
         params.put("com.sun.jersey.config.property.packages", "com.mns.mojoinvest.server.resource");
         params.put(ServletContainer.PROPERTY_WEB_PAGE_CONTENT_REGEX,
-                "/(_ah|jsp|css|images|js|lib|mustache|mapreduce|pipeline|upload.*|tools|appstats)/.*");
-        params.put(ServletContainer.FEATURE_FILTER_FORWARD_ON_404, "true");
+                "/(_ah|jsp|css|images|js|lib|mustache|mapreduce|pipeline|upload-success|tools|appstats).*");
         filter("/*").through(GuiceContainer.class, params);
 
         //Servlets
