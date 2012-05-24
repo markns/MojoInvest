@@ -1,0 +1,14 @@
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+    <title>Upload your CSV file here</title>
+</head>
+<body>
+<% BlobstoreService blobstoreService = BlobstoreServiceFactory.getBlobstoreService(); %>
+<form action="<%= blobstoreService.createUploadUrl("
+/upload") %>" method="post" enctype="multipart/form-data">
+<input type="file" name="data">
+<input type="submit" value="Submit">
+</form>
+</body>
+</html>
