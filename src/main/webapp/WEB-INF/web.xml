@@ -50,6 +50,7 @@
             <url-pattern>/remote_api/*</url-pattern>
             <url-pattern>/mapreduce/*</url-pattern>
             <url-pattern>/upload</url-pattern>
+            <url-pattern>/app</url-pattern>
             <url-pattern>/upload-success</url-pattern>
         </web-resource-collection>
         <auth-constraint>

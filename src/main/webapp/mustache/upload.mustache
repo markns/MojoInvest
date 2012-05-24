@@ -4,11 +4,11 @@
     <title>Upload your CSV file here</title>
 </head>
 <body>
-<% BlobstoreService blobstoreService = BlobstoreServiceFactory.getBlobstoreService(); %>
-<form action="<%= blobstoreService.createUploadUrl("
-/upload") %>" method="post" enctype="multipart/form-data">
-<input type="file" name="data">
-<input type="submit" value="Submit">
+
+<form method="POST" action="{{uploadUrl}}" enctype="multipart/form-data">
+    <input type="file" name="data">
+    <input type="submit" value="Submit">
 </form>
+
 </body>
 </html>

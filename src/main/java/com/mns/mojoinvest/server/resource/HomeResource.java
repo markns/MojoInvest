@@ -6,6 +6,7 @@ import org.joda.time.DateTime;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
+import javax.ws.rs.core.MediaType;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -13,7 +14,7 @@ import java.util.Map;
 public class HomeResource {
 
     @GET
-    @Produces("text/html")
+    @Produces(MediaType.TEXT_HTML)
     public Viewable getMytestView() {
         Map<String, Object> map = new HashMap<String, Object>();
         map.put("name", new DateTime());
