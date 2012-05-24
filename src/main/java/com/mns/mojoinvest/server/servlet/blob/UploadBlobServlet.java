@@ -1,4 +1,5 @@
 package com.mns.mojoinvest.server.servlet.blob;
+
 import com.google.appengine.api.blobstore.BlobKey;
 import com.google.appengine.api.blobstore.BlobstoreService;
 import com.google.appengine.api.blobstore.BlobstoreServiceFactory;
@@ -14,18 +15,20 @@ public class UploadBlobServlet extends HttpServlet {
 
     @Override
     public void doPost(HttpServletRequest req, HttpServletResponse resp)
-			throws IOException {
+            throws IOException {
 
-		BlobstoreService blobstoreService = BlobstoreServiceFactory.getBlobstoreService();
-		Map<String, BlobKey> blobs = blobstoreService.getUploadedBlobs(req);
-		BlobKey blobKey = blobs.get("data");
+        BlobstoreService blobstoreService = BlobstoreServiceFactory.getBlobstoreService();
+        Map<String, BlobKey> blobs = blobstoreService.getUploadedBlobs(req);
+        BlobKey blobKey = blobs.get("data");
 
-		if (blobKey == null) {
-			resp.sendRedirect("/");
-		} else {
-			resp.sendRedirect("/upload-success?blob-key=" + blobKey.getKeyString());
-		}
-	}
+        System.out.println();
+
+        if (blobKey == null) {
+            resp.sendRedirect("/");
+        } else {
+            resp.sendRedirect("/upload-success?blob-key=" + blobKey.getKeyString());
+        }
+    }
 
 }
 

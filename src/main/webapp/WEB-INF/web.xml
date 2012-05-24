@@ -17,9 +17,8 @@
 
     <filter-mapping>
         <filter-name>guiceFilter</filter-name>
-        <url-pattern>/*</url-pattern>
+        <url-pattern>*</url-pattern>
     </filter-mapping>
-
 
     <!--
         This Guice listener hijacks all further filters and servlets. Extra
@@ -32,14 +31,22 @@
         <listener-class>com.mns.mojoinvest.server.guice.MojoGuiceServletContextListener</listener-class>
     </listener>
 
+    <!--Blob upload servlets don't work when configured in Guice ServletModule-->
     <servlet>
-        <servlet-name>upload</servlet-name>
-        <jsp-file>/jsp/upload.jsp</jsp-file>
+        <servlet-name>Upload</servlet-name>
+        <servlet-class>com.mns.mojoinvest.server.servlet.blob.UploadBlobServlet</servlet-class>
     </servlet>
-
     <servlet-mapping>
-        <servlet-name>upload</servlet-name>
-        <url-pattern>/uploader</url-pattern>
+        <servlet-name>Upload</servlet-name>
+        <url-pattern>/upload</url-pattern>
+    </servlet-mapping>
+    <servlet>
+        <servlet-name>SuccessfulUpload</servlet-name>
+        <servlet-class>com.mns.mojoinvest.server.servlet.blob.SuccessfulUploadServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>SuccessfulUpload</servlet-name>
+        <url-pattern>/upload-success</url-pattern>
     </servlet-mapping>
 
     <!--Security Constraints-->
@@ -49,8 +56,8 @@
             <url-pattern>/mapper/*</url-pattern>
             <url-pattern>/remote_api/*</url-pattern>
             <url-pattern>/mapreduce/*</url-pattern>
+            <url-pattern>/uploader</url-pattern>
             <url-pattern>/upload</url-pattern>
-            <url-pattern>/app</url-pattern>
             <url-pattern>/upload-success</url-pattern>
         </web-resource-collection>
         <auth-constraint>

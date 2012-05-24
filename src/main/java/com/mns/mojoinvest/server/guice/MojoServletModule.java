@@ -21,22 +21,15 @@ import com.google.appengine.tools.appstats.AppstatsServlet;
 import com.google.appengine.tools.mapreduce.MapReduceServlet;
 import com.google.apphosting.utils.remoteapi.RemoteApiServlet;
 import com.google.common.collect.Maps;
-import com.google.inject.Inject;
-import com.google.inject.Provider;
 import com.google.inject.Singleton;
 import com.google.inject.servlet.ServletModule;
 import com.googlecode.objectify.ObjectifyFactory;
 import com.mns.mojoinvest.server.engine.model.dao.*;
 import com.mns.mojoinvest.server.mustache.MustacheViewProcessor;
 import com.mns.mojoinvest.server.servlet.*;
-import com.mns.mojoinvest.server.servlet.blob.SuccessfulUploadServlet;
-import com.mns.mojoinvest.server.servlet.blob.UploadBlobServlet;
 import com.sun.jersey.api.json.JSONConfiguration;
 import com.sun.jersey.guice.spi.container.servlet.GuiceContainer;
-import freemarker.cache.TemplateLoader;
-import freemarker.cache.WebappTemplateLoader;
 
-import javax.servlet.ServletContext;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -71,12 +64,6 @@ public class MojoServletModule extends ServletModule {
         serve("/mapreduce/*").with(MapReduceServlet.class);
         bind(MapReduceServlet.class).in(Singleton.class);
 
-        serve("/upload").with(UploadBlobServlet.class);
-        bind(UploadBlobServlet.class).in(Singleton.class);
-
-        serve("/upload-success").with(SuccessfulUploadServlet.class);
-        bind(SuccessfulUploadServlet.class).in(Singleton.class);
-
         serve("/pipeline").with(PipelineServlet.class);
         serve("/quoteviewer").with(QuoteViewerServlet.class);
         serve("/fundviewer").with(FundViewerServlet.class);
@@ -89,29 +76,16 @@ public class MojoServletModule extends ServletModule {
         serve("/appstats/*").with(AppstatsServlet.class);
         bind(AppstatsServlet.class).in(Singleton.class);
 
-        bind(TemplateLoader.class).toProvider(TemplateLoaderProvider.class);
-
         Map<String, String> params = new HashMap<String, String>();
         params.put(JSONConfiguration.FEATURE_POJO_MAPPING, "true");
         params.put("com.sun.jersey.config.property.packages", "com.mns.mojoinvest.server.resource");
-
-        // TODO request scoped if live?
+//
+//        TODO request scoped if live?
         bind(MustacheViewProcessor.class)
 //                .toInstance(new MustacheViewProcessor("mustache", false));
                 .toInstance(new MustacheViewProcessor("mustache", true));
 
         serve("/*").with(GuiceContainer.class, params);
-
-    }
-
-    public static class TemplateLoaderProvider implements Provider<WebappTemplateLoader> {
-
-        @Inject
-        ServletContext servletContext;
-
-        public WebappTemplateLoader get() {
-            return new WebappTemplateLoader(servletContext);
-        }
 
     }
 
