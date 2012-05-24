@@ -31,7 +31,7 @@
         <listener-class>com.mns.mojoinvest.server.guice.MojoGuiceServletContextListener</listener-class>
     </listener>
 
-    <!--Blob upload servlets don't work when configured in Guice ServletModule-->
+    <!--Blob upload servlet doesn't work when configured in Guice ServletModule-->
     <servlet>
         <servlet-name>Upload</servlet-name>
         <servlet-class>com.mns.mojoinvest.server.servlet.blob.UploadBlobServlet</servlet-class>
@@ -39,14 +39,6 @@
     <servlet-mapping>
         <servlet-name>Upload</servlet-name>
         <url-pattern>/upload</url-pattern>
-    </servlet-mapping>
-    <servlet>
-        <servlet-name>SuccessfulUpload</servlet-name>
-        <servlet-class>com.mns.mojoinvest.server.servlet.blob.SuccessfulUploadServlet</servlet-class>
-    </servlet>
-    <servlet-mapping>
-        <servlet-name>SuccessfulUpload</servlet-name>
-        <url-pattern>/upload-success</url-pattern>
     </servlet-mapping>
 
     <!--Security Constraints-->
@@ -58,7 +50,7 @@
             <url-pattern>/mapreduce/*</url-pattern>
             <url-pattern>/uploader</url-pattern>
             <url-pattern>/upload</url-pattern>
-            <url-pattern>/upload-success</url-pattern>
+            <url-pattern>/uploadsuccess</url-pattern>
         </web-resource-collection>
         <auth-constraint>
             <role-name>admin</role-name>

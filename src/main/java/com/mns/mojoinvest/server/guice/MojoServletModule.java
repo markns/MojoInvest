@@ -27,8 +27,10 @@ import com.googlecode.objectify.ObjectifyFactory;
 import com.mns.mojoinvest.server.engine.model.dao.*;
 import com.mns.mojoinvest.server.mustache.MustacheViewProcessor;
 import com.mns.mojoinvest.server.servlet.*;
+import com.mns.mojoinvest.server.servlet.blob.SuccessfulUploadServlet;
 import com.sun.jersey.api.json.JSONConfiguration;
 import com.sun.jersey.guice.spi.container.servlet.GuiceContainer;
+import com.sun.jersey.spi.container.servlet.ServletContainer;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -54,6 +56,14 @@ public class MojoServletModule extends ServletModule {
         filter("/dispatch/*").through(AppstatsFilter.class, appstatsInit);
         bind(AppstatsFilter.class).in(Singleton.class);
 
+        Map<String, String> params = new HashMap<String, String>();
+        params.put(JSONConfiguration.FEATURE_POJO_MAPPING, "true");
+        params.put("com.sun.jersey.config.property.packages", "com.mns.mojoinvest.server.resource");
+        params.put(ServletContainer.PROPERTY_WEB_PAGE_CONTENT_REGEX,
+                "/(_ah|jsp|css|images|js|lib|mustache|pipeline|upload.*|tools)/.*");
+        params.put(ServletContainer.FEATURE_FILTER_FORWARD_ON_404, "true");
+        filter("/*").through(GuiceContainer.class, params);
+
         //Servlets
         serve("/remote_api").with(RemoteApiServlet.class);
         bind(RemoteApiServlet.class).in(Singleton.class);
@@ -63,6 +73,9 @@ public class MojoServletModule extends ServletModule {
 
         serve("/mapreduce/*").with(MapReduceServlet.class);
         bind(MapReduceServlet.class).in(Singleton.class);
+
+        serve("/upload-success").with(SuccessfulUploadServlet.class);
+        bind(SuccessfulUploadServlet.class).in(Singleton.class);
 
         serve("/pipeline").with(PipelineServlet.class);
         serve("/quoteviewer").with(QuoteViewerServlet.class);
@@ -76,16 +89,10 @@ public class MojoServletModule extends ServletModule {
         serve("/appstats/*").with(AppstatsServlet.class);
         bind(AppstatsServlet.class).in(Singleton.class);
 
-        Map<String, String> params = new HashMap<String, String>();
-        params.put(JSONConfiguration.FEATURE_POJO_MAPPING, "true");
-        params.put("com.sun.jersey.config.property.packages", "com.mns.mojoinvest.server.resource");
-//
-//        TODO request scoped if live?
         bind(MustacheViewProcessor.class)
 //                .toInstance(new MustacheViewProcessor("mustache", false));
                 .toInstance(new MustacheViewProcessor("mustache", true));
 
-        serve("/*").with(GuiceContainer.class, params);
 
     }
 

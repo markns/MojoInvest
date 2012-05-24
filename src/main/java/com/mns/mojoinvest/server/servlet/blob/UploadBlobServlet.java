@@ -10,7 +10,6 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.Map;
 
-@SuppressWarnings("serial")
 public class UploadBlobServlet extends HttpServlet {
 
     @Override
@@ -20,8 +19,6 @@ public class UploadBlobServlet extends HttpServlet {
         BlobstoreService blobstoreService = BlobstoreServiceFactory.getBlobstoreService();
         Map<String, BlobKey> blobs = blobstoreService.getUploadedBlobs(req);
         BlobKey blobKey = blobs.get("data");
-
-        System.out.println();
 
         if (blobKey == null) {
             resp.sendRedirect("/");
