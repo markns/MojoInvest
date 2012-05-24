@@ -17,13 +17,15 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Logger;
 
+//TODO: Why is there a problem with sharing the mustacheFactory
+//TODO: How to set base path for mustacheFactory?
+
 @Singleton
 @Provider
 public class MustacheViewProcessor implements ViewProcessor<Mustache> {
 
     private final Logger log = Logger.getLogger(this.getClass().toString());
 
-    private MustacheFactory mustacheFactory;
     private final Map<String, Mustache> compiledTemplates;
     private final String basePath;
     private final boolean live;
@@ -58,7 +60,7 @@ public class MustacheViewProcessor implements ViewProcessor<Mustache> {
             }
         } else if (dir.exists()) {
             String key = namespace + dir.getName();
-            mustacheFactory = new DefaultMustacheFactory();
+            MustacheFactory mustacheFactory = new DefaultMustacheFactory();
             Mustache m = mustacheFactory.compile(dir.getAbsolutePath());
             compiledTemplates.put(key, m);
         }
