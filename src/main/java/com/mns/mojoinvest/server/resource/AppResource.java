@@ -25,6 +25,8 @@ public class AppResource {
     public Viewable getMytestView() {
         Map<String, Object> map = new HashMap<String, Object>();
         map.put("funds", fundDao.list());
+
+
         return new Viewable("/app.mustache", map);
     }
 

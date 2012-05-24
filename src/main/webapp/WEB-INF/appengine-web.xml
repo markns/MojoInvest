@@ -14,11 +14,10 @@
         <property name="java.util.logging.config.file" value="WEB-INF/logging.properties"/>
     </system-properties>
 
-    <!--TODO: Are we?-->
     <threadsafe>true</threadsafe>
 
-    <!--TODO: Remove this-->
-    <precompilation-enabled>false</precompilation-enabled>
-
+    <resource-files>
+        <include path="/mustache/**.mustache"/>
+    </resource-files>
 
 </appengine-web-app>
