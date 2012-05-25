@@ -69,7 +69,6 @@ public class MustacheViewProcessor implements ViewProcessor<Mustache> {
 
     @Override
     public Mustache resolve(final String path) {
-        // accept both '/path/to/template' and '/path/to/template.mustache'
         final String defaultExtension = getDefaultExtension();
         final String filePath = path.endsWith(defaultExtension) ? path : path + defaultExtension;
         if (compiledTemplates.containsKey(filePath)) {

@@ -1,7 +1,7 @@
 {{<mustache/super}}
 {{$title}}App{{/title}}
-{{$body}}
 
+{{$content}}
 
 <form>
     <div class="column grid_3">
@@ -171,7 +171,13 @@
         </fieldset>
     </div>
 </form>
+{{/content}}
 
+{{$foot-scripts}}
+<script>
+    App.backtestParams = new BacktestParams({{backtestParams}});
+    App.funds = new Funds({{funds}}});
+</script>
+{{/foot-scripts}}
 
-{{/body}}
         {{/mustache/super}}

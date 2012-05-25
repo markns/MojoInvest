@@ -7,12 +7,6 @@
 
     <script type="text/javascript">
 
-        $.getJSON('/myserver/templates.json', function (templates) {
-            $.each(templates, function (template) {
-                ich.addTemplate(template.name, template.template);
-            });
-        });
-
         $.get('mustache/user.mustache', function (data) {
 //            $.each(templates, function (template) {
             ich.addTemplate("user", data);
