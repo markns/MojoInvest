@@ -1,6 +1,11 @@
 package com.mns.mojoinvest.server.engine.params;
 
 
+import com.mns.mojoinvest.server.CustomDateDeserializer;
+import com.mns.mojoinvest.server.CustomDateSerializer;
+import org.codehaus.jackson.map.annotate.JsonDeserialize;
+import org.codehaus.jackson.map.annotate.JsonSerialize;
+
 import java.util.Date;
 
 public class PortfolioParams {
@@ -9,29 +14,22 @@ public class PortfolioParams {
     private Double initialInvestment;
     private Double transactionCost;
 
-    public PortfolioParams(Double initialInvestment, Double transactionCost) {
-        this.initialInvestment = initialInvestment;
-        this.transactionCost = transactionCost;
-    }
-
     public PortfolioParams(Double initialInvestment, Double transactionCost, Date creationDate) {
         this.initialInvestment = initialInvestment;
         this.transactionCost = transactionCost;
         this.creationDate = creationDate;
     }
 
-    public PortfolioParams() {
-        //For serialization
-    }
-
     public Double getInitialInvestment() {
         return initialInvestment;
     }
 
+    @JsonDeserialize(using = CustomDateDeserializer.class)
     public void setCreationDate(Date creationDate) {
         this.creationDate = creationDate;
     }
 
+    @JsonSerialize(using = CustomDateSerializer.class)
     public Date getCreationDate() {
         return creationDate;
     }
