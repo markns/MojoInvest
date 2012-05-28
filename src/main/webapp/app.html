@@ -105,10 +105,8 @@
                 dateFormat:"yy-mm-dd"
             });
 
-
             this.$("#fromDate").datepicker();
             this.$("#toDate").datepicker();
-            this.$("#dateContainer").datepicker();
             return this;
         }
 
@@ -157,7 +155,7 @@
             console.log("bootstrapping models");
 
             var model = new AppModel();
-            model.params = new Params({'fromDate':"2001-12-24", 'toDate':"2004-12-24"});
+            model.params = new Params({'fromDate':"2001-12-24", 'toDate':"2011-12-24"});
 
             return model;
         }
