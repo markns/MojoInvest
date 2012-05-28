@@ -1,5 +1,6 @@
 package com.mns.mojoinvest.server.params;
 
+import org.codehaus.jackson.map.annotate.JsonDeserialize;
 import org.codehaus.jackson.map.annotate.JsonSerialize;
 
 import java.util.Date;
@@ -31,7 +32,7 @@ public class BacktestParams {
         return fromDate;
     }
 
-
+    @JsonDeserialize(using = CustomDateDeserializer.class)
     public void setFromDate(Date fromDate) {
         this.fromDate = fromDate;
     }
@@ -41,6 +42,7 @@ public class BacktestParams {
         return toDate;
     }
 
+    @JsonDeserialize(using = CustomDateDeserializer.class)
     public void setToDate(Date toDate) {
         this.toDate = toDate;
     }
