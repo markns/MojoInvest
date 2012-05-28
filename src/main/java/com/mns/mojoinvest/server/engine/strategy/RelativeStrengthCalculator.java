@@ -4,7 +4,7 @@ import com.google.inject.Inject;
 import com.mns.mojoinvest.server.engine.model.CalculatedValue;
 import com.mns.mojoinvest.server.engine.model.Fund;
 import com.mns.mojoinvest.server.engine.model.dao.CalculatedValueDao;
-import com.mns.mojoinvest.server.params.StrategyParams;
+import com.mns.mojoinvest.server.engine.params.StrategyParams;
 import org.joda.time.LocalDate;
 
 import java.math.BigDecimal;

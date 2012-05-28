@@ -1,4 +1,4 @@
-package com.mns.mojoinvest.server.params;
+package com.mns.mojoinvest.server.engine.params;
 
 public class StrategyParams {
 

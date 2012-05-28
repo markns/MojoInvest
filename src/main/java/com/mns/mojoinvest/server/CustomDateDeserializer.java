@@ -1,4 +1,4 @@
-package com.mns.mojoinvest.server.params;
+package com.mns.mojoinvest.server;
 
 import org.codehaus.jackson.JsonParser;
 import org.codehaus.jackson.JsonProcessingException;

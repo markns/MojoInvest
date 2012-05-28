@@ -3,7 +3,7 @@ package com.mns.mojoinvest.server.resource;
 import com.google.inject.Inject;
 import com.mns.mojoinvest.server.engine.model.Fund;
 import com.mns.mojoinvest.server.engine.model.dao.FundDao;
-import com.mns.mojoinvest.server.params.BacktestParams;
+import com.mns.mojoinvest.server.engine.params.BacktestParams;
 import com.sun.jersey.api.view.Viewable;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.joda.time.LocalDate;
