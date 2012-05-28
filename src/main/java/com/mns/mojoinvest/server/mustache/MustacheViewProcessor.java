@@ -1,6 +1,5 @@
 package com.mns.mojoinvest.server.mustache;
 
-import com.github.mustachejava.DefaultMustacheFactory;
 import com.github.mustachejava.Mustache;
 import com.github.mustachejava.MustacheFactory;
 import com.google.inject.Inject;
@@ -60,7 +59,7 @@ public class MustacheViewProcessor implements ViewProcessor<Mustache> {
             }
         } else if (dir.exists()) {
             String key = namespace + dir.getName();
-            MustacheFactory mustacheFactory = new DefaultMustacheFactory();
+            MustacheFactory mustacheFactory = new NonEscapingMustacheFactory();
             Mustache m = mustacheFactory.compile(dir.getAbsolutePath());
             compiledTemplates.put(key, m);
         }
