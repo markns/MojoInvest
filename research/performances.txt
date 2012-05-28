@@ -1,0 +1,64 @@
+//Fidelity
+
+[INFO|main|2:44:39]: Params: Params: {portfolioSize=3, rebalanceFrequency=1, ma1=12, ma2=26, roc=26, castOff=17, stddev=26, equityCurveTrading=false, equityCurveWindow=52, relativeStrengthStyle='ROC', useSafeAsset=false, safeAsset='FSUTX'} 
+[INFO|main|2:44:39]: Number of trades: 123 
+[INFO|main|2:44:39]: MaxDD: 31.7129400% 
+[INFO|main|2:44:39]: Final portfolio value: 311047.60 
+[INFO|main|2:44:39]: CAGR: 22.408998405494927% 
+
+[INFO|main|2:47:33]: Params: Params: {portfolioSize=3, rebalanceFrequency=1, ma1=12, ma2=26, roc=26, castOff=17, stddev=26, equityCurveTrading=false, equityCurveWindow=52, relativeStrengthStyle='MA', useSafeAsset=false, safeAsset='FSUTX'} 
+[INFO|main|2:47:33]: Number of trades: 187 
+[INFO|main|2:47:33]: MaxDD: 57.1865900% 
+[INFO|main|2:47:33]: Final portfolio value: 146900.86 
+[INFO|main|2:47:33]: CAGR: 17.124699724906623% 
+
+[INFO|main|2:48:21]: Params: Params: {portfolioSize=3, rebalanceFrequency=1, ma1=12, ma2=26, roc=26, castOff=17, stddev=26, equityCurveTrading=false, equityCurveWindow=52, relativeStrengthStyle='ALPHA', useSafeAsset=false, safeAsset='FSUTX'} 
+[INFO|main|2:48:21]: Number of trades: 43 
+[INFO|main|2:48:21]: MaxDD: 48.4597000% 
+[INFO|main|2:48:21]: Final portfolio value: 113625.15 
+[INFO|main|2:48:21]: CAGR: 15.368363844210364% 
+
+//International
+
+[INFO|main|5:32:00]: BacktestParams: {fromDate=Mon Jan 01 00:00:00 GMT+07:00 1990, toDate=Thu Mar 01 00:00:00 GMT+07:00 2012} 
+[INFO|main|5:32:00]: StrategyParams: {portfolioSize=1, rebalanceFrequency=1, ma1=12, ma2=26, roc=26, castOff=8, stddev=26, equityCurveTrading=false, equityCurveWindow=52, relativeStrengthStyle='ROC', useSafeAsset=false, safeAsset='FSUTX'} 
+[INFO|main|5:32:00]: Number of trades: 71 
+[INFO|main|5:32:00]: MaxDD: 57.0129900% 
+[INFO|main|5:32:00]: Final portfolio value: 23384.85 
+[INFO|main|5:32:00]: CAGR: 5.826793943049657% 
+
+[INFO|main|5:21:42]: BacktestParams: {fromDate=Mon Jan 01 00:00:00 GMT+07:00 1990, toDate=Thu Mar 01 00:00:00 GMT+07:00 2012} 
+[INFO|main|5:21:42]: StrategyParams: {portfolioSize=1, rebalanceFrequency=1, ma1=12, ma2=26, roc=26, castOff=8, stddev=26, equityCurveTrading=false, equityCurveWindow=52, relativeStrengthStyle='MA', useSafeAsset=false, safeAsset='FSUTX'} 
+[INFO|main|5:21:42]: Number of trades: 65 
+[INFO|main|5:21:42]: MaxDD: 53.7777300% 
+[INFO|main|5:21:42]: Final portfolio value: 36556.45 
+[INFO|main|5:21:42]: CAGR: 9.026214778652285% 
+
+[INFO|main|5:32:43]: BacktestParams: {fromDate=Mon Jan 01 00:00:00 GMT+07:00 1990, toDate=Thu Mar 01 00:00:00 GMT+07:00 2012} 
+[INFO|main|5:32:43]: StrategyParams: {portfolioSize=1, rebalanceFrequency=1, ma1=12, ma2=26, roc=26, castOff=8, stddev=26, equityCurveTrading=false, equityCurveWindow=52, relativeStrengthStyle='ALPHA', useSafeAsset=false, safeAsset='FSUTX'} 
+[INFO|main|5:32:43]: Number of trades: 21 
+[INFO|main|5:32:43]: MaxDD: 43.6348300% 
+[INFO|main|5:32:43]: Final portfolio value: 23923.87 
+[INFO|main|5:32:43]: CAGR: 6.940172308259718% 
+
+//Sector
+
+[INFO|main|2:56:39]: Params: Params: {portfolioSize=1, rebalanceFrequency=1, ma1=12, ma2=26, roc=26, castOff=8, stddev=26, equityCurveTrading=false, equityCurveWindow=52, relativeStrengthStyle='ROC', useSafeAsset=false, safeAsset='FSUTX'} 
+[INFO|main|2:56:39]: Number of trades: 27 
+[INFO|main|2:56:39]: MaxDD: 45.5022300% 
+[INFO|main|2:56:39]: Final portfolio value: 14991.86 
+[INFO|main|2:56:39]: CAGR: 1.8575985113914895% 
+
+[INFO|main|2:57:24]: Params: Params: {portfolioSize=1, rebalanceFrequency=1, ma1=12, ma2=26, roc=26, castOff=8, stddev=26, equityCurveTrading=false, equityCurveWindow=52, relativeStrengthStyle='MA', useSafeAsset=false, safeAsset='FSUTX'} 
+[INFO|main|2:57:24]: Number of trades: 37 
+[INFO|main|2:57:24]: MaxDD: 42.7767800% 
+[INFO|main|2:57:24]: Final portfolio value: 23153.50 
+[INFO|main|2:57:24]: CAGR: 3.889937287952594%
+
+[INFO|main|2:56:06]: Params: Params: {portfolioSize=1, rebalanceFrequency=1, ma1=12, ma2=26, roc=26, castOff=8, stddev=26, equityCurveTrading=false, equityCurveWindow=52, relativeStrengthStyle='ALPHA', useSafeAsset=false, safeAsset='FSUTX'} 
+[INFO|main|2:56:06]: Number of trades: 9 
+[INFO|main|2:56:06]: MaxDD: 33.964300% 
+[INFO|main|2:56:06]: Final portfolio value: 12473.45 
+[INFO|main|2:56:06]: CAGR: 1.0096873454293442% 
+
+//Asset Allocation

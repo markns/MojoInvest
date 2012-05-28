@@ -1,0 +1,7 @@
+Hi Michael,
+
+I thoroughly enjoyed reading your book 'Smarter Investing in Any Economy' recently. For some time I have been developing a momentum based ETF trading system using simple ROC, but your ideas on MA ratios, std deviation adjustments and equity curve trading were absorbed with great interest.
+
+My trading system is hand coded (I'm a software developer by profession) so it was quite easy for me to incorporate your techniques - however I have one q
+
+I'm using adjusted close prices downloaded from yahoo.com
