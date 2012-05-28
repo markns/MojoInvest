@@ -13,7 +13,6 @@ public class MojoGuiceServletContextListener extends GuiceServletContextListener
     protected Injector getInjector() {
         return Guice.createInjector(new MojoServletModule(),
                 new EngineModule(),
-                new MustacheModule(),
                 new TradingStrategyModule());
     }
 
