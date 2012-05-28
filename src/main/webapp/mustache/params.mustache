@@ -5,19 +5,20 @@
             <li>
                 <label for=initInvest>Initial Investment</label>
                 <input id=initInvest name=initInvest type=number min=1
-                       placeholder="ghgfd" required>
+                       required value="{{portfolioParams.initialInvestment}}">
             </li>
             <li>
                 <label for=transCost>Transaction Cost</label>
-                <input id=transCost name=transCost type=number min="0">
+                <input id=transCost name=transCost type=number min="0" value="{{portfolioParams.transactionCost}}">
             </li>
             <li>
                 <label for=portSize>Portfolio Size</label>
-                <input id=portSize name=portSize type=number min="1">
+                <input id=portSize name=portSize type=number min="1" value="{{strategyParams.portfolioSize}}">
             </li>
             <li>
                 <label for=holdingPeriod>Holding Period</label>
-                <input id=holdingPeriod name=holdingPeriod type=number min="1">
+                <input id=holdingPeriod name=holdingPeriod type=number min="1"
+                       value="{{strategyParams.rebalanceFrequency}}">
             </li>
         </ol>
     </fieldset>
@@ -76,9 +77,8 @@
         <ol>
             <li>
                 <label for="stdDevLabel">Adjust by Std Dev</label>
-                <input type="checkbox" id="stdDevLabel" name="stdDevLabel"
-                       onclick="goog.dom.getElement('stdDev').disabled =
-                                   !goog.dom.getElement('stdDev').disabled"/>
+                <input type="checkbox" id="stdDevLabel"
+                       onclick="console.log($('#stdDev')); $('#stdDev').disabled = !$('#stdDev').disabled;"/>
                 <select id="stdDev" name=ÓrocÓ disabled>
                     <option value=Ó4Ó>4</option>
                     <option value=Ó8Ó>8</option>
@@ -90,16 +90,15 @@
             </li>
             <li>
                 <label>Trade Equity Curve</label>
-                <input type="checkbox" id="tradeEquityLabel" name="tradeEquityLabel"
-                       onclick="goog.dom.getElement('tradeEquity').disabled =
-                                   !goog.dom.getElement('tradeEquity').disabled"/>
+                <input type="checkbox" id="tradeEquityLabel"
+                       onclick='$("#tradeEquity").disabled = false'/>
+                <!--onclick="$('#tradeEquity').disabled = !$('#tradeEquity').disabled;"/>-->
                 <input id="tradeEquity" name=portSize type=number min="4" disabled value="52">
             </li>
             <li>
                 <label>Use Safe Asset</label>
-                <input type="checkbox" id="safeAssetCheck" name="safeAssetCheck"
-                       onclick="goog.dom.getElement('safeAsset').disabled =
-                                   !goog.dom.getElement('safeAsset').disabled"/>
+                <input type="checkbox" id="safeAssetCheck"
+                       onclick="$('#safeAsset').disabled = !$('#safeAsset').disabled;"/>
                 <input id=safeAsset name=safeAsset type=text disabled>
             </li>
         </ol>
@@ -112,13 +111,13 @@
             <li>
                 <div>
                     <label for="fromDate">From Date</label>
-                    <input type="text" id="fromDate" value="{{fromDate}}"/>
+                    <input type="text" id="fromDate" value="{{backtestParams.fromDate}}"/>
                 </div>
             </li>
             <li>
                 <div>
                     <label for="toDate">To Date</label>
-                    <input type="text" id="toDate" value="{{toDate}}"/>
+                    <input type="text" id="toDate" value="{{backtestParams.toDate}}"/>
                 </div>
             </li>
         </ol>
