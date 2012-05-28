@@ -5,12 +5,12 @@ import com.google.common.collect.Lists;
 import com.google.inject.Guice;
 import com.google.inject.Inject;
 import com.google.inject.Injector;
-import com.mns.mojoinvest.server.engine.ResultBuilderException;
-import com.mns.mojoinvest.server.engine.Strategy2ResultBuilder;
 import com.mns.mojoinvest.server.engine.model.Fund;
 import com.mns.mojoinvest.server.engine.model.dao.*;
 import com.mns.mojoinvest.server.engine.portfolio.Portfolio;
 import com.mns.mojoinvest.server.engine.portfolio.PortfolioFactory;
+import com.mns.mojoinvest.server.engine.result.ResultBuilderException;
+import com.mns.mojoinvest.server.engine.result.StrategyResultBuilder;
 import com.mns.mojoinvest.server.engine.strategy.MomentumStrategy;
 import com.mns.mojoinvest.server.engine.strategy.StrategyException;
 import com.mns.mojoinvest.server.guice.EngineModule;
@@ -50,12 +50,12 @@ public class RunStrategyApp {
     private final MomentumStrategy strategy;
     private final PortfolioFactory portfolioFactory;
 
-    private final Strategy2ResultBuilder resultBuilder;
+    private final StrategyResultBuilder resultBuilder;
 
     @Inject
     public RunStrategyApp(QuoteDao quoteDao, FundDao fundDao, CalculatedValueDao calculatedValueDao,
                           PortfolioFactory portfolioFactory, MomentumStrategy strategy,
-                          Strategy2ResultBuilder resultBuilder) {
+                          StrategyResultBuilder resultBuilder) {
         this.quoteDao = quoteDao;
         this.fundDao = fundDao;
         this.calculatedValueDao = calculatedValueDao;
