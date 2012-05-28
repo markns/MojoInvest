@@ -1,5 +1,7 @@
 package com.mns.mojoinvest.server.params;
 
+import org.codehaus.jackson.map.annotate.JsonSerialize;
+
 import java.util.Date;
 
 public class BacktestParams {
@@ -8,6 +10,8 @@ public class BacktestParams {
 //    ERROR: Line 10: No source code is available for type org.joda.time.LocalDate; did you forget to inherit a required module?.
 
     //probably best to only pass java.util.Date to and from client - can adapt on way in and out?
+    //TODO: Now we're no longer using gwt it should be possible to serialise directly to jodatime
+
     private Date fromDate;
 
     private Date toDate;
@@ -22,6 +26,7 @@ public class BacktestParams {
         //For serialization
     }
 
+    @JsonSerialize(using = CustomDateSerializer.class)
     public Date getFromDate() {
         return fromDate;
     }
@@ -31,6 +36,7 @@ public class BacktestParams {
         this.fromDate = fromDate;
     }
 
+    @JsonSerialize(using = CustomDateSerializer.class)
     public Date getToDate() {
         return toDate;
     }

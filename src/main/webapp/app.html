@@ -1,0 +1,187 @@
+<html>
+<head>
+    <title>App</title>
+    <link href="css/mojo.css" rel="stylesheet" type="text/css"/>
+    <link href="css/smoothness/jquery-ui-1.8.20.custom.css" rel="stylesheet" type="text/css"/>
+</head>
+<body>
+<div id="back">
+
+    <div id="head">
+        <div class="main">
+            <a class="left" href=""><img src="../images/mojo_logo.png" alt="Mojoinvest"/></a>
+            <ul id="menu">
+                <li><a href="">Home</a></li>
+                <li><a href="app">App</a></li>
+                <li><a href="">Tools</a></li>
+                <li><a href="">Help</a></li>
+            </ul>
+        </div>
+        <div class="clear"></div>
+    </div>
+
+    <div id="content" class="main">
+        <div id="params"></div>
+    </div>
+
+    <div id="footer">
+        <div class="main">
+            <ul class="left">
+                <li><a href="About/index.html">About</a></li>
+                <li><a href="Help/index.html">Help</a></li>
+                <li><a href="Terms/index.html">Terms</a></li>
+            </ul>
+                <span class="right">
+                    &copy; 2012 Mojoinvest Ltd.
+                </span>
+
+            <div class="clear"></div>
+        </div>
+    </div>
+</div>
+
+<script src="lib/jquery-1.7.2.min.js"></script>
+<script src="lib/jquery-ui-1.8.20.custom.min.js"></script>
+<script src="lib/underscore.js"></script>
+<script src="lib/backbone.js"></script>
+<script src="lib/ICanHaz.js"></script>
+
+
+<script>
+    tpl = {
+
+        // Recursively pre-load all the templates for the app.
+        // This implementation should be changed in a production environment. All the template files should be
+        // concatenated in a single file.
+        loadTemplates:function (names, callback) {
+
+            var loadTemplate = function (index) {
+                var name = names[index];
+                console.log('Loading template: ' + name);
+                $.get('mustache/' + name + '.mustache', function (data) {
+                    ich.addTemplate(name, data);
+                    index++;
+                    if (index < names.length) {
+                        loadTemplate(index);
+                    } else {
+                        callback();
+                    }
+                }, "html");
+            };
+
+            loadTemplate(0);
+        },
+
+        // Get template by name from hash of preloaded templates
+        get:function (name) {
+            return this.templates[name];
+        }
+
+    };
+
+    window.Params = Backbone.Model.extend({
+
+    });
+
+
+    var AppModel = Backbone.Model.extend({
+        initialize:function () {
+        }
+    });
+
+
+    window.ParamsView = Backbone.View.extend({
+
+        tagName:"div",
+
+        initialize:function () {
+            this.model.bind("change", this.render, this);
+            this.model.bind("destroy", this.close, this);
+        },
+
+        render:function (eventName) {
+            $(this.el).html(ich.params(this.model.toJSON()));
+            $.datepicker.setDefaults({
+                dateFormat:"yy-mm-dd"
+            });
+
+
+            this.$("#fromDate").datepicker();
+            this.$("#toDate").datepicker();
+            this.$("#dateContainer").datepicker();
+            return this;
+        }
+
+    });
+
+
+    Backbone.View.prototype.close = function () {
+        console.log('Closing view ' + this);
+        if (this.beforeClose) {
+            this.beforeClose();
+        }
+        this.remove();
+        this.unbind();
+    };
+
+
+    var AppRouter = Backbone.Router.extend({
+
+        initialize:function (model) {
+            console.log("initializing AppRouter");
+            console.log(model);
+            this.model = model;
+            this.view = new ParamsView({model:model.params});
+            $('#params').html(this.view.render().el);
+        },
+
+        routes:{
+//            "":"params",
+            "results":"results"
+        },
+
+        params:function () {
+        },
+
+        results:function () {
+        }
+
+    });
+
+
+</script>
+
+<script>
+    bootstrap = {
+        load:function () {
+            console.log("bootstrapping models");
+
+            var model = new AppModel();
+            model.params = new Params({'fromDate':"2001-12-24", 'toDate':"2004-12-24"});
+
+            return model;
+        }
+    }
+</script>
+
+<script>
+
+    //Load templates is async because of http requests
+    tpl.loadTemplates(['params'], function () {
+
+        window.app = new AppRouter(bootstrap.load());
+        Backbone.history.start();
+    });
+
+</script>
+
+
+<!--<script src="js/utils.js"></script>-->
+<!--<script src="js/models/params.js"></script>-->
+<!--<script src="js/models/app.js"></script>-->
+<!--<script src="js/views/paramsview.js"></script>-->
+<!--<script src="js/main.js"></script>-->
+
+
+</body>
+</html>
