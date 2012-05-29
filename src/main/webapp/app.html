@@ -116,8 +116,6 @@
 
     window.ParamsView = Backbone.View.extend({
 
-        tagName:"div",
-
         initialize:function () {
             this.model.bind("change", this.render, this);
             this.model.bind("destroy", this.close, this);
@@ -127,6 +125,10 @@
             $(this.el).html(ich.params(this.model.toJSON()));
             this.$("#fromDate").datepicker();
             this.$("#toDate").datepicker();
+            this.$("#ma1").val(this.model.get("strategyParams").ma1);
+            this.$("#ma2").val(this.model.get("strategyParams").ma2);
+            this.$("#roc").val(this.model.get("strategyParams").roc);
+            this.$("#alpha").val(this.model.get("strategyParams").alpha);
             return this;
         },
 
