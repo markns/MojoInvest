@@ -1,6 +1,8 @@
+<!doctype html>
 <html>
 <head>
     <title>App</title>
+    <meta charset="utf-8">
     <link href="css/mojo.css" rel="stylesheet" type="text/css"/>
     <link href="css/smoothness/jquery-ui-1.8.20.custom.css" rel="stylesheet" type="text/css"/>
 </head>
@@ -49,6 +51,7 @@
 
 <script>
 
+    //JQuery set up stuff - where should this live?
     (function ($) {
         $.fn.toggleDisabled = function () {
             return this.each(function () {
@@ -56,6 +59,10 @@
             });
         };
     })(jQuery);
+    $.datepicker.setDefaults({
+        dateFormat:"yy-mm-dd"
+    });
+
 
     tpl = {
 
@@ -118,13 +125,39 @@
 
         render:function (eventName) {
             $(this.el).html(ich.params(this.model.toJSON()));
-            $.datepicker.setDefaults({
-                dateFormat:"yy-mm-dd"
-            });
-
             this.$("#fromDate").datepicker();
             this.$("#toDate").datepicker();
             return this;
+        },
+
+        events:{
+            "click input[name='rsRadio']:radio":"rsRadioClicked"
+        },
+
+        rsRadioClicked:function (e) {
+            // find out which radio button was clicked and
+            // disable/enable appropriate input elements
+            switch (e.currentTarget.id) {
+                case "maRatioRadio" :
+                    this.$('#ma1').attr('disabled', false);
+                    this.$('#ma2').attr('disabled', false);
+                    this.$('#roc').attr('disabled', true);
+                    this.$('#alpha').attr('disabled', true);
+                    break;
+                case "rocRadio" :
+                    this.$('#ma1').attr('disabled', true);
+                    this.$('#ma2').attr('disabled', true);
+                    this.$('#roc').attr('disabled', false);
+                    this.$('#alpha').attr('disabled', true);
+                    break;
+                case "alphaRadio" :
+                    this.$('#ma1').attr('disabled', true);
+                    this.$('#ma2').attr('disabled', true);
+                    this.$('#roc').attr('disabled', true);
+                    this.$('#alpha').attr('disabled', false);
+                    break;
+            }
+
         }
 
     });
