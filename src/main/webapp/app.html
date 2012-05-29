@@ -48,6 +48,15 @@
 <script src="lib/ICanHaz.js"></script>
 
 <script>
+
+    (function ($) {
+        $.fn.toggleDisabled = function () {
+            return this.each(function () {
+                this.disabled = !this.disabled;
+            });
+        };
+    })(jQuery);
+
     tpl = {
 
         // Recursively pre-load all the templates for the app.
@@ -201,7 +210,6 @@
     });
 
 </script>
-
 
 <!--<script src="js/utils.js"></script>-->
 <!--<script src="js/models/params.js"></script>-->

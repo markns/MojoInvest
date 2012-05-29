@@ -78,7 +78,7 @@
             <li>
                 <label for="stdDevLabel">Adjust by Std Dev</label>
                 <input type="checkbox" id="stdDevLabel"
-                       onclick="console.log($('#stdDev')); $('#stdDev').disabled = !$('#stdDev').disabled;"/>
+                       onclick="$('#stdDev').toggleDisabled()"/>
                 <select id="stdDev" name=ÓrocÓ disabled>
                     <option value=Ó4Ó>4</option>
                     <option value=Ó8Ó>8</option>
@@ -91,14 +91,13 @@
             <li>
                 <label>Trade Equity Curve</label>
                 <input type="checkbox" id="tradeEquityLabel"
-                       onclick='$("#tradeEquity").disabled = false'/>
-                <!--onclick="$('#tradeEquity').disabled = !$('#tradeEquity').disabled;"/>-->
+                       onclick="$('#tradeEquity').toggleDisabled()"/>
                 <input id="tradeEquity" name=portSize type=number min="4" disabled value="52">
             </li>
             <li>
                 <label>Use Safe Asset</label>
                 <input type="checkbox" id="safeAssetCheck"
-                       onclick="$('#safeAsset').disabled = !$('#safeAsset').disabled;"/>
+                       onclick="$('#safeAsset').toggleDisabled()"/>
                 <input id=safeAsset name=safeAsset type=text disabled>
             </li>
         </ol>
