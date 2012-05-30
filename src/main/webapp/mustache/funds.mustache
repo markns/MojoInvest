@@ -1,6 +1,6 @@
 <div class="column grid_12">
     <fieldset>
-        <legend>Universe</legend>
+        <legend>Funds</legend>
         <!-- Table markup-->
         <table id="universe-table" summary="Fund Universe" class="sortable">
             <thead>
@@ -19,7 +19,7 @@
             <tbody>
             {{#funds}}
             <tr>
-                <td class="center"><input type="checkbox" name="query_myTextEditBox"></td>
+                <td class="center"><input type="checkbox" value="{{symbol}}" name="includeFundCheck"></td>
                 <td>{{symbol}}</td>
                 <td>{{name}}</td>
                 <td>{{category}}</td>

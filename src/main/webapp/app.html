@@ -24,7 +24,7 @@
 
     <div id="content" class="main">
         <div id="params"></div>
-        <div id="universe"></div>
+        <div id="funds"></div>
     </div>
 
     <div id="footer">
@@ -47,6 +47,7 @@
 <script src="lib/jquery-ui-1.8.20.custom.min.js"></script>
 <script src="lib/underscore.js"></script>
 <script src="lib/backbone.js"></script>
+<script src="lib/deep-model.js"></script>
 <script src="lib/ICanHaz.js"></script>
 
 <script>
@@ -107,12 +108,10 @@
         model:Fund
     });
 
-
     var AppModel = Backbone.Model.extend({
         initialize:function () {
         }
     });
-
 
     window.ParamsView = Backbone.View.extend({
 
@@ -164,6 +163,45 @@
 
     });
 
+    window.FundsView = Backbone.View.extend({
+        initialize:function () {
+//            this.model.bind("change", this.render, this);
+//            this.model.bind("destroy", this.close, this);
+        },
+
+        render:function (eventName) {
+            //Todo: figure out why I have to wrap the funds in another object,
+            // even though when passing model they should be referenceable as #funds
+            $(this.el).html(ich.funds({funds:this.model.funds.toJSON()}));
+
+            var universe = this.model.params.get('universe');
+            this.$('input[name="includeFundCheck"]:checkbox').each(function (index) {
+                if ($.inArray($(this).val(), universe) != -1) {
+                    $(this).attr('checked', true);
+                }
+            });
+
+            return this;
+        },
+
+        events:{
+            "click input[name='includeFundCheck']:checkbox":"includeFundClicked"
+        },
+
+        includeFundClicked:function (e) {
+            var fund = e.currentTarget.value;
+            var universe = this.model.params.get('universe');
+            console.log(fund, universe);
+            var index = $.inArray(fund, universe);
+            if (index == -1) {
+                universe.push(fund);
+            } else {
+                universe.splice(index, 1);
+            }
+            console.log(universe);
+        }
+    });
+
 
     Backbone.View.prototype.close = function () {
         console.log('Closing view ' + this);
@@ -174,15 +212,16 @@
         this.unbind();
     };
 
-
     var AppRouter = Backbone.Router.extend({
 
         initialize:function (model) {
             console.log("initializing AppRouter");
             console.log(model);
             this.model = model;
-            this.view = new ParamsView({model:model.params});
-            $('#params').html(this.view.render().el);
+            this.paramsView = new ParamsView({model:model.params});
+            this.fundsView = new FundsView({model:model});
+            $('#params').html(this.paramsView.render().el);
+            $('#funds').html(this.fundsView.render().el);
         },
 
         routes:{
@@ -208,7 +247,7 @@
 
             var model = new AppModel();
 
-            model.params = new Params({"universe":["IUSA", "IEEM", "IWRD", "EUE", "ISF", "IBCX", "INAA", "IJPN", "IFFF", "IWDP", "SEMB", "IMEU", "BRIC", "FXC", "IBZL", "IKOR", "IEUX", "MIDD", "EUN", "LTAM", "ITWN", "IEER", "IPXJ", "IEMS", "ISP6", "SSAM", "SAUS", "SRSA", "RUSS", "NFTY"],
+            model.params = new Params({"universe":["EIRL"],
                 "backtestParams":{"fromDate":"1990-01-01", "toDate":"2012-03-01"},
                 "strategyParams":{"portfolioSize":1, "rebalanceFrequency":1, "ma1":12, "ma2":26, "roc":26, "castOff":8, "stdDev":26, "equityCurveWindow":52, "relativeStrengthStyle":"MA", "safeAsset":"IGLT", "alpha":100},
                 "portfolioParams":{"transactionCost":10.0, "creationDate":"1990-01-01", "initialInvestment":10000.0}});
@@ -238,7 +277,7 @@
 <script>
 
     //Load templates is async because of http requests
-    tpl.loadTemplates(['params'], function () {
+    tpl.loadTemplates(['params', 'funds'], function () {
 
         window.app = new AppRouter(bootstrap.load());
         Backbone.history.start();
