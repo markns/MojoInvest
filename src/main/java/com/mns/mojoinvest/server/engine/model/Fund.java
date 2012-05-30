@@ -1,6 +1,8 @@
 package com.mns.mojoinvest.server.engine.model;
 
 import com.googlecode.objectify.annotation.Cached;
+import com.mns.mojoinvest.server.serialization.CustomLocalDateSerializer;
+import org.codehaus.jackson.map.annotate.JsonSerialize;
 import org.joda.time.LocalDate;
 
 import javax.persistence.Id;
@@ -102,6 +104,7 @@ public class Fund implements Serializable, Comparable<Fund> {
         this.provider = provider;
     }
 
+    @JsonSerialize(using = CustomLocalDateSerializer.class)
     public LocalDate getInceptionDate() {
         return inceptionDate;
     }

@@ -1,8 +1,8 @@
 package com.mns.mojoinvest.server.engine.params;
 
 
-import com.mns.mojoinvest.server.CustomDateDeserializer;
-import com.mns.mojoinvest.server.CustomDateSerializer;
+import com.mns.mojoinvest.server.serialization.CustomDateDeserializer;
+import com.mns.mojoinvest.server.serialization.CustomDateSerializer;
 import org.codehaus.jackson.map.annotate.JsonDeserialize;
 import org.codehaus.jackson.map.annotate.JsonSerialize;
 
