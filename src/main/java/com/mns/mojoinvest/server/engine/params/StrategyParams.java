@@ -61,7 +61,7 @@ public class StrategyParams {
         return castOff;
     }
 
-    public boolean riskAdjusted() {
+    public boolean isRiskAdjusted() {
         return riskAdjust;
     }
 
@@ -69,7 +69,7 @@ public class StrategyParams {
         return stddev;
     }
 
-    public boolean tradeEquityCurve() {
+    public boolean isTradeEquityCurve() {
         return equityCurveTrading;
     }
 
@@ -81,7 +81,7 @@ public class StrategyParams {
         return relativeStrengthStyle;
     }
 
-    public boolean useSafeAsset() {
+    public boolean isUseSafeAsset() {
         return useSafeAsset;
     }
 
@@ -102,7 +102,7 @@ public class StrategyParams {
                 ", equityCurveTrading=" + equityCurveTrading +
                 ", equityCurveWindow=" + equityCurveWindow +
                 ", relativeStrengthStyle='" + relativeStrengthStyle + '\'' +
-                ", useSafeAsset=" + useSafeAsset +
+                ", isUseSafeAsset=" + useSafeAsset +
                 ", safeAsset='" + safeAsset + '\'' +
                 '}';
     }

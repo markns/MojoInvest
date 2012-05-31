@@ -46,7 +46,7 @@ public class MomentumStrategy {
         assert rebalanceDates.size() == relativeStrengthsMap.size() : "number of rebalance dates didn't match " +
                 "number of relative strength dates received";
 
-        if (strategyParams.riskAdjusted()) {
+        if (strategyParams.isRiskAdjusted()) {
             relativeStrengthsMap = relativeStrengthCalculator.adjustRelativeStrengths(relativeStrengthsMap, universe,
                     strategyParams, rebalanceDates);
         }
@@ -68,7 +68,7 @@ public class MomentumStrategy {
 
             List<String> selection = getSelection(date, strategyParams, strengths);
 
-            if (strategyParams.tradeEquityCurve()) {
+            if (strategyParams.isTradeEquityCurve()) {
                 //Shadow portfolio and equity curve calculation stuff
                 shadowPortfolioEquityCurve.addValue(shadowPortfolio.marketValue(date).doubleValue());
                 BigDecimal equityCurveMA = null;
@@ -86,7 +86,7 @@ public class MomentumStrategy {
                         log.fine("Crossed below equity curve");
                         belowEquityCurve = true;
                         sellEverything(portfolio, date);
-                        if (strategyParams.useSafeAsset()) {
+                        if (strategyParams.isUseSafeAsset()) {
                             buySafeAsset(portfolio, strategyParams, date);
                         }
                     }
@@ -108,7 +108,7 @@ public class MomentumStrategy {
     }
 
     private void sellSafeAsset(Portfolio portfolio, StrategyParams strategyParams, LocalDate date) throws StrategyException {
-        if (strategyParams.useSafeAsset() &&
+        if (strategyParams.isUseSafeAsset() &&
                 portfolio.contains(strategyParams.getSafeAsset(), date)) {
             try {
                 executor.sellAll(portfolio, strategyParams.getSafeAsset(), date);
