@@ -227,6 +227,7 @@ window.FundsView = Backbone.View.extend({
         }
         //Trigger a change event on the universe view.
         // Not automatic because params.universe is not a collection
+        //Not sure why model.change is not working- http://stackoverflow.com/questions/8280790/backbone-js-model-not-firing-events
         this.model.params.trigger('change:universe');
     }
 });
