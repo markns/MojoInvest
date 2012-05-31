@@ -23,12 +23,9 @@
     </div>
 
     <div id="content" class="main">
+        <div id="paramsJson"></div>
         <div id="params"></div>
-        <div id="universe">
-
-            <label id=""></label>
-
-        </div>
+        <div id="universe"></div>
         <div id="funds"></div>
     </div>
 
@@ -176,8 +173,24 @@ window.ParamsView = Backbone.View.extend({
     },
 
     buttClicked:function (e) {
-//        this.model.get("strategyParams").set("portfolioSize", 2);
         console.log("Params", this.model.toJSON({}));
+    }
+
+});
+
+window.ParamsJsonView = Backbone.View.extend({
+
+    initialize:function () {
+        this.model.bind("change:universe", this.render, this);
+        this.model.get("portfolioParams").bind("change", this.render, this);
+        this.model.get("strategyParams").bind("change", this.render, this);
+        this.model.get("backtestParams").bind("change", this.render, this);
+        this.model.bind("destroy", this.close, this);
+    },
+
+    render:function () {
+        $(this.el).html(ich.paramsJson({params:JSON.stringify(this.model)}));
+        return this;
     }
 
 });
@@ -229,7 +242,8 @@ window.FundsView = Backbone.View.extend({
         }
         //Trigger a change event on the universe view.
         // Not automatic because params.universe is not a collection
-        //Not sure why model.change is not working- http://stackoverflow.com/questions/8280790/backbone-js-model-not-firing-events
+        //Not sure why model.change() is not working-
+        // http://stackoverflow.com/questions/8280790/backbone-js-model-not-firing-events
         this.model.params.trigger('change:universe');
     }
 });
@@ -249,9 +263,11 @@ var AppRouter = Backbone.Router.extend({
         console.log("initializing AppRouter");
 //            this.model = model;
         this.paramsView = new ParamsView({model:model.params});
+        this.paramsJsonView = new ParamsJsonView({model:model.params});
         this.universeView = new UniverseView({model:model.params});
         this.fundsView = new FundsView({model:model});
         $('#params').html(this.paramsView.render().el);
+        $('#paramsJson').html(this.paramsJsonView.render().el);
         $('#universe').html(this.universeView.render().el);
         $('#funds').html(this.fundsView.render().el);
     },
@@ -310,7 +326,7 @@ var AppRouter = Backbone.Router.extend({
 <script>
 
     //Load templates is async because of http requests
-    tpl.loadTemplates(['params', 'funds', 'universe'], function () {
+    tpl.loadTemplates(['params', 'funds', 'universe', 'paramsJson'], function () {
 
         window.app = new AppRouter(bootstrap.load());
         Backbone.history.start();
