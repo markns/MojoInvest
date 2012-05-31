@@ -24,6 +24,11 @@
 
     <div id="content" class="main">
         <div id="params"></div>
+        <div id="universe">
+
+            <label id=""></label>
+
+        </div>
         <div id="funds"></div>
     </div>
 
@@ -47,195 +52,218 @@
 <script src="lib/jquery-ui-1.8.20.custom.min.js"></script>
 <script src="lib/underscore.js"></script>
 <script src="lib/backbone.js"></script>
-<script src="lib/deep-model.js"></script>
+<script src="lib/backbone-relational.js"></script>
 <script src="lib/ICanHaz.js"></script>
 
 <script>
 
-    //JQuery set up stuff - where should this live?
-    (function ($) {
-        $.fn.toggleDisabled = function () {
-            return this.each(function () {
-                this.disabled = !this.disabled;
-            });
-        };
-    })(jQuery);
-    $.datepicker.setDefaults({
-        dateFormat:"yy-mm-dd"
-    });
-
-
-    tpl = {
-
-        // Recursively pre-load all the templates for the app.
-        // This implementation should be changed in a production environment. All the template files should be
-        // concatenated in a single file.
-        loadTemplates:function (names, callback) {
-
-            var loadTemplate = function (index) {
-                var name = names[index];
-                console.log('Loading template: ' + name);
-                $.get('mustache/' + name + '.mustache', function (data) {
-                    ich.addTemplate(name, data);
-                    index++;
-                    if (index < names.length) {
-                        loadTemplate(index);
-                    } else {
-                        callback();
-                    }
-                }, "html");
-            };
-
-            loadTemplate(0);
-        },
-
-        // Get template by name from hash of preloaded templates
-        get:function (name) {
-            return this.templates[name];
-        }
-
+//JQuery set up stuff - where should this live?
+(function ($) {
+    $.fn.toggleDisabled = function () {
+        return this.each(function () {
+            this.disabled = !this.disabled;
+        });
     };
+})(jQuery);
+$.datepicker.setDefaults({
+    dateFormat:"yy-mm-dd"
+});
 
-    window.Params = Backbone.Model.extend({
 
-    });
+tpl = {
 
-    window.Fund = Backbone.Model.extend({
+    // Recursively pre-load all the templates for the app.
+    // This implementation should be changed in a production environment. All the template files should be
+    // concatenated in a single file.
+    loadTemplates:function (names, callback) {
 
-    });
-
-    var Funds = Backbone.Collection.extend({
-        model:Fund
-    });
-
-    var AppModel = Backbone.Model.extend({
-        initialize:function () {
-        }
-    });
-
-    window.ParamsView = Backbone.View.extend({
-
-        initialize:function () {
-            this.model.bind("change", this.render, this);
-            this.model.bind("destroy", this.close, this);
-        },
-
-        render:function (eventName) {
-            $(this.el).html(ich.params(this.model.toJSON()));
-            this.$("#fromDate").datepicker();
-            this.$("#toDate").datepicker();
-            this.$("#ma1").val(this.model.get("strategyParams").ma1);
-            this.$("#ma2").val(this.model.get("strategyParams").ma2);
-            this.$("#roc").val(this.model.get("strategyParams").roc);
-            this.$("#alpha").val(this.model.get("strategyParams").alpha);
-            return this;
-        },
-
-        events:{
-            "click input[name='rsRadio']:radio":"rsRadioClicked"
-        },
-
-        rsRadioClicked:function (e) {
-            // find out which radio button was clicked and
-            // disable/enable appropriate input elements
-            switch (e.currentTarget.id) {
-                case "maRatioRadio" :
-                    this.$('#ma1').attr('disabled', false);
-                    this.$('#ma2').attr('disabled', false);
-                    this.$('#roc').attr('disabled', true);
-                    this.$('#alpha').attr('disabled', true);
-                    break;
-                case "rocRadio" :
-                    this.$('#ma1').attr('disabled', true);
-                    this.$('#ma2').attr('disabled', true);
-                    this.$('#roc').attr('disabled', false);
-                    this.$('#alpha').attr('disabled', true);
-                    break;
-                case "alphaRadio" :
-                    this.$('#ma1').attr('disabled', true);
-                    this.$('#ma2').attr('disabled', true);
-                    this.$('#roc').attr('disabled', true);
-                    this.$('#alpha').attr('disabled', false);
-                    break;
-            }
-
-        }
-
-    });
-
-    window.FundsView = Backbone.View.extend({
-        initialize:function () {
-//            this.model.bind("change", this.render, this);
-//            this.model.bind("destroy", this.close, this);
-        },
-
-        render:function (eventName) {
-            //Todo: figure out why I have to wrap the funds in another object,
-            // even though when passing model they should be referenceable as #funds
-            $(this.el).html(ich.funds({funds:this.model.funds.toJSON()}));
-
-            var universe = this.model.params.get('universe');
-            this.$('input[name="includeFundCheck"]:checkbox').each(function (index) {
-                if ($.inArray($(this).val(), universe) != -1) {
-                    $(this).attr('checked', true);
+        var loadTemplate = function (index) {
+            var name = names[index];
+            console.log('Loading template: ' + name);
+            $.get('mustache/' + name + '.mustache', function (data) {
+                ich.addTemplate(name, data);
+                index++;
+                if (index < names.length) {
+                    loadTemplate(index);
+                } else {
+                    callback();
                 }
-            });
+            }, "html");
+        };
 
-            return this;
-        },
+        loadTemplate(0);
+    },
 
-        events:{
-            "click input[name='includeFundCheck']:checkbox":"includeFundClicked"
-        },
+    // Get template by name from hash of preloaded templates
+    get:function (name) {
+        return this.templates[name];
+    }
 
-        includeFundClicked:function (e) {
-            var fund = e.currentTarget.value;
-            var universe = this.model.params.get('universe');
-            console.log(fund, universe);
-            var index = $.inArray(fund, universe);
-            if (index == -1) {
-                universe.push(fund);
-            } else {
-                universe.splice(index, 1);
+};
+
+window.Params = Backbone.RelationalModel.extend({
+    relations:[
+        {type:Backbone.HasOne, key:'backtestParams', relatedModel:'BacktestParams'},
+        {type:Backbone.HasOne, key:'strategyParams', relatedModel:'StrategyParams' },
+        { type:Backbone.HasOne, key:'portfolioParams', relatedModel:'PortfolioParams' }
+    ]
+});
+
+window.BacktestParams = Backbone.RelationalModel.extend({
+});
+window.StrategyParams = Backbone.RelationalModel.extend({
+});
+window.PortfolioParams = Backbone.RelationalModel.extend({
+});
+
+window.Fund = Backbone.Model.extend({
+
+});
+
+var Funds = Backbone.Collection.extend({
+    model:Fund
+});
+
+var AppModel = Backbone.Model.extend({
+    initialize:function () {
+    }
+});
+
+window.ParamsView = Backbone.View.extend({
+
+    initialize:function () {
+        this.model.bind("change", this.render, this);
+        this.model.bind("destroy", this.close, this);
+    },
+
+    render:function () {
+        $(this.el).html(ich.params(this.model.toJSON()));
+        this.$("#fromDate").datepicker();
+        this.$("#toDate").datepicker();
+        this.$("#ma1").val(this.model.get("strategyParams").ma1);
+        this.$("#ma2").val(this.model.get("strategyParams").ma2);
+        this.$("#roc").val(this.model.get("strategyParams").roc);
+        this.$("#alpha").val(this.model.get("strategyParams").alpha);
+        return this;
+    },
+
+    events:{
+        "click input[name='rsRadio']:radio":"rsRadioClicked"
+    },
+
+    rsRadioClicked:function (e) {
+        // find out which radio button was clicked and
+        // disable/enable appropriate input elements
+        switch (e.currentTarget.id) {
+            case "maRatioRadio" :
+                this.$('#ma1').attr('disabled', false);
+                this.$('#ma2').attr('disabled', false);
+                this.$('#roc').attr('disabled', true);
+                this.$('#alpha').attr('disabled', true);
+                break;
+            case "rocRadio" :
+                this.$('#ma1').attr('disabled', true);
+                this.$('#ma2').attr('disabled', true);
+                this.$('#roc').attr('disabled', false);
+                this.$('#alpha').attr('disabled', true);
+                break;
+            case "alphaRadio" :
+                this.$('#ma1').attr('disabled', true);
+                this.$('#ma2').attr('disabled', true);
+                this.$('#roc').attr('disabled', true);
+                this.$('#alpha').attr('disabled', false);
+                break;
+        }
+
+    }
+
+});
+
+window.UniverseView = Backbone.View.extend({
+    initialize:function () {
+        this.model.bind("change", this.render, this);
+    },
+
+    render:function () {
+        console.log("Universe view render", this.model);
+        $(this.el).html(ich.universe(this.model.toJSON()));
+        return this;
+    }
+
+});
+
+window.FundsView = Backbone.View.extend({
+    initialize:function () {
+    },
+
+    render:function () {
+        //Todo: figure out why I have to wrap the funds in another object,
+        // even though when passing model they should be referenceable as #funds
+        $(this.el).html(ich.funds({funds:this.model.funds.toJSON()}));
+
+        var universe = this.model.params.get('universe');
+        this.$('input[name="includeFundCheck"]:checkbox').each(function (index) {
+            if ($.inArray($(this).val(), universe) != -1) {
+                $(this).attr('checked', true);
             }
-            console.log(universe);
+        });
+
+        return this;
+    },
+
+    events:{
+        "click input[name='includeFundCheck']:checkbox":"includeFundClicked"
+    },
+
+    includeFundClicked:function (e) {
+        var fund = e.currentTarget.value;
+        var universe = this.model.params.get('universe');
+        var index = $.inArray(fund, universe);
+        if (index == -1) {
+            universe.push(fund);
+        } else {
+            universe.splice(index, 1);
         }
-    });
+        this.model.params.set("strategyParams");
+//            console.log(universe);
+    }
+});
 
 
-    Backbone.View.prototype.close = function () {
-        console.log('Closing view ' + this);
-        if (this.beforeClose) {
-            this.beforeClose();
-        }
-        this.remove();
-        this.unbind();
-    };
+Backbone.View.prototype.close = function () {
+    console.log('Closing view ' + this);
+    if (this.beforeClose) {
+        this.beforeClose();
+    }
+    this.remove();
+    this.unbind();
+};
 
-    var AppRouter = Backbone.Router.extend({
+var AppRouter = Backbone.Router.extend({
 
-        initialize:function (model) {
-            console.log("initializing AppRouter");
-            console.log(model);
-            this.model = model;
-            this.paramsView = new ParamsView({model:model.params});
-            this.fundsView = new FundsView({model:model});
-            $('#params').html(this.paramsView.render().el);
-            $('#funds').html(this.fundsView.render().el);
-        },
+    initialize:function (model) {
+        console.log("initializing AppRouter");
+//            this.model = model;
+        this.paramsView = new ParamsView({model:model.params});
+        this.universeView = new UniverseView({model:model.params});
+        this.fundsView = new FundsView({model:model});
+        $('#params').html(this.paramsView.render().el);
+        $('#universe').html(this.universeView.render().el);
+        $('#funds').html(this.fundsView.render().el);
+    },
 
-        routes:{
+    routes:{
 //            "":"params",
-            "results":"results"
-        },
+        "results":"results"
+    },
 
-        params:function () {
-        },
+    params:function () {
+    },
 
-        results:function () {
-        }
+    results:function () {
+    }
 
-    });
+});
 
 
 </script>
@@ -251,6 +279,7 @@
                 "backtestParams":{"fromDate":"1990-01-01", "toDate":"2012-03-01"},
                 "strategyParams":{"portfolioSize":1, "rebalanceFrequency":1, "ma1":12, "ma2":26, "roc":26, "castOff":8, "stdDev":26, "equityCurveWindow":52, "relativeStrengthStyle":"MA", "safeAsset":"IGLT", "alpha":100},
                 "portfolioParams":{"transactionCost":10.0, "creationDate":"1990-01-01", "initialInvestment":10000.0}});
+            console.log(model.params);
             model.funds = new Funds([
                 {"name":"iShares MSCI Ireland Cppd Invstb Mkt Idx", "country":"US", "index":"MSCI EAFE NR USD", "provider":"iShares", "active":true, "symbol":"EIRL", "category":"Europe Stock", "inceptionDate":[2010, 5, 5], "overview":"The investment seeks investment results that correspond generally to the price and yield performance, before fees and expenses, of the MSCI Ireland Investable Market 25/50 Index. The fund generally invests at least 80% of assets in securities of the underlying index and in depositary receipts representing securities of the underlying index. It may invest the remainder of its assets in securities not included in its underlying index but which BFA believes to help the fund track its index, and in futures contracts, options on futures contracts, options and swaps as well as cash and cash equivalents. The fund is non-diversified."},
                 {"name":"iShares MSCI Poland Investable Mkt Index", "country":"US", "index":"MSCI EAFE NR USD", "provider":"iShares", "active":true, "symbol":"EPOL", "category":"Europe Stock", "inceptionDate":[2010, 5, 25], "overview":"The investment seeks investment results that correspond generally to the price and yield performance, before fees and expense, of the MSCI Poland Investable Market Index. The fund generally invests at least 90% of assets in the securities of the underlying index and in depositary receipts representing securities of the underlying index. It will concentrate its investments (i.e., hold 25% or more of its total assets) in a particular industry or group of industries to approximately the same extent that the underlying index is concentrated. The fund is non-diversified."},
@@ -277,7 +306,7 @@
 <script>
 
     //Load templates is async because of http requests
-    tpl.loadTemplates(['params', 'funds'], function () {
+    tpl.loadTemplates(['params', 'funds', 'universe'], function () {
 
         window.app = new AppRouter(bootstrap.load());
         Backbone.history.start();
