@@ -118,32 +118,19 @@ window.ParamsView = Backbone.View.extend({
 
     render:function () {
         $(this.el).html(ich.params(this.model.toJSON({})));
-        if (this.initialized == undefined) {
-            this.$("#fromDate").datepicker();
-            this.$("#toDate").datepicker();
-            this.$("#ma1").val(this.model.get("ma1"));
-            this.$("#ma2").val(this.model.get("ma2"));
-            this.$("#roc").val(this.model.get("roc"));
-            this.$("#alpha").val(this.model.get("alpha"));
-            this.$("#stdDev").val(this.model.get("stdDev"));
-            this.initialized = true;
-        }
+        this.$("#fromDate").datepicker();
+        this.$("#toDate").datepicker();
+        this.$("#ma1").val(this.model.get("ma1"));
+        this.$("#ma2").val(this.model.get("ma2"));
+        this.$("#roc").val(this.model.get("roc"));
+        this.$("#alpha").val(this.model.get("alpha"));
+        this.$("#stdDev").val(this.model.get("stdDev"));
         return this;
     },
 
     events:{
-//        "change input":"change",
-//        "change select":"change",
-        "click input[name='rsRadio']:radio":"rsRadioClicked",
+        "click input[name='relativeStrengthStyle']:radio":"rsRadioClicked",
         "click #mybutt":"runBacktest"
-    },
-
-    change:function (event) {
-        var target = event.target;
-        console.log('changing ' + target.name + ' from: ' + target.defaultValue + ' to: ' + target.value);
-//        var change = {};
-//        change[target.name] = target.value;
-//        this.model.set(change);
     },
 
     rsRadioClicked:function (event) {
@@ -174,6 +161,7 @@ window.ParamsView = Backbone.View.extend({
 
     runBacktest:function (event) {
 
+        console.log(this.$('#initialInvestment').val());
         this.model.set({
             "initialInvestment":$('#initialInvestment').val(),
             "transactionCost":$('#transactionCost').val(),
