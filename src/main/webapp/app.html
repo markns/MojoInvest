@@ -54,6 +54,7 @@
 <script src="lib/backbone.js"></script>
 <script src="lib/backbone-relational.js"></script>
 <script src="lib/ICanHaz.js"></script>
+<script src="lib/jquery.fixedheadertable.js"></script>
 
 <script>
 
@@ -188,6 +189,7 @@ window.UniverseView = Backbone.View.extend({
 
     render:function () {
         $(this.el).html(ich.universe(this.model.toJSON({})));
+        this.$('universe-table').fixedHeaderTable({ footer:false, cloneHeadToFoot:false, fixedColumn:false });
         return this;
     }
 
@@ -321,7 +323,6 @@ var AppRouter = Backbone.Router.extend({
 <!--<script src="js/models/app.js"></script>-->
 <!--<script src="js/views/paramsview.js"></script>-->
 <!--<script src="js/main.js"></script>-->
-
 
 </body>
 </html>
