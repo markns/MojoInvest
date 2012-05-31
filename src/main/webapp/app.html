@@ -104,26 +104,20 @@ tpl = {
 window.Params = Backbone.RelationalModel.extend({
     relations:[
         {type:Backbone.HasOne, key:'backtestParams', relatedModel:'BacktestParams'},
-        {type:Backbone.HasOne, key:'strategyParams', relatedModel:'StrategyParams' },
-        { type:Backbone.HasOne, key:'portfolioParams', relatedModel:'PortfolioParams' }
+        {type:Backbone.HasOne, key:'strategyParams', relatedModel:'StrategyParams'},
+        {type:Backbone.HasOne, key:'portfolioParams', relatedModel:'PortfolioParams'}
     ]
 });
-
-window.BacktestParams = Backbone.RelationalModel.extend({
-});
-window.StrategyParams = Backbone.RelationalModel.extend({
-});
-window.PortfolioParams = Backbone.RelationalModel.extend({
-});
+window.BacktestParams = Backbone.RelationalModel.extend({});
+window.StrategyParams = Backbone.RelationalModel.extend({});
+window.PortfolioParams = Backbone.RelationalModel.extend({});
 
 window.Fund = Backbone.Model.extend({
 
 });
-
 var Funds = Backbone.Collection.extend({
     model:Fund
 });
-
 var AppModel = Backbone.Model.extend({
     initialize:function () {
     }
@@ -132,12 +126,14 @@ var AppModel = Backbone.Model.extend({
 window.ParamsView = Backbone.View.extend({
 
     initialize:function () {
-        this.model.bind("change", this.render, this);
+        this.model.get("portfolioParams").bind("change", this.render, this);
+        this.model.get("strategyParams").bind("change", this.render, this);
+        this.model.get("backtestParams").bind("change", this.render, this);
         this.model.bind("destroy", this.close, this);
     },
 
     render:function () {
-        $(this.el).html(ich.params(this.model.toJSON()));
+        $(this.el).html(ich.params(this.model.toJSON({})));
         this.$("#fromDate").datepicker();
         this.$("#toDate").datepicker();
         this.$("#ma1").val(this.model.get("strategyParams").ma1);
@@ -148,7 +144,8 @@ window.ParamsView = Backbone.View.extend({
     },
 
     events:{
-        "click input[name='rsRadio']:radio":"rsRadioClicked"
+        "click input[name='rsRadio']:radio":"rsRadioClicked",
+        "click #mybutt":"buttClicked"
     },
 
     rsRadioClicked:function (e) {
@@ -175,18 +172,22 @@ window.ParamsView = Backbone.View.extend({
                 break;
         }
 
+    },
+
+    buttClicked:function (e) {
+//        this.model.get("strategyParams").set("portfolioSize", 2);
+        console.log("Params", this.model.toJSON({}));
     }
 
 });
 
 window.UniverseView = Backbone.View.extend({
     initialize:function () {
-        this.model.bind("change", this.render, this);
+        this.model.bind("change:universe", this.render, this);
     },
 
     render:function () {
-        console.log("Universe view render", this.model);
-        $(this.el).html(ich.universe(this.model.toJSON()));
+        $(this.el).html(ich.universe(this.model.toJSON({})));
         return this;
     }
 
@@ -199,12 +200,12 @@ window.FundsView = Backbone.View.extend({
     render:function () {
         //Todo: figure out why I have to wrap the funds in another object,
         // even though when passing model they should be referenceable as #funds
-        $(this.el).html(ich.funds({funds:this.model.funds.toJSON()}));
+        $(this.el).html(ich.funds({funds:this.model.funds.toJSON({})}));
 
-        var universe = this.model.params.get('universe');
-        this.$('input[name="includeFundCheck"]:checkbox').each(function (index) {
+        var universe = this.model.params.get("universe");
+        this.$("input[name='includeFundCheck']:checkbox").each(function (index) {
             if ($.inArray($(this).val(), universe) != -1) {
-                $(this).attr('checked', true);
+                $(this).attr("checked", true);
             }
         });
 
@@ -217,18 +218,17 @@ window.FundsView = Backbone.View.extend({
 
     includeFundClicked:function (e) {
         var fund = e.currentTarget.value;
-        var universe = this.model.params.get('universe');
+        var universe = this.model.params.get("universe");
         var index = $.inArray(fund, universe);
         if (index == -1) {
             universe.push(fund);
         } else {
             universe.splice(index, 1);
         }
-        this.model.params.set("strategyParams");
-//            console.log(universe);
+        //Trigger a change event on the universe view
+        this.model.params.trigger('change:universe');
     }
 });
-
 
 Backbone.View.prototype.close = function () {
     console.log('Closing view ' + this);
