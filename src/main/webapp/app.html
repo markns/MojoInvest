@@ -225,7 +225,8 @@ window.FundsView = Backbone.View.extend({
         } else {
             universe.splice(index, 1);
         }
-        //Trigger a change event on the universe view
+        //Trigger a change event on the universe view.
+        // Not automatic because params.universe is not a collection
         this.model.params.trigger('change:universe');
     }
 });
@@ -275,7 +276,7 @@ var AppRouter = Backbone.Router.extend({
 
             var model = new AppModel();
 
-            model.params = new Params({"universe":["EIRL"],
+            model.params = new Params({"universe":["EIRL", "EWD"],
                 "backtestParams":{"fromDate":"1990-01-01", "toDate":"2012-03-01"},
                 "strategyParams":{"portfolioSize":1, "rebalanceFrequency":1, "ma1":12, "ma2":26, "roc":26, "castOff":8, "stdDev":26, "equityCurveWindow":52, "relativeStrengthStyle":"MA", "safeAsset":"IGLT", "alpha":100},
                 "portfolioParams":{"transactionCost":10.0, "creationDate":"1990-01-01", "initialInvestment":10000.0}});
