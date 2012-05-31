@@ -14,9 +14,9 @@
      **/
     var _, Backbone, exports;
     if (typeof window === 'undefined') {
-        _ = require('underscore');
-        Backbone = require('backbone');
-        exports = module.exports = Backbone;
+//        _ = require('underscore');
+//        Backbone = require('backbone');
+//        exports = module.exports = Backbone;
     }
     else {
         var _ = window._;
