@@ -85,8 +85,7 @@ public class AppResource {
 
 
     private List<String> getUniverse() {
-        String funds = "IUSA|IEEM|IWRD|EUE|ISF|IBCX|INAA|IJPN|IFFF|IWDP|SEMB|IMEU|" +
-                "BRIC|FXC|IBZL|IKOR|IEUX|MIDD|EUN|LTAM|ITWN|IEER|IPXJ|IEMS|ISP6|SSAM|SAUS|SRSA|RUSS|NFTY";
+        String funds = "EIRL|EWD";
         return toList(Splitter.on("|").split(funds));
     }
 

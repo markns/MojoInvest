@@ -8,6 +8,261 @@
 {{/content}}
 
 {{$foot-scripts}}
+
+
+<script>
+
+//JQuery set up stuff - where should this live?
+(function ($) {
+    $.fn.toggleDisabled = function () {
+        return this.each(function () {
+            this.disabled = !this.disabled;
+        });
+    };
+})(jQuery);
+$.datepicker.setDefaults({
+    dateFormat:"yy-mm-dd"
+});
+
+
+tpl = {
+
+    // Recursively pre-load all the templates for the app.
+    // This implementation should be changed in a production environment. All the template files should be
+    // concatenated in a single file.
+    loadTemplates:function (names, callback) {
+
+        var loadTemplate = function (index) {
+            var name = names[index];
+            console.log('Loading template: ' + name);
+            $.get('mustache/' + name + '.mustache', function (data) {
+                ich.addTemplate(name, data);
+                index++;
+                if (index < names.length) {
+                    loadTemplate(index);
+                } else {
+                    callback();
+                }
+            }, "html");
+        };
+
+        loadTemplate(0);
+    },
+
+    // Get template by name from hash of preloaded templates
+    get:function (name) {
+        return this.templates[name];
+    }
+
+};
+
+window.Params = Backbone.Model.extend({
+});
+
+
+window.ParamsView = Backbone.View.extend({
+
+    initialize:function () {
+        this.model.bind("change", this.render, this);
+        this.model.bind("destroy", this.close, this);
+    },
+
+    render:function () {
+        $(this.el).html(ich.params(this.model.toJSON({})));
+        this.$("#fromDate").datepicker();
+        this.$("#toDate").datepicker();
+        this.$("#ma1").val(this.model.get("ma1"));
+        this.$("#ma2").val(this.model.get("ma2"));
+        this.$("#roc").val(this.model.get("roc"));
+        this.$("#alpha").val(this.model.get("alpha"));
+        this.$("#stdDev").val(this.model.get("stdDev"));
+        return this;
+    },
+
+    events:{
+        "click input[name='relativeStrengthStyle']:radio":"rsRadioClicked",
+        "click #mybutt":"runBacktest"
+    },
+
+    rsRadioClicked:function (event) {
+        // find out which radio button was clicked and
+        // disable/enable appropriate input elements
+        switch (event.currentTarget.id) {
+            case "maRatioRadio" :
+                this.$('#ma1').attr('disabled', false);
+                this.$('#ma2').attr('disabled', false);
+                this.$('#roc').attr('disabled', true);
+                this.$('#alpha').attr('disabled', true);
+                break;
+            case "rocRadio" :
+                this.$('#ma1').attr('disabled', true);
+                this.$('#ma2').attr('disabled', true);
+                this.$('#roc').attr('disabled', false);
+                this.$('#alpha').attr('disabled', true);
+                break;
+            case "alphaRadio" :
+                this.$('#ma1').attr('disabled', true);
+                this.$('#ma2').attr('disabled', true);
+                this.$('#roc').attr('disabled', true);
+                this.$('#alpha').attr('disabled', false);
+                break;
+        }
+
+    },
+
+    runBacktest:function (event) {
+
+        console.log(this.$('#initialInvestment').val());
+        this.model.set({
+            "initialInvestment":$('#initialInvestment').val(),
+            "transactionCost":$('#transactionCost').val(),
+            "portfolioSize":$('#portfolioSize').val(),
+            "relativeStrengthStyle":$('#relativeStrengthStyle').val(),
+            "ma1":$('#ma1').val(),
+            "ma2":$('#ma2').val(),
+            "roc":$('#roc').val(),
+            "alpha":$('#alpha').val(),
+            "rebalanceFrequency":$('#rebalanceFrequency').val(),
+            "castOff":$('#castOff').val(),
+            "riskAdjusted":$('#riskAdjusted').val(),
+            "stdDev":$('#stdDev').val(),
+            "tradeEquityCurve":$('#tradeEquityCurve').val(),
+            "equityCurveWindow":$('#equityCurveWindow').val(),
+            "useSafeAsset":$('#useSafeAsset').checked,
+            "safeAsset":$('#safeAsset').val(),
+            "fromDate":$('#fromDate').val(),
+            "toDate":$('#toDate').val(),
+            "creationDate":$('#fromDate').val()
+        });
+//        if (this.model.isNew()) {
+//            var self = this;
+//            app.wineList.create(this.model, {
+//                success:function () {
+//                    app.navigate('wines/' + self.model.id, false);
+//                }
+//            });
+//        } else {
+//            this.model.save();
+//        }
+
+        console.log(JSON.stringify(this.model));
+
+
+        return false;
+    }
+
+
+})
+;
+
+window.ParamsJsonView = Backbone.View.extend({
+
+    initialize:function () {
+        this.model.bind("change:universe", this.render, this);
+        this.model.bind("change", this.render, this);
+        this.model.bind("destroy", this.close, this);
+    },
+
+    render:function () {
+        $(this.el).html(ich.paramsJson({params:JSON.stringify(this.model)}));
+        return this;
+    }
+
+});
+
+window.UniverseView = Backbone.View.extend({
+    initialize:function () {
+        this.model.bind("change:universe", this.render, this);
+    },
+
+    render:function () {
+        $(this.el).html(ich.universe(this.model.toJSON({})));
+        this.$('universe-table').fixedHeaderTable({ footer:false, cloneHeadToFoot:false, fixedColumn:false });
+        return this;
+    }
+
+});
+
+window.FundsView = Backbone.View.extend({
+    initialize:function () {
+    },
+
+    render:function () {
+        //Todo: figure out why I have to wrap the funds in another object,
+        // even though when passing model they should be referenceable as #funds
+        $(this.el).html(ich.funds(this.model));
+
+        var universe = this.model.params.get("universe");
+        this.$("input[name='includeFundCheck']:checkbox").each(function (index) {
+            if ($.inArray($(this).val(), universe) != -1) {
+                $(this).attr("checked", true);
+            }
+        });
+
+        return this;
+    },
+
+    events:{
+        "click input[name='includeFundCheck']:checkbox":"includeFundClicked"
+    },
+
+    includeFundClicked:function (event) {
+        var fund = event.currentTarget.value;
+        var universe = this.model.params.get("universe");
+        var index = $.inArray(fund, universe);
+        if (index == -1) {
+            universe.push(fund);
+        } else {
+            universe.splice(index, 1);
+        }
+        //Trigger a change event on the universe view.
+        // Not automatic because params.universe is not a collection
+        //Not sure why model.change() is not working-
+        // http://stackoverflow.com/questions/8280790/backbone-js-model-not-firing-events
+        this.model.params.trigger('change:universe');
+    }
+});
+
+Backbone.View.prototype.close = function () {
+    console.log('Closing view ' + this);
+    if (this.beforeClose) {
+        this.beforeClose();
+    }
+    this.remove();
+    this.unbind();
+};
+
+var AppRouter = Backbone.Router.extend({
+
+    initialize:function (model) {
+        console.log("initializing AppRouter");
+        this.paramsView = new ParamsView({model:model.params});
+        this.paramsJsonView = new ParamsJsonView({model:model.params});
+        this.universeView = new UniverseView({model:model.params});
+        this.fundsView = new FundsView({model:model});
+        $('#params').html(this.paramsView.render().el);
+        $('#paramsJson').html(this.paramsJsonView.render().el);
+        $('#universe').html(this.universeView.render().el);
+        $('#funds').html(this.fundsView.render().el);
+    },
+
+    routes:{
+//            "":"params",
+        "results":"results"
+    },
+
+    params:function () {
+    },
+
+    results:function () {
+    }
+
+});
+
+
+</script>
+
+
 <script>
     bootstrap = {
         load:function () {
@@ -16,7 +271,7 @@
             var model = {};
 
             model.params = new Params({{params}});
-            model.funds = new Funds({{funds}});
+            model.funds = {{funds}};
 
             return model;
         }
