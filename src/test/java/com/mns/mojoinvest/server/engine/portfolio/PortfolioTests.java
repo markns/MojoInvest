@@ -10,7 +10,7 @@ import com.mns.mojoinvest.server.engine.model.dao.FundDao;
 import com.mns.mojoinvest.server.engine.model.dao.ObjectifyFundDao;
 import com.mns.mojoinvest.server.engine.model.dao.ObjectifyQuoteDao;
 import com.mns.mojoinvest.server.engine.model.dao.QuoteDao;
-import com.mns.mojoinvest.server.engine.params.PortfolioParams;
+import com.mns.mojoinvest.server.engine.params.Params;
 import com.mns.mojoinvest.server.engine.transaction.BuyTransaction;
 import com.mns.mojoinvest.server.engine.transaction.SellTransaction;
 import org.joda.time.LocalDate;
@@ -25,8 +25,8 @@ import static junit.framework.Assert.*;
 
 public class PortfolioTests {
 
-    private final PortfolioParams params = new PortfolioParams(50000.00d, 15.00d, new LocalDate("2011-01-01").toDateMidnight().toDate());
-    private final PortfolioParams loadsofcash = new PortfolioParams(10000000d, 15.0d, new LocalDate("2011-01-01").toDateMidnight().toDate());
+    private final Params params = getParams();
+    private final Params loadsofcash = getLoadsOfCashParams();
 
     private final QuoteDao quoteDao = new ObjectifyQuoteDao(ObjectifyService.factory());
     private final FundDao fundDao = new ObjectifyFundDao(ObjectifyService.factory());
@@ -263,5 +263,71 @@ public class PortfolioTests {
         assertEquals(new BigDecimal("6.11430600"), portfolio.overallReturn(buy200Date));
         assertEquals(new BigDecimal("17.5357400"), portfolio.overallReturn(sell50Date));
     }
+
+
+    public Params getParams() {
+
+        LocalDate fromDate = new LocalDate("1990-01-01");
+        LocalDate toDate = new LocalDate("2012-03-01");
+
+        int portfolioSize = 1;
+        int holdingPeriod = 1;
+        int ma1 = 12;
+        int ma2 = 26;
+        int roc = 26;
+        int alpha = 100;
+        int castOff = 8;
+        boolean riskAdjust = true;
+        int stddev = 26;
+        boolean equityCurveTrading = true;
+        int equityCurveWindow = 52;
+        boolean useSafeAsset = true;
+        //String safeAsset = "FSUTX"; //fidelity
+        String safeAsset = "IGLT"; //ishares
+        //String safeAsset = "GSPC";
+        String relativeStrengthStyle = "MA";
+
+        double initialInvestment = 50000.00d;
+        double transactionCost = 15.00d;
+        LocalDate creationDate = new LocalDate("2011-01-01");
+
+        return new Params(fromDate, toDate, creationDate, initialInvestment, transactionCost,
+                portfolioSize, holdingPeriod, ma1, ma2, roc, alpha,
+                castOff, riskAdjust, stddev, equityCurveTrading, equityCurveWindow,
+                relativeStrengthStyle, useSafeAsset, safeAsset, null);
+    }
+
+    public Params getLoadsOfCashParams() {
+
+        LocalDate fromDate = new LocalDate("1990-01-01");
+        LocalDate toDate = new LocalDate("2012-03-01");
+
+        int portfolioSize = 1;
+        int holdingPeriod = 1;
+        int ma1 = 12;
+        int ma2 = 26;
+        int roc = 26;
+        int alpha = 100;
+        int castOff = 8;
+        boolean riskAdjust = true;
+        int stddev = 26;
+        boolean equityCurveTrading = true;
+        int equityCurveWindow = 52;
+        boolean useSafeAsset = true;
+        //String safeAsset = "FSUTX"; //fidelity
+        String safeAsset = "IGLT"; //ishares
+        //String safeAsset = "GSPC";
+        String relativeStrengthStyle = "MA";
+
+        double initialInvestment = 10000000d;
+        double transactionCost = 15.00d;
+        LocalDate creationDate = new LocalDate("2011-01-01");
+
+        return new Params(fromDate, toDate, creationDate, initialInvestment, transactionCost,
+                portfolioSize, holdingPeriod, ma1, ma2, roc, alpha,
+                castOff, riskAdjust, stddev, equityCurveTrading, equityCurveWindow,
+                relativeStrengthStyle, useSafeAsset, safeAsset, null);
+    }
+
 
 }

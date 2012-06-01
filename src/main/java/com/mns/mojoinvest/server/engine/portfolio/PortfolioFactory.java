@@ -1,9 +1,9 @@
 package com.mns.mojoinvest.server.engine.portfolio;
 
-import com.mns.mojoinvest.server.engine.params.PortfolioParams;
+import com.mns.mojoinvest.server.engine.params.Params;
 
 public interface PortfolioFactory {
 
-    Portfolio create(PortfolioParams params, boolean shadow);
+    Portfolio create(Params params, boolean shadow);
 
 }

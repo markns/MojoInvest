@@ -6,8 +6,7 @@ import com.mns.mojoinvest.server.engine.model.Fund;
 import com.mns.mojoinvest.server.engine.model.Quote;
 import com.mns.mojoinvest.server.engine.model.dao.FundDao;
 import com.mns.mojoinvest.server.engine.model.dao.QuoteDao;
-import com.mns.mojoinvest.server.engine.params.BacktestParams;
-import com.mns.mojoinvest.server.engine.params.StrategyParams;
+import com.mns.mojoinvest.server.engine.params.Params;
 import com.mns.mojoinvest.server.engine.portfolio.Portfolio;
 import com.mns.mojoinvest.server.engine.strategy.DrawDown;
 import com.mns.mojoinvest.server.engine.strategy.MomentumStrategy;
@@ -34,12 +33,11 @@ public class StrategyResultBuilder {
     private Portfolio portfolio;
     private Portfolio shadowPortfolio;
     private Map<String, Map<LocalDate, BigDecimal>> additionalResults;
-    private BacktestParams backtestParams;
-    private StrategyParams strategyParams;
 
     private Collection<Fund> universe;
     private Map<String, BigDecimal> initCompares = new HashMap<String, BigDecimal>();
     private Map<String, BigDecimal> portfolioCompares = new HashMap<String, BigDecimal>();
+    private Params params;
 
     @Inject
     public StrategyResultBuilder(QuoteDao quoteDao, FundDao fundDao) {
@@ -57,13 +55,8 @@ public class StrategyResultBuilder {
         return this;
     }
 
-    public StrategyResultBuilder setBacktestParams(BacktestParams params) {
-        this.backtestParams = params;
-        return this;
-    }
-
-    public StrategyResultBuilder setStrategyParams(StrategyParams params) {
-        this.strategyParams = params;
+    public StrategyResultBuilder setParams(Params params) {
+        this.params = params;
         return this;
     }
 
@@ -72,14 +65,9 @@ public class StrategyResultBuilder {
         return this;
     }
 
-    public StrategyResultBuilder setUniverse(Collection<Fund> universe) {
-        this.universe = universe;
-        return this;
-    }
-
     public void build() throws ResultBuilderException {
-        LocalDate fromDate = new LocalDate(backtestParams.getFromDate());
-        LocalDate toDate = new LocalDate(backtestParams.getToDate());
+        LocalDate fromDate = params.getFromDate();
+        LocalDate toDate = params.getToDate();
 
         CSVWriter writer = initialiseCsv();
         writeCsvHeader(universe, writer);
@@ -87,7 +75,7 @@ public class StrategyResultBuilder {
         List<DrawDown> drawDowns = new ArrayList<DrawDown>();
         DrawDown currentDD = null;
 
-        List<LocalDate> rebalanceDates = getRebalanceDates(fromDate, toDate, strategyParams);
+        List<LocalDate> rebalanceDates = getRebalanceDates(params);
 
         LocalDate earliestTransactionDate = portfolio.getTransactions().get(0).getDate();
 
@@ -108,14 +96,15 @@ public class StrategyResultBuilder {
 
         flushCsvWriter(writer);
 
-        logParams(backtestParams, strategyParams);
+        logParams(params);
         logTrades(portfolio);
         logDrawDowns(drawDowns);
         logCAGR(portfolio, toDate);
     }
 
-    private List<LocalDate> getRebalanceDates(LocalDate fromDate, LocalDate toDate, StrategyParams params) {
-        return TradingDayUtils.getEndOfWeekSeries(fromDate, toDate, params.getRebalanceFrequency());
+    private List<LocalDate> getRebalanceDates(Params params) {
+        return TradingDayUtils.getEndOfWeekSeries(params.getFromDate(), params.getToDate(),
+                params.getRebalanceFrequency());
     }
 
     private DrawDown calculateDrawDowns(List<DrawDown> drawDowns, DrawDown currentDD, LocalDate rebalanceDate, BigDecimal marketValue) {
@@ -150,9 +139,8 @@ public class StrategyResultBuilder {
         return currentDD;
     }
 
-    private void logParams(BacktestParams backtestParams, StrategyParams strategyParams) {
-        log.info("" + backtestParams);
-        log.info("" + strategyParams);
+    private void logParams(Params params) {
+        log.info("" + params);
     }
 
     private void logDrawDowns(List<DrawDown> drawDowns) {

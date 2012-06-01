@@ -4,7 +4,7 @@ import com.google.inject.Inject;
 import com.google.inject.assistedinject.Assisted;
 import com.mns.mojoinvest.server.engine.model.dao.FundDao;
 import com.mns.mojoinvest.server.engine.model.dao.QuoteDao;
-import com.mns.mojoinvest.server.engine.params.PortfolioParams;
+import com.mns.mojoinvest.server.engine.params.Params;
 import com.mns.mojoinvest.server.engine.transaction.BuyTransaction;
 import com.mns.mojoinvest.server.engine.transaction.SellTransaction;
 import com.mns.mojoinvest.server.engine.transaction.Transaction;
@@ -50,16 +50,16 @@ public class SimplePortfolio implements Portfolio {
     private List<Transaction> transactions;
     private NavigableMap<LocalDate, BigDecimal> cashFlows;
     private BigDecimal transactionCost;
-    private PortfolioParams portfolioParams;
+    private Params params;
 
 
     @Inject
-    public SimplePortfolio(FundDao fundDao, QuoteDao quoteDao, @Assisted PortfolioParams params, @Assisted boolean shadow) {
+    public SimplePortfolio(FundDao fundDao, QuoteDao quoteDao, @Assisted Params params, @Assisted boolean shadow) {
         this.fundDao = fundDao;
         this.quoteDao = quoteDao;
         this.positions = new HashMap<String, Position>();
         this.transactions = new ArrayList<Transaction>();
-        this.portfolioParams = params;
+        this.params = params;
         this.cashFlows = new TreeMap<LocalDate, BigDecimal>();
         this.cashFlows.put(new LocalDate(params.getCreationDate()),
                 BigDecimal.valueOf(params.getInitialInvestment()));
@@ -111,8 +111,8 @@ public class SimplePortfolio implements Portfolio {
         return positions.get(fund);
     }
 
-    public PortfolioParams getParams() {
-        return portfolioParams;
+    public Params getParams() {
+        return params;
     }
 
     @Override

@@ -5,10 +5,7 @@ import com.google.common.collect.Lists;
 import com.google.inject.Inject;
 import com.mns.mojoinvest.server.engine.model.Fund;
 import com.mns.mojoinvest.server.engine.model.dao.FundDao;
-import com.mns.mojoinvest.server.engine.params.BacktestParams;
 import com.mns.mojoinvest.server.engine.params.Params;
-import com.mns.mojoinvest.server.engine.params.PortfolioParams;
-import com.mns.mojoinvest.server.engine.params.StrategyParams;
 import com.sun.jersey.api.view.Viewable;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.joda.time.LocalDate;
@@ -19,7 +16,10 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.MediaType;
 import java.io.IOException;
-import java.util.*;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @Path("/app")
 public class AppResource {
@@ -40,12 +40,7 @@ public class AppResource {
 
         Collection<Fund> funds = fundDao.list();
 
-        BacktestParams backtestParams = getBacktestParams();
-        StrategyParams strategyParams = getStrategyParams();
-        PortfolioParams portfolioParams = getPortfolioParams();
-        List<String> universe = getUniverse();
-
-        Params params = new Params(backtestParams, strategyParams, portfolioParams, universe);
+        Params params = getParams();
 
         try {
             map.put("funds", mapper.writeValueAsString(funds));
@@ -56,16 +51,11 @@ public class AppResource {
         return new Viewable("/app.mustache", map);
     }
 
-    BacktestParams getBacktestParams() {
-        LocalDate fDate = new LocalDate("1990-01-01");
-        LocalDate tDate = new LocalDate("2012-03-01");
-        Date fromDate = fDate.toDateMidnight().toDate();
-        Date toDate = tDate.toDateMidnight().toDate();
+    public Params getParams() {
 
-        return new BacktestParams(fromDate, toDate);
-    }
+        LocalDate fromDate = new LocalDate("1990-01-01");
+        LocalDate toDate = new LocalDate("2012-03-01");
 
-    public StrategyParams getStrategyParams() {
         int portfolioSize = 1;
         int holdingPeriod = 1;
         int ma1 = 12;
@@ -83,18 +73,16 @@ public class AppResource {
         //String safeAsset = "GSPC";
         String relativeStrengthStyle = "MA";
 
-        return new StrategyParams(portfolioSize, holdingPeriod, ma1, ma2, roc, alpha,
-                castOff, riskAdjust, stddev, equityCurveTrading, equityCurveWindow,
-                relativeStrengthStyle, useSafeAsset, safeAsset);
-    }
-
-
-    public PortfolioParams getPortfolioParams() {
-        double cash = 10000d;
+        double initialInvestment = 10000d;
         double transactionCost = 10d;
+        LocalDate creationDate = new LocalDate("1990-01-01");
 
-        return new PortfolioParams(cash, transactionCost, new LocalDate("1990-01-01").toDateMidnight().toDate());
+        return new Params(fromDate, toDate, creationDate, initialInvestment, transactionCost,
+                portfolioSize, holdingPeriod, ma1, ma2, roc, alpha,
+                castOff, riskAdjust, stddev, equityCurveTrading, equityCurveWindow,
+                relativeStrengthStyle, useSafeAsset, safeAsset, getUniverse());
     }
+
 
     private List<String> getUniverse() {
         String funds = "IUSA|IEEM|IWRD|EUE|ISF|IBCX|INAA|IJPN|IFFF|IWDP|SEMB|IMEU|" +

@@ -6,8 +6,7 @@ import com.google.common.collect.Ordering;
 import com.google.inject.Inject;
 import com.mns.mojoinvest.server.engine.execution.Executor;
 import com.mns.mojoinvest.server.engine.model.Fund;
-import com.mns.mojoinvest.server.engine.params.BacktestParams;
-import com.mns.mojoinvest.server.engine.params.StrategyParams;
+import com.mns.mojoinvest.server.engine.params.Params;
 import com.mns.mojoinvest.server.engine.portfolio.Portfolio;
 import com.mns.mojoinvest.server.engine.portfolio.PortfolioException;
 import com.mns.mojoinvest.server.util.TradingDayUtils;
@@ -34,24 +33,24 @@ public class MomentumStrategy {
         this.executor = executor;
     }
 
-    public Map<String, Map<LocalDate, BigDecimal>> execute(Portfolio portfolio, Portfolio shadowPortfolio, BacktestParams backtestParams,
-                                                           StrategyParams strategyParams, Collection<Fund> universe)
+    public Map<String, Map<LocalDate, BigDecimal>> execute(Portfolio portfolio, Portfolio shadowPortfolio,
+                                                           Params params, Collection<Fund> universe)
             throws StrategyException {
 
-        List<LocalDate> rebalanceDates = getRebalanceDates(backtestParams, strategyParams);
+        List<LocalDate> rebalanceDates = getRebalanceDates(params);
 
         SortedMap<LocalDate, Map<String, BigDecimal>> relativeStrengthsMap =
-                getRelativeStrengths(universe, strategyParams, rebalanceDates);
+                getRelativeStrengths(universe, params, rebalanceDates);
 
         assert rebalanceDates.size() == relativeStrengthsMap.size() : "number of rebalance dates didn't match " +
                 "number of relative strength dates received";
 
-        if (strategyParams.isRiskAdjusted()) {
+        if (params.isRiskAdjust()) {
             relativeStrengthsMap = relativeStrengthCalculator.adjustRelativeStrengths(relativeStrengthsMap, universe,
-                    strategyParams, rebalanceDates);
+                    params, rebalanceDates);
         }
 
-        DescriptiveStatistics shadowPortfolioEquityCurve = new DescriptiveStatistics(strategyParams.getEquityCurveWindow());
+        DescriptiveStatistics shadowPortfolioEquityCurve = new DescriptiveStatistics(params.getEquityCurveWindow());
         boolean belowEquityCurve = false;
 
         Map<String, Map<LocalDate, BigDecimal>> additionalResults = new HashMap<String, Map<LocalDate, BigDecimal>>();
@@ -61,18 +60,18 @@ public class MomentumStrategy {
 
             Map<String, BigDecimal> strengths = relativeStrengthsMap.get(date);
 
-            if (strengths.size() < strategyParams.getCastOff()) {
+            if (strengths.size() < params.getCastOff()) {
                 log.warning(date + " Not enough funds in universe to make selection");
                 continue;
             }
 
-            List<String> selection = getSelection(date, strategyParams, strengths);
+            List<String> selection = getSelection(date, params, strengths);
 
-            if (strategyParams.isTradeEquityCurve()) {
+            if (params.isEquityCurveTrading()) {
                 //Shadow portfolio and equity curve calculation stuff
                 shadowPortfolioEquityCurve.addValue(shadowPortfolio.marketValue(date).doubleValue());
                 BigDecimal equityCurveMA = null;
-                if (shadowPortfolioEquityCurve.getN() >= strategyParams.getEquityCurveWindow()) {
+                if (shadowPortfolioEquityCurve.getN() >= params.getEquityCurveWindow()) {
                     equityCurveMA = new BigDecimal(shadowPortfolioEquityCurve.getMean(), MathContext.DECIMAL32);
                 }
                 additionalResults.get(SHADOW_EQUITY_CURVE).put(date, equityCurveMA);
@@ -80,53 +79,53 @@ public class MomentumStrategy {
                 log.info(date + " " + portfolio.getActiveFunds(date) + " " + portfolio.marketValue(date) + " " +
                         shadowPortfolio.marketValue(date) + " " + equityCurveMA);
 
-                rebalance(shadowPortfolio, date, selection, strategyParams);
+                rebalance(shadowPortfolio, date, selection, params);
                 if (equityCurveMA != null && shadowPortfolio.marketValue(date).compareTo(equityCurveMA) < 0) {
                     if (!belowEquityCurve) {
                         log.fine("Crossed below equity curve");
                         belowEquityCurve = true;
                         sellEverything(portfolio, date);
-                        if (strategyParams.isUseSafeAsset()) {
-                            buySafeAsset(portfolio, strategyParams, date);
+                        if (params.isUseSafeAsset()) {
+                            buySafeAsset(portfolio, params, date);
                         }
                     }
                 } else {
                     if (belowEquityCurve) {
                         log.fine("Crossed above equity curve");
-                        sellSafeAsset(portfolio, strategyParams, date);
+                        sellSafeAsset(portfolio, params, date);
                         belowEquityCurve = false;
                     }
-                    rebalance(portfolio, date, selection, strategyParams);
+                    rebalance(portfolio, date, selection, params);
                 }
             } else {
                 log.info(date + " " + portfolio.getActiveFunds(date) + " " + portfolio.marketValue(date));
-                rebalance(portfolio, date, selection, strategyParams);
+                rebalance(portfolio, date, selection, params);
             }
         }
 
         return additionalResults;
     }
 
-    private void sellSafeAsset(Portfolio portfolio, StrategyParams strategyParams, LocalDate date) throws StrategyException {
-        if (strategyParams.isUseSafeAsset() &&
-                portfolio.contains(strategyParams.getSafeAsset(), date)) {
+    private void sellSafeAsset(Portfolio portfolio, Params params, LocalDate date) throws StrategyException {
+        if (params.isUseSafeAsset() &&
+                portfolio.contains(params.getSafeAsset(), date)) {
             try {
-                executor.sellAll(portfolio, strategyParams.getSafeAsset(), date);
+                executor.sellAll(portfolio, params.getSafeAsset(), date);
             } catch (PortfolioException e) {
                 throw new StrategyException(date + " Unable to move out of safe asset", e);
             }
         }
     }
 
-    private void buySafeAsset(Portfolio portfolio, StrategyParams strategyParams, LocalDate date) {
-        int numEmpty = strategyParams.getPortfolioSize() - portfolio.openPositionCount(
+    private void buySafeAsset(Portfolio portfolio, Params params, LocalDate date) {
+        int numEmpty = params.getPortfolioSize() - portfolio.openPositionCount(
                 TradingDayUtils.rollForward(date.plusDays(1)));
         BigDecimal availableCash = portfolio.getCash(
                 TradingDayUtils.rollForward(date.plusDays(1))).
                 subtract(portfolio.getTransactionCost().
                         multiply(new BigDecimal(numEmpty)));
         try {
-            executor.buy(portfolio, strategyParams.getSafeAsset(),
+            executor.buy(portfolio, params.getSafeAsset(),
                     date, availableCash);
         } catch (PortfolioException e) {
             log.warning(date + " Unable to move into safe asset");
@@ -144,10 +143,10 @@ public class MomentumStrategy {
         }
     }
 
-    private List<LocalDate> getRebalanceDates(BacktestParams backtestParams, StrategyParams params)
+    private List<LocalDate> getRebalanceDates(Params params)
             throws StrategyException {
-        LocalDate fromDate = new LocalDate(backtestParams.getFromDate());
-        LocalDate toDate = new LocalDate(backtestParams.getToDate());
+        LocalDate fromDate = params.getFromDate();
+        LocalDate toDate = params.getToDate();
 
         if (fromDate.isAfter(toDate))
             throw new StrategyException("From date cannot be after to date");
@@ -157,25 +156,25 @@ public class MomentumStrategy {
 
 
     private SortedMap<LocalDate, Map<String, BigDecimal>> getRelativeStrengths(Collection<Fund> universe,
-                                                                               StrategyParams strategyParams,
+                                                                               Params params,
                                                                                List<LocalDate> rebalanceDates)
             throws StrategyException {
-        if ("MA".equals(strategyParams.getRelativeStrengthStyle())) {
+        if ("MA".equals(params.getRelativeStrengthStyle())) {
             return relativeStrengthCalculator
-                    .getRelativeStrengthsMA(universe, strategyParams, rebalanceDates);
-        } else if ("ROC".equals(strategyParams.getRelativeStrengthStyle())) {
+                    .getRelativeStrengthsMA(universe, params, rebalanceDates);
+        } else if ("ROC".equals(params.getRelativeStrengthStyle())) {
             return relativeStrengthCalculator
-                    .getRelativeStrengthsROC(universe, strategyParams, rebalanceDates);
-        } else if ("ALPHA".equals(strategyParams.getRelativeStrengthStyle())) {
+                    .getRelativeStrengthsROC(universe, params, rebalanceDates);
+        } else if ("ALPHA".equals(params.getRelativeStrengthStyle())) {
             return relativeStrengthCalculator
-                    .getRelativeStrengthAlpha(universe, strategyParams, rebalanceDates);
+                    .getRelativeStrengthAlpha(universe, params, rebalanceDates);
         } else {
-            throw new StrategyException("Relative strength style " + strategyParams);
+            throw new StrategyException("Relative strength style " + params);
         }
     }
 
 
-    private List<String> getSelection(LocalDate date, StrategyParams params, Map<String, BigDecimal> rs) {
+    private List<String> getSelection(LocalDate date, Params params, Map<String, BigDecimal> rs) {
         //Rank order
         Ordering<String> valueComparator = Ordering.natural()
                 .reverse()
@@ -187,7 +186,7 @@ public class MomentumStrategy {
         return rank.subList(0, params.getCastOff());
     }
 
-    private void rebalance(Portfolio portfolio, LocalDate rebalanceDate, List<String> selection, StrategyParams params) throws StrategyException {
+    private void rebalance(Portfolio portfolio, LocalDate rebalanceDate, List<String> selection, Params params) throws StrategyException {
         sellLosers(portfolio, rebalanceDate, selection);
         buyWinners(portfolio, params, rebalanceDate, selection);
     }
@@ -209,7 +208,7 @@ public class MomentumStrategy {
         }
     }
 
-    private void buyWinners(Portfolio portfolio, StrategyParams params,
+    private void buyWinners(Portfolio portfolio, Params params,
                             LocalDate rebalanceDate, List<String> selection)
             throws StrategyException {
 

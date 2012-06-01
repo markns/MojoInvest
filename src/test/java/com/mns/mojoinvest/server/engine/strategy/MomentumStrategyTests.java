@@ -9,7 +9,6 @@ import com.mns.mojoinvest.server.engine.model.Quote;
 import com.mns.mojoinvest.server.engine.model.dao.FundDao;
 import com.mns.mojoinvest.server.engine.model.dao.ObjectifyFundDao;
 import com.mns.mojoinvest.server.engine.model.dao.QuoteDao;
-import com.mns.mojoinvest.server.engine.params.BacktestParams;
 import com.mns.mojoinvest.server.engine.portfolio.Portfolio;
 import org.joda.time.LocalDate;
 import org.junit.Before;
@@ -72,7 +71,7 @@ public class MomentumStrategyTests {
 //
 //    private OldMomentumStrategy strategy;
     private Portfolio portfolio;
-    private BacktestParams backtestParams;
+//    private BacktestParams backtestParams;
 //    private MomentumStrategyParams strategyParams;
 
     @Before
