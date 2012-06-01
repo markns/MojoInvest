@@ -4,13 +4,32 @@
 {{$content}}
 <div id="params"></div>
 <div id="universe"></div>
+<div id="funds"></div>
 {{/content}}
 
 {{$foot-scripts}}
 <script>
-    App.params = new Params({{params}});
-    App.funds = new Funds({{funds}});
-</script>
-{{/foot-scripts}}
+    bootstrap = {
+        load:function () {
+            console.log("bootstrapping models");
 
+            var model = {};
+
+            model.params = new Params({{params}});
+            model.funds = new Funds({{funds}});
+
+            return model;
+        }
+    };
+
+    //Load templates is async because of http requests
+    tpl.loadTemplates(['params', 'funds', 'universe', 'paramsJson'], function () {
+
+        window.app = new AppRouter(bootstrap.load());
+        Backbone.history.start();
+    });
+
+</script>
+
+{{/foot-scripts}}
         {{/mustache/super}}
