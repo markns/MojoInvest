@@ -23,9 +23,9 @@ public class Params {
     private int roc;
     private int alpha;
     private int castOff;
-    private boolean riskAdjust;
+    private boolean riskAdjusted;
     private int stddev;
-    private boolean equityCurveTrading;
+    private boolean tradeEquityCurve;
     private int equityCurveWindow;
     private String relativeStrengthStyle;
     private boolean useSafeAsset;
@@ -34,7 +34,7 @@ public class Params {
 
     public Params(LocalDate fromDate, LocalDate toDate, LocalDate creationDate, Double initialInvestment,
                   Double transactionCost, int portfolioSize, int rebalanceFrequency, int ma1, int ma2,
-                  int roc, int alpha, int castOff, boolean riskAdjust, int stddev, boolean equityCurveTrading,
+                  int roc, int alpha, int castOff, boolean riskAdjusted, int stddev, boolean tradeEquityCurve,
                   int equityCurveWindow, String relativeStrengthStyle, boolean useSafeAsset,
                   String safeAsset, List<String> universe) {
         this.fromDate = fromDate;
@@ -49,9 +49,9 @@ public class Params {
         this.roc = roc;
         this.alpha = alpha;
         this.castOff = castOff;
-        this.riskAdjust = riskAdjust;
+        this.riskAdjusted = riskAdjusted;
         this.stddev = stddev;
-        this.equityCurveTrading = equityCurveTrading;
+        this.tradeEquityCurve = tradeEquityCurve;
         this.equityCurveWindow = equityCurveWindow;
         this.relativeStrengthStyle = relativeStrengthStyle;
         this.useSafeAsset = useSafeAsset;
@@ -161,12 +161,12 @@ public class Params {
         this.castOff = castOff;
     }
 
-    public boolean isRiskAdjust() {
-        return riskAdjust;
+    public boolean isRiskAdjusted() {
+        return riskAdjusted;
     }
 
-    public void setRiskAdjust(boolean riskAdjust) {
-        this.riskAdjust = riskAdjust;
+    public void setRiskAdjusted(boolean riskAdjusted) {
+        this.riskAdjusted = riskAdjusted;
     }
 
     public int getStddev() {
@@ -177,12 +177,12 @@ public class Params {
         this.stddev = stddev;
     }
 
-    public boolean isEquityCurveTrading() {
-        return equityCurveTrading;
+    public boolean isTradeEquityCurve() {
+        return tradeEquityCurve;
     }
 
-    public void setEquityCurveTrading(boolean equityCurveTrading) {
-        this.equityCurveTrading = equityCurveTrading;
+    public void setTradeEquityCurve(boolean tradeEquityCurve) {
+        this.tradeEquityCurve = tradeEquityCurve;
     }
 
     public int getEquityCurveWindow() {

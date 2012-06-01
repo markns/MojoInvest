@@ -45,7 +45,7 @@ public class MomentumStrategy {
         assert rebalanceDates.size() == relativeStrengthsMap.size() : "number of rebalance dates didn't match " +
                 "number of relative strength dates received";
 
-        if (params.isRiskAdjust()) {
+        if (params.isRiskAdjusted()) {
             relativeStrengthsMap = relativeStrengthCalculator.adjustRelativeStrengths(relativeStrengthsMap, universe,
                     params, rebalanceDates);
         }
@@ -67,7 +67,7 @@ public class MomentumStrategy {
 
             List<String> selection = getSelection(date, params, strengths);
 
-            if (params.isEquityCurveTrading()) {
+            if (params.isTradeEquityCurve()) {
                 //Shadow portfolio and equity curve calculation stuff
                 shadowPortfolioEquityCurve.addValue(shadowPortfolio.marketValue(date).doubleValue());
                 BigDecimal equityCurveMA = null;

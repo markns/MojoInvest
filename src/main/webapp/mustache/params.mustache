@@ -23,7 +23,7 @@
     </fieldset>
 </div>
 <div class="column grid_3">
-    <fieldset>
+    <fieldset id="relativeStrength">
         <legend>Relative Strength</legend>
         <ol>
             <li>
@@ -91,7 +91,7 @@
                 <label for="riskAdjusted">Adjust by Std Dev</label>
                 <input type="checkbox" id="riskAdjusted"
                        onclick="$('#stdDev').toggleDisabled()"/>
-                <select id="stdDev" name="stdDev" disabled>
+                <select id="stdDev" name="stdDev">
                     <option value="4">4</option>
                     <option value="8">8</option>
                     <option value="12">12</option>
@@ -105,13 +105,13 @@
                 <input type="checkbox" id="tradeEquityCurve"
                        onclick="$('#equityCurveWindow').toggleDisabled()"/>
                 <input id="equityCurveWindow" name="equityCurveWindow" type=number class="inputField"
-                       disabled value="52">
+                       value="52">
             </li>
             <li>
                 <label>Use Safe Asset</label>
                 <input type="checkbox" id="useSafeAsset"
                        onclick="$('#safeAsset').toggleDisabled()"/>
-                <input id="safeAsset" name="safeAsset" type=text disabled class="inputField"
+                <input id="safeAsset" name="safeAsset" type=text class="inputField"
                        value="{{safeAsset}}">
             </li>
         </ol>
