@@ -5,6 +5,7 @@ html, body, #back {
 
 body {
     margin: 0;
+    /*font-family: "Lucida Sans Unicode", "Lucida Grande", Sans-Serif;*/
     font-family: Helvetica, Arial, sans-serif;
     font-size: 12px;
     line-height: 20px;
@@ -308,7 +309,8 @@ label {
 }
 
 #universe-table {
-    font-family: "Lucida Sans Unicode", "Lucida Grande", Sans-Serif;
+    font-size: 12px; /*Overridden by user agent stylesheet otherwise */
+    font-family: Helvetica, Arial, sans-serif;
     background: #fff;
     border-collapse: collapse;
     text-align: left;
