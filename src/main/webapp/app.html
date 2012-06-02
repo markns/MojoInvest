@@ -68,6 +68,7 @@ $.datepicker.setDefaults({
 $('#loadingDiv')
         .hide()// hide it initially
         .ajaxStart(function () {
+//            http://malsup.com/jquery/block/#demos
             $(this).show();
         })
         .ajaxStop(function () {
@@ -235,11 +236,12 @@ window.ParamsView = Backbone.View.extend({
 
     success:function (data) {
         console.log(data);
-        app.navigate('wines/' + self.model.id, false);
+        app.navigate('results', false);
     },
 
     error:function (jqXHR, textStatus, errorThrown) {
         console.log(jqXHR, textStatus, errorThrown);
+        app.navigate('results', false);
     }
 
 });
@@ -320,14 +322,16 @@ var AppRouter = Backbone.Router.extend({
     },
 
     routes:{
-//            "":"params",
+        "":"params",
         "results":"results"
     },
 
     params:function () {
+        console.log("Showing params");
     },
 
     results:function () {
+        console.log("Showing results");
     }
 
 });
@@ -342,7 +346,7 @@ var AppRouter = Backbone.Router.extend({
 
             var model = {};
 
-            model.params = new Params({"universe":["EIRL", "EWD"], "transactionCost":10.0, "creationDate":"1990-01-01", "initialInvestment":10000.0, "fromDate":"1990-01-01", "toDate":"2012-03-01", "portfolioSize":1, "rebalanceFrequency":1, "ma1":12, "ma2":26, "roc":26, "alpha":100, "castOff":8, "riskAdjusted":true, "stddev":26, "tradeEquityCurve":true, "equityCurveWindow":52, "relativeStrengthStyle":"MA", "useSafeAsset":true, "safeAsset":"IGLT"});
+            model.params = new Params({"universe":["EIRL", "EWD"], "transactionCost":10.0, "creationDate":"1990-01-01", "initialInvestment":10000.0, "fromDate":"1990-01-01", "toDate":"2012-03-01", "portfolioSize":1, "rebalanceFrequency":1, "ma1":12, "ma2":26, "roc":26, "alpha":100, "castOff":8, "riskAdjusted":true, "stdDev":26, "tradeEquityCurve":true, "equityCurveWindow":52, "relativeStrengthStyle":"MA", "useSafeAsset":true, "safeAsset":"IGLT"});
             model.funds = [
                 {"name":"iShares MSCI Ireland Cppd Invstb Mkt Idx", "country":"US", "index":"MSCI EAFE NR USD", "provider":"iShares", "active":true, "symbol":"EIRL", "category":"Europe Stock", "inceptionDate":"2010-05-05", "overview":"The investment seeks investment results that correspond generally to the price and yield performance, before fees and expenses, of the MSCI Ireland Investable Market 25/50 Index. The fund generally invests at least 80% of assets in securities of the underlying index and in depositary receipts representing securities of the underlying index. It may invest the remainder of its assets in securities not included in its underlying index but which BFA believes to help the fund track its index, and in futures contracts, options on futures contracts, options and swaps as well as cash and cash equivalents. The fund is non-diversified."},
                 {"name":"iShares MSCI Poland Investable Mkt Index", "country":"US", "index":"MSCI EAFE NR USD", "provider":"iShares", "active":true, "symbol":"EPOL", "category":"Europe Stock", "inceptionDate":"2010-05-25", "overview":"The investment seeks investment results that correspond generally to the price and yield performance, before fees and expense, of the MSCI Poland Investable Market Index. The fund generally invests at least 90% of assets in the securities of the underlying index and in depositary receipts representing securities of the underlying index. It will concentrate its investments (i.e., hold 25% or more of its total assets) in a particular industry or group of industries to approximately the same extent that the underlying index is concentrated. The fund is non-diversified."},

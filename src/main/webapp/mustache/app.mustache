@@ -9,7 +9,6 @@
 
 {{$foot-scripts}}
 
-
 <script>
 
 //JQuery set up stuff - where should this live?
@@ -23,6 +22,16 @@
 $.datepicker.setDefaults({
     dateFormat:"yy-mm-dd"
 });
+$('#loadingDiv')
+        .hide()// hide it initially
+        .ajaxStart(function () {
+//            http://malsup.com/jquery/block/#demos
+            $(this).show();
+        })
+        .ajaxStop(function () {
+            $(this).hide();
+        })
+;
 
 
 tpl = {
@@ -57,6 +66,7 @@ tpl = {
 };
 
 window.Params = Backbone.Model.extend({
+    url:"backtest"
 });
 
 
@@ -71,11 +81,45 @@ window.ParamsView = Backbone.View.extend({
         $(this.el).html(ich.params(this.model.toJSON({})));
         this.$("#fromDate").datepicker();
         this.$("#toDate").datepicker();
+        this.$("input[name=relativeStrengthStyle][value=" + this.model.get("relativeStrengthStyle") + "]")
+                .attr('checked', 'checked');
+
         this.$("#ma1").val(this.model.get("ma1"));
         this.$("#ma2").val(this.model.get("ma2"));
         this.$("#roc").val(this.model.get("roc"));
         this.$("#alpha").val(this.model.get("alpha"));
+
+        //TODO: Consolidate this logic with the rsRadioClicked logic below
+        switch ($('input[name=relativeStrengthStyle]:checked', '#relativeStrength').val()) {
+            case "MA" :
+                this.$('#ma1').attr('disabled', false);
+                this.$('#ma2').attr('disabled', false);
+                this.$('#roc').attr('disabled', true);
+                this.$('#alpha').attr('disabled', true);
+                break;
+            case "ROC" :
+                this.$('#ma1').attr('disabled', true);
+                this.$('#ma2').attr('disabled', true);
+                this.$('#roc').attr('disabled', false);
+                this.$('#alpha').attr('disabled', true);
+                break;
+            case "ALPHA" :
+                this.$('#ma1').attr('disabled', true);
+                this.$('#ma2').attr('disabled', true);
+                this.$('#roc').attr('disabled', true);
+                this.$('#alpha').attr('disabled', false);
+                break;
+        }
+
+
         this.$("#stdDev").val(this.model.get("stdDev"));
+        this.$("#riskAdjusted").attr('checked', this.model.get("riskAdjusted"));
+        this.$("#stdDev").attr('disabled', !this.model.get("riskAdjusted"));
+        this.$("#tradeEquityCurve").attr('checked', this.model.get("tradeEquityCurve"));
+        this.$("#equityCurveWindow").attr('disabled', !this.model.get("tradeEquityCurve"));
+        this.$("#useSafeAsset").attr('checked', this.model.get("useSafeAsset"));
+        this.$("#safeAsset").attr('disabled', !this.model.get("useSafeAsset"));
+        //TODO: Need to disable and uncheck useSafeAsset when trade equity curve is unchecked
         return this;
     },
 
@@ -112,63 +156,54 @@ window.ParamsView = Backbone.View.extend({
 
     runBacktest:function (event) {
 
-        console.log(this.$('#initialInvestment').val());
         this.model.set({
             "initialInvestment":$('#initialInvestment').val(),
             "transactionCost":$('#transactionCost').val(),
             "portfolioSize":$('#portfolioSize').val(),
-            "relativeStrengthStyle":$('#relativeStrengthStyle').val(),
+            "relativeStrengthStyle":$('input[name=relativeStrengthStyle]:checked', '#relativeStrength').val(),
             "ma1":$('#ma1').val(),
             "ma2":$('#ma2').val(),
             "roc":$('#roc').val(),
             "alpha":$('#alpha').val(),
             "rebalanceFrequency":$('#rebalanceFrequency').val(),
             "castOff":$('#castOff').val(),
-            "riskAdjusted":$('#riskAdjusted').val(),
+            "riskAdjusted":$('#riskAdjusted').is(':checked'),
             "stdDev":$('#stdDev').val(),
-            "tradeEquityCurve":$('#tradeEquityCurve').val(),
+            "tradeEquityCurve":$('#tradeEquityCurve').is(':checked'),
             "equityCurveWindow":$('#equityCurveWindow').val(),
-            "useSafeAsset":$('#useSafeAsset').checked,
+            "useSafeAsset":$('#useSafeAsset').is(':checked'),
             "safeAsset":$('#safeAsset').val(),
             "fromDate":$('#fromDate').val(),
             "toDate":$('#toDate').val(),
             "creationDate":$('#fromDate').val()
         });
-//        if (this.model.isNew()) {
-//            var self = this;
-//            app.wineList.create(this.model, {
-//                success:function () {
-//                    app.navigate('wines/' + self.model.id, false);
-//                }
-//            });
-//        } else {
-//            this.model.save();
-//        }
+        $.ajax({
+            type:'POST',
+            url:"backtest",
+            data:JSON.stringify(this.model),
+            start:this.start,
+            success:this.success,
+            error:this.error,
+            contentType:"application/json;charset=utf-8",
+            dataType:'json'
+        });
 
         console.log(JSON.stringify(this.model));
-
-
         return false;
-    }
-
-
-})
-;
-
-window.ParamsJsonView = Backbone.View.extend({
-
-    initialize:function () {
-        this.model.bind("change:universe", this.render, this);
-        this.model.bind("change", this.render, this);
-        this.model.bind("destroy", this.close, this);
     },
 
-    render:function () {
-        $(this.el).html(ich.paramsJson({params:JSON.stringify(this.model)}));
-        return this;
+    success:function (data) {
+        console.log(data);
+        app.navigate('results', false);
+    },
+
+    error:function (jqXHR, textStatus, errorThrown) {
+        console.log(jqXHR, textStatus, errorThrown);
+        app.navigate('results', false);
     }
 
 });
+
 
 window.UniverseView = Backbone.View.extend({
     initialize:function () {
@@ -177,7 +212,7 @@ window.UniverseView = Backbone.View.extend({
 
     render:function () {
         $(this.el).html(ich.universe(this.model.toJSON({})));
-        this.$('universe-table').fixedHeaderTable({ footer:false, cloneHeadToFoot:false, fixedColumn:false });
+//        this.$('universe-table').fixedHeaderTable({ footer:false, cloneHeadToFoot:false, fixedColumn:false });
         return this;
     }
 
@@ -237,24 +272,24 @@ var AppRouter = Backbone.Router.extend({
     initialize:function (model) {
         console.log("initializing AppRouter");
         this.paramsView = new ParamsView({model:model.params});
-        this.paramsJsonView = new ParamsJsonView({model:model.params});
         this.universeView = new UniverseView({model:model.params});
         this.fundsView = new FundsView({model:model});
         $('#params').html(this.paramsView.render().el);
-        $('#paramsJson').html(this.paramsJsonView.render().el);
         $('#universe').html(this.universeView.render().el);
         $('#funds').html(this.fundsView.render().el);
     },
 
     routes:{
-//            "":"params",
+        "":"params",
         "results":"results"
     },
 
     params:function () {
+        console.log("Showing params");
     },
 
     results:function () {
+        console.log("Showing results");
     }
 
 });

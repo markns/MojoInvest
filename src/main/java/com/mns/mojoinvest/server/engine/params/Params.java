@@ -24,7 +24,7 @@ public class Params {
     private int alpha;
     private int castOff;
     private boolean riskAdjusted;
-    private int stddev;
+    private int stdDev;
     private boolean tradeEquityCurve;
     private int equityCurveWindow;
     private String relativeStrengthStyle;
@@ -34,7 +34,7 @@ public class Params {
 
     public Params(LocalDate fromDate, LocalDate toDate, LocalDate creationDate, Double initialInvestment,
                   Double transactionCost, int portfolioSize, int rebalanceFrequency, int ma1, int ma2,
-                  int roc, int alpha, int castOff, boolean riskAdjusted, int stddev, boolean tradeEquityCurve,
+                  int roc, int alpha, int castOff, boolean riskAdjusted, int stdDev, boolean tradeEquityCurve,
                   int equityCurveWindow, String relativeStrengthStyle, boolean useSafeAsset,
                   String safeAsset, List<String> universe) {
         this.fromDate = fromDate;
@@ -50,13 +50,17 @@ public class Params {
         this.alpha = alpha;
         this.castOff = castOff;
         this.riskAdjusted = riskAdjusted;
-        this.stddev = stddev;
+        this.stdDev = stdDev;
         this.tradeEquityCurve = tradeEquityCurve;
         this.equityCurveWindow = equityCurveWindow;
         this.relativeStrengthStyle = relativeStrengthStyle;
         this.useSafeAsset = useSafeAsset;
         this.safeAsset = safeAsset;
         this.universe = universe;
+    }
+
+    public Params() {
+        //Constructor for Jackson serialization
     }
 
     @JsonSerialize(using = CustomLocalDateSerializer.class)
@@ -169,12 +173,12 @@ public class Params {
         this.riskAdjusted = riskAdjusted;
     }
 
-    public int getStddev() {
-        return stddev;
+    public int getStdDev() {
+        return stdDev;
     }
 
-    public void setStddev(int stddev) {
-        this.stddev = stddev;
+    public void setStdDev(int stdDev) {
+        this.stdDev = stdDev;
     }
 
     public boolean isTradeEquityCurve() {

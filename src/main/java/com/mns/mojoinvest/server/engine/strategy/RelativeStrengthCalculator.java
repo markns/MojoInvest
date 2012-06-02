@@ -91,7 +91,7 @@ public class RelativeStrengthCalculator {
                                                                                  List<LocalDate> dates) {
 
         SortedMap<LocalDate, Map<String, BigDecimal>> adjusted = new TreeMap<LocalDate, Map<String, BigDecimal>>();
-        Collection<CalculatedValue> stddevs = calculatedValueDao.get(dates, funds, "STDDEV", params.getStddev());
+        Collection<CalculatedValue> stddevs = calculatedValueDao.get(dates, funds, "STDDEV", params.getStdDev());
         Map<LocalDate, Map<String, BigDecimal>> stddevMap = buildDateCalcValueMap(stddevs);
         for (LocalDate date : unadjusted.keySet()) {
             Map<String, BigDecimal> adjustedDate = new HashMap<String, BigDecimal>();
@@ -100,7 +100,7 @@ public class RelativeStrengthCalculator {
                     adjustedDate.put(symbol, unadjusted.get(date).get(symbol)
                             .divide(stddevMap.get(date).get(symbol), RoundingMode.HALF_EVEN));
                 } else {
-                    log.warning(date + " Unable to calculate adjusted RS for " + symbol + " on " + date + " no STDDEV|" + params.getStddev());
+                    log.warning(date + " Unable to calculate adjusted RS for " + symbol + " on " + date + " no STDDEV|" + params.getStdDev());
                 }
             }
             adjusted.put(date, adjustedDate);
