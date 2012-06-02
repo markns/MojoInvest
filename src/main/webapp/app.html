@@ -21,6 +21,8 @@
         <div class="clear"></div>
     </div>
 
+    <div id="loadingDiv">Loading my balls</div>
+
     <div id="content" class="main">
         <div id="paramsJson"></div>
         <div id="params"></div>
@@ -49,7 +51,6 @@
 <script src="lib/underscore.js"></script>
 <script src="lib/backbone.js"></script>
 <script src="lib/ICanHaz.js"></script>
-<script src="lib/jquery.fixedheadertable.js"></script>
 
 <script>
 
@@ -64,6 +65,15 @@
 $.datepicker.setDefaults({
     dateFormat:"yy-mm-dd"
 });
+$('#loadingDiv')
+        .hide()// hide it initially
+        .ajaxStart(function () {
+            $(this).show();
+        })
+        .ajaxStop(function () {
+            $(this).hide();
+        })
+;
 
 
 tpl = {
@@ -98,6 +108,7 @@ tpl = {
 };
 
 window.Params = Backbone.Model.extend({
+    url:"backtest"
 });
 
 
@@ -112,10 +123,37 @@ window.ParamsView = Backbone.View.extend({
         $(this.el).html(ich.params(this.model.toJSON({})));
         this.$("#fromDate").datepicker();
         this.$("#toDate").datepicker();
+        this.$("input[name=relativeStrengthStyle][value=" + this.model.get("relativeStrengthStyle") + "]")
+                .attr('checked', 'checked');
+
         this.$("#ma1").val(this.model.get("ma1"));
         this.$("#ma2").val(this.model.get("ma2"));
         this.$("#roc").val(this.model.get("roc"));
         this.$("#alpha").val(this.model.get("alpha"));
+
+        //TODO: Consolidate this logic with the rsRadioClicked logic below
+        switch ($('input[name=relativeStrengthStyle]:checked', '#relativeStrength').val()) {
+            case "MA" :
+                this.$('#ma1').attr('disabled', false);
+                this.$('#ma2').attr('disabled', false);
+                this.$('#roc').attr('disabled', true);
+                this.$('#alpha').attr('disabled', true);
+                break;
+            case "ROC" :
+                this.$('#ma1').attr('disabled', true);
+                this.$('#ma2').attr('disabled', true);
+                this.$('#roc').attr('disabled', false);
+                this.$('#alpha').attr('disabled', true);
+                break;
+            case "ALPHA" :
+                this.$('#ma1').attr('disabled', true);
+                this.$('#ma2').attr('disabled', true);
+                this.$('#roc').attr('disabled', true);
+                this.$('#alpha').attr('disabled', false);
+                break;
+        }
+
+
         this.$("#stdDev").val(this.model.get("stdDev"));
         this.$("#riskAdjusted").attr('checked', this.model.get("riskAdjusted"));
         this.$("#stdDev").attr('disabled', !this.model.get("riskAdjusted"));
@@ -123,7 +161,7 @@ window.ParamsView = Backbone.View.extend({
         this.$("#equityCurveWindow").attr('disabled', !this.model.get("tradeEquityCurve"));
         this.$("#useSafeAsset").attr('checked', this.model.get("useSafeAsset"));
         this.$("#safeAsset").attr('disabled', !this.model.get("useSafeAsset"));
-        //TODO: Need to disable use of safe asset when trade equity curve is disabled
+        //TODO: Need to disable and uncheck useSafeAsset when trade equity curve is unchecked
         return this;
     },
 
@@ -181,23 +219,28 @@ window.ParamsView = Backbone.View.extend({
             "toDate":$('#toDate').val(),
             "creationDate":$('#fromDate').val()
         });
-//        if (this.model.isNew()) {
-//            var self = this;
-//            app.wineList.create(this.model, {
-//                success:function () {
-//                    app.navigate('wines/' + self.model.id, false);
-//                }
-//            });
-//        } else {
-//            this.model.save();
-//        }
+        $.ajax({
+            type:'POST',
+            url:"backtest",
+            data:this.model.toJSON({}),
+            start:this.start,
+            success:this.success,
+            error:this.error
+//            dataType:dataType
+        });
 
         console.log(JSON.stringify(this.model));
-
-
         return false;
-    }
+    },
 
+    success:function (data) {
+        console.log(data);
+        app.navigate('wines/' + self.model.id, false);
+    },
+
+    error:function (jqXHR, textStatus, errorThrown) {
+        console.log(jqXHR, textStatus, errorThrown);
+    }
 
 });
 
@@ -209,7 +252,7 @@ window.UniverseView = Backbone.View.extend({
 
     render:function () {
         $(this.el).html(ich.universe(this.model.toJSON({})));
-        this.$('universe-table').fixedHeaderTable({ footer:false, cloneHeadToFoot:false, fixedColumn:false });
+//        this.$('universe-table').fixedHeaderTable({ footer:false, cloneHeadToFoot:false, fixedColumn:false });
         return this;
     }
 
@@ -299,7 +342,7 @@ var AppRouter = Backbone.Router.extend({
 
             var model = {};
 
-            model.params = new Params({"universe":["EIRL", "EWD"], "transactionCost":10.0, "creationDate":"1990-01-01", "initialInvestment":10000.0, "fromDate":"1990-01-01", "toDate":"2012-03-01", "portfolioSize":1, "rebalanceFrequency":1, "ma1":12, "ma2":26, "roc":26, "alpha":100, "castOff":8, "riskAdjusted":true, "stddev":26, "tradeEquityCurve":false, "equityCurveWindow":52, "relativeStrengthStyle":"MA", "useSafeAsset":true, "safeAsset":"IGLT"});
+            model.params = new Params({"universe":["EIRL", "EWD"], "transactionCost":10.0, "creationDate":"1990-01-01", "initialInvestment":10000.0, "fromDate":"1990-01-01", "toDate":"2012-03-01", "portfolioSize":1, "rebalanceFrequency":1, "ma1":12, "ma2":26, "roc":26, "alpha":100, "castOff":8, "riskAdjusted":true, "stddev":26, "tradeEquityCurve":true, "equityCurveWindow":52, "relativeStrengthStyle":"MA", "useSafeAsset":true, "safeAsset":"IGLT"});
             model.funds = [
                 {"name":"iShares MSCI Ireland Cppd Invstb Mkt Idx", "country":"US", "index":"MSCI EAFE NR USD", "provider":"iShares", "active":true, "symbol":"EIRL", "category":"Europe Stock", "inceptionDate":"2010-05-05", "overview":"The investment seeks investment results that correspond generally to the price and yield performance, before fees and expenses, of the MSCI Ireland Investable Market 25/50 Index. The fund generally invests at least 80% of assets in securities of the underlying index and in depositary receipts representing securities of the underlying index. It may invest the remainder of its assets in securities not included in its underlying index but which BFA believes to help the fund track its index, and in futures contracts, options on futures contracts, options and swaps as well as cash and cash equivalents. The fund is non-diversified."},
                 {"name":"iShares MSCI Poland Investable Mkt Index", "country":"US", "index":"MSCI EAFE NR USD", "provider":"iShares", "active":true, "symbol":"EPOL", "category":"Europe Stock", "inceptionDate":"2010-05-25", "overview":"The investment seeks investment results that correspond generally to the price and yield performance, before fees and expense, of the MSCI Poland Investable Market Index. The fund generally invests at least 90% of assets in the securities of the underlying index and in depositary receipts representing securities of the underlying index. It will concentrate its investments (i.e., hold 25% or more of its total assets) in a particular industry or group of industries to approximately the same extent that the underlying index is concentrated. The fund is non-diversified."},
