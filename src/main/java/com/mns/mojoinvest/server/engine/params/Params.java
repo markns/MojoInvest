@@ -228,4 +228,30 @@ public class Params {
     public void setUniverse(List<String> universe) {
         this.universe = universe;
     }
+
+    @Override
+    public String toString() {
+        return "Params{" +
+                "fromDate=" + fromDate +
+                ", toDate=" + toDate +
+                ", creationDate=" + creationDate +
+                ", initialInvestment=" + initialInvestment +
+                ", transactionCost=" + transactionCost +
+                ", portfolioSize=" + portfolioSize +
+                ", rebalanceFrequency=" + rebalanceFrequency +
+                ", ma1=" + ma1 +
+                ", ma2=" + ma2 +
+                ", roc=" + roc +
+                ", alpha=" + alpha +
+                ", castOff=" + castOff +
+                ", riskAdjusted=" + riskAdjusted +
+                ", stdDev=" + stdDev +
+                ", tradeEquityCurve=" + tradeEquityCurve +
+                ", equityCurveWindow=" + equityCurveWindow +
+                ", relativeStrengthStyle='" + relativeStrengthStyle + '\'' +
+                ", useSafeAsset=" + useSafeAsset +
+                ", safeAsset='" + safeAsset + '\'' +
+                ", universe=" + universe +
+                '}';
+    }
 }

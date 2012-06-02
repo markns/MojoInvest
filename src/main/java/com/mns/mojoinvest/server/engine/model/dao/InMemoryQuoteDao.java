@@ -44,6 +44,7 @@ public class InMemoryQuoteDao implements QuoteDao {
                 continue;
             String symbol = row[0];
             if (!map.containsKey(symbol)) {
+                System.out.println(symbol);
                 map.put(symbol, new HashMap<LocalDate, Quote>());
             }
             Quote quote = QuoteUtils.fromStringArray(row);

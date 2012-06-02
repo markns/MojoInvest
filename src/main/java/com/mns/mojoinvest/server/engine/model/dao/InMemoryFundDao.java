@@ -51,7 +51,7 @@ public class InMemoryFundDao implements FundDao {
 
     @Override
     public Collection<Fund> list() {
-        throw new NotImplementedException();
+        return funds.values();
     }
 
     @Override

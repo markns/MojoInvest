@@ -5,6 +5,7 @@ import com.google.common.collect.Lists;
 import com.google.inject.Inject;
 import com.mns.mojoinvest.server.engine.model.Fund;
 import com.mns.mojoinvest.server.engine.model.dao.FundDao;
+import com.mns.mojoinvest.server.engine.model.dao.InMemoryFundDao;
 import com.mns.mojoinvest.server.engine.params.Params;
 import com.sun.jersey.api.view.Viewable;
 import org.codehaus.jackson.map.ObjectMapper;
@@ -31,6 +32,7 @@ public class AppResource {
     @Inject
     public AppResource(FundDao fundDao) {
         this.fundDao = fundDao;
+        ((InMemoryFundDao) fundDao).init("data/ishares_funds.csv");
     }
 
     @GET

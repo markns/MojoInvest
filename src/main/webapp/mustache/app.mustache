@@ -313,7 +313,7 @@ var AppRouter = Backbone.Router.extend({
     };
 
     //Load templates is async because of http requests
-    tpl.loadTemplates(['params', 'funds', 'universe', 'paramsJson'], function () {
+    tpl.loadTemplates(['params', 'funds', 'universe'], function () {
 
         window.app = new AppRouter(bootstrap.load());
         Backbone.history.start();
