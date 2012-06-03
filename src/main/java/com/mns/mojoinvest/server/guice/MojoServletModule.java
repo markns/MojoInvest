@@ -46,14 +46,9 @@ public class MojoServletModule extends ServletModule {
         //TODO: Move this stuff to another module
         // Model object managers
         bind(ObjectifyFactory.class).in(Singleton.class);
-//        bind(QuoteDao.class).to(ObjectifyQuoteDao.class);
-//        bind(FundDao.class).to(ObjectifyFundDao.class);
-//        bind(CalculatedValueDao.class).to(ObjectifyCalculatedValueDao.class);
-
-        bind(QuoteDao.class).to(InMemoryQuoteDao.class);
-        bind(FundDao.class).to(InMemoryFundDao.class);
-        bind(CalculatedValueDao.class).to(InMemoryCalculatedValueDao.class);
-
+        bind(QuoteDao.class).to(ObjectifyQuoteDao.class);
+        bind(FundDao.class).to(ObjectifyFundDao.class);
+        bind(CalculatedValueDao.class).to(ObjectifyCalculatedValueDao.class);
 
         //Filters
         Map<String, String> appstatsInit = Maps.newHashMap();

@@ -2,7 +2,9 @@ package com.mns.mojoinvest.server.resource;
 
 import com.google.inject.Inject;
 import com.mns.mojoinvest.server.engine.model.Fund;
-import com.mns.mojoinvest.server.engine.model.dao.*;
+import com.mns.mojoinvest.server.engine.model.dao.CalculatedValueDao;
+import com.mns.mojoinvest.server.engine.model.dao.FundDao;
+import com.mns.mojoinvest.server.engine.model.dao.QuoteDao;
 import com.mns.mojoinvest.server.engine.params.Params;
 import com.mns.mojoinvest.server.engine.portfolio.Portfolio;
 import com.mns.mojoinvest.server.engine.portfolio.PortfolioFactory;
@@ -44,9 +46,6 @@ public class BacktestResource {
         this.fundDao = fundDao;
         this.quoteDate = quoteDao;
         this.calculatedValueDao = calculatedValueDao;
-        ((InMemoryQuoteDao) quoteDao).init("data/ishares_quotes.csv", "data/ishares_quotes_missing.csv", "data/etf_quotes_compare.csv");
-        ((InMemoryFundDao) fundDao).init("data/ishares_funds.csv");
-        ((InMemoryCalculatedValueDao) calculatedValueDao).init("data/ishares_cvs.csv");
         this.portfolioFactory = portfolioFactory;
         this.strategy = strategy;
         this.resultBuilder = resultBuilder;

@@ -9,7 +9,6 @@ import com.mns.mojoinvest.server.engine.model.dao.QuoteDao;
 import com.mns.mojoinvest.server.engine.params.Params;
 import com.mns.mojoinvest.server.engine.portfolio.Portfolio;
 import com.mns.mojoinvest.server.engine.strategy.DrawDown;
-import com.mns.mojoinvest.server.engine.strategy.MomentumStrategy;
 import com.mns.mojoinvest.server.util.TradingDayUtils;
 import org.apache.commons.lang.ArrayUtils;
 import org.joda.time.LocalDate;
@@ -69,8 +68,8 @@ public class StrategyResultBuilder {
         LocalDate fromDate = params.getFromDate();
         LocalDate toDate = params.getToDate();
 
-        CSVWriter writer = initialiseCsv();
-        writeCsvHeader(universe, writer);
+//        CSVWriter writer = initialiseCsv();
+//        writeCsvHeader(universe, writer);
 
         List<DrawDown> drawDowns = new ArrayList<DrawDown>();
         DrawDown currentDD = null;
@@ -86,15 +85,15 @@ public class StrategyResultBuilder {
             }
             currentDD = calculateDrawDowns(drawDowns, currentDD, rebalanceDate, portfolio.marketValue(rebalanceDate));
 
-            initialiseComparisonsForCsv(universe, rebalanceDate, portfolio.marketValue(rebalanceDate));
-            String[] compares = calculatePercentChangeForCsv(universe, rebalanceDate);
-            writeCsvRow(portfolio, shadowPortfolio, writer, rebalanceDate, portfolio.marketValue(rebalanceDate),
-                    shadowPortfolio.marketValue(rebalanceDate),
-                    additionalResults.get(MomentumStrategy.SHADOW_EQUITY_CURVE).get(rebalanceDate),
-                    compares);
+//            initialiseComparisonsForCsv(universe, rebalanceDate, portfolio.marketValue(rebalanceDate));
+//            String[] compares = calculatePercentChangeForCsv(universe, rebalanceDate);
+//            writeCsvRow(portfolio, shadowPortfolio, writer, rebalanceDate, portfolio.marketValue(rebalanceDate),
+//                    shadowPortfolio.marketValue(rebalanceDate),
+//                    additionalResults.get(MomentumStrategy.SHADOW_EQUITY_CURVE).get(rebalanceDate),
+//                    compares);
         }
 
-        flushCsvWriter(writer);
+//        flushCsvWriter(writer);
 
         logParams(params);
         logTrades(portfolio);
