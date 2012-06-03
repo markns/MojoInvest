@@ -16,8 +16,4 @@
 
     <threadsafe>true</threadsafe>
 
-    <resource-files>
-        <include path="/mustache/**.mustache"/>
-    </resource-files>
-
 </appengine-web-app>
