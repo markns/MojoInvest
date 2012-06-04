@@ -53,7 +53,7 @@ public class AppResource {
 
     public Params getParams() {
 
-        LocalDate fromDate = new LocalDate("1990-01-01");
+        LocalDate fromDate = new LocalDate("2000-01-01");
         LocalDate toDate = new LocalDate("2012-03-01");
 
         int portfolioSize = 1;
@@ -67,7 +67,7 @@ public class AppResource {
         int stddev = 26;
         boolean equityCurveTrading = true;
         int equityCurveWindow = 52;
-        boolean useSafeAsset = true;
+        boolean useSafeAsset = false;
         //String safeAsset = "FSUTX"; //fidelity
         String safeAsset = "IGLT"; //ishares
         //String safeAsset = "GSPC";

@@ -36,6 +36,7 @@ public class RelativeStrengthCalculator {
         Map<LocalDate, Map<String, BigDecimal>> ma1Map = buildDateCalcValueMap(ma1s);
         Map<LocalDate, Map<String, BigDecimal>> ma2Map = buildDateCalcValueMap(ma2s);
 
+        log.fine("Finished building ma1 & ma2 maps");
         SortedMap<LocalDate, Map<String, BigDecimal>> allRs = new TreeMap<LocalDate, Map<String, BigDecimal>>();
         for (LocalDate date : dates) {
 
@@ -58,6 +59,7 @@ public class RelativeStrengthCalculator {
             }
             allRs.put(date, rs);
         }
+        log.fine("Finished building allRs map");
         return allRs;
     }
 

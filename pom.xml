@@ -157,10 +157,6 @@
                     <groupId>org.easymock</groupId>
                     <artifactId>easymockclassextension</artifactId>
                 </exclusion>
-                <exclusion>
-                    <groupId>commons-logging</groupId>
-                    <artifactId>commons-logging</artifactId>
-                </exclusion>
             </exclusions>
         </dependency>
         <dependency>
@@ -179,7 +175,6 @@
             <groupId>javax.persistence</groupId>
             <artifactId>persistence-api</artifactId>
             <version>${persistence-api.version}</version>
-            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>net.sf.jsr107cache</groupId>
