@@ -49,6 +49,10 @@
 
 <script>
 
+window.App = {
+    //Main application namespace
+};
+
 //JQuery set up stuff - where should this live?
 (function ($) {
     $.fn.toggleDisabled = function () {
@@ -103,11 +107,11 @@ tpl = {
 
 };
 
-window.Params = Backbone.Model.extend({});
-window.AppModel = Backbone.Model.extend({});
+App.Params = Backbone.Model.extend({});
+App.AppModel = Backbone.Model.extend({});
 
 
-window.ParamsView = Backbone.View.extend({
+App.ParamsView = Backbone.View.extend({
 
     initialize:function () {
         this.model.bind("change", this.render, this);
@@ -231,17 +235,18 @@ window.ParamsView = Backbone.View.extend({
 
     success:function (data) {
         console.log(data);
-        app.navigate('results', true);
+        console.log(data.dataTable);
+        App.router.navigate('results', true);
     },
 
     error:function (jqXHR, textStatus, errorThrown) {
         console.log(jqXHR, textStatus, errorThrown);
-        app.navigate('results', true);
+        App.router.navigate('results', true);
     }
 
 });
 
-window.UniverseView = Backbone.View.extend({
+App.UniverseView = Backbone.View.extend({
     initialize:function () {
         this.model.bind("change:universe", this.render, this);
     },
@@ -254,7 +259,7 @@ window.UniverseView = Backbone.View.extend({
 
 });
 
-window.FundsView = Backbone.View.extend({
+App.FundsView = Backbone.View.extend({
     initialize:function () {
     },
 
@@ -318,16 +323,16 @@ var AppRouter = Backbone.Router.extend({
 
     params:function () {
         console.log("Showing params");
-        var views = [new ParamsView({model:this.model.params}),
-            new UniverseView({model:this.model.params}),
-            new FundsView({model:this.model})];
-        app.showViews("#content", views)
+        var views = [new App.ParamsView({model:this.model.params}),
+            new App.UniverseView({model:this.model.params}),
+            new App.FundsView({model:this.model})];
+        App.router.showViews("#content", views)
     },
 
     results:function () {
         console.log("Showing results");
-        var views = [new FundsView({model:this.model})];
-        app.showViews("#content", views)
+        var views = [new App.FundsView({model:this.model})];
+        App.router.showViews("#content", views)
     },
 
     showViews:function (selector, views) {
@@ -349,13 +354,15 @@ var AppRouter = Backbone.Router.extend({
 
 
 <script>
+
     bootstrap = {
         load:function () {
             console.log("bootstrapping models");
 
+
             var model = {};
 
-            model.params = new Params({"fromDate":"2000-01-01", "toDate":"2012-03-01", "creationDate":"1990-01-01", "initialInvestment":10000.0, "transactionCost":10.0, "portfolioSize":1, "rebalanceFrequency":1, "ma1":12, "ma2":26, "roc":26, "alpha":100, "castOff":8, "riskAdjusted":true, "stdDev":26, "tradeEquityCurve":true, "equityCurveWindow":52, "relativeStrengthStyle":"MA", "useSafeAsset":false, "safeAsset":"IGLT", "universe":["EWM", "EWW", "EWL", "EWU", "EWS", "EWH", "EWA", "EWJ", "EWG", "EWD", "EWK", "EWQ", "EWC", "EWN", "EWP", "EWI", "EWO"]});
+            model.params = new App.Params({"fromDate":"2000-01-01", "toDate":"2012-03-01", "creationDate":"1990-01-01", "initialInvestment":10000.0, "transactionCost":10.0, "portfolioSize":1, "rebalanceFrequency":1, "ma1":12, "ma2":26, "roc":26, "alpha":100, "castOff":8, "riskAdjusted":true, "stdDev":26, "tradeEquityCurve":true, "equityCurveWindow":52, "relativeStrengthStyle":"MA", "useSafeAsset":false, "safeAsset":"IGLT", "universe":["EWM", "EWW", "EWL", "EWU", "EWS", "EWH", "EWA", "EWJ", "EWG", "EWD", "EWK", "EWQ", "EWC", "EWN", "EWP", "EWI", "EWO"]});
             model.funds = [
                 {"symbol":"EWA", "name":"iShares MSCI Australia Index", "category":"Pacific Stock", "provider":"iShares", "active":true, "country":"US", "index":"", "overview":"", "inceptionDate":"1996-04-01"},
                 {"symbol":"EWC", "name":"iShares MSCI Canada Index", "category":"Foreign Stock", "provider":"iShares", "active":true, "country":"US", "index":"", "overview":"", "inceptionDate":"1996-04-01"},
@@ -378,12 +385,13 @@ var AppRouter = Backbone.Router.extend({
 
             return model;
         }
-    };
+    }
+    ;
 
     //Load templates is async because of http requests
     tpl.loadTemplates(['params', 'funds', 'universe'], function () {
 
-        window.app = new AppRouter(bootstrap.load());
+        App.router = new AppRouter(bootstrap.load());
         Backbone.history.start();
     });
 
