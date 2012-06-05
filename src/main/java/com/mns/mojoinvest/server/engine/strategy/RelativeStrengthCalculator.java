@@ -26,17 +26,22 @@ public class RelativeStrengthCalculator {
     public SortedMap<LocalDate, Map<String, BigDecimal>> getRelativeStrengthsMA(Collection<Fund> funds, Params params,
                                                                                 List<LocalDate> dates) {
 
-        log.info("Starting load of calculated values");
+        log.fine("Starting load of ma1 calculated values");
         Collection<CalculatedValue> ma1s = calculatedValueDao.get(dates, funds,
                 "SMA", params.getMa1());
+        log.fine("Loaded " + ma1s.size() + " ma1s from datastore");
+
+        log.fine("Starting load of ma2 calculated values");
         Collection<CalculatedValue> ma2s = calculatedValueDao.get(dates, funds,
                 "SMA", params.getMa2());
+        log.fine("Loaded " + ma2s.size() + " ma2s from datastore");
 
-        log.info("Building intermediate data structures");
+        log.fine("Building intermediate data structures");
         Map<LocalDate, Map<String, BigDecimal>> ma1Map = buildDateCalcValueMap(ma1s);
         Map<LocalDate, Map<String, BigDecimal>> ma2Map = buildDateCalcValueMap(ma2s);
-
         log.fine("Finished building ma1 & ma2 maps");
+
+        long start = System.currentTimeMillis();
         SortedMap<LocalDate, Map<String, BigDecimal>> allRs = new TreeMap<LocalDate, Map<String, BigDecimal>>();
         for (LocalDate date : dates) {
 
@@ -59,7 +64,7 @@ public class RelativeStrengthCalculator {
             }
             allRs.put(date, rs);
         }
-        log.fine("Finished building allRs map");
+        log.fine("Building allRs map took " + (System.currentTimeMillis() - start));
         return allRs;
     }
 
@@ -93,8 +98,14 @@ public class RelativeStrengthCalculator {
                                                                                  List<LocalDate> dates) {
 
         SortedMap<LocalDate, Map<String, BigDecimal>> adjusted = new TreeMap<LocalDate, Map<String, BigDecimal>>();
+        log.fine("Starting load of stdDev calculated values");
         Collection<CalculatedValue> stddevs = calculatedValueDao.get(dates, funds, "STDDEV", params.getStdDev());
+        log.fine("Loaded " + stddevs.size() + " ma1s from datastore");
+
+        log.fine("Building intermediate data structure");
         Map<LocalDate, Map<String, BigDecimal>> stddevMap = buildDateCalcValueMap(stddevs);
+
+        long start = System.currentTimeMillis();
         for (LocalDate date : unadjusted.keySet()) {
             Map<String, BigDecimal> adjustedDate = new HashMap<String, BigDecimal>();
             for (String symbol : unadjusted.get(date).keySet()) {
@@ -107,18 +118,22 @@ public class RelativeStrengthCalculator {
             }
             adjusted.put(date, adjustedDate);
         }
+        log.fine("Building adjusted RS took " + (System.currentTimeMillis() - start));
         return adjusted;
     }
 
 
     private SortedMap<LocalDate, Map<String, BigDecimal>> buildDateCalcValueMap(Collection<CalculatedValue> vals) {
+        long start = System.currentTimeMillis();
         SortedMap<LocalDate, Map<String, BigDecimal>> valMap = new TreeMap<LocalDate, Map<String, BigDecimal>>();
+//        Map<LocalDate, Map<String, BigDecimal>> valMap = new HashMap<LocalDate, Map<String, BigDecimal>>();
         for (CalculatedValue val : vals) {
             if (!valMap.containsKey(val.getDate())) {
                 valMap.put(val.getDate(), new HashMap<String, BigDecimal>());
             }
             valMap.get(val.getDate()).put(val.getSymbol(), val.getValue());
         }
+        log.fine("ms for buildDateCalcValueMap was: " + (System.currentTimeMillis() - start));
         return valMap;
     }
 }
