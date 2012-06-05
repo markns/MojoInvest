@@ -2,6 +2,10 @@ package com.mns.mojoinvest.server.engine.result;
 
 import au.com.bytecode.opencsv.CSVWriter;
 import com.google.inject.Inject;
+import com.google.visualization.datasource.base.TypeMismatchException;
+import com.google.visualization.datasource.datatable.ColumnDescription;
+import com.google.visualization.datasource.datatable.DataTable;
+import com.google.visualization.datasource.datatable.value.ValueType;
 import com.mns.mojoinvest.server.engine.model.Fund;
 import com.mns.mojoinvest.server.engine.model.Quote;
 import com.mns.mojoinvest.server.engine.model.dao.FundDao;
@@ -12,10 +16,8 @@ import com.mns.mojoinvest.server.engine.strategy.DrawDown;
 import com.mns.mojoinvest.server.util.TradingDayUtils;
 import org.apache.commons.lang.ArrayUtils;
 import org.joda.time.LocalDate;
-import org.joda.time.LocalTime;
 import org.joda.time.Years;
 
-import java.io.FileWriter;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.math.MathContext;
@@ -64,9 +66,7 @@ public class StrategyResultBuilder {
         return this;
     }
 
-    public void build() throws ResultBuilderException {
-        LocalDate fromDate = params.getFromDate();
-        LocalDate toDate = params.getToDate();
+    public StrategyResult build() throws ResultBuilderException {
 
 //        CSVWriter writer = initialiseCsv();
 //        writeCsvHeader(universe, writer);
@@ -98,7 +98,33 @@ public class StrategyResultBuilder {
         logParams(params);
         logTrades(portfolio);
         logDrawDowns(drawDowns);
-        logCAGR(portfolio, toDate);
+        logCAGR(portfolio, params);
+
+        return new StrategyResult(generateDataTable(portfolio, shadowPortfolio), portfolio.getTransactions());
+    }
+
+    public DataTable generateDataTable(Portfolio portfolio, Portfolio shadowPortfolio) {
+
+        // Create a data table
+        DataTable data = new DataTable();
+        ArrayList<ColumnDescription> cd = new ArrayList<ColumnDescription>();
+        cd.add(new ColumnDescription("name", ValueType.TEXT, "Animal name"));
+        cd.add(new ColumnDescription("link", ValueType.TEXT, "Link to wikipedia"));
+        cd.add(new ColumnDescription("population", ValueType.NUMBER, "Population size"));
+        cd.add(new ColumnDescription("vegeterian", ValueType.BOOLEAN, "Vegetarian?"));
+
+        data.addColumns(cd);
+
+        // Fill the data table.
+        try {
+            data.addRowFromValues("Aye-aye", "http://en.wikipedia.org/wiki/Aye-aye", 100, true);
+            data.addRowFromValues("Sloth", "http://en.wikipedia.org/wiki/Sloth", 300, true);
+            data.addRowFromValues("Leopard", "http://en.wikipedia.org/wiki/Leopard", 50, false);
+            data.addRowFromValues("Tiger", "http://en.wikipedia.org/wiki/Tiger", 80, false);
+        } catch (TypeMismatchException e) {
+            System.out.println("Invalid type!");
+        }
+        return data;
     }
 
     private List<LocalDate> getRebalanceDates(Params params) {
@@ -153,16 +179,16 @@ public class StrategyResultBuilder {
     }
 
 
-    private void logCAGR(Portfolio portfolio, LocalDate toDate)
+    private void logCAGR(Portfolio portfolio, Params toDate)
             throws ResultBuilderException {
         if (portfolio.getTransactions().size() == 0)
             throw new ResultBuilderException("No transactions in portfolio");
         LocalDate fromDate = portfolio.getTransactions().get(0).getDate();
 
-        BigDecimal marketValue = portfolio.marketValue(toDate);
+        BigDecimal marketValue = portfolio.marketValue(params.getToDate());
         log.info("Final portfolio value: " + marketValue);
         double base = marketValue.divide(new BigDecimal(portfolio.getParams().getInitialInvestment())).doubleValue();
-        double e = 1d / Years.yearsBetween(fromDate, toDate).getYears();
+        double e = 1d / Years.yearsBetween(fromDate, params.getToDate()).getYears();
         double cagr = (1 - Math.pow(base, e)) * -100;
         log.info("CAGR: " + cagr + "%");
     }
@@ -180,16 +206,16 @@ public class StrategyResultBuilder {
      * Csv writing stuff - non production
     */
 
-    private CSVWriter initialiseCsv() {
-        CSVWriter writer = null;
-        try {
-            writer = new CSVWriter(new FileWriter("data/strategy_runs/" + new LocalTime() + ".csv"));
-        } catch (IOException e) {
-            e.printStackTrace();
-            throw new RuntimeException("", e);
-        }
-        return writer;
-    }
+//    private CSVWriter initialiseCsv() {
+//        CSVWriter writer = null;
+//        try {
+//            writer = new CSVWriter(new FileWriter("data/strategy_runs/" + new LocalTime() + ".csv"));
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//            throw new RuntimeException("", e);
+//        }
+//        return writer;
+//    }
 
     private void writeCsvHeader(Collection<Fund> universe, CSVWriter writer) {
         String[] headCompare = new String[universe.size()];

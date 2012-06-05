@@ -1,4 +1,4 @@
-package com.mns.mojoinvest.server.dto;
+package com.mns.mojoinvest.server.engine.result;
 
 import java.util.Date;
 

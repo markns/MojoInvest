@@ -9,10 +9,10 @@ import com.mns.mojoinvest.server.engine.params.Params;
 import com.mns.mojoinvest.server.engine.portfolio.Portfolio;
 import com.mns.mojoinvest.server.engine.portfolio.PortfolioFactory;
 import com.mns.mojoinvest.server.engine.result.ResultBuilderException;
+import com.mns.mojoinvest.server.engine.result.StrategyResult;
 import com.mns.mojoinvest.server.engine.result.StrategyResultBuilder;
 import com.mns.mojoinvest.server.engine.strategy.MomentumStrategy;
 import com.mns.mojoinvest.server.engine.strategy.StrategyException;
-import org.codehaus.jackson.map.ObjectMapper;
 import org.joda.time.LocalDate;
 
 import javax.ws.rs.Consumes;
@@ -36,8 +36,6 @@ public class BacktestResource {
     private final StrategyResultBuilder resultBuilder;
 
 
-    private final ObjectMapper mapper = new ObjectMapper();
-
     @Inject
     public BacktestResource(final FundDao fundDao, final QuoteDao quoteDao,
                             final CalculatedValueDao calculatedValueDao,
@@ -54,7 +52,8 @@ public class BacktestResource {
     @POST
     @Consumes({MediaType.APPLICATION_JSON})
     @Produces({MediaType.APPLICATION_JSON})
-    public Portfolio runBacktest(Params params) {
+    public StrategyResult runBacktest(Params params)
+            throws StrategyException, ResultBuilderException {
         System.out.println(params);
         Collection<Fund> universe;
         if (params.getUniverse() != null) {
@@ -65,21 +64,14 @@ public class BacktestResource {
         Portfolio portfolio = portfolioFactory.create(params, false);
         Portfolio shadowPortfolio = portfolioFactory.create(params, true);
 
-        try {
-            Map<String, Map<LocalDate, BigDecimal>> additionalResults =
-                    strategy.execute(portfolio, shadowPortfolio, params, universe);
-            //Should we use assisted inject here?
-            resultBuilder.setPortfolio(portfolio)
-                    .setShadowPortfolio(shadowPortfolio)
-                    .setAdditionalResults(additionalResults)
-                    .setParams(params)
-                    .build();
-        } catch (StrategyException e) {
-            e.printStackTrace();
-        } catch (ResultBuilderException e) {
-            e.printStackTrace();
-        }
-        return portfolio;
+        Map<String, Map<LocalDate, BigDecimal>> additionalResults =
+                strategy.execute(portfolio, shadowPortfolio, params, universe);
+        //Should we use assisted inject here?
+        return resultBuilder.setPortfolio(portfolio)
+                .setShadowPortfolio(shadowPortfolio)
+                .setAdditionalResults(additionalResults)
+                .setParams(params)
+                .build();
     }
 
 }
