@@ -65,9 +65,8 @@ tpl = {
 
 };
 
-window.Params = Backbone.Model.extend({
-    url:"backtest"
-});
+window.Params = Backbone.Model.extend({});
+window.AppModel = Backbone.Model.extend({});
 
 
 window.ParamsView = Backbone.View.extend({
@@ -194,12 +193,12 @@ window.ParamsView = Backbone.View.extend({
 
     success:function (data) {
         console.log(data);
-        app.navigate('results', false);
+        app.navigate('results', true);
     },
 
     error:function (jqXHR, textStatus, errorThrown) {
         console.log(jqXHR, textStatus, errorThrown);
-        app.navigate('results', false);
+        app.navigate('results', true);
     }
 
 });
@@ -271,12 +270,8 @@ var AppRouter = Backbone.Router.extend({
 
     initialize:function (model) {
         console.log("initializing AppRouter");
-        this.paramsView = new ParamsView({model:model.params});
-        this.universeView = new UniverseView({model:model.params});
-        this.fundsView = new FundsView({model:model});
-        $('#params').html(this.paramsView.render().el);
-        $('#universe').html(this.universeView.render().el);
-        $('#funds').html(this.fundsView.render().el);
+        //Nb. this.model is NOT a backbone model entity
+        this.model = model;
     },
 
     routes:{
@@ -286,10 +281,28 @@ var AppRouter = Backbone.Router.extend({
 
     params:function () {
         console.log("Showing params");
+        var views = [new ParamsView({model:this.model.params}),
+            new UniverseView({model:this.model.params}),
+            new FundsView({model:this.model})];
+        app.showViews("#content", views)
     },
 
     results:function () {
         console.log("Showing results");
+        var views = [new FundsView({model:this.model})];
+        app.showViews("#content", views)
+    },
+
+    showViews:function (selector, views) {
+        if (this.currentViews) {
+            for (var i = 0; i < this.currentViews.length; i++) {
+                this.currentViews[i].close();
+            }
+        }
+        for (var j = 0; j < views.length; j++) {
+            $(selector).append(views[j].render().el);
+        }
+        this.currentViews = views;
     }
 
 });
