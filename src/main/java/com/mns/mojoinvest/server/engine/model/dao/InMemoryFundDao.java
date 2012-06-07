@@ -69,8 +69,4 @@ public class InMemoryFundDao implements FundDao {
         throw new NotImplementedException();
     }
 
-
-    public Collection<Fund> getAll() {
-        return funds.values();
-    }
 }

@@ -29,7 +29,7 @@ public class FundUpdaterJob extends Job1<String, List<Fund>> {
 
         Collection<Fund> existing = null;
         try {
-            existing = dao.getAll();
+            existing = dao.list();
         } catch (NotFoundException e) {
             existing = new HashSet<Fund>(0);
         }

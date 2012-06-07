@@ -63,7 +63,7 @@ public class BacktestResource {
         if (params.getUniverse() != null) {
             universe = fundDao.get(params.getUniverse());
         } else {
-            universe = fundDao.getAll();
+            universe = fundDao.list();
         }
         Portfolio portfolio = portfolioFactory.create(params, false);
         Portfolio shadowPortfolio = portfolioFactory.create(params, true);

@@ -3,7 +3,7 @@ package com.mns.mojoinvest.server.engine.model.dao;
 import com.google.inject.Inject;
 import com.googlecode.objectify.Key;
 import com.googlecode.objectify.ObjectifyFactory;
-import com.mns.mojoinvest.server.engine.model.*;
+import com.mns.mojoinvest.server.engine.model.Fund;
 
 import java.util.*;
 import java.util.logging.Logger;
@@ -28,29 +28,12 @@ public class ObjectifyFundDao extends DAOBase implements FundDao {
     public void registerObjects(ObjectifyFactory ofyFactory) {
         objectsRegistered = true;
         ofyFactory.register(Fund.class);
-        ofyFactory.register(Symbols.class);
-        ofyFactory.register(Provider.class);
-        ofyFactory.register(ProviderSet.class);
-        ofyFactory.register(Category.class);
-        ofyFactory.register(CategorySet.class);
         ofyFactory.getConversions().add(new MyTypeConverters());
     }
 
     @Override
     public Collection<Fund> list() {
         return ofy().query(Fund.class).list();
-    }
-
-    @Override
-    public Collection<Fund> getAll() {
-        Key<Symbols> key = new Key<Symbols>(Symbols.class, "symbols");
-        Symbols symbols = ofy().get(key);
-
-        List<Key<Fund>> keys = new ArrayList<Key<Fund>>();
-        for (String symbol : symbols.getSymbols()) {
-            keys.add(new Key<Fund>(Fund.class, symbol));
-        }
-        return ofy().get(keys).values();
     }
 
     @Override

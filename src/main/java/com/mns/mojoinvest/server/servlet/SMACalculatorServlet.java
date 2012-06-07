@@ -44,7 +44,7 @@ public class SMACalculatorServlet extends HttpServlet {
 
         CalculationService service = new CalculationService();
 
-        for (Fund fund : fundDao.getAll()) {
+        for (Fund fund : fundDao.list()) {
 
             log.info("Running calculations for " + fund);
             List<Quote> quotes = quoteDao.query(fund.getSymbol());

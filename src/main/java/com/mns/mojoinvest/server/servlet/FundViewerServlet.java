@@ -31,7 +31,7 @@ public class FundViewerServlet extends HttpServlet {
 
         boolean csv = Boolean.parseBoolean(req.getParameter("csv"));
 
-        Collection<Fund> funds = dao.getAll();
+        Collection<Fund> funds = dao.list();
 
         resp.setContentType("text/html");
 

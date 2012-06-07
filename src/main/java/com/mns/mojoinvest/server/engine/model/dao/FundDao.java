@@ -14,8 +14,6 @@ public interface FundDao {
 
     Collection<Fund> list();
 
-    Collection<Fund> getAll();
-
     Fund get(String symbol);
 
     Collection<Fund> get(Collection<String> symbols);

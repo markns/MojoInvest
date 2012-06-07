@@ -56,7 +56,7 @@ public class OfflineCalculatorTool {
         NavigableMap<LocalDate, BigDecimal> idxReturns = getIndexReturns("GSPC", latest);
 
 
-        for (Fund fund : fundDao.getAll()) {
+        for (Fund fund : fundDao.list()) {
 
             List<Quote> quotes = quoteDao.query(fund.getSymbol());
             if (quotes == null)
