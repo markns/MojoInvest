@@ -54,12 +54,6 @@ public class InMemoryQuoteDao implements QuoteDao {
         reader.close();
     }
 
-    public List<Quote> get(Fund fund, final Collection<LocalDate> dates) {
-        Map<LocalDate, Quote> quotes = map.get(fund.getSymbol());
-        List<Quote> filtered = new ArrayList<Quote>(Maps.filterKeys(quotes, Predicates.in(dates)).values());
-        return filtered;
-    }
-
     @Override
     public void registerObjects(ObjectifyFactory ofyFactory) {
         throw new NotImplementedException();
@@ -76,22 +70,6 @@ public class InMemoryQuoteDao implements QuoteDao {
     }
 
     @Override
-    public List<Quote> list() {
-        throw new NotImplementedException();
-    }
-
-    @Override
-    public List<Quote> query(Map<String, Object> filters) {
-        throw new NotImplementedException();
-    }
-
-    @Override
-    public List<Quote> query(Fund fund) {
-        return new ArrayList<Quote>(map.get(fund.getSymbol()).values());
-
-    }
-
-    @Override
     public List<Quote> query(String symbol) {
         Map<LocalDate, Quote> quoteMap = map.get(symbol);
         if (quoteMap == null)
@@ -105,8 +83,17 @@ public class InMemoryQuoteDao implements QuoteDao {
     }
 
     @Override
-    public List<Quote> query(String symbol, LocalDate date) {
-        throw new NotImplementedException();
+    public Quote get(Fund fund, LocalDate date) {
+        return map.get(fund.getSymbol()).get(date);
+
+    }
+
+    @Override
+    public Quote get(String symbol, LocalDate date) {
+        if (map.get(symbol) == null)
+            return null;
+
+        return map.get(symbol).get(date);
     }
 
     @Override
@@ -119,33 +106,14 @@ public class InMemoryQuoteDao implements QuoteDao {
         throw new NotImplementedException();
     }
 
+    public List<Quote> get(Fund fund, final Collection<LocalDate> dates) {
+        Map<LocalDate, Quote> quotes = map.get(fund.getSymbol());
+        return new ArrayList<Quote>(Maps.filterKeys(quotes, Predicates.in(dates)).values());
+    }
+
     @Override
     public List<Key<Quote>> getKeys(Collection<String> symbols, Collection<LocalDate> dates) {
         throw new NotImplementedException();
-    }
-
-    @Override
-    public List<Key<Quote>> getKeys(String symbol, Collection<LocalDate> dates) {
-        throw new NotImplementedException();
-    }
-
-    @Override
-    public List<Key<Quote>> getKeys(List<String> symbols, LocalDate date) {
-        throw new NotImplementedException();
-    }
-
-    @Override
-    public Quote get(String symbol, LocalDate date) {
-        if (map.get(symbol) == null)
-            return null;
-
-        return map.get(symbol).get(date);
-    }
-
-    @Override
-    public Quote get(Fund fund, LocalDate date) {
-        return map.get(fund.getSymbol()).get(date);
-
     }
 }
 

@@ -31,7 +31,6 @@ public class ObjectifyQuoteDao extends DAOBase implements QuoteDao {
         return objectsRegistered;
     }
 
-
     @Override
     public void registerObjects(ObjectifyFactory ofyFactory) {
         objectsRegistered = true;
@@ -50,26 +49,6 @@ public class ObjectifyQuoteDao extends DAOBase implements QuoteDao {
     }
 
     @Override
-    public List<Quote> list() {
-        Query<Quote> q = ofy().query(Quote.class);
-        return q.list();
-    }
-
-    @Override
-    public List<Quote> query(Map<String, Object> filters) {
-        Query<Quote> q = ofy().query(Quote.class);
-        for (Map.Entry<String, Object> entry : filters.entrySet()) {
-            q.filter(entry.getKey(), entry.getValue());
-        }
-        return q.list();
-    }
-
-    @Override
-    public List<Quote> query(Fund fund) {
-        return query(fund.getSymbol());
-    }
-
-    @Override
     public List<Quote> query(String symbol) {
         Query<Quote> q = ofy().query(Quote.class);
         q.filter("symbol", symbol);
@@ -79,14 +58,6 @@ public class ObjectifyQuoteDao extends DAOBase implements QuoteDao {
     @Override
     public List<Quote> query(LocalDate date) {
         Query<Quote> q = ofy().query(Quote.class);
-        q.filter("date", date.toDate());
-        return q.list();
-    }
-
-    @Override
-    public List<Quote> query(String symbol, LocalDate date) {
-        Query<Quote> q = ofy().query(Quote.class);
-        q.filter("symbol", symbol);
         q.filter("date", date.toDate());
         return q.list();
     }
@@ -114,6 +85,15 @@ public class ObjectifyQuoteDao extends DAOBase implements QuoteDao {
     }
 
     @Override
+    public Collection<Quote> get(Fund fund, Collection<LocalDate> dates) {
+        List<Key<Quote>> keys = new ArrayList<Key<Quote>>();
+        for (LocalDate date : dates) {
+            keys.add(new Key<Quote>(Quote.class, QuoteUtils.quoteId(fund.getSymbol(), date)));
+        }
+        return get(keys);
+    }
+
+    @Override
     public List<Key<Quote>> getKeys(Collection<String> symbols, Collection<LocalDate> dates) {
         List<Key<Quote>> keys = new ArrayList<Key<Quote>>();
         for (LocalDate date : dates) {
@@ -122,33 +102,6 @@ public class ObjectifyQuoteDao extends DAOBase implements QuoteDao {
             }
         }
         return keys;
-    }
-
-    @Override
-    public List<Key<Quote>> getKeys(String symbol, Collection<LocalDate> dates) {
-        List<Key<Quote>> keys = new ArrayList<Key<Quote>>();
-        for (LocalDate date : dates) {
-            keys.add(new Key<Quote>(Quote.class, QuoteUtils.quoteId(symbol, date)));
-        }
-        return keys;
-    }
-
-    @Override
-    public List<Key<Quote>> getKeys(List<String> symbols, LocalDate date) {
-        List<Key<Quote>> keys = new ArrayList<Key<Quote>>();
-        for (String symbol : symbols) {
-            keys.add(new Key<Quote>(Quote.class, QuoteUtils.quoteId(symbol, date)));
-        }
-        return keys;
-    }
-
-    @Override
-    public Collection<Quote> get(Fund fund, Collection<LocalDate> dates) {
-        List<Key<Quote>> keys = new ArrayList<Key<Quote>>();
-        for (LocalDate date : dates) {
-            keys.add(new Key<Quote>(Quote.class, QuoteUtils.quoteId(fund.getSymbol(), date)));
-        }
-        return get(keys);
     }
 
 

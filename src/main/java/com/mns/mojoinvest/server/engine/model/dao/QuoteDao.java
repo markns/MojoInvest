@@ -18,33 +18,20 @@ public interface QuoteDao {
 
     Map<Key<Quote>, Quote> put(Iterable<Quote> quotes);
 
-    List<Quote> list();
-
-    List<Quote> query(Map<String, Object> filters);
-
-    List<Quote> query(Fund fund);
-
     List<Quote> query(String symbol);
 
     List<Quote> query(LocalDate date);
 
-    List<Quote> query(String symbol, LocalDate date);
-
     Quote get(String symbol, LocalDate date);
 
     Quote get(Fund fund, LocalDate date);
+
+    Collection<Quote> get(Fund fund, Collection<LocalDate> dates);
 
     Collection<Quote> get(List<Key<Quote>> keys);
 
     Collection<Quote> get(Collection<String> symbols, Collection<LocalDate> dates);
 
     List<Key<Quote>> getKeys(Collection<String> symbols, Collection<LocalDate> dates);
-
-    List<Key<Quote>> getKeys(String symbol, Collection<LocalDate> dates);
-
-    List<Key<Quote>> getKeys(List<String> symbols, LocalDate date);
-
-    Collection<Quote> get(Fund fund, Collection<LocalDate> dates);
-
 
 }
