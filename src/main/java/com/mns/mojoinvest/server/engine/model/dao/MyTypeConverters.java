@@ -40,7 +40,7 @@ public class MyTypeConverters implements Converter {
         if (value instanceof DateMidnight)
             return ((DateMidnight) value).toDate();
         if (value instanceof LocalDate)
-            return ((LocalDate) value).toDateMidnight().toDate();
+            return ((LocalDate) value).toDate();
         else
             return null;
     }

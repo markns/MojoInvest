@@ -37,4 +37,5 @@ Thumbs.db
 *.iml
 .idea/
 target/
+temp/
 *.bin

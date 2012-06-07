@@ -6,6 +6,7 @@ import com.google.visualization.datasource.base.TypeMismatchException;
 import com.google.visualization.datasource.datatable.ColumnDescription;
 import com.google.visualization.datasource.datatable.DataTable;
 import com.google.visualization.datasource.datatable.value.ValueType;
+import com.ibm.icu.util.GregorianCalendar;
 import com.mns.mojoinvest.server.engine.model.Fund;
 import com.mns.mojoinvest.server.engine.model.Quote;
 import com.mns.mojoinvest.server.engine.model.dao.FundDao;
@@ -100,31 +101,37 @@ public class StrategyResultBuilder {
         logDrawDowns(drawDowns);
         logCAGR(portfolio, params);
 
-        return new StrategyResult(generateDataTable(portfolio, shadowPortfolio), portfolio.getTransactions());
+        return new StrategyResult(generateDataTable(rebalanceDates, portfolio), portfolio.getTransactions());
     }
 
-    public DataTable generateDataTable(Portfolio portfolio, Portfolio shadowPortfolio) {
+    public DataTable generateDataTable(List<LocalDate> dates, Portfolio portfolio1) {
 
         // Create a data table
         DataTable data = new DataTable();
+
         ArrayList<ColumnDescription> cd = new ArrayList<ColumnDescription>();
-        cd.add(new ColumnDescription("name", ValueType.TEXT, "Animal name"));
-        cd.add(new ColumnDescription("link", ValueType.TEXT, "Link to wikipedia"));
-        cd.add(new ColumnDescription("population", ValueType.NUMBER, "Population size"));
-        cd.add(new ColumnDescription("vegeterian", ValueType.BOOLEAN, "Vegetarian?"));
+        cd.add(new ColumnDescription("Date", ValueType.DATE, "Date"));
+        cd.add(new ColumnDescription("Portfolio", ValueType.NUMBER, "Portfolio Value"));
+        cd.add(new ColumnDescription("ShadowPortfolio", ValueType.NUMBER, "Shadow Portfolio Value"));
 
         data.addColumns(cd);
 
-        // Fill the data table.
-        try {
-            data.addRowFromValues("Aye-aye", "http://en.wikipedia.org/wiki/Aye-aye", 100, true);
-            data.addRowFromValues("Sloth", "http://en.wikipedia.org/wiki/Sloth", 300, true);
-            data.addRowFromValues("Leopard", "http://en.wikipedia.org/wiki/Leopard", 50, false);
-            data.addRowFromValues("Tiger", "http://en.wikipedia.org/wiki/Tiger", 80, false);
-        } catch (TypeMismatchException e) {
-            System.out.println("Invalid type!");
+        for (LocalDate date : dates) {
+            try {
+                data.addRowFromValues(getGregorianCalendar(date), portfolio.marketValue(date), 1);
+            } catch (TypeMismatchException e) {
+                System.out.println("Invalid type! " + e);
+                e.printStackTrace();
+            }
         }
+        // Fill the data table.
         return data;
+    }
+
+    private static GregorianCalendar getGregorianCalendar(LocalDate date) {
+        GregorianCalendar cal = new GregorianCalendar(date.getYear(), date.getMonthOfYear(), date.getDayOfMonth());
+        cal.setTimeZone(com.ibm.icu.util.TimeZone.getTimeZone("GMT"));
+        return cal;
     }
 
     private List<LocalDate> getRebalanceDates(Params params) {

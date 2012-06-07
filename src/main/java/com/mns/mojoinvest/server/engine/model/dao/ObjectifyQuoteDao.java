@@ -79,7 +79,7 @@ public class ObjectifyQuoteDao extends DAOBase implements QuoteDao {
     @Override
     public List<Quote> query(LocalDate date) {
         Query<Quote> q = ofy().query(Quote.class);
-        q.filter("date", date.toDateMidnight().toDate());
+        q.filter("date", date.toDate());
         return q.list();
     }
 
@@ -87,7 +87,7 @@ public class ObjectifyQuoteDao extends DAOBase implements QuoteDao {
     public List<Quote> query(String symbol, LocalDate date) {
         Query<Quote> q = ofy().query(Quote.class);
         q.filter("symbol", symbol);
-        q.filter("date", date.toDateMidnight().toDate());
+        q.filter("date", date.toDate());
         return q.list();
     }
 

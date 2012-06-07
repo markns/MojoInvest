@@ -56,6 +56,7 @@ public class MomentumStrategy {
         Map<String, Map<LocalDate, BigDecimal>> additionalResults = new HashMap<String, Map<LocalDate, BigDecimal>>();
         additionalResults.put(SHADOW_EQUITY_CURVE, new HashMap<LocalDate, BigDecimal>(relativeStrengthsMap.size()));
 
+        long start = System.currentTimeMillis();
         for (LocalDate date : relativeStrengthsMap.keySet()) {
 
             Map<String, BigDecimal> strengths = relativeStrengthsMap.get(date);
@@ -102,6 +103,7 @@ public class MomentumStrategy {
                 rebalance(portfolio, date, selection, params);
             }
         }
+        log.fine("Rebalancing took " + (System.currentTimeMillis() - start) + " ms");
 
         return additionalResults;
     }

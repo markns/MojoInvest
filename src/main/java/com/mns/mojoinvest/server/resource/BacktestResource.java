@@ -23,9 +23,12 @@ import javax.ws.rs.core.MediaType;
 import java.math.BigDecimal;
 import java.util.Collection;
 import java.util.Map;
+import java.util.logging.Logger;
 
 @Path("/backtest")
 public class BacktestResource {
+
+    private static final Logger log = Logger.getLogger(BacktestResource.class.getName());
 
     private final FundDao fundDao;
     private final QuoteDao quoteDate;
@@ -55,6 +58,7 @@ public class BacktestResource {
     public StrategyResult runBacktest(Params params)
             throws StrategyException, ResultBuilderException {
         System.out.println(params);
+        long start = System.currentTimeMillis();
         Collection<Fund> universe;
         if (params.getUniverse() != null) {
             universe = fundDao.get(params.getUniverse());
@@ -64,14 +68,20 @@ public class BacktestResource {
         Portfolio portfolio = portfolioFactory.create(params, false);
         Portfolio shadowPortfolio = portfolioFactory.create(params, true);
 
+        long step = System.currentTimeMillis();
         Map<String, Map<LocalDate, BigDecimal>> additionalResults =
                 strategy.execute(portfolio, shadowPortfolio, params, universe);
+        log.fine("Total run strategy time: " + (System.currentTimeMillis() - step));
         //Should we use assisted inject here?
-        return resultBuilder.setPortfolio(portfolio)
+        step = System.currentTimeMillis();
+        StrategyResult result = resultBuilder.setPortfolio(portfolio)
                 .setShadowPortfolio(shadowPortfolio)
                 .setAdditionalResults(additionalResults)
                 .setParams(params)
                 .build();
+        log.fine("Total result builder time: " + (System.currentTimeMillis() - step));
+        log.fine("Total request time: " + (System.currentTimeMillis() - start));
+        return result;
     }
 
 }

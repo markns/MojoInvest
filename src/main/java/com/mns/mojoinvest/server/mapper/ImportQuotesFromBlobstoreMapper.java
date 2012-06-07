@@ -35,7 +35,7 @@ public class ImportQuotesFromBlobstoreMapper extends
         }
 
         String symbol = values[0];
-        LocalDate date  = fmt.parseDateTime(values[1]).toLocalDate();
+        LocalDate date = fmt.parseDateTime(values[1]).toLocalDate();
         String open = values[2];
         String high = values[3];
         String low = values[4];
@@ -47,7 +47,7 @@ public class ImportQuotesFromBlobstoreMapper extends
         if (!symbol.isEmpty()) {
             Entity quote = new Entity("Quote", QuoteUtils.quoteId(symbol, date));
             quote.setProperty("symbol", symbol);
-            quote.setProperty("date", date.toDateMidnight().toDate());
+            quote.setProperty("date", date.toDate());
             quote.setUnindexedProperty("open", open);
             quote.setUnindexedProperty("high", high);
             quote.setUnindexedProperty("low", low);

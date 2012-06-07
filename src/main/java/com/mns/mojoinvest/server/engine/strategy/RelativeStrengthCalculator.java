@@ -27,21 +27,23 @@ public class RelativeStrengthCalculator {
                                                                                 List<LocalDate> dates) {
 
         log.fine("Starting load of ma1 calculated values");
+        long start = System.currentTimeMillis();
         Collection<CalculatedValue> ma1s = calculatedValueDao.get(dates, funds,
                 "SMA", params.getMa1());
-        log.fine("Loaded " + ma1s.size() + " ma1s from datastore");
+        log.fine("Loading " + ma1s.size() + " ma1s from datastore took " + (System.currentTimeMillis() - start));
 
         log.fine("Starting load of ma2 calculated values");
+        start = System.currentTimeMillis();
         Collection<CalculatedValue> ma2s = calculatedValueDao.get(dates, funds,
                 "SMA", params.getMa2());
-        log.fine("Loaded " + ma2s.size() + " ma2s from datastore");
+        log.fine("Loading " + ma2s.size() + " ma2s from datastore took " + (System.currentTimeMillis() - start));
 
         log.fine("Building intermediate data structures");
         Map<LocalDate, Map<String, BigDecimal>> ma1Map = buildDateCalcValueMap(ma1s);
         Map<LocalDate, Map<String, BigDecimal>> ma2Map = buildDateCalcValueMap(ma2s);
         log.fine("Finished building ma1 & ma2 maps");
 
-        long start = System.currentTimeMillis();
+        start = System.currentTimeMillis();
         SortedMap<LocalDate, Map<String, BigDecimal>> allRs = new TreeMap<LocalDate, Map<String, BigDecimal>>();
         for (LocalDate date : dates) {
 
@@ -123,17 +125,22 @@ public class RelativeStrengthCalculator {
     }
 
 
-    private SortedMap<LocalDate, Map<String, BigDecimal>> buildDateCalcValueMap(Collection<CalculatedValue> vals) {
+    public SortedMap<LocalDate, Map<String, BigDecimal>> buildDateCalcValueMap(Collection<CalculatedValue> vals) {
         long start = System.currentTimeMillis();
-        SortedMap<LocalDate, Map<String, BigDecimal>> valMap = new TreeMap<LocalDate, Map<String, BigDecimal>>();
-//        Map<LocalDate, Map<String, BigDecimal>> valMap = new HashMap<LocalDate, Map<String, BigDecimal>>();
+        Map<String, Map<String, BigDecimal>> valMap = new HashMap<String, Map<String, BigDecimal>>();
         for (CalculatedValue val : vals) {
-            if (!valMap.containsKey(val.getDate())) {
-                valMap.put(val.getDate(), new HashMap<String, BigDecimal>());
+            if (!valMap.containsKey(val.getDateStr())) {
+                valMap.put(val.getDateStr(), new HashMap<String, BigDecimal>());
             }
-            valMap.get(val.getDate()).put(val.getSymbol(), val.getValue());
+            valMap.get(val.getDateStr()).put(val.getSymbol(), val.getValue());
         }
         log.fine("ms for buildDateCalcValueMap was: " + (System.currentTimeMillis() - start));
-        return valMap;
+
+        //Convert to map keyed by localdate
+        SortedMap<LocalDate, Map<String, BigDecimal>> dateValMap = new TreeMap<LocalDate, Map<String, BigDecimal>>();
+        for (Map.Entry<String, Map<String, BigDecimal>> entry : valMap.entrySet()) {
+            dateValMap.put(new LocalDate(entry.getKey()), entry.getValue());
+        }
+        return dateValMap;
     }
 }

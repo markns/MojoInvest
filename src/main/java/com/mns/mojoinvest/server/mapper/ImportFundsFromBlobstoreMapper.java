@@ -54,7 +54,7 @@ public class ImportFundsFromBlobstoreMapper extends
             quote.setProperty("country", country);
             quote.setProperty("index", index);
             quote.setProperty("overview", overview);
-            quote.setProperty("inceptionDate", inceptionDate.toDateMidnight().toDate());
+            quote.setProperty("inceptionDate", inceptionDate.toDate());
 
             DatastoreMutationPool mutationPool = this.getAppEngineContext(context)
                     .getMutationPool();
