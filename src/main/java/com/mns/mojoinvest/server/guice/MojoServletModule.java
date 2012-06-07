@@ -81,7 +81,6 @@ public class MojoServletModule extends ServletModule {
         serve("/tools/fundviewer").with(FundViewerServlet.class);
         serve("/tools/calculator").with(SMACalculatorServlet.class);
         serve("/tools/clearcache").with(ClearCacheServlet.class);
-        serve("/tools/fundindexes").with(UpdateFundIndexesServlet.class);
         serve("/tools/test2").with(Test2Servlet.class);
 
         serve("/appstats/*").with(AppstatsServlet.class);

@@ -50,10 +50,10 @@ public class FundViewerServlet extends HttpServlet {
             }
         }
 
-        resp.getWriter().write("<p>Categories: " + dao.getCategorySet().size() + "</p>");
-        resp.getWriter().write("<p>Categories: " + dao.getCategorySet() + "</p>");
-        resp.getWriter().write("<p>Providers: " + dao.getProviderSet().size() + "</p>");
-        resp.getWriter().write("<p>Providers: " + dao.getProviderSet() + "</p>");
+//        resp.getWriter().write("<p>Categories: " + dao.getCategorySet().size() + "</p>");
+//        resp.getWriter().write("<p>Categories: " + dao.getCategorySet() + "</p>");
+//        resp.getWriter().write("<p>Providers: " + dao.getProviderSet().size() + "</p>");
+//        resp.getWriter().write("<p>Providers: " + dao.getProviderSet() + "</p>");
 
         resp.getWriter().println("</ul>");
     }

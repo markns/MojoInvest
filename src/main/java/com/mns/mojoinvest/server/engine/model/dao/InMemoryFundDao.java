@@ -6,7 +6,7 @@ import com.google.common.collect.Maps;
 import com.google.inject.Singleton;
 import com.googlecode.objectify.Key;
 import com.googlecode.objectify.ObjectifyFactory;
-import com.mns.mojoinvest.server.engine.model.*;
+import com.mns.mojoinvest.server.engine.model.Fund;
 import org.apache.commons.lang.NotImplementedException;
 
 import java.io.BufferedReader;
@@ -65,54 +65,10 @@ public class InMemoryFundDao implements FundDao {
     }
 
     @Override
-    public Set<String> getByCategory(String categoryName) {
-        throw new NotImplementedException();
-    }
-
-    @Override
-    public Set<String> getByProvider(String providerName) {
-        throw new NotImplementedException();
-    }
-
-    @Override
     public Map<Key<Fund>, Fund> put(Set<Fund> funds) {
         throw new NotImplementedException();
     }
 
-    @Override
-    public Key<Symbols> put(Symbols symbols) {
-        throw new NotImplementedException();
-    }
-
-    @Override
-    public void put(ProviderSet providerSet) {
-        throw new NotImplementedException();
-    }
-
-    @Override
-    public Map<Key<Provider>, Provider> putProviders(Collection<Provider> providers) {
-        throw new NotImplementedException();
-    }
-
-    @Override
-    public Key<CategorySet> put(CategorySet categorySet) {
-        throw new NotImplementedException();
-    }
-
-    @Override
-    public Map<Key<Category>, Category> putCategories(Collection<Category> values) {
-        throw new NotImplementedException();
-    }
-
-    @Override
-    public Set<String> getProviderSet() {
-        throw new NotImplementedException();
-    }
-
-    @Override
-    public Set<String> getCategorySet() {
-        throw new NotImplementedException();
-    }
 
     public Collection<Fund> getAll() {
         return funds.values();

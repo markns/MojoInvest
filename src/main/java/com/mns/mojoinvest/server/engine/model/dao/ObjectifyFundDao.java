@@ -69,70 +69,7 @@ public class ObjectifyFundDao extends DAOBase implements FundDao {
     }
 
     @Override
-    public Set<String> getByCategory(String categoryName) {
-        Key<Category> key = new Key<Category>(Category.class, categoryName);
-        Category category = ofy().get(key);
-        return category.getSymbols();
-
-//        List<Key<Fund>> keys = new ArrayList<Key<Fund>>();
-//        for (String symbol : category.getSymbols()) {
-//            keys.add(new Key<Fund>(Fund.class, symbol));
-//        }
-//        return ofy().get(keys).values();
-    }
-
-    @Override
-    public Set<String> getByProvider(String providerName) {
-        Key<Provider> key = new Key<Provider>(Provider.class, providerName);
-        Provider provider = ofy().get(key);
-        return provider.getSymbols();
-
-//        List<Key<Fund>> keys = new ArrayList<Key<Fund>>();
-//        for (String symbol : provider.getSymbols()) {
-//            keys.add(new Key<Fund>(Fund.class, symbol));
-//        }
-//        return ofy().get(keys).values();
-    }
-
-    //*************
-
-    @Override
     public Map<Key<Fund>, Fund> put(Set<Fund> funds) {
         return ofy().put(funds);
-    }
-
-    @Override
-    public Key<Symbols> put(Symbols symbols) {
-        return ofy().put(symbols);
-    }
-
-    @Override
-    public void put(ProviderSet providerSet) {
-        ofy().put(providerSet);
-    }
-
-    @Override
-    public Map<Key<Provider>, Provider> putProviders(Collection<Provider> providers) {
-        return ofy().put(providers);
-    }
-
-    @Override
-    public Key<CategorySet> put(CategorySet categorySet) {
-        return ofy().put(categorySet);
-    }
-
-    @Override
-    public Map<Key<Category>, Category> putCategories(Collection<Category> values) {
-        return ofy().put(values);
-    }
-
-    @Override
-    public Set<String> getProviderSet() {
-        return ofy().get(new Key<ProviderSet>(ProviderSet.class, "providers")).getProviders();
-    }
-
-    @Override
-    public Set<String> getCategorySet() {
-        return ofy().get(new Key<CategorySet>(CategorySet.class, "categories")).getCategories();
     }
 }
