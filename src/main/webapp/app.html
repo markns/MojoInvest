@@ -23,7 +23,18 @@
 
     <div id="loadingDiv">Loading</div>
 
-    <div id="content" class="main"></div>
+    <p>gviz line chart:</p>
+
+    <div id="gviz" style="width:600px; height:300px;"></div>
+
+    <p>same data drawn using dygraphs:</p>
+    date column:
+    <div id="dygraphs" style="width:600px; height:300px;"></div>
+    datetime column:
+    <div id="dygraphs_datetime" style="width:600px; height:300px;"></div>
+
+    <div id="content" class="main">
+    </div>
 
     <div id="footer">
         <div class="main">
@@ -46,6 +57,8 @@
 <script src="lib/underscore.js"></script>
 <script src="lib/backbone.js"></script>
 <script src="lib/ICanHaz.js"></script>
+<script src="http://www.google.com/jsapi"></script>
+<script src="lib/dygraph-combined.js"></script>
 
 <script>
 
@@ -108,6 +121,7 @@ tpl = {
 };
 
 App.Params = Backbone.Model.extend({});
+App.Results = Backbone.Model.extend({});
 App.AppModel = Backbone.Model.extend({});
 
 
@@ -219,10 +233,9 @@ App.ParamsView = Backbone.View.extend({
             "creationDate":$('#fromDate').val()
         });
         $.ajax({
-            type:'POST',
-            url:"http://localhost:8888/backtest",
+            type:'GET',
+            url:"http://localhost:8000/response.json",
             data:JSON.stringify(this.model),
-            start:this.start,
             success:this.success,
             error:this.error,
             contentType:"application/json;charset=utf-8",
@@ -234,8 +247,7 @@ App.ParamsView = Backbone.View.extend({
     },
 
     success:function (data) {
-        console.log(data);
-        console.log(data.dataTable);
+        App.results = new App.Results(data);
         App.router.navigate('results', true);
     },
 
@@ -266,9 +278,9 @@ App.FundsView = Backbone.View.extend({
     render:function () {
         //Todo: figure out why I have to wrap the funds in another object,
         // even though when passing model they should be referenceable as #funds
-        $(this.el).html(ich.funds(this.model));
+        $(this.el).html(ich.funds(App));
 
-        var universe = this.model.params.get("universe");
+        var universe = App.params.get("universe");
         this.$("input[name='includeFundCheck']:checkbox").each(function (index) {
             if ($.inArray($(this).val(), universe) != -1) {
                 $(this).attr("checked", true);
@@ -284,7 +296,7 @@ App.FundsView = Backbone.View.extend({
 
     includeFundClicked:function (event) {
         var fund = event.currentTarget.value;
-        var universe = this.model.params.get("universe");
+        var universe = App.params.get("universe");
         var index = $.inArray(fund, universe);
         if (index == -1) {
             universe.push(fund);
@@ -295,8 +307,71 @@ App.FundsView = Backbone.View.extend({
         // Not automatic because params.universe is not a collection
         //Not sure why model.change() is not working-
         // http://stackoverflow.com/questions/8280790/backbone-js-model-not-firing-events
-        this.model.params.trigger('change:universe');
+        App.params.trigger('change:universe');
     }
+});
+
+App.ChartView = Backbone.View.extend({
+
+    initialize:function () {
+    },
+
+    createDataTable:function (dateType) {
+        console.log("Creating datatable");
+        var data = new google.visualization.DataTable();
+        data.addColumn(dateType, 'Date');
+        data.addColumn('number', 'Column A');
+        data.addColumn('number', 'Column B');
+        data.addRows(4);
+        data.setCell(0, 0, new Date("2009/07/01"));
+        data.setCell(0, 1, 1);
+        data.setCell(0, 2, 7);
+        data.setCell(1, 0, new Date("2009/07/08"));
+        data.setCell(1, 1, 2);
+        data.setCell(1, 2, 4);
+        data.setCell(2, 0, new Date("2009/07/15"));
+        data.setCell(2, 1, 3);
+        data.setCell(2, 2, 3);
+        data.setCell(3, 0, new Date("2009/07/22"));
+        data.setCell(3, 1, 4);
+        data.setCell(3, 2, 0);
+        console.log("Created datatable " + data.toJSON());
+
+        return data;
+    },
+
+    drawVisualization:function () {
+        console.log("In draw visualization");
+        var data = this.createDataTable('date');
+        console.log(data);
+        console.log(this.$('#gviz'));
+        var chart = new google.visualization.LineChart(this.$('#gviz'));
+
+        chart.draw(data, null);
+
+        var chart1 = new Dygraph.GVizChart(this.$('#dygraphs')).draw(data, { });
+
+        data = createDataTable('datetime');
+        var chart2 = new Dygraph.GVizChart(this.$('#dygraphs_datetime')).draw(data, { });
+
+
+    },
+
+
+    render:function () {
+//        $(this.el).html(ich.results());
+
+        console.log("Loading google visualization");
+        google.load('visualization', '1', {packages:'linechart'});
+        console.log("Loaded google visualization");
+        console.log("Setting on load callback");
+
+        google.setOnLoadCallback(this.drawVisualization);
+        console.log("Set on load callback");
+
+        return this;
+    }
+
 });
 
 Backbone.View.prototype.close = function () {
@@ -310,10 +385,9 @@ Backbone.View.prototype.close = function () {
 
 var AppRouter = Backbone.Router.extend({
 
-    initialize:function (model) {
+    initialize:function () {
         console.log("initializing AppRouter");
         //Nb. this.model is NOT a backbone model entity
-        this.model = model;
     },
 
     routes:{
@@ -323,15 +397,15 @@ var AppRouter = Backbone.Router.extend({
 
     params:function () {
         console.log("Showing params");
-        var views = [new App.ParamsView({model:this.model.params}),
-            new App.UniverseView({model:this.model.params}),
-            new App.FundsView({model:this.model})];
+        var views = [new App.ParamsView({model:App.params}),
+            new App.UniverseView({model:App.params}),
+            new App.FundsView()];
         App.router.showViews("#content", views)
     },
 
     results:function () {
         console.log("Showing results");
-        var views = [new App.FundsView({model:this.model})];
+        var views = [new App.ChartView({model:App.results})];
         App.router.showViews("#content", views)
     },
 
@@ -349,49 +423,37 @@ var AppRouter = Backbone.Router.extend({
 
 });
 
-
 </script>
 
 
 <script>
 
-    bootstrap = {
-        load:function () {
-            console.log("bootstrapping models");
+    console.log("bootstrapping models");
 
-
-            var model = {};
-
-            model.params = new App.Params({"fromDate":"2000-01-01", "toDate":"2012-03-01", "creationDate":"1990-01-01", "initialInvestment":10000.0, "transactionCost":10.0, "portfolioSize":1, "rebalanceFrequency":1, "ma1":12, "ma2":26, "roc":26, "alpha":100, "castOff":8, "riskAdjusted":true, "stdDev":26, "tradeEquityCurve":true, "equityCurveWindow":52, "relativeStrengthStyle":"MA", "useSafeAsset":false, "safeAsset":"IGLT", "universe":["EWM", "EWW", "EWL", "EWU", "EWS", "EWH", "EWA", "EWJ", "EWG", "EWD", "EWK", "EWQ", "EWC", "EWN", "EWP", "EWI", "EWO"]});
-            model.funds = [
-                {"symbol":"EWA", "name":"iShares MSCI Australia Index", "category":"Pacific Stock", "provider":"iShares", "active":true, "country":"US", "index":"", "overview":"", "inceptionDate":"1996-04-01"},
-                {"symbol":"EWC", "name":"iShares MSCI Canada Index", "category":"Foreign Stock", "provider":"iShares", "active":true, "country":"US", "index":"", "overview":"", "inceptionDate":"1996-04-01"},
-                {"symbol":"EWD", "name":"iShares MSCI Sweden Index", "category":"Europe Stock", "provider":"iShares", "active":true, "country":"US", "index":"", "overview":"", "inceptionDate":"1996-04-01"},
-                {"symbol":"EWG", "name":"iShares MSCI Germany Index", "category":"Europe Stock", "provider":"iShares", "active":true, "country":"US", "index":"", "overview":"", "inceptionDate":"1996-04-01"},
-                {"symbol":"EWH", "name":"iShares MSCI Hong Kong Index", "category":"Pacific Stock", "provider":"iShares", "active":true, "country":"US", "index":"", "overview":"", "inceptionDate":"1996-04-01"},
-                {"symbol":"EWI", "name":"iShares MSCI Italy Index", "category":"Europe Stock", "provider":"iShares", "active":true, "country":"US", "index":"", "overview":"", "inceptionDate":"1996-04-01"},
-                {"symbol":"EWJ", "name":"iShares MSCI Japan Index", "category":"Pacific Stock", "provider":"iShares", "active":true, "country":"US", "index":"", "overview":"", "inceptionDate":"1996-04-01"},
-                {"symbol":"EWK", "name":"iShares MSCI Belgium Investable Mkt Idx", "category":"Europe Stock", "provider":"iShares", "active":true, "country":"US", "index":"", "overview":"", "inceptionDate":"1996-04-01"},
-                {"symbol":"EWL", "name":"iShares MSCI Switzerland Index", "category":"Europe Stock", "provider":"iShares", "active":true, "country":"US", "index":"", "overview":"", "inceptionDate":"1996-04-01"},
-                {"symbol":"EWM", "name":"iShares MSCI Malaysia Index", "category":"Pacific Stock", "provider":"iShares", "active":true, "country":"US", "index":"", "overview":"", "inceptionDate":"1996-04-01"},
-                {"symbol":"EWN", "name":"iShares MSCI Netherlands Invstbl Mkt Idx", "category":"Europe Stock", "provider":"iShares", "active":true, "country":"US", "index":"", "overview":"", "inceptionDate":"1996-04-01"},
-                {"symbol":"EWO", "name":"iShares MSCI Austria Investable Mkt Idx", "category":"Europe Stock", "provider":"iShares", "active":true, "country":"US", "index":"", "overview":"", "inceptionDate":"1996-04-01"},
-                {"symbol":"EWP", "name":"iShares MSCI Spain Index", "category":"Europe Stock", "provider":"iShares", "active":true, "country":"US", "index":"", "overview":"", "inceptionDate":"1996-04-01"},
-                {"symbol":"EWQ", "name":"iShares MSCI France Index", "category":"Europe Stock", "provider":"iShares", "active":true, "country":"US", "index":"", "overview":"", "inceptionDate":"1996-04-01"},
-                {"symbol":"EWS", "name":"iShares MSCI Singapore Index", "category":"Pacific Stock", "provider":"iShares", "active":true, "country":"US", "index":"", "overview":"", "inceptionDate":"1996-04-01"},
-                {"symbol":"EWU", "name":"iShares MSCI United Kingdom Index", "category":"Europe Stock", "provider":"iShares", "active":true, "country":"US", "index":"", "overview":"", "inceptionDate":"1996-04-01"},
-                {"symbol":"EWW", "name":"iShares MSCI Mexico Investable Mkt Idx", "category":"Diversified Emerging Markets", "provider":"iShares", "active":true, "country":"US", "index":"", "overview":"", "inceptionDate":"1996-04-01"}
-            ];
-
-            return model;
-        }
-    }
-    ;
+    App.params = new App.Params({"fromDate":"2000-01-01", "toDate":"2012-03-01", "creationDate":"1990-01-01", "initialInvestment":10000.0, "transactionCost":10.0, "portfolioSize":1, "rebalanceFrequency":1, "ma1":12, "ma2":26, "roc":26, "alpha":100, "castOff":8, "riskAdjusted":true, "stdDev":26, "tradeEquityCurve":true, "equityCurveWindow":52, "relativeStrengthStyle":"MA", "useSafeAsset":false, "safeAsset":"IGLT", "universe":["EWM", "EWW", "EWL", "EWU", "EWS", "EWH", "EWA", "EWJ", "EWG", "EWD", "EWK", "EWQ", "EWC", "EWN", "EWP", "EWI", "EWO"]});
+    App.funds = [
+        {"symbol":"EWA", "name":"iShares MSCI Australia Index", "category":"Pacific Stock", "provider":"iShares", "active":true, "country":"US", "index":"", "overview":"", "inceptionDate":"1996-04-01"},
+        {"symbol":"EWC", "name":"iShares MSCI Canada Index", "category":"Foreign Stock", "provider":"iShares", "active":true, "country":"US", "index":"", "overview":"", "inceptionDate":"1996-04-01"},
+        {"symbol":"EWD", "name":"iShares MSCI Sweden Index", "category":"Europe Stock", "provider":"iShares", "active":true, "country":"US", "index":"", "overview":"", "inceptionDate":"1996-04-01"},
+        {"symbol":"EWG", "name":"iShares MSCI Germany Index", "category":"Europe Stock", "provider":"iShares", "active":true, "country":"US", "index":"", "overview":"", "inceptionDate":"1996-04-01"},
+        {"symbol":"EWH", "name":"iShares MSCI Hong Kong Index", "category":"Pacific Stock", "provider":"iShares", "active":true, "country":"US", "index":"", "overview":"", "inceptionDate":"1996-04-01"},
+        {"symbol":"EWI", "name":"iShares MSCI Italy Index", "category":"Europe Stock", "provider":"iShares", "active":true, "country":"US", "index":"", "overview":"", "inceptionDate":"1996-04-01"},
+        {"symbol":"EWJ", "name":"iShares MSCI Japan Index", "category":"Pacific Stock", "provider":"iShares", "active":true, "country":"US", "index":"", "overview":"", "inceptionDate":"1996-04-01"},
+        {"symbol":"EWK", "name":"iShares MSCI Belgium Investable Mkt Idx", "category":"Europe Stock", "provider":"iShares", "active":true, "country":"US", "index":"", "overview":"", "inceptionDate":"1996-04-01"},
+        {"symbol":"EWL", "name":"iShares MSCI Switzerland Index", "category":"Europe Stock", "provider":"iShares", "active":true, "country":"US", "index":"", "overview":"", "inceptionDate":"1996-04-01"},
+        {"symbol":"EWM", "name":"iShares MSCI Malaysia Index", "category":"Pacific Stock", "provider":"iShares", "active":true, "country":"US", "index":"", "overview":"", "inceptionDate":"1996-04-01"},
+        {"symbol":"EWN", "name":"iShares MSCI Netherlands Invstbl Mkt Idx", "category":"Europe Stock", "provider":"iShares", "active":true, "country":"US", "index":"", "overview":"", "inceptionDate":"1996-04-01"},
+        {"symbol":"EWO", "name":"iShares MSCI Austria Investable Mkt Idx", "category":"Europe Stock", "provider":"iShares", "active":true, "country":"US", "index":"", "overview":"", "inceptionDate":"1996-04-01"},
+        {"symbol":"EWP", "name":"iShares MSCI Spain Index", "category":"Europe Stock", "provider":"iShares", "active":true, "country":"US", "index":"", "overview":"", "inceptionDate":"1996-04-01"},
+        {"symbol":"EWQ", "name":"iShares MSCI France Index", "category":"Europe Stock", "provider":"iShares", "active":true, "country":"US", "index":"", "overview":"", "inceptionDate":"1996-04-01"},
+        {"symbol":"EWS", "name":"iShares MSCI Singapore Index", "category":"Pacific Stock", "provider":"iShares", "active":true, "country":"US", "index":"", "overview":"", "inceptionDate":"1996-04-01"},
+        {"symbol":"EWU", "name":"iShares MSCI United Kingdom Index", "category":"Europe Stock", "provider":"iShares", "active":true, "country":"US", "index":"", "overview":"", "inceptionDate":"1996-04-01"},
+        {"symbol":"EWW", "name":"iShares MSCI Mexico Investable Mkt Idx", "category":"Diversified Emerging Markets", "provider":"iShares", "active":true, "country":"US", "index":"", "overview":"", "inceptionDate":"1996-04-01"}
+    ];
 
     //Load templates is async because of http requests
-    tpl.loadTemplates(['params', 'funds', 'universe'], function () {
-
-        App.router = new AppRouter(bootstrap.load());
+    tpl.loadTemplates(['params', 'funds', 'universe', 'results'], function () {
+        App.router = new AppRouter();
         Backbone.history.start();
     });
 
