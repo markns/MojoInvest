@@ -92,6 +92,17 @@ public class ObjectifyQuoteDao extends DAOBase implements QuoteDao {
     }
 
     @Override
+    public Quote get(String symbol, LocalDate date) {
+        Key<Quote> key = new Key<Quote>(Quote.class, QuoteUtils.quoteId(symbol, date));
+        return ofy().get(key);
+    }
+
+    @Override
+    public Quote get(Fund fund, LocalDate date) {
+        return get(fund.getSymbol(), date);
+    }
+
+    @Override
     public Collection<Quote> get(List<Key<Quote>> keys) {
         return ofy().get(keys).values();
     }
@@ -140,14 +151,5 @@ public class ObjectifyQuoteDao extends DAOBase implements QuoteDao {
         return get(keys);
     }
 
-    @Override
-    public Quote get(String symbol, LocalDate date) {
-        Key<Quote> key = new Key<Quote>(Quote.class, QuoteUtils.quoteId(symbol, date));
-        return ofy().get(key);
-    }
 
-    @Override
-    public Quote get(Fund fund, LocalDate date) {
-        return get(fund.getSymbol(), date);
-    }
 }

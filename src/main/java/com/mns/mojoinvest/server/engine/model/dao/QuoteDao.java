@@ -30,6 +30,10 @@ public interface QuoteDao {
 
     List<Quote> query(String symbol, LocalDate date);
 
+    Quote get(String symbol, LocalDate date);
+
+    Quote get(Fund fund, LocalDate date);
+
     Collection<Quote> get(List<Key<Quote>> keys);
 
     Collection<Quote> get(Collection<String> symbols, Collection<LocalDate> dates);
@@ -42,7 +46,5 @@ public interface QuoteDao {
 
     Collection<Quote> get(Fund fund, Collection<LocalDate> dates);
 
-    Quote get(String symbol, LocalDate date);
 
-    Quote get(Fund fund, LocalDate date);
 }
