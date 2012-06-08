@@ -1,4 +1,4 @@
-package com.mns.mojoinvest.server.engine.strategy;
+package com.mns.mojoinvest.server.engine.calculator;
 
 import com.google.inject.Inject;
 import com.mns.mojoinvest.server.engine.model.CalculatedValue;

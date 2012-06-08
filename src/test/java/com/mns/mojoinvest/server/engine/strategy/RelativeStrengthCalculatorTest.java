@@ -1,6 +1,7 @@
 package com.mns.mojoinvest.server.engine.strategy;
 
 import com.googlecode.objectify.ObjectifyService;
+import com.mns.mojoinvest.server.engine.calculator.RelativeStrengthCalculator;
 import com.mns.mojoinvest.server.engine.model.CalculatedValue;
 import com.mns.mojoinvest.server.engine.model.dao.CalculatedValueDao;
 import com.mns.mojoinvest.server.engine.model.dao.ObjectifyCalculatedValueDao;

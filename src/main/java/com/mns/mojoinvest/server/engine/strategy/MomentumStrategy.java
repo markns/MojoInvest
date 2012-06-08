@@ -4,6 +4,7 @@ import com.google.common.base.Functions;
 import com.google.common.collect.ImmutableSortedMap;
 import com.google.common.collect.Ordering;
 import com.google.inject.Inject;
+import com.mns.mojoinvest.server.engine.calculator.RelativeStrengthCalculator;
 import com.mns.mojoinvest.server.engine.execution.Executor;
 import com.mns.mojoinvest.server.engine.model.Fund;
 import com.mns.mojoinvest.server.engine.params.Params;
