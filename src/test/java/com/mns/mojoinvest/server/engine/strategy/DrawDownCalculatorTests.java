@@ -1,5 +1,6 @@
 package com.mns.mojoinvest.server.engine.strategy;
 
+import com.mns.mojoinvest.server.engine.result.DrawDown;
 import org.joda.time.LocalDate;
 import org.junit.Test;
 

@@ -13,7 +13,6 @@ import com.mns.mojoinvest.server.engine.model.dao.FundDao;
 import com.mns.mojoinvest.server.engine.model.dao.QuoteDao;
 import com.mns.mojoinvest.server.engine.params.Params;
 import com.mns.mojoinvest.server.engine.portfolio.Portfolio;
-import com.mns.mojoinvest.server.engine.strategy.DrawDown;
 import com.mns.mojoinvest.server.util.TradingDayUtils;
 import org.apache.commons.lang.ArrayUtils;
 import org.joda.time.LocalDate;

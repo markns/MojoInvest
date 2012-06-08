@@ -1,4 +1,4 @@
-package com.mns.mojoinvest.server.engine.strategy;
+package com.mns.mojoinvest.server.engine.result;
 
 import org.joda.time.LocalDate;
 
