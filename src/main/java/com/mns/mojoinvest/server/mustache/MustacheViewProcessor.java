@@ -23,7 +23,7 @@ import java.util.logging.Logger;
 @Provider
 public class MustacheViewProcessor implements ViewProcessor<Mustache> {
 
-    private final Logger log = Logger.getLogger(this.getClass().toString());
+    private final Logger log = Logger.getLogger(MustacheViewProcessor.class.getName());
 
     private final Map<String, Mustache> compiledTemplates;
     private final String basePath;
