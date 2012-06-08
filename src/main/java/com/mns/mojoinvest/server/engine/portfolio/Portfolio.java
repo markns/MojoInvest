@@ -1,7 +1,5 @@
 package com.mns.mojoinvest.server.engine.portfolio;
 
-import com.mns.mojoinvest.server.engine.model.dao.FundDao;
-import com.mns.mojoinvest.server.engine.model.dao.QuoteDao;
 import com.mns.mojoinvest.server.engine.params.Params;
 import com.mns.mojoinvest.server.engine.transaction.BuyTransaction;
 import com.mns.mojoinvest.server.engine.transaction.SellTransaction;
@@ -30,13 +28,13 @@ public interface Portfolio {
 
     void add(SellTransaction transaction) throws PortfolioException;
 
+    List<Transaction> getTransactions();
+
     Collection<Position> getPositions();
 
     Map<String, Position> getOpenPositions(LocalDate date);
 
     int openPositionCount(LocalDate date);
-
-    Collection<String> getFunds();
 
     Collection<String> getActiveFunds(LocalDate date);
 
@@ -54,15 +52,5 @@ public interface Portfolio {
 
     BigDecimal returnsGain(LocalDate date);
 
-    List<BigDecimal> marketValue(List<LocalDate> dates);
-
-    List<Transaction> getTransactions();
-
-//    void storeMarketValue(LocalDate date, BigDecimal value);
-
     Params getParams();
-
-    FundDao getFundDao();
-
-    QuoteDao getQuoteDao();
 }

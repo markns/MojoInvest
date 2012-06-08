@@ -51,7 +51,7 @@ public class SimplePortfolio implements Portfolio {
     private NavigableMap<LocalDate, BigDecimal> cashFlows;
     private BigDecimal transactionCost;
     private Params params;
-
+    private Map<LocalDate, BigDecimal> marketValueCache = new HashMap<LocalDate, BigDecimal>();
 
     @Inject
     public SimplePortfolio(FundDao fundDao, QuoteDao quoteDao, @Assisted Params params, @Assisted boolean shadow) {
@@ -65,16 +65,6 @@ public class SimplePortfolio implements Portfolio {
                 BigDecimal.valueOf(params.getInitialInvestment()));
         this.transactionCost = BigDecimal.valueOf(params.getTransactionCost());
         this.shadow = shadow;
-    }
-
-    @Override
-    public FundDao getFundDao() {
-        return fundDao;
-    }
-
-    @Override
-    public QuoteDao getQuoteDao() {
-        return quoteDao;
     }
 
     @Override
@@ -97,13 +87,18 @@ public class SimplePortfolio implements Portfolio {
         cashFlows.put(date, cashFlows.get(date).add(amount));
     }
 
-    public BigDecimal getTransactionCost() {
-        return transactionCost;
+    @Override
+    public List<Transaction> getTransactions() {
+        return transactions;
     }
 
     @Override
-    public boolean contains(String fund, LocalDate date) {
-        return getOpenPositions(date).containsKey(fund);
+    public Collection<Position> getPositions() {
+        return positions.values();
+    }
+
+    public BigDecimal getTransactionCost() {
+        return transactionCost;
     }
 
     @Override
@@ -111,8 +106,14 @@ public class SimplePortfolio implements Portfolio {
         return positions.get(fund);
     }
 
+    @Override
     public Params getParams() {
         return params;
+    }
+
+    @Override
+    public boolean contains(String fund, LocalDate date) {
+        return getOpenPositions(date).containsKey(fund);
     }
 
     @Override
@@ -148,10 +149,6 @@ public class SimplePortfolio implements Portfolio {
         positions.get(transaction.getFund()).add(transaction);
     }
 
-    public Collection<Position> getPositions() {
-        return positions.values();
-    }
-
     @Override
     public Map<String, Position> getOpenPositions(LocalDate date) {
         Map<String, Position> currentPositions = new HashMap<String, Position>();
@@ -166,11 +163,6 @@ public class SimplePortfolio implements Portfolio {
     @Override
     public int openPositionCount(LocalDate date) {
         return getOpenPositions(date).size();
-    }
-
-    @Override
-    public Collection<String> getFunds() {
-        return positions.keySet();
     }
 
     @Override
@@ -206,8 +198,6 @@ public class SimplePortfolio implements Portfolio {
         return cashOut;
     }
 
-    Map<LocalDate, BigDecimal> marketValueCache = new HashMap<LocalDate, BigDecimal>();
-
     @Override
     public BigDecimal marketValue(LocalDate date) {
         if (marketValueCache.containsKey(date))
@@ -239,6 +229,7 @@ public class SimplePortfolio implements Portfolio {
         gain percentage = gain / cost basis
      */
 
+
     @Override
     public BigDecimal gainPercentage(LocalDate date) {
         System.out.println(gain(date) + " " + costBasis(date));
@@ -249,7 +240,6 @@ public class SimplePortfolio implements Portfolio {
                 //multiply by 100 for percentage
                 .multiply(BigDecimal.TEN.multiply(BigDecimal.TEN));
     }
-
 
     /**
      * returns gain = market_value + cash in - cash out
@@ -266,6 +256,7 @@ public class SimplePortfolio implements Portfolio {
         }
         return returnsGain;
     }
+
 
     /**
      * Finally, the overall return is computed by converting the returns gain
@@ -284,31 +275,6 @@ public class SimplePortfolio implements Portfolio {
         //negate cashOut in division to maintain direction of gain
         return returnsGain(date).divide(cashOut(date).negate(), MathContext.DECIMAL32)
                 .multiply(BigDecimal.TEN.multiply(BigDecimal.TEN));
-    }
-
-
-    public List<BigDecimal> marketValue(List<LocalDate> dates) {
-        List<BigDecimal> portfolioValues = new ArrayList<BigDecimal>(Collections.nCopies(dates.size(), BigDecimal.ZERO));
-
-        log.info("Calculating portfolio market values from " + positions.size() + " positions");
-        for (Position position : positions.values()) {
-            List<BigDecimal> positionValues = position.marketValue(dates);
-            //Add values of the two lists
-            for (int i = 0; i < portfolioValues.size(); i++) {
-                portfolioValues.set(i, portfolioValues.get(i).add(positionValues.get(i)));
-            }
-        }
-
-        log.info("Adding cash to portfolio values");
-        for (int i = 0; i < dates.size(); i++) {
-            portfolioValues.set(i, portfolioValues.get(i).add(getCash(dates.get(i))));
-        }
-
-        return portfolioValues;
-    }
-
-    public List<Transaction> getTransactions() {
-        return transactions;
     }
 
 }
