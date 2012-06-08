@@ -81,12 +81,6 @@ public class SimplePortfolio implements Portfolio {
         return cash;
     }
 
-    private void addCashFlow(LocalDate date, BigDecimal amount) {
-        if (!cashFlows.containsKey(date))
-            cashFlows.put(date, BigDecimal.ZERO);
-        cashFlows.put(date, cashFlows.get(date).add(amount));
-    }
-
     @Override
     public List<Transaction> getTransactions() {
         return transactions;
@@ -147,6 +141,12 @@ public class SimplePortfolio implements Portfolio {
         transactions.add(transaction);
         addCashFlow(transaction.getDate(), transaction.getCashValue());
         positions.get(transaction.getFund()).add(transaction);
+    }
+
+    private void addCashFlow(LocalDate date, BigDecimal amount) {
+        if (!cashFlows.containsKey(date))
+            cashFlows.put(date, BigDecimal.ZERO);
+        cashFlows.put(date, cashFlows.get(date).add(amount));
     }
 
     @Override
@@ -218,7 +218,6 @@ public class SimplePortfolio implements Portfolio {
         BigDecimal gain = BigDecimal.ZERO;
         for (Position position : positions.values()) {
             //adjust for currency
-            System.out.println(position + " " + position.gain(date));
             gain = gain.add(position.gain(date));
         }
         return gain;
