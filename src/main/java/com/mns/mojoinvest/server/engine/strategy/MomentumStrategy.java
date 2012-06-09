@@ -43,9 +43,6 @@ public class MomentumStrategy {
         SortedMap<LocalDate, Map<String, BigDecimal>> relativeStrengthsMap =
                 getRelativeStrengths(universe, params, rebalanceDates);
 
-        assert rebalanceDates.size() == relativeStrengthsMap.size() : "number of rebalance dates didn't match " +
-                "number of relative strength dates received";
-
         if (params.isRiskAdjusted()) {
             relativeStrengthsMap = relativeStrengthCalculator.adjustRelativeStrengths(relativeStrengthsMap, universe,
                     params, rebalanceDates);
@@ -58,7 +55,7 @@ public class MomentumStrategy {
         additionalResults.put(SHADOW_EQUITY_CURVE, new HashMap<LocalDate, BigDecimal>(relativeStrengthsMap.size()));
 
         long start = System.currentTimeMillis();
-        for (LocalDate date : relativeStrengthsMap.keySet()) {
+        for (LocalDate date : rebalanceDates) {
 
             Map<String, BigDecimal> strengths = relativeStrengthsMap.get(date);
 
@@ -78,7 +75,7 @@ public class MomentumStrategy {
                 }
                 additionalResults.get(SHADOW_EQUITY_CURVE).put(date, equityCurveMA);
 
-                log.info(date + " " + portfolio.getActiveFunds(date) + " " + portfolio.marketValue(date) + " " +
+                log.fine(date + " " + portfolio.getActiveFunds(date) + " " + portfolio.marketValue(date) + " " +
                         shadowPortfolio.marketValue(date) + " " + equityCurveMA);
 
                 rebalance(shadowPortfolio, date, selection, params);
@@ -100,7 +97,7 @@ public class MomentumStrategy {
                     rebalance(portfolio, date, selection, params);
                 }
             } else {
-                log.info(date + " " + portfolio.getActiveFunds(date) + " " + portfolio.marketValue(date));
+                log.fine(date + " " + portfolio.getActiveFunds(date) + " " + portfolio.marketValue(date));
                 rebalance(portfolio, date, selection, params);
             }
         }
