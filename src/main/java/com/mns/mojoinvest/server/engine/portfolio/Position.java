@@ -1,6 +1,7 @@
 package com.mns.mojoinvest.server.engine.portfolio;
 
 import com.mns.mojoinvest.server.engine.model.Fund;
+import com.mns.mojoinvest.server.engine.model.Quote;
 import com.mns.mojoinvest.server.engine.model.dao.QuoteDao;
 import com.mns.mojoinvest.server.engine.transaction.BuyTransaction;
 import com.mns.mojoinvest.server.engine.transaction.SellTransaction;
@@ -9,7 +10,10 @@ import org.joda.time.LocalDate;
 
 import java.math.BigDecimal;
 import java.math.MathContext;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.logging.Logger;
 
 
@@ -36,37 +40,32 @@ public class Position {
 
     private final QuoteDao quoteDao;
     private final Fund fund;
+    private final LocalDate openingDate;
     private final List<Lot> lots;
     private final List<Transaction> transactions;
 
+    private Map<LocalDate, BigDecimal> marketValueCache = new HashMap<LocalDate, BigDecimal>();
+
     private static final Logger log = Logger.getLogger(Position.class.getName());
 
-    public Position(QuoteDao quoteDao, Fund fund) {
+    public Position(Fund fund, LocalDate openingDate, QuoteDao quoteDao) {
         this.quoteDao = quoteDao;
         this.fund = fund;
         this.lots = new ArrayList<Lot>();
         this.transactions = new ArrayList<Transaction>();
+        this.openingDate = openingDate;
     }
 
     public Fund getFund() {
         return fund;
     }
 
-    private BigDecimal getClose(LocalDate date) {
-        //TODO: cache here?
-        return quoteDao.get(fund, date).getAdjClose();
-    }
-
     public List<Lot> getLots() {
         return lots;
     }
 
-
-    public List<Transaction> getTransactions() {
-        return transactions;
-    }
-
     public void add(Transaction transaction) throws PortfolioException {
+        checkOpeningDate(transaction);
         if (transaction instanceof BuyTransaction) {
             add((BuyTransaction) transaction);
         } else if (transaction instanceof SellTransaction) {
@@ -77,6 +76,7 @@ public class Position {
     }
 
     public void add(BuyTransaction transaction) throws PortfolioException {
+        checkOpeningDate(transaction);
         if (!fund.getSymbol().equals(transaction.getFund())) {
             throw new PortfolioException("Attempt to add a " + transaction.getFund() +
                     " transaction to a " + fund + " position");
@@ -86,6 +86,7 @@ public class Position {
     }
 
     public void add(SellTransaction transaction) throws PortfolioException {
+        checkOpeningDate(transaction);
         //TODO: Check if a later transaction has already been added
         if (!fund.getSymbol().equals(transaction.getFund())) {
             throw new PortfolioException("Attempt to add a " + transaction.getFund() +
@@ -99,6 +100,11 @@ public class Position {
         updateLots(transaction);
     }
 
+    private void checkOpeningDate(Transaction transaction) {
+        if (transaction.getDate().isBefore(openingDate))
+            throw new IllegalStateException("Attempt to add a transaction to a position " +
+                    "before the position's creation date");
+    }
 
     private boolean saleIsValid(Transaction transaction) {
         BigDecimal openPosition = BigDecimal.ZERO;
@@ -140,6 +146,9 @@ public class Position {
     }
 
     public BigDecimal shares(LocalDate date) {
+        if (date.isBefore(openingDate))
+            return BigDecimal.ZERO;
+
         BigDecimal shares = BigDecimal.ZERO;
         for (Lot lot : lots) {
             if (!lot.openedAfter(date)) {
@@ -149,9 +158,9 @@ public class Position {
         return shares;
     }
 
-    //TODO: Should we invert logic to match lot.closed()?
     public boolean open(LocalDate date) {
-        return shares(date).compareTo(BigDecimal.ZERO) > 0;
+        return !date.isBefore(openingDate) &&
+                shares(date).compareTo(BigDecimal.ZERO) > 0;
     }
 
     /*
@@ -162,6 +171,9 @@ public class Position {
     */
 
     public BigDecimal costBasis(LocalDate date) {
+        if (date.isBefore(openingDate))
+            return BigDecimal.ZERO;
+
         BigDecimal costBasis = BigDecimal.ZERO;
         for (Lot lot : lots) {
             if (!lot.openedAfter(date)) {
@@ -172,6 +184,9 @@ public class Position {
     }
 
     public BigDecimal cashOut(LocalDate date) {
+        if (date.isBefore(openingDate))
+            return BigDecimal.ZERO;
+
         BigDecimal cashOut = BigDecimal.ZERO;
         for (Lot lot : lots) {
             if (!lot.openedAfter(date)) {
@@ -182,6 +197,9 @@ public class Position {
     }
 
     public BigDecimal cashIn(LocalDate date) {
+        if (date.isBefore(openingDate))
+            return BigDecimal.ZERO;
+
         BigDecimal cashIn = BigDecimal.ZERO;
         for (Lot lot : lots) {
             cashIn = cashIn.add(lot.cashIn(date));
@@ -190,16 +208,29 @@ public class Position {
     }
 
     public BigDecimal marketValue(LocalDate date) {
+        if (date.isBefore(openingDate))
+            return BigDecimal.ZERO;
+
+        if (marketValueCache.containsKey(date))
+            return marketValueCache.get(date);
+        log.fine(date + " Calculating market value for " + this);
+
         BigDecimal marketValue = BigDecimal.ZERO;
         for (Lot lot : lots) {
-            if (!lot.openedAfter(date)) {
-                marketValue = marketValue.add(lot.marketValue(date, getClose(date)));
+            if (!lot.openedAfter(date) && !lot.closed(date)) {
+                BigDecimal close = getClose(date);
+                marketValue = marketValue.add(lot.marketValue(date, close));
             }
         }
+        log.fine(date + " Calculated market value for " + this + " as " + marketValue);
+        marketValueCache.put(date, marketValue);
         return marketValue;
     }
 
     public BigDecimal gain(LocalDate date) {
+        if (date.isBefore(openingDate))
+            return BigDecimal.ZERO;
+
         BigDecimal gain = BigDecimal.ZERO;
         for (Lot lot : lots) {
             if (!lot.openedAfter(date)) {
@@ -214,13 +245,18 @@ public class Position {
      *  gain percentage = gain / cost basis
      */
     public BigDecimal gainPercentage(LocalDate date) {
+        if (date.isBefore(openingDate))
+            return BigDecimal.ZERO;
+
         return gain(date).divide(costBasis(date), MathContext.DECIMAL32)
                 //multiply by 100 for percentage
                 .multiply(BigDecimal.TEN.multiply(BigDecimal.TEN));
     }
 
-
     public BigDecimal returnsGain(LocalDate date) {
+        if (date.isBefore(openingDate))
+            return BigDecimal.ZERO;
+
         BigDecimal returnsGain = BigDecimal.ZERO;
         for (Lot lot : lots) {
             if (!lot.openedAfter(date)) {
@@ -230,40 +266,36 @@ public class Position {
         return returnsGain;
     }
 
+
     /*
      * The total return for each security is calculated similarly: Returns gain and cash out are summed over all the
      * lots for the security, then the total return is calculated by:
      *  total return = returns gain / cash out
      */
     public BigDecimal totalReturn(LocalDate date) {
+        if (date.isBefore(openingDate))
+            return BigDecimal.ZERO;
+
         return returnsGain(date).divide(cashOut(date).negate(), MathContext.DECIMAL32)
                 //multiply by 100 for percentage
                 .multiply(BigDecimal.TEN.multiply(BigDecimal.TEN));
     }
 
-    public List<BigDecimal> marketValue(List<LocalDate> dates) {
-
-        List<BigDecimal> positionValues = new ArrayList<BigDecimal>(Collections.nCopies(dates.size(), BigDecimal.ZERO));
-
-        for (Lot lot : lots) {
-            List<BigDecimal> lotValues = lot.marketValue(dates);
-            for (int i = 0; i < positionValues.size(); i++) {
-                positionValues.set(i, positionValues.get(i).add(lotValues.get(i)));
-            }
+    private BigDecimal getClose(LocalDate date) {
+        Quote quote = quoteDao.get(fund, date);
+        log.fine("Loaded quote " + quote);
+        if (quote.getAdjClose() != null) {
+            return quote.getAdjClose();
+        } else {
+            return quote.getClose();
         }
-        return positionValues;
     }
 
-    public Collection<LocalDate> getActiveDates(List<LocalDate> dates) {
-        NavigableSet<LocalDate> dateset = new TreeSet<LocalDate>(dates);
-        List<LocalDate> activeDates = new ArrayList<LocalDate>();
-        for (Lot lot : lots) {
-            if (lot.getCloseDate() != null) {
-                activeDates.addAll(dateset.subSet(lot.getOpenDate(), true, lot.getCloseDate(), true));
-            } else {
-                activeDates.addAll(dateset.tailSet(lot.getOpenDate(), true));
-            }
-        }
-        return activeDates;
+    @Override
+    public String toString() {
+        return "Position{" +
+                "fund=" + fund +
+                ", lots=" + lots.size() +
+                '}';
     }
 }

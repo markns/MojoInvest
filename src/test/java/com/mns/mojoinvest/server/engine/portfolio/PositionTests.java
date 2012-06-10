@@ -14,7 +14,6 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -51,12 +50,12 @@ public class PositionTests {
     private final LocalServiceTestHelper helper = new LocalServiceTestHelper(config);
 
     public static final List<Quote> quotes = Arrays.asList(
-            new Quote("TEST", buy100Date, BigDecimal.ZERO, BigDecimal.ZERO, BigDecimal.ZERO, new BigDecimal("400"), BigDecimal.ZERO, BigDecimal.ZERO, BigDecimal.ZERO, BigDecimal.ZERO, false),
-            new Quote("TEST", buy200Date, BigDecimal.ZERO, BigDecimal.ZERO, BigDecimal.ZERO, new BigDecimal("500"), BigDecimal.ZERO, BigDecimal.ZERO, BigDecimal.ZERO, BigDecimal.ZERO, false),
-            new Quote("TEST", sell50Date, BigDecimal.ZERO, BigDecimal.ZERO, BigDecimal.ZERO, new BigDecimal("550"), BigDecimal.ZERO, BigDecimal.ZERO, BigDecimal.ZERO, BigDecimal.ZERO, false),
-            new Quote("TEST", sell50_2Date, BigDecimal.ZERO, BigDecimal.ZERO, BigDecimal.ZERO, new BigDecimal("550"), BigDecimal.ZERO, BigDecimal.ZERO, BigDecimal.ZERO, BigDecimal.ZERO, false),
-            new Quote("TEST", sell100Date, BigDecimal.ZERO, BigDecimal.ZERO, BigDecimal.ZERO, new BigDecimal("490"), BigDecimal.ZERO, BigDecimal.ZERO, BigDecimal.ZERO, BigDecimal.ZERO, false),
-            new Quote("TEST", sell200Date, BigDecimal.ZERO, BigDecimal.ZERO, BigDecimal.ZERO, new BigDecimal("510"), BigDecimal.ZERO, BigDecimal.ZERO, BigDecimal.ZERO, BigDecimal.ZERO, false)
+            new Quote("TEST", buy100Date, BigDecimal.ZERO, BigDecimal.ZERO, BigDecimal.ZERO, new BigDecimal("400"), BigDecimal.ZERO, BigDecimal.ZERO, BigDecimal.ZERO, new BigDecimal("400"), false),
+            new Quote("TEST", buy200Date, BigDecimal.ZERO, BigDecimal.ZERO, BigDecimal.ZERO, new BigDecimal("500"), BigDecimal.ZERO, BigDecimal.ZERO, BigDecimal.ZERO, new BigDecimal("500"), false),
+            new Quote("TEST", sell50Date, BigDecimal.ZERO, BigDecimal.ZERO, BigDecimal.ZERO, new BigDecimal("550"), BigDecimal.ZERO, BigDecimal.ZERO, BigDecimal.ZERO, new BigDecimal("550"), false),
+            new Quote("TEST", sell50_2Date, BigDecimal.ZERO, BigDecimal.ZERO, BigDecimal.ZERO, new BigDecimal("550"), BigDecimal.ZERO, BigDecimal.ZERO, BigDecimal.ZERO, new BigDecimal("550"), false),
+            new Quote("TEST", sell100Date, BigDecimal.ZERO, BigDecimal.ZERO, BigDecimal.ZERO, new BigDecimal("490"), BigDecimal.ZERO, BigDecimal.ZERO, BigDecimal.ZERO, new BigDecimal("490"), false),
+            new Quote("TEST", sell200Date, BigDecimal.ZERO, BigDecimal.ZERO, BigDecimal.ZERO, new BigDecimal("510"), BigDecimal.ZERO, BigDecimal.ZERO, BigDecimal.ZERO, new BigDecimal("510"), false)
     );
 
     @Before
@@ -67,13 +66,13 @@ public class PositionTests {
 
     @Test
     public void testCreatePosition() throws PortfolioException {
-        Position position = new Position(quoteDao, fund);
+        Position position = new Position(fund, buy100Date, quoteDao);
         assertNotNull(position);
     }
 
     @Test
     public void testAddBuyTransactionCreatesLot() throws PortfolioException {
-        Position position = new Position(quoteDao, fund);
+        Position position = new Position(fund, buy100Date, quoteDao);
         position.add(buy100);
         assertEquals(1, position.getLots().size());
         position.add(buy200);
@@ -82,7 +81,7 @@ public class PositionTests {
 
     @Test
     public void testClosePosition() throws PortfolioException {
-        Position position = new Position(quoteDao, fund);
+        Position position = new Position(fund, buy100Date, quoteDao);
         position.add(buy100);
         assertTrue(position.open(buy100Date));
         position.add(sell50);
@@ -92,7 +91,7 @@ public class PositionTests {
 
     @Test
     public void testSplitSellAcrossLots() throws PortfolioException {
-        Position position = new Position(quoteDao, fund);
+        Position position = new Position(fund, buy100Date, quoteDao);
         position.add(buy100);
         position.add(buy200);
         position.add(sell200);
@@ -106,7 +105,7 @@ public class PositionTests {
 
     @Test(expected = PortfolioException.class)
     public void testSplitTooBigSellAcrossLotsFails() throws PortfolioException {
-        Position position = new Position(quoteDao, fund);
+        Position position = new Position(fund, buy100Date, quoteDao);
         position.add(buy100);
         position.add(buy200);
         position.add(sell200);
@@ -115,13 +114,13 @@ public class PositionTests {
 
     @Test(expected = PortfolioException.class)
     public void testAddWrongFundFails() throws PortfolioException {
-        Position position = new Position(quoteDao, fund);
+        Position position = new Position(fund, buy100Date, quoteDao);
         position.add(buyWrongFund);
     }
 
     @Test
     public void testShares() throws PortfolioException {
-        Position position = new Position(quoteDao, fund);
+        Position position = new Position(fund, buy100Date, quoteDao);
         position.add(buy100);
         assertEquals(new BigDecimal("100"), position.shares(buy100Date));
         assertEquals(new BigDecimal("0"), position.shares(buy100Date.minusDays(1)));
@@ -129,7 +128,7 @@ public class PositionTests {
 
     @Test
     public void testCostBasis() throws PortfolioException {
-        Position position = new Position(quoteDao, fund);
+        Position position = new Position(fund, buy100Date, quoteDao);
         position.add(buy100);
         assertEquals(new BigDecimal("47124.00"), position.costBasis(buy100Date));
         position.add(buy200);
@@ -144,7 +143,7 @@ public class PositionTests {
 
     @Test
     public void testCashOut() throws PortfolioException {
-        Position position = new Position(quoteDao, fund);
+        Position position = new Position(fund, buy100Date, quoteDao);
         position.add(buy100);
         assertEquals(new BigDecimal("-47124.00"), position.cashOut(buy100Date));
         position.add(buy200);
@@ -159,7 +158,7 @@ public class PositionTests {
 
     @Test
     public void testCashIn() throws PortfolioException {
-        Position position = new Position(quoteDao, fund);
+        Position position = new Position(fund, buy100Date, quoteDao);
         position.add(buy100);
         assertEquals(new BigDecimal("0"), position.cashIn(buy100Date));
         position.add(buy200);
@@ -174,7 +173,7 @@ public class PositionTests {
 
     @Test
     public void testMarketValue() throws PortfolioException {
-        Position position = new Position(quoteDao, fund);
+        Position position = new Position(fund, buy100Date, quoteDao);
         position.add(buy100);
         assertEquals(new BigDecimal("40000"), position.marketValue(buy100Date));
         position.add(buy200);
@@ -189,7 +188,7 @@ public class PositionTests {
 
     @Test
     public void testGain() throws PortfolioException {
-        Position position = new Position(quoteDao, fund);
+        Position position = new Position(fund, buy100Date, quoteDao);
         position.add(buy100);
         assertEquals(new BigDecimal("-7124.00"), position.gain(buy100Date));
         position.add(buy200);
@@ -204,7 +203,7 @@ public class PositionTests {
 
     @Test
     public void testGainPercentage() throws PortfolioException {
-        Position position = new Position(quoteDao, fund);
+        Position position = new Position(fund, buy100Date, quoteDao);
         position.add(buy100);
         assertEquals(new BigDecimal("-15.1175600"), position.gainPercentage(buy100Date));
         position.add(buy200);
@@ -220,7 +219,7 @@ public class PositionTests {
     //    returns gain = market_value + cash in - cash out
     @Test
     public void testReturnsGain() throws PortfolioException {
-        Position position = new Position(quoteDao, fund);
+        Position position = new Position(fund, buy100Date, quoteDao);
         position.add(buy100);
         assertEquals(new BigDecimal("-7124.00"), position.returnsGain(buy100Date));
         position.add(buy200);
@@ -235,7 +234,7 @@ public class PositionTests {
 
     @Test
     public void testTotalReturn() throws PortfolioException {
-        Position position = new Position(quoteDao, fund);
+        Position position = new Position(fund, buy100Date, quoteDao);
         position.add(buy100);
         assertEquals(new BigDecimal("-15.1175600"), position.totalReturn(buy100Date));
         position.add(buy200);
@@ -247,31 +246,5 @@ public class PositionTests {
         assertEquals(new BigDecimal("17.5357400"), position.totalReturn(sell50Date));
         assertEquals(new BigDecimal("8.32855800"), position.totalReturn(sell200Date));
     }
-
-    @Test
-    public void testGetQuotes() throws PortfolioException {
-
-        Position position = new Position(quoteDao, fund);
-        position.add(buy100);//2011-02-01
-        position.add(buy200);//2011-03-01
-        position.add(sell50);//2011-03-15
-        position.add(sell50_2);//2011-04-01
-        position.add(sell200);//2011-06-01
-
-        List<LocalDate> dates =
-                new ArrayList<LocalDate>(Arrays.asList(
-                        new LocalDate("2011-01-15"),
-                        new LocalDate("2011-02-01"),
-                        new LocalDate("2011-03-15"),
-                        new LocalDate("2011-04-01"),
-                        new LocalDate("2011-06-01"),
-                        new LocalDate("2011-08-01")
-                ));
-
-//        Map<LocalDate, Quote> quotes = position.getQuotes(dates);
-//        System.out.println(quotes);
-        position.marketValue(dates);
-    }
-
 
 }

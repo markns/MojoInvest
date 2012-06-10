@@ -71,6 +71,7 @@ public class StrategyResultBuilder {
 //        CSVWriter writer = initialiseCsv();
 //        writeCsvHeader(universe, writer);
 
+        log.fine("Building strategy result");
         List<DrawDown> drawDowns = new ArrayList<DrawDown>();
         DrawDown currentDD = null;
 

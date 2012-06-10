@@ -46,6 +46,7 @@ public class Lot {
     private LocalDate closeDate;
 
     private final BuyTransaction openingTransaction;
+    private Map<LocalDate, BigDecimal> marketValueCache = new HashMap<LocalDate, BigDecimal>();
 
     private final NavigableMap<LocalDate, SellTransaction> sellTransactionsMap;
     private QuoteDao quoteDao;
@@ -127,20 +128,17 @@ public class Lot {
         return openingTransaction.getInitialInvestment();
     }
 
-    public LocalDate getOpenDate() {
-        return openDate;
-    }
-
-    public LocalDate getCloseDate() {
+    protected LocalDate getCloseDate() {
         return closeDate;
     }
 
-    public boolean openedAfter(LocalDate date) {
+    protected boolean openedAfter(LocalDate date) {
         return getOpeningTransaction().getDate().isAfter(date);
     }
 
-    public boolean closed(LocalDate date) {
-        return getRemainingQuantity(date).compareTo(BigDecimal.ZERO) == 0;
+    protected boolean closed(LocalDate date) {
+//        return getRemainingQuantity(date).compareTo(BigDecimal.ZERO) == 0;
+        return closeDate != null && !date.isBefore(closeDate);
     }
 
     /**
@@ -200,7 +198,12 @@ public class Lot {
      * @return marketValue
      */
     public BigDecimal marketValue(LocalDate date, BigDecimal sharePrice) {
-        return getRemainingQuantity(date).multiply(sharePrice);
+        if (marketValueCache.containsKey(date))
+            return marketValueCache.get(date);
+        BigDecimal marketValue = getRemainingQuantity(date).multiply(sharePrice);
+        log.fine(date + " Calculated market value for " + this + " as " + marketValue);
+        marketValueCache.put(date, marketValue);
+        return marketValue;
     }
 
     /**
@@ -303,4 +306,12 @@ public class Lot {
         return new ArrayList<BigDecimal>(quantities.values());
     }
 
+
+    @Override
+    public String toString() {
+        return "Lot{" +
+                "symbol=" + openingTransaction.getFund() +
+                ", openDate=" + openDate +
+                '}';
+    }
 }

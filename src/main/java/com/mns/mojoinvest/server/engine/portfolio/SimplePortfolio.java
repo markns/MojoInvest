@@ -127,7 +127,8 @@ public class SimplePortfolio implements Portfolio {
                     + transaction);
         transactions.add(transaction);
         if (!positions.containsKey(transaction.getFund())) {
-            positions.put(transaction.getFund(), new Position(quoteDao, fundDao.get(transaction.getFund())));
+            positions.put(transaction.getFund(),
+                    new Position(fundDao.get(transaction.getFund()), transaction.getDate(), quoteDao));
         }
         addCashFlow(transaction.getDate(), transaction.getCashValue());
         positions.get(transaction.getFund()).add(transaction);
@@ -151,13 +152,13 @@ public class SimplePortfolio implements Portfolio {
 
     @Override
     public Map<String, Position> getOpenPositions(LocalDate date) {
-        Map<String, Position> currentPositions = new HashMap<String, Position>();
+        Map<String, Position> openPositions = new HashMap<String, Position>();
         for (Position position : positions.values()) {
             if (position.open(date)) {
-                currentPositions.put(position.getFund().getSymbol(), position);
+                openPositions.put(position.getFund().getSymbol(), position);
             }
         }
-        return currentPositions;
+        return openPositions;
     }
 
     @Override
@@ -202,13 +203,14 @@ public class SimplePortfolio implements Portfolio {
     public BigDecimal marketValue(LocalDate date) {
         if (marketValueCache.containsKey(date))
             return marketValueCache.get(date);
-
+        log.fine(date + " Calculating market value for " + this);
         BigDecimal marketValue = BigDecimal.ZERO;
         for (Position position : positions.values()) {
             //adjust for currency
             marketValue = marketValue.add(position.marketValue(date));
         }
         marketValue = marketValue.add(getCash(date));
+        log.fine(date + " Calculated market value for " + this + " as " + marketValue);
         marketValueCache.put(date, marketValue);
         return marketValue;
     }
@@ -276,4 +278,10 @@ public class SimplePortfolio implements Portfolio {
                 .multiply(BigDecimal.TEN.multiply(BigDecimal.TEN));
     }
 
+    @Override
+    public String toString() {
+        return "SimplePortfolio{" +
+                "positions=" + positions.keySet() +
+                '}';
+    }
 }
