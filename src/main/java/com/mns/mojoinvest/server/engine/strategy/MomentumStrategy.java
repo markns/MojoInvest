@@ -237,8 +237,7 @@ public class MomentumStrategy {
         //Check how many portfolio slots there are on the day after rebalance date.
         //(We've already sold positions, however they won't show as empty until the next day)
         //TODO: Could store a member var detailing how many positions have been sold
-        int numEmpty = params.getPortfolioSize() - portfolio.openPositionCount(
-                getExecutionDate(rebalanceDate));
+        int numEmpty = params.getPortfolioSize() - portfolio.openPositionCount(getExecutionDate(rebalanceDate));
         //Check how many cash we'll have on the day after rebalance date.
         BigDecimal availableCash = portfolio.getCash(getExecutionDate(rebalanceDate))
                 .subtract(portfolio.getTransactionCost()
