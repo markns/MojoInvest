@@ -17,8 +17,10 @@
     ChartView = Backbone.View.extend({
 
         render:function () {
+            console.log("ChartView render");
             $(this.el).html('<p>gviz line chart:</p>' +
                     '<div id="gviz" style="width:600px; height:300px;"></div>');
+            console.log(this);
             google.load('visualization', '1', {packages:'linechart'});
             google.setOnLoadCallback(this.drawVisualization);
             return this;
@@ -27,26 +29,21 @@
         //This never gets called
         drawVisualization:function () {
             console.log("In draw visualization");
-            var data = this.createDataTable('date');
-            var chart = new google.visualization.LineChart(this.$('#gviz'));
-            chart.draw(data, null, null);
-        },
-
-        createDataTable:function (dateType) {
-            console.log("Creating datatable");
+//            var data = createDataTable('date');
+            console.log(this);
             var data = new google.visualization.DataTable();
-            data.addColumn(dateType, 'Date');
+            data.addColumn('date', 'Date');
             data.addColumn('number', 'Column A');
             data.addColumn('number', 'Column B');
-            data.addRows(4);
+            data.addRows(2);
             data.setCell(0, 0, new Date("2009/07/01"));
             data.setCell(0, 1, 1);
             data.setCell(0, 2, 7);
             data.setCell(1, 0, new Date("2009/07/08"));
             data.setCell(1, 1, 2);
             data.setCell(1, 2, 4);
-            console.log("Created datatable " + data.toJSON());
-            return data;
+            var chart = new google.visualization.LineChart(this.$('#gviz'));
+            chart.draw(data, null, null);
         }
 
     });

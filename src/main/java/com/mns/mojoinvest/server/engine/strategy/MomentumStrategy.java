@@ -132,7 +132,7 @@ public class MomentumStrategy {
                 log.fine("Add a " + symbol + " pricing quote for rebalance date");
                 keys.add(new Key<Quote>(Quote.class, QuoteUtils.quoteId(symbol, date)));
             }
-            LocalDate executionDate = TradingDayUtils.rollForward(date.plusDays(1));
+            LocalDate executionDate = getExecutionDate(date);
             Set<String> sells = new HashSet<String>(params.getPortfolioSize());
             for (String symbol : portfolioPath) {
                 if (!selection.contains(symbol)) {
@@ -238,12 +238,11 @@ public class MomentumStrategy {
         //(We've already sold positions, however they won't show as empty until the next day)
         //TODO: Could store a member var detailing how many positions have been sold
         int numEmpty = params.getPortfolioSize() - portfolio.openPositionCount(
-                TradingDayUtils.rollForward(rebalanceDate.plusDays(1)));
+                getExecutionDate(rebalanceDate));
         //Check how many cash we'll have on the day after rebalance date.
-        BigDecimal availableCash = portfolio.getCash(
-                TradingDayUtils.rollForward(rebalanceDate.plusDays(1))).
-                subtract(portfolio.getTransactionCost().
-                        multiply(new BigDecimal(numEmpty)));
+        BigDecimal availableCash = portfolio.getCash(getExecutionDate(rebalanceDate))
+                .subtract(portfolio.getTransactionCost()
+                        .multiply(new BigDecimal(numEmpty)));
 
         int added = 0;
         for (String symbol : selection) {
@@ -277,15 +276,10 @@ public class MomentumStrategy {
     }
 
     private void buySafeAsset(Portfolio portfolio, Params params, LocalDate date) {
-        int numEmpty = params.getPortfolioSize() - portfolio.openPositionCount(
-                TradingDayUtils.rollForward(date.plusDays(1)));
-        BigDecimal availableCash = portfolio.getCash(
-                TradingDayUtils.rollForward(date.plusDays(1))).
-                subtract(portfolio.getTransactionCost().
-                        multiply(new BigDecimal(numEmpty)));
+        BigDecimal availableCash = portfolio.getCash(getExecutionDate(date))
+                .subtract(portfolio.getTransactionCost());
         try {
-            executor.buy(portfolio, params.getSafeAsset(),
-                    date, availableCash);
+            executor.buy(portfolio, params.getSafeAsset(), date, availableCash);
         } catch (PortfolioException e) {
             log.warning(date + " Unable to move into safe asset");
         }
@@ -300,6 +294,10 @@ public class MomentumStrategy {
                 throw new StrategyException(date + " Unable to move out of safe asset", e);
             }
         }
+    }
+
+    private LocalDate getExecutionDate(LocalDate date) {
+        return TradingDayUtils.rollForward(date.plusDays(1));
     }
 
 
