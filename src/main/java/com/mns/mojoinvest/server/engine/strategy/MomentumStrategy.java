@@ -162,11 +162,7 @@ public class MomentumStrategy {
         }
         long start = System.currentTimeMillis();
         Collection quotes = quoteDao.get(keys);
-        for (Object quote : quotes) {
-            System.out.println(quote);
-        }
-
-        log.fine("Loading " + keys.size() + " quotes into memcache took " + (System.currentTimeMillis() - start));
+        log.fine("Loading " + quotes.size() + " quotes into memcache took " + (System.currentTimeMillis() - start));
     }
 
     private List<LocalDate> getRebalanceDates(Params params)

@@ -120,7 +120,7 @@ public class StrategyResultBuilder {
             try {
                 data.addRowFromValues(getGregorianCalendar(date), portfolio.marketValue(date), 1);
             } catch (TypeMismatchException e) {
-                System.out.println("Invalid type! " + e);
+                log.severe("Invalid type! " + e);
                 e.printStackTrace();
             }
         }

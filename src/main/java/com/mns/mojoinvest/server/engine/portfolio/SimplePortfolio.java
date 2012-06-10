@@ -233,7 +233,6 @@ public class SimplePortfolio implements Portfolio {
 
     @Override
     public BigDecimal gainPercentage(LocalDate date) {
-        System.out.println(gain(date) + " " + costBasis(date));
         BigDecimal costBasis = costBasis(date);
         if (costBasis.compareTo(BigDecimal.ZERO) == 0)
             return BigDecimal.ZERO;

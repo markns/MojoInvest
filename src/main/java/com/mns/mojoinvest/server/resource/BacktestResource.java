@@ -57,7 +57,7 @@ public class BacktestResource {
     @Produces({MediaType.APPLICATION_JSON})
     public StrategyResult runBacktest(Params params)
             throws StrategyException, ResultBuilderException {
-        System.out.println(params);
+        log.info("Run backtest called with " + params);
         long start = System.currentTimeMillis();
         Collection<Fund> universe;
         if (params.getUniverse() != null) {
@@ -71,7 +71,7 @@ public class BacktestResource {
         long step = System.currentTimeMillis();
         Map<String, Map<LocalDate, BigDecimal>> additionalResults =
                 strategy.execute(portfolio, shadowPortfolio, params, universe);
-        log.fine("Total run strategy time: " + (System.currentTimeMillis() - step));
+        log.info("Total run strategy time: " + (System.currentTimeMillis() - step));
         //Should we use assisted inject here?
         step = System.currentTimeMillis();
         StrategyResult result = resultBuilder.setPortfolio(portfolio)
@@ -79,8 +79,8 @@ public class BacktestResource {
                 .setAdditionalResults(additionalResults)
                 .setParams(params)
                 .build();
-        log.fine("Total result builder time: " + (System.currentTimeMillis() - step));
-        log.fine("Total request time: " + (System.currentTimeMillis() - start));
+        log.info("Total result builder time: " + (System.currentTimeMillis() - step));
+        log.info("Total request time: " + (System.currentTimeMillis() - start));
         return result;
     }
 
