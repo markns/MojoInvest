@@ -26,11 +26,13 @@ import java.util.logging.Logger;
 public class MomentumStrategy {
 
     private static final Logger log = Logger.getLogger(MomentumStrategy.class.getName());
-    public static final String SHADOW_EQUITY_CURVE = "Shadow Equity Curve";
 
     private final RelativeStrengthCalculator relativeStrengthCalculator;
     private final Executor executor;
     private final QuoteDao quoteDao;
+
+    public static final String SHADOW_EQUITY_CURVE = "Shadow Equity Curve";
+    private static final String SHADOW_PORTFOLIO_MARKET_VALUE = "Shadow Portfolio Market Value";
 
     @Inject
     public MomentumStrategy(RelativeStrengthCalculator relativeStrengthCalculator,
@@ -54,7 +56,7 @@ public class MomentumStrategy {
                     params, rebalanceDates);
         }
 
-        DescriptiveStatistics shadowPortfolioEquityCurve = new DescriptiveStatistics(params.getEquityCurveWindow());
+        DescriptiveStatistics shadowEquityCurve = new DescriptiveStatistics(params.getEquityCurveWindow());
         boolean belowEquityCurve = false;
 
         Map<String, Map<LocalDate, BigDecimal>> additionalResults = new HashMap<String, Map<LocalDate, BigDecimal>>();
@@ -77,18 +79,17 @@ public class MomentumStrategy {
 
             if (params.isTradeEquityCurve()) {
                 //Shadow portfolio and equity curve calculation stuff
-                shadowPortfolioEquityCurve.addValue(shadowPortfolio.marketValue(date).doubleValue());
+                BigDecimal shadowMarketValue = shadowPortfolio.marketValue(date);
+                shadowEquityCurve.addValue(shadowMarketValue.doubleValue());
                 BigDecimal equityCurveMA = null;
-                if (shadowPortfolioEquityCurve.getN() >= params.getEquityCurveWindow()) {
-                    equityCurveMA = new BigDecimal(shadowPortfolioEquityCurve.getMean(), MathContext.DECIMAL32);
+                if (shadowEquityCurve.getN() >= params.getEquityCurveWindow()) {
+                    equityCurveMA = new BigDecimal(shadowEquityCurve.getMean(), MathContext.DECIMAL32);
                 }
+                additionalResults.get(SHADOW_PORTFOLIO_MARKET_VALUE).put(date, shadowMarketValue);
                 additionalResults.get(SHADOW_EQUITY_CURVE).put(date, equityCurveMA);
 
-//                log.fine(date + " " + portfolio.getActiveFunds(date) + " " + portfolio.marketValue(date) + " " +
-//                        shadowPortfolio.marketValue(date) + " " + equityCurveMA);
-
                 rebalance(shadowPortfolio, date, selection, params);
-                if (equityCurveMA != null && shadowPortfolio.marketValue(date).compareTo(equityCurveMA) < 0) {
+                if (equityCurveMA != null && shadowMarketValue.compareTo(equityCurveMA) < 0) {
                     if (!belowEquityCurve) {
                         log.fine("Crossed below equity curve");
                         belowEquityCurve = true;
@@ -106,7 +107,6 @@ public class MomentumStrategy {
                     rebalance(portfolio, date, selection, params);
                 }
             } else {
-//                log.fine(date + " " + portfolio.getActiveFunds(date) + " " + portfolio.marketValue(date));
                 rebalance(portfolio, date, selection, params);
             }
         }
