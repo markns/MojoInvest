@@ -13,6 +13,7 @@ import com.mns.mojoinvest.server.engine.model.dao.QuoteDao;
 import com.mns.mojoinvest.server.engine.params.Params;
 import com.mns.mojoinvest.server.engine.portfolio.Portfolio;
 import com.mns.mojoinvest.server.engine.portfolio.PortfolioException;
+import com.mns.mojoinvest.server.engine.portfolio.PortfolioFactory;
 import com.mns.mojoinvest.server.util.QuoteUtils;
 import com.mns.mojoinvest.server.util.TradingDayUtils;
 import org.apache.commons.math.stat.descriptive.DescriptiveStatistics;
@@ -30,20 +31,22 @@ public class MomentumStrategy {
     private final RelativeStrengthCalculator relativeStrengthCalculator;
     private final Executor executor;
     private final QuoteDao quoteDao;
+    private final PortfolioFactory portfolioFactory;
 
     public static final String SHADOW_EQUITY_CURVE = "Shadow Equity Curve";
-    private static final String SHADOW_PORTFOLIO_MARKET_VALUE = "Shadow Portfolio Market Value";
+    public static final String SHADOW_PORTFOLIO_MARKET_VALUE = "Shadow Portfolio Market Value";
 
     @Inject
     public MomentumStrategy(RelativeStrengthCalculator relativeStrengthCalculator,
-                            Executor executor, QuoteDao quoteDao) {
+                            PortfolioFactory portfolioFactory, Executor executor, QuoteDao quoteDao) {
         this.relativeStrengthCalculator = relativeStrengthCalculator;
+        this.portfolioFactory = portfolioFactory;
         this.executor = executor;
         this.quoteDao = quoteDao;
     }
 
-    public Map<String, Map<LocalDate, BigDecimal>> execute(Portfolio portfolio, Portfolio shadowPortfolio,
-                                                           Params params, Collection<Fund> universe)
+    public Map<String, Map<LocalDate, BigDecimal>> execute(Portfolio portfolio, Params params,
+                                                           Collection<Fund> universe)
             throws StrategyException {
 
         List<LocalDate> rebalanceDates = getRebalanceDates(params);
@@ -56,16 +59,50 @@ public class MomentumStrategy {
                     params, rebalanceDates);
         }
 
-        DescriptiveStatistics shadowEquityCurve = new DescriptiveStatistics(params.getEquityCurveWindow());
-        boolean belowEquityCurve = false;
+        warmQuoteMemCache(params, rebalanceDates, relativeStrengthsMap);
 
         Map<String, Map<LocalDate, BigDecimal>> additionalResults = new HashMap<String, Map<LocalDate, BigDecimal>>();
-        additionalResults.put(SHADOW_EQUITY_CURVE, new HashMap<LocalDate, BigDecimal>(relativeStrengthsMap.size()));
-
-        warmQuoteMemCache(params, rebalanceDates, relativeStrengthsMap);
 
         log.fine("Running strategy");
         long start = System.currentTimeMillis();
+        if (params.isTradeEquityCurve()) {
+            runStrategyWithEquityCurve(portfolio, params, rebalanceDates, relativeStrengthsMap, additionalResults);
+        } else {
+            runStrategy(portfolio, params, rebalanceDates, relativeStrengthsMap, additionalResults);
+        }
+        log.fine("Rebalancing took " + (System.currentTimeMillis() - start) + " ms");
+        return additionalResults;
+    }
+
+    private void runStrategy(Portfolio portfolio, Params params, List<LocalDate> rebalanceDates,
+                             SortedMap<LocalDate, Map<String, BigDecimal>> relativeStrengthsMap,
+                             Map<String, Map<LocalDate, BigDecimal>> additionalResults) throws StrategyException {
+
+        for (LocalDate date : rebalanceDates) {
+            Map<String, BigDecimal> strengths = relativeStrengthsMap.get(date);
+            if (strengths.size() < params.getCastOff()) {
+                log.warning(date + " Not enough funds in universe to make selection");
+                continue;
+            }
+            List<String> selection = getSelection(date, params, strengths);
+            rebalance(portfolio, date, selection, params);
+        }
+
+    }
+
+    private Map<String, Map<LocalDate, BigDecimal>> runStrategyWithEquityCurve(Portfolio portfolio, Params params, List<LocalDate> rebalanceDates,
+                                                                               SortedMap<LocalDate, Map<String, BigDecimal>> relativeStrengthsMap,
+                                                                               Map<String, Map<LocalDate, BigDecimal>> additionalResults)
+            throws StrategyException {
+
+        Portfolio shadowPortfolio = portfolioFactory.create(params, true);
+
+        DescriptiveStatistics shadowEquityCurve = new DescriptiveStatistics(params.getEquityCurveWindow());
+        boolean belowEquityCurve = false;
+
+        additionalResults.put(SHADOW_EQUITY_CURVE, new HashMap<LocalDate, BigDecimal>(relativeStrengthsMap.size()));
+        additionalResults.put(SHADOW_PORTFOLIO_MARKET_VALUE, new HashMap<LocalDate, BigDecimal>(relativeStrengthsMap.size()));
+
         for (LocalDate date : rebalanceDates) {
 
             Map<String, BigDecimal> strengths = relativeStrengthsMap.get(date);
@@ -77,41 +114,36 @@ public class MomentumStrategy {
 
             List<String> selection = getSelection(date, params, strengths);
 
-            if (params.isTradeEquityCurve()) {
-                //Shadow portfolio and equity curve calculation stuff
-                BigDecimal shadowMarketValue = shadowPortfolio.marketValue(date);
-                shadowEquityCurve.addValue(shadowMarketValue.doubleValue());
-                BigDecimal equityCurveMA = null;
-                if (shadowEquityCurve.getN() >= params.getEquityCurveWindow()) {
-                    equityCurveMA = new BigDecimal(shadowEquityCurve.getMean(), MathContext.DECIMAL32);
-                }
-                additionalResults.get(SHADOW_PORTFOLIO_MARKET_VALUE).put(date, shadowMarketValue);
-                additionalResults.get(SHADOW_EQUITY_CURVE).put(date, equityCurveMA);
+            //Shadow portfolio and equity curve calculation stuff
+            BigDecimal shadowMarketValue = shadowPortfolio.marketValue(date);
+            shadowEquityCurve.addValue(shadowMarketValue.doubleValue());
+            BigDecimal equityCurveMA = null;
+            if (shadowEquityCurve.getN() >= params.getEquityCurveWindow()) {
+                equityCurveMA = new BigDecimal(shadowEquityCurve.getMean(), MathContext.DECIMAL32);
+            }
+            additionalResults.get(SHADOW_PORTFOLIO_MARKET_VALUE).put(date, shadowMarketValue);
+            additionalResults.get(SHADOW_EQUITY_CURVE).put(date, equityCurveMA);
 
-                rebalance(shadowPortfolio, date, selection, params);
-                if (equityCurveMA != null && shadowMarketValue.compareTo(equityCurveMA) < 0) {
-                    if (!belowEquityCurve) {
-                        log.fine("Crossed below equity curve");
-                        belowEquityCurve = true;
-                        sellEverything(portfolio, date);
-                        if (params.isUseSafeAsset()) {
-                            buySafeAsset(portfolio, params, date);
-                        }
+            rebalance(shadowPortfolio, date, selection, params);
+            if (equityCurveMA != null && shadowMarketValue.compareTo(equityCurveMA) < 0) {
+                if (!belowEquityCurve) {
+                    log.fine("Crossed below equity curve");
+                    belowEquityCurve = true;
+                    sellEverything(portfolio, date);
+                    if (params.isUseSafeAsset()) {
+                        buySafeAsset(portfolio, params, date);
                     }
-                } else {
-                    if (belowEquityCurve) {
-                        log.fine("Crossed above equity curve");
-                        sellSafeAsset(portfolio, params, date);
-                        belowEquityCurve = false;
-                    }
-                    rebalance(portfolio, date, selection, params);
                 }
             } else {
+                if (belowEquityCurve) {
+                    log.fine("Crossed above equity curve");
+                    sellSafeAsset(portfolio, params, date);
+                    belowEquityCurve = false;
+                }
                 rebalance(portfolio, date, selection, params);
             }
-        }
-        log.fine("Rebalancing took " + (System.currentTimeMillis() - start) + " ms");
 
+        }
         return additionalResults;
     }
 

@@ -95,7 +95,7 @@ public class RunStrategyApp {
 
         try {
             Map<String, Map<LocalDate, BigDecimal>> additionalResults =
-                    strategy.execute(portfolio, shadowPortfolio, params, universe);
+                    strategy.execute(portfolio, params, universe);
             //Should we use assisted inject here?
             resultBuilder.setPortfolio(portfolio)
                     .setShadowPortfolio(shadowPortfolio)

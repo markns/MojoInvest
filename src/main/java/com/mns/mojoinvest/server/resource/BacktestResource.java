@@ -66,16 +66,14 @@ public class BacktestResource {
             universe = fundDao.list();
         }
         Portfolio portfolio = portfolioFactory.create(params, false);
-        Portfolio shadowPortfolio = portfolioFactory.create(params, true);
 
         long step = System.currentTimeMillis();
         Map<String, Map<LocalDate, BigDecimal>> additionalResults =
-                strategy.execute(portfolio, shadowPortfolio, params, universe);
+                strategy.execute(portfolio, params, universe);
         log.info("Total run strategy time: " + (System.currentTimeMillis() - step));
         //Should we use assisted inject here?
         step = System.currentTimeMillis();
         StrategyResult result = resultBuilder.setPortfolio(portfolio)
-                .setShadowPortfolio(shadowPortfolio)
                 .setAdditionalResults(additionalResults)
                 .setParams(params)
                 .build();
