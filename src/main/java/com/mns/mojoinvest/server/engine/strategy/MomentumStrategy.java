@@ -77,7 +77,6 @@ public class MomentumStrategy {
     private void runStrategy(Portfolio portfolio, Params params, List<LocalDate> rebalanceDates,
                              SortedMap<LocalDate, Map<String, BigDecimal>> relativeStrengthsMap,
                              Map<String, Map<LocalDate, BigDecimal>> additionalResults) throws StrategyException {
-
         for (LocalDate date : rebalanceDates) {
             Map<String, BigDecimal> strengths = relativeStrengthsMap.get(date);
             if (strengths.size() < params.getCastOff()) {
@@ -87,7 +86,6 @@ public class MomentumStrategy {
             List<String> selection = getSelection(date, params, strengths);
             rebalance(portfolio, date, selection, params);
         }
-
     }
 
     private Map<String, Map<LocalDate, BigDecimal>> runStrategyWithEquityCurve(Portfolio portfolio, Params params, List<LocalDate> rebalanceDates,
