@@ -13,6 +13,7 @@ import com.mns.mojoinvest.server.engine.model.dao.FundDao;
 import com.mns.mojoinvest.server.engine.model.dao.QuoteDao;
 import com.mns.mojoinvest.server.engine.params.Params;
 import com.mns.mojoinvest.server.engine.portfolio.Portfolio;
+import com.mns.mojoinvest.server.engine.strategy.MomentumStrategy;
 import com.mns.mojoinvest.server.util.TradingDayUtils;
 import org.apache.commons.lang.ArrayUtils;
 import org.joda.time.LocalDate;
@@ -51,11 +52,6 @@ public class StrategyResultBuilder {
         return this;
     }
 
-    public StrategyResultBuilder setShadowPortfolio(Portfolio shadowPortfolio) {
-        this.shadowPortfolio = shadowPortfolio;
-        return this;
-    }
-
     public StrategyResultBuilder setParams(Params params) {
         this.params = params;
         return this;
@@ -68,43 +64,67 @@ public class StrategyResultBuilder {
 
     public StrategyResult build() throws ResultBuilderException {
 
-//        CSVWriter writer = initialiseCsv();
-//        writeCsvHeader(universe, writer);
-
         log.fine("Building strategy result");
+        List<LocalDate> rebalanceDates = getRebalanceDates(params);
+
+        DataTable dataTable = generateDataTable(rebalanceDates);
+
+        Map<String, Object> stats = new HashMap<String, Object>();
+        BigDecimal maxDD = maxDD(rebalanceDates);
+        BigDecimal cagr = cagr();
+        stats.put("Max DD%", maxDD);
+        stats.put("CAGR", cagr);
+        stats.put("CAGR/Max DD%", maxDD.divide(cagr, MathContext.DECIMAL32));
+        stats.put("Total Return", totalReturn());
+        stats.put("Num Trades", portfolio.getTransactions().size());
+
+        return new StrategyResult(dataTable, portfolio.getTransactions(), stats);
+    }
+
+    private BigDecimal totalReturn() {
+        BigDecimal marketValue = portfolio.marketValue(params.getToDate());
+        return marketValue;
+    }
+
+    private BigDecimal cagr()
+            throws ResultBuilderException {
+        if (portfolio.getTransactions().size() == 0)
+            throw new ResultBuilderException("No transactions in portfolio");
+        LocalDate fromDate = portfolio.getTransactions().get(0).getDate();
+
+        BigDecimal marketValue = portfolio.marketValue(params.getToDate());
+        log.info("Final portfolio value: " + marketValue);
+        double base = marketValue.divide(new BigDecimal(portfolio.getParams().getInitialInvestment())).doubleValue();
+        double e = 1d / Years.yearsBetween(fromDate, params.getToDate()).getYears();
+        double cagr = (1 - Math.pow(base, e)) * -100;
+        log.info("CAGR: " + cagr + "%");
+        return new BigDecimal(cagr);
+    }
+
+    private BigDecimal maxDD(List<LocalDate> dates) {
         List<DrawDown> drawDowns = new ArrayList<DrawDown>();
         DrawDown currentDD = null;
 
-        List<LocalDate> rebalanceDates = getRebalanceDates(params);
-
         LocalDate earliestTransactionDate = portfolio.getTransactions().get(0).getDate();
-
-        for (LocalDate rebalanceDate : rebalanceDates) {
-
+        for (LocalDate rebalanceDate : dates) {
             if (rebalanceDate.isBefore(earliestTransactionDate.minusWeeks(2))) {
                 continue;
             }
-            currentDD = calculateDrawDowns(drawDowns, currentDD, rebalanceDate, portfolio.marketValue(rebalanceDate));
-
-//            initialiseComparisonsForCsv(universe, rebalanceDate, portfolio.marketValue(rebalanceDate));
-//            String[] compares = calculatePercentChangeForCsv(universe, rebalanceDate);
-//            writeCsvRow(portfolio, shadowPortfolio, writer, rebalanceDate, portfolio.marketValue(rebalanceDate),
-//                    shadowPortfolio.marketValue(rebalanceDate),
-//                    additionalResults.get(MomentumStrategy.SHADOW_EQUITY_CURVE).get(rebalanceDate),
-//                    compares);
+            currentDD = calculateDrawDowns(drawDowns, currentDD, rebalanceDate,
+                    portfolio.marketValue(rebalanceDate));
         }
-
-//        flushCsvWriter(writer);
-
-        logParams(params);
-        logTrades(portfolio);
-        logDrawDowns(drawDowns);
-        logCAGR(portfolio, params);
-
-        return new StrategyResult(generateDataTable(rebalanceDates, portfolio), portfolio.getTransactions());
+        BigDecimal maxDD = BigDecimal.ZERO;
+        for (DrawDown drawDown : drawDowns) {
+            if (drawDown.getPctValue().compareTo(maxDD) > 0) {
+                maxDD = drawDown.getPctValue();
+            }
+        }
+        log.info("MaxDD: " + maxDD + "%");
+        return maxDD;
     }
 
-    public DataTable generateDataTable(List<LocalDate> dates, Portfolio portfolio1) {
+
+    public DataTable generateDataTable(List<LocalDate> dates) {
 
         // Create a data table
         DataTable data = new DataTable();
@@ -113,12 +133,19 @@ public class StrategyResultBuilder {
         cd.add(new ColumnDescription("Date", ValueType.DATE, "Date"));
         cd.add(new ColumnDescription("Portfolio", ValueType.NUMBER, "Portfolio Value"));
         cd.add(new ColumnDescription("ShadowPortfolio", ValueType.NUMBER, "Shadow Portfolio Value"));
+        cd.add(new ColumnDescription("ShadowPortfolioEC", ValueType.NUMBER, "Shadow Portfolio Equity Curve"));
 
         data.addColumns(cd);
 
+        Map<LocalDate, BigDecimal> spv = additionalResults.get(MomentumStrategy.SHADOW_PORTFOLIO_MARKET_VALUE);
+        Map<LocalDate, BigDecimal> sec = additionalResults.get(MomentumStrategy.SHADOW_EQUITY_CURVE);
+
         for (LocalDate date : dates) {
             try {
-                data.addRowFromValues(getGregorianCalendar(date), portfolio.marketValue(date), 1);
+                data.addRowFromValues(getGregorianCalendar(date),
+                        portfolio.marketValue(date),
+                        spv.get(date),
+                        sec.get(date));
             } catch (TypeMismatchException e) {
                 log.severe("Invalid type! " + e);
                 e.printStackTrace();
@@ -171,58 +198,11 @@ public class StrategyResultBuilder {
         return currentDD;
     }
 
-    private void logParams(Params params) {
-        log.info("" + params);
-    }
-
-    private void logDrawDowns(List<DrawDown> drawDowns) {
-        BigDecimal maxDD = BigDecimal.ZERO;
-        for (DrawDown drawDown : drawDowns) {
-            if (drawDown.getPctValue().compareTo(maxDD) > 0) {
-                maxDD = drawDown.getPctValue();
-            }
-        }
-        log.info("MaxDD: " + maxDD + "%");
-    }
-
-
-    private void logCAGR(Portfolio portfolio, Params toDate)
-            throws ResultBuilderException {
-        if (portfolio.getTransactions().size() == 0)
-            throw new ResultBuilderException("No transactions in portfolio");
-        LocalDate fromDate = portfolio.getTransactions().get(0).getDate();
-
-        BigDecimal marketValue = portfolio.marketValue(params.getToDate());
-        log.info("Final portfolio value: " + marketValue);
-        double base = marketValue.divide(new BigDecimal(portfolio.getParams().getInitialInvestment())).doubleValue();
-        double e = 1d / Years.yearsBetween(fromDate, params.getToDate()).getYears();
-        double cagr = (1 - Math.pow(base, e)) * -100;
-        log.info("CAGR: " + cagr + "%");
-    }
-
-    private void logTrades(Portfolio portfolio) {
-//        for (Transaction transaction : portfolio.getTransactions()) {
-//
-//            log.fine(transaction + "");
-//        }
-        log.info("Number of trades: " + portfolio.getTransactions().size());
-    }
-
 
     /*
      * Csv writing stuff - non production
     */
 
-//    private CSVWriter initialiseCsv() {
-//        CSVWriter writer = null;
-//        try {
-//            writer = new CSVWriter(new FileWriter("data/strategy_runs/" + new LocalTime() + ".csv"));
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//            throw new RuntimeException("", e);
-//        }
-//        return writer;
-//    }
 
     private void writeCsvHeader(Collection<Fund> universe, CSVWriter writer) {
         String[] headCompare = new String[universe.size()];

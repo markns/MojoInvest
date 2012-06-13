@@ -1,18 +1,60 @@
 <!doctype html>
 <html>
 <head>
-    <title>App</title>
+    <title>Chart</title>
     <meta charset="utf-8">
 </head>
 <body>
 <div id="content"></div>
 
+<p>GVIZ:</p>
+
 <script src="lib/jquery-1.7.2.min.js"></script>
 <script src="lib/underscore.js"></script>
 <script src="lib/backbone.js"></script>
-<script src="http://www.google.com/jsapi"></script>
+<script src="lib/ICanHaz.js"></script>
+<script src="lib/jsapi.js"></script>
 
 <script>
+    window.App = {
+        //Main application namespace
+    };
+
+    App.tpl = {
+
+        loadTemplates:function (names, callback) {
+            var loadTemplate = function (index) {
+                var name = names[index];
+                console.log('Loading template: ' + name);
+                $.ajax({type:'GET',
+                    url:'mustache/' + name + '.mustache',
+                    success:function (data) {
+                        ich.addTemplate(name, data);
+                        index++;
+                        if (index < names.length) {
+                            loadTemplate(index);
+                        } else {
+                            console.log("Running callback " + callback);
+                            callback();
+                        }
+                    },
+                    error:function (jqXHR, textStatus, errorThrown) {
+                        console.log(jqXHR, textStatus, errorThrown);
+                        alert(jqXHR + " " + textStatus + " " + errorThrown);
+                    },
+                    dataType:'html'
+
+                })
+            };
+            loadTemplate(0);
+        },
+
+        // Get template by name from hash of preloaded templates
+        get:function (name) {
+            return this.templates[name];
+        }
+
+    };
 
     ChartView = Backbone.View.extend({
 
@@ -21,16 +63,15 @@
             $(this.el).html('<p>gviz line chart:</p>' +
                     '<div id="gviz" style="width:600px; height:300px;"></div>');
             console.log(this);
-            google.load('visualization', '1', {packages:'linechart'});
-            google.setOnLoadCallback(this.drawVisualization);
+            google.load('visualization', '1', {'callback':this.drawVisualization,
+                'packages':['linechart']});
+//            google.load('visualization', '1', {packages:'linechart'});
+//            google.setOnLoadCallback(this.drawVisualization);
             return this;
         },
 
-        //This never gets called
         drawVisualization:function () {
-            console.log("In draw visualization");
-//            var data = createDataTable('date');
-            console.log(this);
+            console.log("ChartView drawVisualization");
             var data = new google.visualization.DataTable();
             data.addColumn('date', 'Date');
             data.addColumn('number', 'Column A');
@@ -42,7 +83,7 @@
             data.setCell(1, 0, new Date("2009/07/08"));
             data.setCell(1, 1, 2);
             data.setCell(1, 2, 4);
-            var chart = new google.visualization.LineChart(this.$('#gviz'));
+            var chart = new google.visualization.LineChart(this.$('#gviz').get(0));
             chart.draw(data, null, null);
         }
 
@@ -53,14 +94,15 @@
             "":"chart"
         },
         chart:function () {
-            console.log("Showing chart");
+            console.log("Routing to ChartView");
             $("#content").append(new ChartView().render().el);
-
         }
     });
 
-    router = new AppRouter();
-    Backbone.history.start();
+    App.tpl.loadTemplates(['results'], function () {
+        App.router = new AppRouter();
+        Backbone.history.start();
+    });
 
 </script>
 

@@ -8,6 +8,10 @@
 
 <script>
 
+window.App = {
+    //Main application namespace
+};
+
 //JQuery set up stuff - where should this live?
 (function ($) {
     $.fn.toggleDisabled = function () {
@@ -27,8 +31,7 @@ $('#loadingDiv')
         })
         .ajaxStop(function () {
             $(this).hide();
-        })
-;
+        });
 
 
 tpl = {
@@ -62,11 +65,12 @@ tpl = {
 
 };
 
-window.Params = Backbone.Model.extend({});
-window.AppModel = Backbone.Model.extend({});
+App.Params = Backbone.Model.extend({});
+App.Results = Backbone.Model.extend({});
+App.AppModel = Backbone.Model.extend({});
 
 
-window.ParamsView = Backbone.View.extend({
+App.ParamsView = Backbone.View.extend({
 
     initialize:function () {
         this.model.bind("change", this.render, this);
@@ -177,7 +181,6 @@ window.ParamsView = Backbone.View.extend({
             type:'POST',
             url:"backtest",
             data:JSON.stringify(this.model),
-            start:this.start,
             success:this.success,
             error:this.error,
             contentType:"application/json;charset=utf-8",
@@ -189,19 +192,19 @@ window.ParamsView = Backbone.View.extend({
     },
 
     success:function (data) {
-        console.log(data);
-        app.navigate('results', true);
+        App.results = new App.Results(data);
+        App.router.navigate('results', true);
     },
 
     error:function (jqXHR, textStatus, errorThrown) {
         console.log(jqXHR, textStatus, errorThrown);
-        app.navigate('results', true);
+        alert(jqXHR + " " + textStatus + " " + errorThrown);
+//        App.router.navigate('results', true);
     }
 
 });
 
-
-window.UniverseView = Backbone.View.extend({
+App.UniverseView = Backbone.View.extend({
     initialize:function () {
         this.model.bind("change:universe", this.render, this);
     },
@@ -214,16 +217,16 @@ window.UniverseView = Backbone.View.extend({
 
 });
 
-window.FundsView = Backbone.View.extend({
+App.FundsView = Backbone.View.extend({
     initialize:function () {
     },
 
     render:function () {
         //Todo: figure out why I have to wrap the funds in another object,
         // even though when passing model they should be referenceable as #funds
-        $(this.el).html(ich.funds(this.model));
+        $(this.el).html(ich.funds(App));
 
-        var universe = this.model.params.get("universe");
+        var universe = App.params.get("universe");
         this.$("input[name='includeFundCheck']:checkbox").each(function (index) {
             if ($.inArray($(this).val(), universe) != -1) {
                 $(this).attr("checked", true);
@@ -239,7 +242,7 @@ window.FundsView = Backbone.View.extend({
 
     includeFundClicked:function (event) {
         var fund = event.currentTarget.value;
-        var universe = this.model.params.get("universe");
+        var universe = App.params.get("universe");
         var index = $.inArray(fund, universe);
         if (index == -1) {
             universe.push(fund);
@@ -250,9 +253,38 @@ window.FundsView = Backbone.View.extend({
         // Not automatic because params.universe is not a collection
         //Not sure why model.change() is not working-
         // http://stackoverflow.com/questions/8280790/backbone-js-model-not-firing-events
-        this.model.params.trigger('change:universe');
+        App.params.trigger('change:universe');
     }
 });
+
+App.ChartView = Backbone.View.extend({
+
+    render:function () {
+        $(this.el).html(ich.results());
+        console.log("ChartView render");
+        console.log(this.model);
+        google.load('visualization', '1', {'callback':this.drawVisualization,
+            'packages':['linechart']});
+        return this;
+    },
+
+    drawVisualization:function () {
+        var data = new google.visualization.DataTable(App.results.get('dataTable'));
+        console.log("Datatable created:", data);
+        new Dygraph.GVizChart(this.$('#chart').get(0)).draw(data,
+                {
+//                    customBars: true,
+//                    title: 'Daily Temperatures in New York vs. San Francisco',
+//                    ylabel: '(F)',
+//                    legend: 'always',
+//                    labelsDivStyles: { 'textAlign': 'right' },
+                    showRangeSelector:true
+                });
+    }
+
+
+});
+
 
 Backbone.View.prototype.close = function () {
     console.log('Closing view ' + this);
@@ -265,10 +297,8 @@ Backbone.View.prototype.close = function () {
 
 var AppRouter = Backbone.Router.extend({
 
-    initialize:function (model) {
+    initialize:function () {
         console.log("initializing AppRouter");
-        //Nb. this.model is NOT a backbone model entity
-        this.model = model;
     },
 
     routes:{
@@ -278,16 +308,16 @@ var AppRouter = Backbone.Router.extend({
 
     params:function () {
         console.log("Showing params");
-        var views = [new ParamsView({model:this.model.params}),
-            new UniverseView({model:this.model.params}),
-            new FundsView({model:this.model})];
-        app.showViews("#content", views)
+        var views = [new App.ParamsView({model:App.params}),
+            new App.UniverseView({model:App.params}),
+            new App.FundsView()];
+        App.router.showViews("#content", views)
     },
 
     results:function () {
         console.log("Showing results");
-        var views = [new FundsView({model:this.model})];
-        app.showViews("#content", views)
+        var views = [new App.ChartView({model:App.results})];
+        App.router.showViews("#content", views)
     },
 
     showViews:function (selector, views) {
@@ -304,28 +334,20 @@ var AppRouter = Backbone.Router.extend({
 
 });
 
-
 </script>
 
 
 <script>
-    bootstrap = {
-        load:function () {
-            console.log("bootstrapping models");
 
-            var model = {};
+    console.log("bootstrapping models");
 
-            model.params = new Params({{params}});
-            model.funds = {{funds}};
+    App.params = new App.Params({{params}});
+    App.funds = {{funds}};
 
-            return model;
-        }
-    };
 
     //Load templates is async because of http requests
-    tpl.loadTemplates(['params', 'funds', 'universe'], function () {
-
-        window.app = new AppRouter(bootstrap.load());
+    tpl.loadTemplates(['params', 'funds', 'universe', 'results'], function () {
+        App.router = new AppRouter();
         Backbone.history.start();
     });
 

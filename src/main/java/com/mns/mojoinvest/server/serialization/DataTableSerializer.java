@@ -15,6 +15,6 @@ public class DataTableSerializer extends JsonSerializer<DataTable> {
     public void serialize(DataTable dataTable, JsonGenerator jsonGenerator, SerializerProvider serializerProvider)
             throws IOException, JsonProcessingException {
 
-        jsonGenerator.writeString(JsonRenderer.renderDataTable(dataTable, true, true, true).toString());
+        jsonGenerator.writeString(JsonRenderer.renderDataTable(dataTable, true, true, false).toString());
     }
 }

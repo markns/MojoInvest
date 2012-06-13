@@ -91,14 +91,12 @@ public class RunStrategyApp {
             universe = fundDao.list();
         }
         Portfolio portfolio = portfolioFactory.create(params, false);
-        Portfolio shadowPortfolio = portfolioFactory.create(params, true);
 
         try {
             Map<String, Map<LocalDate, BigDecimal>> additionalResults =
                     strategy.execute(portfolio, params, universe);
             //Should we use assisted inject here?
             resultBuilder.setPortfolio(portfolio)
-                    .setShadowPortfolio(shadowPortfolio)
                     .setAdditionalResults(additionalResults)
                     .setParams(params)
                     .build();

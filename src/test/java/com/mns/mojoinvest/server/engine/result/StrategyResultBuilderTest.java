@@ -6,7 +6,6 @@ import com.googlecode.objectify.ObjectifyService;
 import com.mns.mojoinvest.server.engine.model.dao.FundDao;
 import com.mns.mojoinvest.server.engine.model.dao.ObjectifyFundDao;
 import com.mns.mojoinvest.server.engine.model.dao.QuoteDao;
-import com.mns.mojoinvest.server.engine.portfolio.SimplePortfolio;
 import org.joda.time.LocalDate;
 import org.junit.Test;
 import org.mockito.Mock;
@@ -33,6 +32,6 @@ public class StrategyResultBuilderTest {
     @Test
     public void testGenerateDataTable() throws Exception {
         StrategyResultBuilder builder = new StrategyResultBuilder(quoteDao, fundDao);
-        builder.generateDataTable(new ArrayList<LocalDate>(), new SimplePortfolio(null, null, null, false));
+        builder.generateDataTable(new ArrayList<LocalDate>());
     }
 }

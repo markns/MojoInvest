@@ -6,15 +6,18 @@ import com.mns.mojoinvest.server.serialization.DataTableSerializer;
 import org.codehaus.jackson.map.annotate.JsonSerialize;
 
 import java.util.List;
+import java.util.Map;
 
 public class StrategyResult {
 
-    private DataTable dataTableDto;
+    private DataTable dataTable;
     private List<Transaction> transactions;
+    private Map<String, Object> stats;
 
-    public StrategyResult(DataTable dataTableDto, List<Transaction> transactions) {
-        this.dataTableDto = dataTableDto;
+    public StrategyResult(DataTable dataTable, List<Transaction> transactions, Map<String, Object> stats) {
+        this.dataTable = dataTable;
         this.transactions = transactions;
+        this.stats = stats;
     }
 
     public StrategyResult() {
@@ -22,10 +25,14 @@ public class StrategyResult {
 
     @JsonSerialize(using = DataTableSerializer.class)
     public DataTable getDataTable() {
-        return dataTableDto;
+        return dataTable;
     }
 
     public List<Transaction> getTransactions() {
         return transactions;
+    }
+
+    public Map<String, Object> getStats() {
+        return stats;
     }
 }

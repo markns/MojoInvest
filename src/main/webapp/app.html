@@ -23,16 +23,6 @@
 
     <div id="loadingDiv">Loading</div>
 
-    <p>gviz line chart:</p>
-
-    <div id="gviz" style="width:600px; height:300px;"></div>
-
-    <p>same data drawn using dygraphs:</p>
-    date column:
-    <div id="dygraphs" style="width:600px; height:300px;"></div>
-    datetime column:
-    <div id="dygraphs_datetime" style="width:600px; height:300px;"></div>
-
     <div id="content" class="main">
     </div>
 
@@ -85,8 +75,7 @@ $('#loadingDiv')
         })
         .ajaxStop(function () {
             $(this).hide();
-        })
-;
+        });
 
 
 tpl = {
@@ -253,7 +242,8 @@ App.ParamsView = Backbone.View.extend({
 
     error:function (jqXHR, textStatus, errorThrown) {
         console.log(jqXHR, textStatus, errorThrown);
-        App.router.navigate('results', true);
+        alert(jqXHR + " " + textStatus + " " + errorThrown);
+//        App.router.navigate('results', true);
     }
 
 });
@@ -313,66 +303,30 @@ App.FundsView = Backbone.View.extend({
 
 App.ChartView = Backbone.View.extend({
 
-    initialize:function () {
-    },
-
-    createDataTable:function (dateType) {
-        console.log("Creating datatable");
-        var data = new google.visualization.DataTable();
-        data.addColumn(dateType, 'Date');
-        data.addColumn('number', 'Column A');
-        data.addColumn('number', 'Column B');
-        data.addRows(4);
-        data.setCell(0, 0, new Date("2009/07/01"));
-        data.setCell(0, 1, 1);
-        data.setCell(0, 2, 7);
-        data.setCell(1, 0, new Date("2009/07/08"));
-        data.setCell(1, 1, 2);
-        data.setCell(1, 2, 4);
-        data.setCell(2, 0, new Date("2009/07/15"));
-        data.setCell(2, 1, 3);
-        data.setCell(2, 2, 3);
-        data.setCell(3, 0, new Date("2009/07/22"));
-        data.setCell(3, 1, 4);
-        data.setCell(3, 2, 0);
-        console.log("Created datatable " + data.toJSON());
-
-        return data;
+    render:function () {
+        $(this.el).html(ich.results());
+        console.log("ChartView render");
+        google.load('visualization', '1', {'callback':this.drawVisualization,
+            'packages':['linechart']});
+        return this;
     },
 
     drawVisualization:function () {
-        console.log("In draw visualization");
-        var data = this.createDataTable('date');
-        console.log(data);
-        console.log(this.$('#gviz'));
-        var chart = new google.visualization.LineChart(this.$('#gviz'));
-
-        chart.draw(data, null);
-
-        var chart1 = new Dygraph.GVizChart(this.$('#dygraphs')).draw(data, { });
-
-        data = createDataTable('datetime');
-        var chart2 = new Dygraph.GVizChart(this.$('#dygraphs_datetime')).draw(data, { });
-
-
-    },
-
-
-    render:function () {
-//        $(this.el).html(ich.results());
-
-        console.log("Loading google visualization");
-        google.load('visualization', '1', {packages:'linechart'});
-        console.log("Loaded google visualization");
-        console.log("Setting on load callback");
-
-        google.setOnLoadCallback(this.drawVisualization);
-        console.log("Set on load callback");
-
-        return this;
+        var data = new google.visualization.DataTable(App.results.get('dataTable'));
+        new Dygraph.GVizChart(this.$('#chart').get(0)).draw(data,
+                {
+//                    customBars: true,
+//                    title: 'Daily Temperatures in New York vs. San Francisco',
+//                    ylabel: '(F)',
+//                    legend: 'always',
+//                    labelsDivStyles: { 'textAlign': 'right' },
+                    showRangeSelector:true
+                });
     }
 
+
 });
+
 
 Backbone.View.prototype.close = function () {
     console.log('Closing view ' + this);
@@ -387,7 +341,6 @@ var AppRouter = Backbone.Router.extend({
 
     initialize:function () {
         console.log("initializing AppRouter");
-        //Nb. this.model is NOT a backbone model entity
     },
 
     routes:{
@@ -459,11 +412,6 @@ var AppRouter = Backbone.Router.extend({
 
 </script>
 
-<!--<script src="js/utils.js"></script>-->
-<!--<script src="js/models/params.js"></script>-->
-<!--<script src="js/models/app.js"></script>-->
-<!--<script src="js/views/paramsview.js"></script>-->
-<!--<script src="js/main.js"></script>-->
-
 </body>
+
 </html>
