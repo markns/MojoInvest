@@ -26,7 +26,7 @@ import com.google.inject.servlet.ServletModule;
 import com.googlecode.objectify.ObjectifyFactory;
 import com.mns.mojoinvest.server.engine.model.dao.*;
 import com.mns.mojoinvest.server.mustache.MustacheViewProcessor;
-import com.mns.mojoinvest.server.servlet.*;
+import com.mns.mojoinvest.server.servlet.PipelineServlet;
 import com.mns.mojoinvest.server.servlet.blob.SuccessfulUploadServlet;
 import com.sun.jersey.api.json.JSONConfiguration;
 import com.sun.jersey.guice.spi.container.servlet.GuiceContainer;
@@ -60,7 +60,7 @@ public class MojoServletModule extends ServletModule {
         params.put(JSONConfiguration.FEATURE_POJO_MAPPING, "true");
         params.put("com.sun.jersey.config.property.packages", "com.mns.mojoinvest.server.resource");
         params.put(ServletContainer.PROPERTY_WEB_PAGE_CONTENT_REGEX,
-                "/(_ah|jsp|css|images|js|lib|mustache|mapreduce|pipeline|upload-success|tools|appstats).*");
+                "/(_ah|jsp|css|images|js|lib|mustache|mapreduce|pipeline|upload-success|appstats).*");
         filter("/*").through(GuiceContainer.class, params);
 
         //Servlets
@@ -77,11 +77,11 @@ public class MojoServletModule extends ServletModule {
         bind(SuccessfulUploadServlet.class).in(Singleton.class);
 
         serve("/pipeline").with(PipelineServlet.class);
-        serve("/tools/quoteviewer").with(QuoteViewerServlet.class);
-        serve("/tools/fundviewer").with(FundViewerServlet.class);
-        serve("/tools/calculator").with(SMACalculatorServlet.class);
-        serve("/tools/clearcache").with(ClearCacheServlet.class);
-        serve("/tools/test2").with(Test2Servlet.class);
+//        serve("/tools/quoteviewer").with(QuoteViewerServlet.class);
+//        serve("/tools/fundviewer").with(FundViewerServlet.class);
+//        serve("/tools/calculator").with(SMACalculatorServlet.class);
+//        serve("/tools/clearcache").with(ClearCacheServlet.class);
+//        serve("/tools/test2").with(Test2Servlet.class);
 
         serve("/appstats/*").with(AppstatsServlet.class);
         bind(AppstatsServlet.class).in(Singleton.class);

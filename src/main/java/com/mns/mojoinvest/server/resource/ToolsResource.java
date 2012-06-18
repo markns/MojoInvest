@@ -9,15 +9,14 @@ import javax.ws.rs.core.MediaType;
 import java.util.HashMap;
 import java.util.Map;
 
-@Path("/")
-public class HomeResource {
+@Path("/tools")
+public class ToolsResource {
 
     @GET
     @Produces(MediaType.TEXT_HTML)
     public Viewable getMytestView() {
         Map<String, Object> map = new HashMap<String, Object>();
-//        map.put("name", new DateTime());
-        return new Viewable("/home.mustache", map);
+        return new Viewable("/tools.mustache", map);
     }
 
 }
