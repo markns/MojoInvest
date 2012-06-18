@@ -1,139 +1,143 @@
-<div class="column grid_3">
+<div class="params">
+    <div class="column grid_3">
+        <fieldset class="portfolio">
+            <legend>Portfolio</legend>
+            <ol>
+                <li title="Initial investment in portfolio">
+                    <label for=initialInvestment>Initial Investment</label>
+                    <input id=initialInvestment name=initialInvestment type=number class="inputField"
+                           value="{{initialInvestment}}">
+                </li>
+                <li>
+                    <label for=transactionCost>Transaction Cost</label>
+                    <input id=transactionCost name=transactionCost type=number class="inputField"
+                           value="{{transactionCost}}">
+                </li>
+                <li>
+                    <label for=portfolioSize>Portfolio Size</label>
+                    <input id=portfolioSize name=portfolioSize type=number class="inputField"
+                           value="{{portfolioSize}}">
+                </li>
+                <li>
+                    <label for="rebalanceFrequency">Rebalance freq</label>
+                    <input id="rebalanceFrequency" name="rebalanceFrequency" type=number class="inputField"
+                           value="{{rebalanceFrequency}}">
+                </li>
+                <li>
+                    <label for="castOff">Cast off rank</label>
+                    <input id="castOff" name="castOff" type=number class="inputField"
+                           value="{{castOff}}">
+                </li>
+            </ol>
+        </fieldset>
+    </div>
+    <div class="column grid_3">
+        <fieldset id="relativeStrength" class="strength">
+            <legend>Relative Strength</legend>
+            <ol>
+                <li>
+                    <input id="maRatioRadio" type="radio" name="relativeStrengthStyle" value="MA"/>
+                    <label for="maRatioRadio">MA Ratio</label>
+                    <select id="ma1" name="ma1">
+                        <option value="4">4</option>
+                        <option value="8">8</option>
+                        <option value="12">12</option>
+                        <option value="26">26</option>
+                        <option value="39">39</option>
+                        <option value="52">52</option>
+                    </select>
+                    <!--<label>/</label>-->
+                    <select id="ma2" name="ma2">
+                        <option value="4">4</option>
+                        <option value="8">8</option>
+                        <option value="12">12</option>
+                        <option value="26">26</option>
+                        <option value="39">39</option>
+                        <option value="52">52</option>
+                    </select>
+                </li>
+                <li>
+                    <input id="rocRadio" type="radio" name="relativeStrengthStyle" value="ROC"/>
+                    <label for="rocRadio">ROC</label>
+                    <select id="roc" name="roc">
+                        <option value="4">4</option>
+                        <option value="8">8</option>
+                        <option value="12">12</option>
+                        <option value="26">26</option>
+                        <option value="39">39</option>
+                        <option value="52">52</option>
+                    </select>
+                </li>
+                <li>
+                    <input id="alphaRadio" type="radio" name="relativeStrengthStyle" value="ALPHA"/>
+                    <label for="alphaRadio">Alpha</label>
+                    <select id="alpha" name="alpha">
+                        <option value="100">100</option>
+                    </select>
+                </li>
 
+            </ol>
 
-    <fieldset>
-        <legend>Portfolio</legend>
-        <ol>
-            <li>
-                <label for=initialInvestment>Initial Investment</label>
-                <input id=initialInvestment name=initialInvestment type=number class="inputField"
-                       value="{{initialInvestment}}">
-            </li>
-            <li>
-                <label for=transactionCost>Transaction Cost</label>
-                <input id=transactionCost name=transactionCost type=number class="inputField"
-                       value="{{transactionCost}}">
-            </li>
-            <li>
-                <label for=portfolioSize>Portfolio Size</label>
-                <input id=portfolioSize name=portfolioSize type=number class="inputField"
-                       value="{{portfolioSize}}">
-            </li>
-        </ol>
-    </fieldset>
-</div>
-<div class="column grid_3">
-    <fieldset id="relativeStrength">
-        <legend>Relative Strength</legend>
-        <ol>
-            <li>
-                <input id="maRatioRadio" type="radio" name="relativeStrengthStyle" value="MA"/>
-                <label for="maRatioRadio">MA Ratio</label>
-                <select id="ma1" name="ma1">
-                    <option value="4">4</option>
-                    <option value="8">8</option>
-                    <option value="12">12</option>
-                    <option value="26">26</option>
-                    <option value="39">39</option>
-                    <option value="52">52</option>
-                </select>
-                <!--<label>/</label>-->
-                <select id="ma2" name="ma2">
-                    <option value="4">4</option>
-                    <option value="8">8</option>
-                    <option value="12">12</option>
-                    <option value="26">26</option>
-                    <option value="39">39</option>
-                    <option value="52">52</option>
-                </select>
-            </li>
-            <li>
-                <input id="rocRadio" type="radio" name="relativeStrengthStyle" value="ROC"/>
-                <label for="rocRadio">Rate of Change</label>
-                <select id="roc" name="roc">
-                    <option value="4">4</option>
-                    <option value="8">8</option>
-                    <option value="12">12</option>
-                    <option value="26">26</option>
-                    <option value="39">39</option>
-                    <option value="52">52</option>
-                </select>
-            </li>
-            <li>
-                <input id="alphaRadio" type="radio" name="relativeStrengthStyle" value="ALPHA"/>
-                <label for="alphaRadio">Alpha</label>
-                <select id="alpha" name="alpha">
-                    <option value="100">100</option>
-                </select>
-            </li>
-            <li>
-                <label for="rebalanceFrequency">Rebalance freq</label>
-                <input id="rebalanceFrequency" name="rebalanceFrequency" type=number class="inputField"
-                       value="{{rebalanceFrequency}}">
-            </li>
-            <li>
-                <label for="castOff">Cast off rank</label>
-                <input id="castOff" name="castOff" type=number class="inputField"
-                       value="{{castOff}}">
-            </li>
-        </ol>
-
-    </fieldset>
-</div>
-<div class="column grid_3">
-    <fieldset>
-        <legend>Risk</legend>
-        <ol>
-            <li>
-                <label for="riskAdjusted">Adjust by Std Dev</label>
-                <input type="checkbox" id="riskAdjusted"
-                       onclick="$('#stdDev').toggleDisabled()"/>
-                <select id="stdDev" name="stdDev">
-                    <option value="4">4</option>
-                    <option value="8">8</option>
-                    <option value="12">12</option>
-                    <option value="26">26</option>
-                    <option value="39">39</option>
-                    <option value="52">52</option>
-                </select>
-            </li>
-            <li>
-                <label>Trade Eq Curve</label>
-                <input type="checkbox" id="tradeEquityCurve"
-                       onclick="$('#equityCurveWindow').toggleDisabled()"/>
-                <input id="equityCurveWindow" name="equityCurveWindow" type=number class="inputField"
-                       value="52">
-            </li>
-            <li>
-                <label>Use Safe Asset</label>
-                <input type="checkbox" id="useSafeAsset"
-                       onclick="$('#safeAsset').toggleDisabled()"/>
-                <input id="safeAsset" name="safeAsset" type=text class="inputField"
-                       value="{{safeAsset}}">
-            </li>
-        </ol>
-    </fieldset>
-</div>
-<div class="column grid_3">
-    <fieldset>
-        <legend>Backtest</legend>
-        <ol>
-            <li>
-                <div>
-                    <label for="fromDate">From Date</label>
-                    <input type="text" id="fromDate" class="inputDateField"
-                           value="{{fromDate}}"/>
-                </div>
-            </li>
-            <li>
-                <div>
-                    <label for="toDate">To Date</label>
-                    <input type="text" id="toDate" class="inputDateField"
-                           value="{{toDate}}"/>
-                </div>
-            </li>
-        </ol>
-        <button id="mybutt" type="button">Click Me!</button>
-
-    </fieldset>
+        </fieldset>
+    </div>
+    <div class="column grid_3">
+        <fieldset class="risk ">
+            <legend>Risk</legend>
+            <ol>
+                <li>
+                    <label for="riskAdjusted">Adjust by Std Dev</label>
+                    <input type="checkbox" id="riskAdjusted"
+                           onclick="$('#stdDev').toggleDisabled()"/>
+                    <select id="stdDev" name="stdDev">
+                        <option value="4">4</option>
+                        <option value="8">8</option>
+                        <option value="12">12</option>
+                        <option value="26">26</option>
+                        <option value="39">39</option>
+                        <option value="52">52</option>
+                    </select>
+                </li>
+                <li>
+                    <label>Trade Eq Curve</label>
+                    <input type="checkbox" id="tradeEquityCurve"
+                           onclick="$('#equityCurveWindow').toggleDisabled()"/>
+                    <input id="equityCurveWindow" name="equityCurveWindow" type=number class="inputField"
+                           value="52">
+                </li>
+                <li>
+                    <label>Use Safe Asset</label>
+                    <input type="checkbox" id="useSafeAsset"
+                           onclick="$('#safeAsset').toggleDisabled()"/>
+                    <input id="safeAsset" name="safeAsset" type=text class="inputField"
+                           value="{{safeAsset}}">
+                </li>
+            </ol>
+        </fieldset>
+    </div>
+    <div class="column grid_3">
+        <fieldset class="backtest">
+            <legend>Backtest</legend>
+            <ol>
+                <li>
+                    <div>
+                        <label for="fromDate">From Date</label>
+                        <input type="text" id="fromDate" class="inputDateField"
+                               value="{{fromDate}}"/>
+                    </div>
+                </li>
+                <li>
+                    <div>
+                        <label for="toDate">To Date</label>
+                        <input type="text" id="toDate" class="inputDateField"
+                               value="{{toDate}}"/>
+                    </div>
+                </li>
+            </ol>
+        </fieldset>
+        <fieldset class="backtest">
+            <legend>Actions</legend>
+            <button id="runbacktest" type="button">Run Backtest</button>
+            <button id="resetdefaults" type="button" disabled>Reset Defaults</button>
+        </fieldset>
+    </div>
 </div>

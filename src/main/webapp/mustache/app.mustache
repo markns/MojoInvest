@@ -125,7 +125,7 @@ App.ParamsView = Backbone.View.extend({
 
     events:{
         "click input[name='relativeStrengthStyle']:radio":"rsRadioClicked",
-        "click #mybutt":"runBacktest"
+        "click #runbacktest":"runBacktest"
     },
 
     rsRadioClicked:function (event) {
@@ -273,11 +273,6 @@ App.ChartView = Backbone.View.extend({
         console.log("Datatable created:", data);
         new Dygraph.GVizChart(this.$('#chart').get(0)).draw(data,
                 {
-//                    customBars: true,
-//                    title: 'Daily Temperatures in New York vs. San Francisco',
-//                    ylabel: '(F)',
-//                    legend: 'always',
-//                    labelsDivStyles: { 'textAlign': 'right' },
                     showRangeSelector:true
                 });
     }
@@ -309,7 +304,7 @@ var AppRouter = Backbone.Router.extend({
     params:function () {
         console.log("Showing params");
         var views = [new App.ParamsView({model:App.params}),
-            new App.UniverseView({model:App.params}),
+//            new App.UniverseView({model:App.params}),
             new App.FundsView()];
         App.router.showViews("#content", views)
     },

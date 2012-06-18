@@ -19,8 +19,8 @@ body {
 }
 
 #head {
-    height: 70px;
-    padding-top: 8px;
+    height: 65px;
+    padding-top: 15px;
     background: url(../images/back_header.jpg) repeat-x;
     background-color: #dce1e4;
     border-bottom: 1px solid #bdc1c7;
@@ -32,7 +32,7 @@ body {
 
 #menu {
     float: right;
-    padding-top: 8px;
+    padding-top: 2px;
 }
 
 #menu li {
@@ -197,25 +197,37 @@ a.cs-active {
 
 /*App*/
 
+.params {
+    padding-top: 15px;
+}
+
 fieldset {
-    /*border-left: 0;*/
-    /*border-right: 0;*/
-    /*border-bottom: 0;*/
+    border-left: 0;
+    border-right: 0;
+    border-bottom: 0;
     /*border: 1px solid #bdc1c7;*/
-    border: 1px solid gray;
+    border-top: 1px solid gray;
     /*margin: 1px;*/
-    /*padding: 0;*/
     display: inline-block;
     float: left;
 }
 
 legend {
     margin-left: 1em;
+    font-weight: bold;
 }
 
 fieldset ol {
     padding: 0;
     list-style: none;
+    margin-top: 6px;
+}
+
+fieldset li {
+    float: left;
+    clear: left;
+    width: 100%;
+    /*padding-bottom: 1em;*/
 }
 
 .inputField {
@@ -227,10 +239,40 @@ fieldset ol {
 }
 
 label {
-    /*float: left;*/
-    width: 10em;
+    float: left;
     margin-right: 1em;
     text-align: right;
+}
+
+.portfolio label {
+    width: 8em;
+}
+
+.strength label {
+    width: 5em;
+}
+
+.risk label {
+    width: 8em;
+}
+
+.risk .inputField {
+    width: 5em;
+}
+
+.backtest label {
+    width: 6em;
+}
+
+#runbacktest {
+    /*color: green;*/
+}
+
+#resetdefaults {
+    background-color: white;
+    border-style: dotted;
+    color: gray;
+    font-weight: lighter;
 }
 
 .center {
