@@ -23,14 +23,22 @@ window.App = {
 $.datepicker.setDefaults({
     dateFormat:"yy-mm-dd"
 });
-$('#loadingDiv')
-        .hide()// hide it initially
+$('#content')
         .ajaxStart(function () {
 //            http://malsup.com/jquery/block/#demos
-            $(this).show();
+            $.blockUI({ css:{
+                message:'Please wait...',
+                border:'none',
+                padding:'15px',
+                backgroundColor:'#000',
+                '-webkit-border-radius':'10px',
+                '-moz-border-radius':'10px',
+                opacity:.5,
+                color:'#fff'
+            } });
         })
         .ajaxStop(function () {
-            $(this).hide();
+            $.unblockUI();
         });
 
 
@@ -90,7 +98,7 @@ App.ParamsView = Backbone.View.extend({
         this.$("#alpha").val(this.model.get("alpha"));
 
         //TODO: Consolidate this logic with the rsRadioClicked logic below
-        switch ($('input[name=relativeStrengthStyle]:checked', '#relativeStrength').val()) {
+        switch (this.$('input[name=relativeStrengthStyle]:checked', '#relativeStrength').val()) {
             case "MA" :
                 this.$('#ma1').attr('disabled', false);
                 this.$('#ma2').attr('disabled', false);
@@ -262,7 +270,6 @@ App.ChartView = Backbone.View.extend({
     render:function () {
         $(this.el).html(ich.results());
         console.log("ChartView render");
-        console.log(this.model);
         google.load('visualization', '1', {'callback':this.drawVisualization,
             'packages':['linechart']});
         return this;
@@ -270,7 +277,6 @@ App.ChartView = Backbone.View.extend({
 
     drawVisualization:function () {
         var data = new google.visualization.DataTable(App.results.get('dataTable'));
-        console.log("Datatable created:", data);
         new Dygraph.GVizChart(this.$('#chart').get(0)).draw(data,
                 {
                     showRangeSelector:true
@@ -304,7 +310,6 @@ var AppRouter = Backbone.Router.extend({
     params:function () {
         console.log("Showing params");
         var views = [new App.ParamsView({model:App.params}),
-//            new App.UniverseView({model:App.params}),
             new App.FundsView()];
         App.router.showViews("#content", views)
     },

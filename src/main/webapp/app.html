@@ -21,8 +21,6 @@
         <div class="clear"></div>
     </div>
 
-    <div id="loadingDiv">Loading</div>
-
     <div id="content" class="main">
     </div>
 
@@ -44,6 +42,7 @@
 
 <script src="lib/jquery-1.7.2.min.js"></script>
 <script src="lib/jquery-ui-1.8.20.custom.min.js"></script>
+<script src="lib/jquery.blockUI.js"></script>
 <script src="lib/underscore.js"></script>
 <script src="lib/backbone.js"></script>
 <script src="lib/ICanHaz.js"></script>
@@ -68,14 +67,22 @@ window.App = {
 $.datepicker.setDefaults({
     dateFormat:"yy-mm-dd"
 });
-$('#loadingDiv')
-        .hide()// hide it initially
+$('#content')
         .ajaxStart(function () {
 //            http://malsup.com/jquery/block/#demos
-            $(this).show();
+            $.blockUI({ css:{
+                message:'Please wait...',
+                border:'none',
+                padding:'15px',
+                backgroundColor:'#000',
+                '-webkit-border-radius':'10px',
+                '-moz-border-radius':'10px',
+                opacity:.5,
+                color:'#fff'
+            } });
         })
         .ajaxStop(function () {
-            $(this).hide();
+            $.unblockUI();
         });
 
 
@@ -135,7 +142,7 @@ App.ParamsView = Backbone.View.extend({
         this.$("#alpha").val(this.model.get("alpha"));
 
         //TODO: Consolidate this logic with the rsRadioClicked logic below
-        switch ($('input[name=relativeStrengthStyle]:checked', '#relativeStrength').val()) {
+        switch (this.$('input[name=relativeStrengthStyle]:checked', '#relativeStrength').val()) {
             case "MA" :
                 this.$('#ma1').attr('disabled', false);
                 this.$('#ma2').attr('disabled', false);
@@ -400,7 +407,7 @@ var AppRouter = Backbone.Router.extend({
     ];
 
     //Load templates is async because of http requests
-    tpl.loadTemplates(['params', 'funds', 'universe', 'results'], function () {
+    tpl.loadTemplates(['params', 'funds', 'results'], function () {
         App.router = new AppRouter();
         Backbone.history.start();
     });
