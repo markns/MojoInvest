@@ -1,10 +1,6 @@
-A Relative Strength based trading strategy for ETFs.
+A Relative Strength based trading strategy for ETFs. Based on the ideas of Michael J. Carr in his book 'Smarter Investing in Any Economy: The Definitive Guide to Relative Strength Investing'
 
-
-
-
-
-Server
+Server To Do
 
 Return logging statements rather than throw exceptions in pipeline
 Multifactor Relative Strength
@@ -28,7 +24,8 @@ Add moving average filter - don't buy if the etf is trading below it's x-month m
 Solutions to the drawbacks of relative strength systems (dynamic hedging, addition of uncorrelated assets) (Cambria paper)
 >>Relative Strength is obtained by dividing the stocks price with a benchmark index (e.g. S&P 500) over the last 4 quarters, with 40% weight for the most recent quarter and 20% for each of the remaining quarters.
 
-Client
+Client To Do
+
 http://www.humblesoftware.com/finance/index
 Display "data as of" field
 Display "buy now" data
