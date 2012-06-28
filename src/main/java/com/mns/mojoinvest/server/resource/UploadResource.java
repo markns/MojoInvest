@@ -12,7 +12,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Logger;
 
-@Path("/uploader")
+@Path("/loader")
 public class UploadResource {
 
     private static final Logger log = Logger.getLogger(UploadResource.class.getName());
