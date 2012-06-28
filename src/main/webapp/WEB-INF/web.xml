@@ -51,7 +51,7 @@
             <url-pattern>/mapreduce/*</url-pattern>
             <url-pattern>/uploader</url-pattern>
             <url-pattern>/upload</url-pattern>
-            <url-pattern>/uploadsuccess</url-pattern>
+            <url-pattern>/upload-success</url-pattern>
         </web-resource-collection>
         <auth-constraint>
             <role-name>admin</role-name>
