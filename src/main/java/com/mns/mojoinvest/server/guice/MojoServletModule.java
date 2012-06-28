@@ -28,6 +28,7 @@ import com.mns.mojoinvest.server.engine.model.dao.*;
 import com.mns.mojoinvest.server.mustache.MustacheViewProcessor;
 import com.mns.mojoinvest.server.servlet.PipelineServlet;
 import com.mns.mojoinvest.server.servlet.blob.SuccessfulUploadServlet;
+import com.sun.jersey.api.core.ResourceConfig;
 import com.sun.jersey.api.json.JSONConfiguration;
 import com.sun.jersey.guice.spi.container.servlet.GuiceContainer;
 import com.sun.jersey.spi.container.servlet.ServletContainer;
@@ -61,6 +62,7 @@ public class MojoServletModule extends ServletModule {
         params.put("com.sun.jersey.config.property.packages", "com.mns.mojoinvest.server.resource");
         params.put(ServletContainer.PROPERTY_WEB_PAGE_CONTENT_REGEX,
                 "/(_ah|jsp|css|images|js|lib|mustache|mapreduce|pipeline|upload-success|appstats).*");
+        params.put(ResourceConfig.FEATURE_DISABLE_WADL, "true");
         filter("/*").through(GuiceContainer.class, params);
 
         //Servlets
