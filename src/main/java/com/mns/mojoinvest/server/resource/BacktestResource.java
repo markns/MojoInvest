@@ -25,7 +25,7 @@ import java.util.Collection;
 import java.util.Map;
 import java.util.logging.Logger;
 
-@Path("/backtest")
+@Path("/api/backtest")
 public class BacktestResource {
 
     private static final Logger log = Logger.getLogger(BacktestResource.class.getName());

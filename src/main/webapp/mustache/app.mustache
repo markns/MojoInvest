@@ -187,7 +187,7 @@ App.ParamsView = Backbone.View.extend({
         });
         $.ajax({
             type:'POST',
-            url:"backtest",
+            url:"api/backtest",
             data:JSON.stringify(this.model),
             success:this.success,
             error:this.error,
