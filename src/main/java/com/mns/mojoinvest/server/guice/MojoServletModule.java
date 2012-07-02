@@ -26,6 +26,7 @@ import com.google.inject.servlet.ServletModule;
 import com.googlecode.objectify.ObjectifyFactory;
 import com.mns.mojoinvest.server.engine.model.dao.*;
 import com.mns.mojoinvest.server.mustache.MustacheViewProcessor;
+import com.mns.mojoinvest.server.servlet.CalculatedValueViewerServlet;
 import com.mns.mojoinvest.server.servlet.FundViewerServlet;
 import com.mns.mojoinvest.server.servlet.PipelineServlet;
 import com.mns.mojoinvest.server.servlet.QuoteViewerServlet;
@@ -56,7 +57,7 @@ public class MojoServletModule extends ServletModule {
         //Filters
         Map<String, String> appstatsInit = Maps.newHashMap();
         appstatsInit.put("logMessage", "Appstats available: /appstats/details?time={ID}");
-        filter("/dispatch/*").through(AppstatsFilter.class, appstatsInit);
+        filter("/api/*").through(AppstatsFilter.class, appstatsInit);
         bind(AppstatsFilter.class).in(Singleton.class);
 
         Map<String, String> params = new HashMap<String, String>();
@@ -83,6 +84,7 @@ public class MojoServletModule extends ServletModule {
         serve("/pipeline").with(PipelineServlet.class);
         serve("/tools/quoteviewer").with(QuoteViewerServlet.class);
         serve("/tools/fundviewer").with(FundViewerServlet.class);
+        serve("/tools/cvviewer").with(CalculatedValueViewerServlet.class);
 //        serve("/tools/calculator").with(SMACalculatorServlet.class);
 //        serve("/tools/clearcache").with(ClearCacheServlet.class);
 //        serve("/tools/test2").with(Test2Servlet.class);
