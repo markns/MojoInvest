@@ -7,7 +7,6 @@ import com.google.inject.Inject;
 import com.mns.mojoinvest.server.engine.calculator.RelativeStrengthCalculator;
 import com.mns.mojoinvest.server.engine.execution.Executor;
 import com.mns.mojoinvest.server.engine.model.Fund;
-import com.mns.mojoinvest.server.engine.model.dao.QuoteDao;
 import com.mns.mojoinvest.server.engine.params.Params;
 import com.mns.mojoinvest.server.engine.portfolio.Portfolio;
 import com.mns.mojoinvest.server.engine.portfolio.PortfolioException;
@@ -27,7 +26,6 @@ public class MomentumStrategy {
 
     private final RelativeStrengthCalculator relativeStrengthCalculator;
     private final Executor executor;
-    private final QuoteDao quoteDao;
     private final PortfolioFactory portfolioFactory;
 
     public static final String SHADOW_EQUITY_CURVE = "Shadow Equity Curve";
@@ -35,11 +33,10 @@ public class MomentumStrategy {
 
     @Inject
     public MomentumStrategy(RelativeStrengthCalculator relativeStrengthCalculator,
-                            PortfolioFactory portfolioFactory, Executor executor, QuoteDao quoteDao) {
+                            PortfolioFactory portfolioFactory, Executor executor) {
         this.relativeStrengthCalculator = relativeStrengthCalculator;
         this.portfolioFactory = portfolioFactory;
         this.executor = executor;
-        this.quoteDao = quoteDao;
     }
 
     public Map<String, Map<LocalDate, BigDecimal>> execute(Portfolio portfolio, Params params,
