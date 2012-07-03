@@ -19,10 +19,10 @@ import java.nio.channels.Channels;
 import java.util.*;
 import java.util.logging.Logger;
 
-public class ObjectifyCalculatedValueDao implements CalculatedValueDao {
+public class BlobstoreCalculatedValueDao implements CalculatedValueDao {
 
 
-    private static final Logger log = Logger.getLogger(ObjectifyCalculatedValueDao.class.getName());
+    private static final Logger log = Logger.getLogger(BlobstoreCalculatedValueDao.class.getName());
 
     private static boolean objectsRegistered;
     private final BlobstoreKeyRecordDao recordDao;
@@ -30,7 +30,7 @@ public class ObjectifyCalculatedValueDao implements CalculatedValueDao {
     private final FileService fileService = FileServiceFactory.getFileService();
 
     @Inject
-    public ObjectifyCalculatedValueDao(BlobstoreKeyRecordDao recordDao) {
+    public BlobstoreCalculatedValueDao(BlobstoreKeyRecordDao recordDao) {
         this.recordDao = recordDao;
     }
 
