@@ -134,8 +134,8 @@ public class CalculatedValue {
 
     public String[] toStrArr() {
         return new String[]{
-                key,
-                value + ""};
+                symbol + "|" + type + "|" + period,
+                dateStr + "|" + value};
     }
 
     public String getKey() {

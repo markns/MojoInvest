@@ -32,13 +32,13 @@ public class OfflineCalculatorTool {
 
     private void run() throws IOException {
 
-//        quoteDao.init("data/etf_international_quotes.csv", "data/etf_quotes_compare.csv");
-//        fundDao.init("data/etf_international_funds.csv");
-//        String outfile = "data/etf_international_cvs.csv";
+        quoteDao.init("data/etf_international_quotes.csv", "data/etf_quotes_compare.csv");
+        fundDao.init("data/etf_international_funds.csv");
+        String outfile = "data/etf_international_cvs.csv";
 
-        quoteDao.init("data/etf_sector_quotes.csv", "data/etf_quotes_compare.csv");
-        fundDao.init("data/etf_sector_funds.csv");
-        String outfile = "data/etf_sector_cvs.csv";
+//        quoteDao.init("data/etf_sector_quotes.csv", "data/etf_quotes_compare.csv");
+//        fundDao.init("data/etf_sector_funds.csv");
+//        String outfile = "data/etf_sector_cvs.csv";
 //        quoteDao.init("data/etf_asset_alloc_quotes.csv", "data/etf_quotes_compare.csv");
 //        fundDao.init("data/etf_asset_alloc_funds.csv");
 //        String outfile = "data/etf_asset_alloc_cvs.csv";
@@ -113,14 +113,14 @@ public class OfflineCalculatorTool {
             }
 //
 //            //RSquared - coefficient of determination
-            for (int period : Arrays.asList(12, 26, 39, 52)) {
-                cvs.addAll(calculationService.calculateRSquared(quoteSeries, period));
-            }
+//            for (int period : Arrays.asList(12, 26, 39, 52)) {
+//                cvs.addAll(calculationService.calculateRSquared(quoteSeries, period));
+//            }
 
             //Alpha
-            for (int period : Arrays.asList(100)) {
-                cvs.addAll(calculationService.calculateAlpha(quoteSeries, idxReturns, period));
-            }
+//            for (int period : Arrays.asList(100)) {
+//                cvs.addAll(calculationService.calculateAlpha(quoteSeries, idxReturns, period));
+//            }
 
             System.out.println(fund + " " + earliest + " " + latest + " " + cvs.size());
 

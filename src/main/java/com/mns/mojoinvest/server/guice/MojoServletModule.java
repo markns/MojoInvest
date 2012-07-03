@@ -26,10 +26,8 @@ import com.google.inject.servlet.ServletModule;
 import com.googlecode.objectify.ObjectifyFactory;
 import com.mns.mojoinvest.server.engine.model.dao.*;
 import com.mns.mojoinvest.server.mustache.MustacheViewProcessor;
-import com.mns.mojoinvest.server.servlet.CalculatedValueViewerServlet;
-import com.mns.mojoinvest.server.servlet.FundViewerServlet;
-import com.mns.mojoinvest.server.servlet.PipelineServlet;
-import com.mns.mojoinvest.server.servlet.QuoteViewerServlet;
+import com.mns.mojoinvest.server.servlet.*;
+import com.mns.mojoinvest.server.servlet.blob.PersistBlobWorker;
 import com.mns.mojoinvest.server.servlet.blob.SuccessfulUploadServlet;
 import com.sun.jersey.api.core.ResourceConfig;
 import com.sun.jersey.api.json.JSONConfiguration;
@@ -64,7 +62,8 @@ public class MojoServletModule extends ServletModule {
         params.put(JSONConfiguration.FEATURE_POJO_MAPPING, "true");
         params.put("com.sun.jersey.config.property.packages", "com.mns.mojoinvest.server.resource");
         params.put(ServletContainer.PROPERTY_WEB_PAGE_CONTENT_REGEX,
-                "/(_ah|jsp|css|images|js|lib|mustache|mapreduce|pipeline|upload|upload-success|appstats|tools/).*");
+                "/(_ah|jsp|css|images|js|lib|mustache|mapreduce|pipeline|blobworker|" +
+                        "upload|upload-success|appstats|tools/).*");
         params.put(ResourceConfig.FEATURE_DISABLE_WADL, "true");
         filter("/*").through(GuiceContainer.class, params);
 
@@ -82,9 +81,11 @@ public class MojoServletModule extends ServletModule {
         bind(SuccessfulUploadServlet.class).in(Singleton.class);
 
         serve("/pipeline").with(PipelineServlet.class);
+        serve("/blobworker").with(PersistBlobWorker.class);
         serve("/tools/quoteviewer").with(QuoteViewerServlet.class);
         serve("/tools/fundviewer").with(FundViewerServlet.class);
         serve("/tools/cvviewer").with(CalculatedValueViewerServlet.class);
+        serve("/tools/cvblobs").with(CreateCVBlobsServlet.class);
 //        serve("/tools/calculator").with(SMACalculatorServlet.class);
 //        serve("/tools/clearcache").with(ClearCacheServlet.class);
 //        serve("/tools/test2").with(Test2Servlet.class);
