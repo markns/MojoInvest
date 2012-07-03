@@ -93,8 +93,7 @@ public class ObjectifyQuoteDao extends DAOBase implements QuoteDao {
         return get(keys);
     }
 
-    @Override
-    public List<Key<Quote>> getKeys(Collection<String> symbols, Collection<LocalDate> dates) {
+    private List<Key<Quote>> getKeys(Collection<String> symbols, Collection<LocalDate> dates) {
         List<Key<Quote>> keys = new ArrayList<Key<Quote>>();
         for (LocalDate date : dates) {
             for (String symbol : symbols) {

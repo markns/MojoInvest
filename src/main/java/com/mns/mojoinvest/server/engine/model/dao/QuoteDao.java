@@ -18,10 +18,6 @@ public interface QuoteDao {
 
     Map<Key<Quote>, Quote> put(Iterable<Quote> quotes);
 
-    List<Quote> query(String symbol);
-
-    List<Quote> query(LocalDate date);
-
     Quote get(String symbol, LocalDate date);
 
     Quote get(Fund fund, LocalDate date);
@@ -32,6 +28,8 @@ public interface QuoteDao {
 
     Collection<Quote> get(Collection<String> symbols, Collection<LocalDate> dates);
 
-    List<Key<Quote>> getKeys(Collection<String> symbols, Collection<LocalDate> dates);
+    //Query methods only used by QuoteViewerServlet
+    List<Quote> query(String symbol);
 
+    List<Quote> query(LocalDate date);
 }

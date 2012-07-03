@@ -110,10 +110,6 @@ public class InMemoryQuoteDao implements QuoteDao {
         return new ArrayList<Quote>(Maps.filterKeys(quotes, Predicates.in(dates)).values());
     }
 
-    @Override
-    public List<Key<Quote>> getKeys(Collection<String> symbols, Collection<LocalDate> dates) {
-        throw new NotImplementedException();
-    }
 }
 
 
