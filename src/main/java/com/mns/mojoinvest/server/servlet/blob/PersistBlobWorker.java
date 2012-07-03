@@ -35,17 +35,18 @@ public class PersistBlobWorker extends HttpServlet {
     protected void doPost(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
         String key = req.getParameter("key");
-        String values = req.getParameter("values");
+        String value = req.getParameter("value");
 
-        AppEngineFile file = writeValuesToBlob(key, values);
+        //TODO: Should be in transaction?
+        AppEngineFile file = writeValuesToBlob(key, value);
         writeBlobstoreKeyRecord(key, file);
 
     }
 
     private void writeBlobstoreKeyRecord(String key, AppEngineFile file) {
         // Now read from the file using the Blobstore API
-        BlobKey blobKey2 = fileService.getBlobKey(file);
-        BlobstoreKeyRecord record = new BlobstoreKeyRecord(key, blobKey2);
+        BlobKey blobKey = fileService.getBlobKey(file);
+        BlobstoreKeyRecord record = new BlobstoreKeyRecord(key, blobKey);
         dao.put(record);
     }
 

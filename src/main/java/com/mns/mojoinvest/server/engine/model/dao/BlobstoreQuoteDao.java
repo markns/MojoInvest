@@ -21,13 +21,11 @@ public class BlobstoreQuoteDao implements QuoteDao {
     @Override
     public Key<Quote> put(Quote quote) {
         throw new NotImplementedException();
-
     }
 
     @Override
     public Map<Key<Quote>, Quote> put(Iterable<Quote> quotes) {
         throw new NotImplementedException();
-
     }
 
     @Override

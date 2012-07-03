@@ -15,15 +15,11 @@ import java.io.IOException;
 import java.io.StringReader;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.logging.Logger;
 
 import static com.google.appengine.api.taskqueue.TaskOptions.Builder.withUrl;
 
 @Singleton
 public class CreateCVBlobsServlet extends HttpServlet {
-
-    private static final Logger log = Logger.getLogger(CreateCVBlobsServlet.class.getName());
-
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -33,17 +29,13 @@ public class CreateCVBlobsServlet extends HttpServlet {
         Map<String, StringBuilder> map = buildKeyToValueListMap(s);
 
         for (String key : map.keySet()) {
-            String values = map.get(key).toString();
-
+            String value = map.get(key).toString();
             Queue queue = QueueFactory.getDefaultQueue();
             queue.add(withUrl("/blobworker")
                     .param("key", key)
-                    .param("values", values));
-
+                    .param("value", value));
         }
-
     }
-
 
     private static Map<String, StringBuilder> buildKeyToValueListMap(String s) throws IOException {
         Map<String, StringBuilder> map = new HashMap<String, StringBuilder>();
