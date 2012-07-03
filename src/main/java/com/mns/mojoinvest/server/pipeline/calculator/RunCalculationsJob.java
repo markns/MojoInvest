@@ -48,7 +48,7 @@ public class RunCalculationsJob extends Job2<Void, LocalDate, Fund> {
         for (int period : Arrays.asList(4, 8, 12, 16, 20, 24, 28, 32, 36, 40, 44, 48, 52)) {
 //            cvs.addAll(calculationService.calculateSMA(fund, date.minusWeeks(period), date, period));
         }
-        cvDao.put(cvs);
+//        cvDao.put(cvs);
 
         return null;
     }

@@ -2,10 +2,8 @@ package com.mns.mojoinvest.server.engine.model.dao;
 
 import au.com.bytecode.opencsv.CSVReader;
 import com.google.inject.Singleton;
-import com.googlecode.objectify.Key;
 import com.mns.mojoinvest.server.engine.model.CalculatedValue;
 import com.mns.mojoinvest.server.engine.model.Fund;
-import org.apache.commons.lang.NotImplementedException;
 import org.joda.time.LocalDate;
 
 import java.io.BufferedReader;
@@ -14,7 +12,6 @@ import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.logging.Logger;
 
@@ -44,16 +41,6 @@ public class InMemoryCalculatedValueDao implements CalculatedValueDao {
                 calculatedValues.put(cv.getKey(), cv);
         }
         reader.close();
-    }
-
-    @Override
-    public Key<CalculatedValue> put(CalculatedValue cv) {
-        throw new NotImplementedException();
-    }
-
-    @Override
-    public Map<Key<CalculatedValue>, CalculatedValue> put(List<CalculatedValue> cvs) {
-        throw new NotImplementedException();
     }
 
     @Override

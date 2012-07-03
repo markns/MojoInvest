@@ -6,9 +6,7 @@ import com.google.appengine.api.files.FileService;
 import com.google.appengine.api.files.FileServiceFactory;
 import com.google.common.base.Splitter;
 import com.google.inject.Inject;
-import com.googlecode.objectify.Key;
 import com.mns.mojoinvest.server.engine.model.BlobstoreKeyRecord;
-import com.mns.mojoinvest.server.engine.model.CalculatedValue;
 import com.mns.mojoinvest.server.engine.model.Fund;
 import org.joda.time.LocalDate;
 
@@ -16,7 +14,10 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.nio.channels.Channels;
-import java.util.*;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
 import java.util.logging.Logger;
 
 public class BlobstoreCalculatedValueDao implements CalculatedValueDao {
@@ -24,7 +25,6 @@ public class BlobstoreCalculatedValueDao implements CalculatedValueDao {
 
     private static final Logger log = Logger.getLogger(BlobstoreCalculatedValueDao.class.getName());
 
-    private static boolean objectsRegistered;
     private final BlobstoreKeyRecordDao recordDao;
 
     private final FileService fileService = FileServiceFactory.getFileService();
@@ -32,19 +32,6 @@ public class BlobstoreCalculatedValueDao implements CalculatedValueDao {
     @Inject
     public BlobstoreCalculatedValueDao(BlobstoreKeyRecordDao recordDao) {
         this.recordDao = recordDao;
-    }
-
-
-    @Override
-    public Key<CalculatedValue> put(CalculatedValue cv) {
-//        return ofy().put(cv);
-        return null;
-    }
-
-    @Override
-    public Map<Key<CalculatedValue>, CalculatedValue> put(List<CalculatedValue> cvs) {
-//        return ofy().put(cvs);
-        return null;
     }
 
     @Override
