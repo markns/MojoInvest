@@ -4,17 +4,14 @@ import com.google.common.base.Functions;
 import com.google.common.collect.ImmutableSortedMap;
 import com.google.common.collect.Ordering;
 import com.google.inject.Inject;
-import com.googlecode.objectify.Key;
 import com.mns.mojoinvest.server.engine.calculator.RelativeStrengthCalculator;
 import com.mns.mojoinvest.server.engine.execution.Executor;
 import com.mns.mojoinvest.server.engine.model.Fund;
-import com.mns.mojoinvest.server.engine.model.Quote;
 import com.mns.mojoinvest.server.engine.model.dao.QuoteDao;
 import com.mns.mojoinvest.server.engine.params.Params;
 import com.mns.mojoinvest.server.engine.portfolio.Portfolio;
 import com.mns.mojoinvest.server.engine.portfolio.PortfolioException;
 import com.mns.mojoinvest.server.engine.portfolio.PortfolioFactory;
-import com.mns.mojoinvest.server.util.QuoteUtils;
 import com.mns.mojoinvest.server.util.TradingDayUtils;
 import org.apache.commons.math.stat.descriptive.DescriptiveStatistics;
 import org.joda.time.LocalDate;
@@ -59,8 +56,6 @@ public class MomentumStrategy {
                     params, rebalanceDates);
         }
 
-//        warmQuoteMemCache(params, rebalanceDates, relativeStrengthsMap);
-
         Map<String, Map<LocalDate, BigDecimal>> additionalResults = new HashMap<String, Map<LocalDate, BigDecimal>>();
 
         log.fine("Running strategy");
@@ -103,8 +98,6 @@ public class MomentumStrategy {
 
         for (LocalDate date : rebalanceDates) {
 
-//            log.info("Rebalancing date " + date);
-
             Map<String, BigDecimal> strengths = relativeStrengthsMap.get(date);
 
             if (strengths.size() < params.getCastOff()) {
@@ -145,56 +138,6 @@ public class MomentumStrategy {
 
         }
         return additionalResults;
-    }
-
-    private void warmQuoteMemCache(Params params, List<LocalDate> rebalanceDates, SortedMap<LocalDate, Map<String, BigDecimal>> relativeStrengthsMap) {
-        List<Key<Quote>> keys = new ArrayList<Key<Quote>>();
-        Set<String> portfolioPath = new HashSet<String>();
-
-        for (LocalDate date : rebalanceDates) {
-            Map<String, BigDecimal> strengths = relativeStrengthsMap.get(date);
-
-            if (strengths.size() < params.getCastOff()) {
-                continue;
-            }
-
-            List<String> selection = getSelection(date, params, strengths);
-
-            for (String symbol : portfolioPath) {
-                log.fine("Add a " + symbol + " pricing quote for rebalance date");
-                keys.add(new Key<Quote>(Quote.class, QuoteUtils.quoteId(symbol, date)));
-            }
-            LocalDate executionDate = getExecutionDate(date);
-            Set<String> sells = new HashSet<String>(params.getPortfolioSize());
-            for (String symbol : portfolioPath) {
-                if (!selection.contains(symbol)) {
-//                    Add an execution quote for the sold fund,
-                    // for TradingDayUtils.rollForward(rebalanceDate.plusDays(1))
-                    log.fine("Add a " + symbol + " sell quote for execution date");
-                    keys.add(new Key<Quote>(Quote.class, QuoteUtils.quoteId(symbol, executionDate)));
-                    sells.add(symbol);
-                }
-            }
-            portfolioPath.removeAll(sells);
-            Set<String> buys = new HashSet<String>(params.getPortfolioSize());
-            for (String symbol : selection) {
-                if (portfolioPath.size() == params.getPortfolioSize()) {
-                    break;
-                }
-                if (!portfolioPath.contains(symbol)) {
-                    //Add an execution quote for the sold fund,
-                    // for TradingDayUtils.rollForward(rebalanceDate.plusDays(1))
-                    log.fine("Add a " + symbol + " buy quote for execution date");
-                    keys.add(new Key<Quote>(Quote.class, QuoteUtils.quoteId(symbol, executionDate)));
-                    buys.add(symbol);
-
-                }
-            }
-            portfolioPath.addAll(buys);
-        }
-        long start = System.currentTimeMillis();
-        Collection quotes = quoteDao.get(keys);
-        log.fine("Loading " + quotes.size() + " quotes into memcache took " + (System.currentTimeMillis() - start));
     }
 
     private List<LocalDate> getRebalanceDates(Params params)
