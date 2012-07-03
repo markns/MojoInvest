@@ -2,7 +2,6 @@ package com.mns.mojoinvest.server.servlet;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
-import com.mns.mojoinvest.server.engine.model.CalculatedValue;
 import com.mns.mojoinvest.server.engine.model.Fund;
 import com.mns.mojoinvest.server.engine.model.dao.CalculatedValueDao;
 import com.mns.mojoinvest.server.engine.model.dao.FundDao;
@@ -14,8 +13,10 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 import java.util.logging.Logger;
 
 @Singleton
@@ -42,14 +43,14 @@ public class CalculatedValueViewerServlet extends HttpServlet {
 
         long start = System.currentTimeMillis();
         log.fine("Attempting to retrieve " + dates.size() * funds.size() + " cvs");
-        Collection<CalculatedValue> cvs = cvDao.get(dates, funds, "SMA", 12);
+        Map<String, Map<LocalDate, BigDecimal>> cvs = cvDao.get(funds, "SMA", 12);
         log.fine("Loading " + cvs.size() + " cvs took " + (System.currentTimeMillis() - start) + " ms");
 
-        resp.setContentType("text/html");
-        resp.getWriter().println("<ul>");
-        for (CalculatedValue cv : cvs) {
-            resp.getWriter().println("<li>" + cv + "</li>");
-        }
-        resp.getWriter().println("</ul>");
+//        resp.setContentType("text/html");
+//        resp.getWriter().println("<ul>");
+//        for (CalculatedValue cv : cvs) {
+//            resp.getWriter().println("<li>" + cv + "</li>");
+//        }
+//        resp.getWriter().println("</ul>");
     }
 }

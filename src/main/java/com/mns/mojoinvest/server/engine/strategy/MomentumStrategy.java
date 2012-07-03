@@ -59,7 +59,7 @@ public class MomentumStrategy {
                     params, rebalanceDates);
         }
 
-        warmQuoteMemCache(params, rebalanceDates, relativeStrengthsMap);
+//        warmQuoteMemCache(params, rebalanceDates, relativeStrengthsMap);
 
         Map<String, Map<LocalDate, BigDecimal>> additionalResults = new HashMap<String, Map<LocalDate, BigDecimal>>();
 
@@ -102,6 +102,8 @@ public class MomentumStrategy {
         additionalResults.put(SHADOW_PORTFOLIO_MARKET_VALUE, new HashMap<LocalDate, BigDecimal>(relativeStrengthsMap.size()));
 
         for (LocalDate date : rebalanceDates) {
+
+//            log.info("Rebalancing date " + date);
 
             Map<String, BigDecimal> strengths = relativeStrengthsMap.get(date);
 

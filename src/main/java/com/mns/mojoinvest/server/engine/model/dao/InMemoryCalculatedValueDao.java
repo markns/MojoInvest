@@ -3,7 +3,6 @@ package com.mns.mojoinvest.server.engine.model.dao;
 import au.com.bytecode.opencsv.CSVReader;
 import com.google.inject.Singleton;
 import com.googlecode.objectify.Key;
-import com.googlecode.objectify.ObjectifyFactory;
 import com.mns.mojoinvest.server.engine.model.CalculatedValue;
 import com.mns.mojoinvest.server.engine.model.Fund;
 import org.apache.commons.lang.NotImplementedException;
@@ -12,7 +11,11 @@ import org.joda.time.LocalDate;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.*;
+import java.math.BigDecimal;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.logging.Logger;
 
 @Singleton
@@ -44,11 +47,6 @@ public class InMemoryCalculatedValueDao implements CalculatedValueDao {
     }
 
     @Override
-    public void registerObjects(ObjectifyFactory ofyFactory) {
-        throw new NotImplementedException();
-    }
-
-    @Override
     public Key<CalculatedValue> put(CalculatedValue cv) {
         throw new NotImplementedException();
     }
@@ -59,26 +57,17 @@ public class InMemoryCalculatedValueDao implements CalculatedValueDao {
     }
 
     @Override
-    public Collection<CalculatedValue> get(List<LocalDate> dates, Collection<Fund> funds, String type, int period) {
-        List<CalculatedValue> cvs = new ArrayList<CalculatedValue>();
-        for (LocalDate date : dates) {
-            for (Fund fund : funds) {
-                CalculatedValue cv = calculatedValues.get(
-                        CalculatedValue.getCalculatedValueKey(date, fund.getSymbol(), type, period));
-                if (cv != null)
-                    cvs.add(cv);
-            }
-        }
+    public Map<String, Map<LocalDate, BigDecimal>> get(Collection<Fund> funds, String type, int period) {
+        Map<String, Map<LocalDate, BigDecimal>> cvs = new HashMap<String, Map<LocalDate, BigDecimal>>(funds.size());
+//        for (LocalDate date : dates) {
+//            for (Fund fund : funds) {
+//                CalculatedValue cv = calculatedValues.get(
+//                        CalculatedValue.getCalculatedValueKey(date, fund.getSymbol(), type, period));
+//                if (cv != null)
+//                    cvs.add(cv);
+//            }
+//        }
         return cvs;
     }
 
-    @Override
-    public Collection<CalculatedValue> get(LocalDate date, Collection<Fund> funds, String type, int period) {
-        List<CalculatedValue> cvs = new ArrayList<CalculatedValue>();
-        for (Fund fund : funds) {
-            cvs.add(calculatedValues.get(
-                    CalculatedValue.getCalculatedValueKey(date, fund.getSymbol(), type, period)));
-        }
-        return cvs;
-    }
 }

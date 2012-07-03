@@ -3,6 +3,7 @@ package com.mns.mojoinvest.server.engine.strategy;
 import com.googlecode.objectify.ObjectifyService;
 import com.mns.mojoinvest.server.engine.calculator.RelativeStrengthCalculator;
 import com.mns.mojoinvest.server.engine.model.CalculatedValue;
+import com.mns.mojoinvest.server.engine.model.dao.BlobstoreKeyRecordDao;
 import com.mns.mojoinvest.server.engine.model.dao.CalculatedValueDao;
 import com.mns.mojoinvest.server.engine.model.dao.ObjectifyCalculatedValueDao;
 import com.mns.mojoinvest.server.util.TradingDayUtils;
@@ -16,7 +17,8 @@ import java.util.List;
 
 public class RelativeStrengthCalculatorTest {
 
-    private CalculatedValueDao cvDao = new ObjectifyCalculatedValueDao(ObjectifyService.factory());
+    private CalculatedValueDao cvDao = new ObjectifyCalculatedValueDao(
+            new BlobstoreKeyRecordDao(ObjectifyService.factory()));
 
 
     @Test
@@ -32,7 +34,7 @@ public class RelativeStrengthCalculatorTest {
         System.out.println(cvs.size());
         RelativeStrengthCalculator calc = new RelativeStrengthCalculator(cvDao);
         long start = System.currentTimeMillis();
-        calc.buildDateCalcValueMap(cvs);
+//        calc.buildDateCalcValueMap(cvs);
         System.out.println("Build calc map took " + (System.currentTimeMillis() - start));
     }
 }
