@@ -58,7 +58,7 @@ public class BlobstoreCalculatedValueDao implements CalculatedValueDao {
     private Map<LocalDate, BigDecimal> readValuesFromFile(AppEngineFile file) throws IOException {
         // Later, read from the file using the file API
         boolean lock = false; // Let other people read at the same time
-        FileReadChannel readChannel = fileService.openReadChannel(file, false);
+        FileReadChannel readChannel = fileService.openReadChannel(file, lock);
 
         // Again, different standard Java ways of reading from the channel.
         BufferedReader reader = new BufferedReader(Channels.newReader(readChannel, "UTF8"));
