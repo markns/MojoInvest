@@ -96,11 +96,6 @@ public class InMemoryQuoteDao implements QuoteDao {
     }
 
     @Override
-    public Collection<Quote> get(List<Key<Quote>> keys) {
-        throw new NotImplementedException();
-    }
-
-    @Override
     public Collection<Quote> get(Collection<String> symbols, Collection<LocalDate> dates) {
         throw new NotImplementedException();
     }

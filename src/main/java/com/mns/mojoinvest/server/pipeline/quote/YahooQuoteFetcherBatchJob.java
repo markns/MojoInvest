@@ -80,8 +80,8 @@ public class YahooQuoteFetcherBatchJob extends Job2<String, List<Fund>, LocalDat
         for (Quote quote : quotes) {
             quote.getKey();
             keys.add(quote.getKey());
-        }
-        List<Quote> existing = new ArrayList<Quote>(dao.get(keys));
+        }                                              //TODO: needs reimplementing
+        List<Quote> existing = new ArrayList<Quote>(); //dao.get(keys));
         QuoteUtils.sortByDateDesc(existing);
         String message;
         if (quotes.size() != existing.size()) {

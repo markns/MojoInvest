@@ -73,8 +73,7 @@ public class ObjectifyQuoteDao extends DAOBase implements QuoteDao {
         return get(fund.getSymbol(), date);
     }
 
-    @Override
-    public Collection<Quote> get(List<Key<Quote>> keys) {
+    private Collection<Quote> get(List<Key<Quote>> keys) {
         return ofy().get(keys).values();
     }
 

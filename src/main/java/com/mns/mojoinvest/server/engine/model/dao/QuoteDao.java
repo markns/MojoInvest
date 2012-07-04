@@ -24,8 +24,6 @@ public interface QuoteDao {
 
     Collection<Quote> get(Fund fund, Collection<LocalDate> dates);
 
-    Collection<Quote> get(List<Key<Quote>> keys);
-
     Collection<Quote> get(Collection<String> symbols, Collection<LocalDate> dates);
 
     //Query methods only used by QuoteViewerServlet
