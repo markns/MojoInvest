@@ -32,9 +32,9 @@ public class OfflineCalculatorTool {
 
     private void run() throws IOException {
 
-        quoteDao.init("data/etf_international_quotes.csv", "data/etf_quotes_compare.csv");
-        fundDao.init("data/etf_international_funds.csv");
-        String outfile = "data/etf_international_cvs.csv";
+//        quoteDao.init("data/etf_international_quotes.csv", "data/etf_quotes_compare.csv");
+//        fundDao.init("data/etf_international_funds.csv");
+//        String outfile = "data/etf_international_cvs.csv";
 
 //        quoteDao.init("data/etf_sector_quotes.csv", "data/etf_quotes_compare.csv");
 //        fundDao.init("data/etf_sector_funds.csv");
@@ -42,16 +42,16 @@ public class OfflineCalculatorTool {
 //        quoteDao.init("data/etf_asset_alloc_quotes.csv", "data/etf_quotes_compare.csv");
 //        fundDao.init("data/etf_asset_alloc_funds.csv");
 //        String outfile = "data/etf_asset_alloc_cvs.csv";
-//        quoteDao.init("data/ishares_quotes.csv", "data/ishares_quotes_missing.csv", "data/GSPC.csv");
-//        fundDao.init("data/ishares_funds.csv");
-//        String outfile = "data/ishares_cvs.csv";
+        quoteDao.init("data/ishares_quotes.csv", "data/GSPC.csv");//"data/ishares_quotes_missing.csv",
+        fundDao.init("data/ishares_funds.csv");
+        String outfile = "data/ishares_cvs.csv";
 //        quoteDao.init("data/fidelity_quotes.csv", "data/fidelity_quotes_missing.csv", "data/etf_quotes_compare.csv");
 //        fundDao.init("data/fidelity_funds.csv");
 //        String outfile = "data/fidelity_cvs_av.csv";
 
         CSVWriter writer = new CSVWriter(new FileWriter(outfile));
 
-        LocalDate latest = new LocalDate("2012-03-30");
+        LocalDate latest = new LocalDate("2012-07-04");
 //        LocalDate latest = new LocalDate("2012-05-02");
         NavigableMap<LocalDate, BigDecimal> idxReturns = getIndexReturns("GSPC", latest);
 
