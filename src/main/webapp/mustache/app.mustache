@@ -226,13 +226,13 @@ App.UniverseView = Backbone.View.extend({
 
     render:function () {
         $(this.el).html(ich.universe(this.model.toJSON({})));
-//        this.$('universe_table').fixedHeaderTable({ footer:false, cloneHeadToFoot:false, fixedColumn:false });
         return this;
     }
 
 });
 
 App.FundsView = Backbone.View.extend({
+
     initialize:function () {
     },
 
@@ -241,19 +241,21 @@ App.FundsView = Backbone.View.extend({
         // even though when passing model they should be referenceable as #funds
         $(this.el).html(ich.funds(App));
 
+        this.updateCheckedRows();
+        return this;
+    },
+    events:{
+        "click input[name='includeFundCheck']:checkbox":"includeFundClicked",
+        "click input[name='includeAllFundsCheck']:checkbox":"includeAllFundsClicked"
+    },
+
+    updateCheckedRows:function () {
         var universe = App.params.get("universe");
         this.$("input[name='includeFundCheck']:checkbox").each(function (index) {
             if ($.inArray($(this).val(), universe) != -1) {
                 $(this).attr("checked", true);
             }
         });
-
-
-        return this;
-    },
-
-    events:{
-        "click input[name='includeFundCheck']:checkbox":"includeFundClicked"
     },
 
     includeFundClicked:function (event) {
@@ -270,7 +272,41 @@ App.FundsView = Backbone.View.extend({
         //Not sure why model.change() is not working-
         // http://stackoverflow.com/questions/8280790/backbone-js-model-not-firing-events
         App.params.trigger('change:universe');
+    },
+
+    includeAllFundsClicked:function (event) {
+
+        var filteredData = this.fundTF.GetFilteredData(false);
+
+        for (var i = 0; i < filteredData.length; i++) {
+            var fund = filteredData[i][1][1];
+            var universe = App.params.get("universe");
+            var index = $.inArray(fund, universe);
+            if (index == -1) {
+                universe.push(fund);
+            } else {
+                universe.splice(index, 1);
+            }
+        }
+
+        App.params.trigger('change:universe');
+        this.updateCheckedRows();
+    },
+
+    setFilterGrid:function () {
+        var table_Props = {
+            col_0:"none",
+            col_3:"select",
+            col_4:"select",
+            col_5:"select",
+            col_6:"select",
+            col_7:"select",
+            display_all_text:" [ Show all ] ",
+            sort_select:true
+        };
+        this.fundTF = setFilterGrid("universe_table", table_Props);
     }
+
 });
 
 App.ChartView = Backbone.View.extend({
@@ -317,28 +353,18 @@ var AppRouter = Backbone.Router.extend({
 
     params:function () {
         console.log("Showing params");
-        var views = [new App.ParamsView({model:App.params}),
-            new App.FundsView()];
-        App.router.showViews("#content", views);
+        var params = new App.ParamsView({model:App.params});
+        var funds = new App.FundsView();
+        App.router.showViews("#content", [params, funds]);
 
-        var table_Props = {
-            col_0:"none",
-            col_3:"select",
-            col_4:"select",
-            col_5:"select",
-            col_6:"select",
-            col_7:"select",
-            display_all_text:" [ Show all ] ",
-            sort_select:true
-        };
-
-        var y = setFilterGrid("universe_table", table_Props);
+        //Call to set up fund filter grid must be made after view has been rendered
+        funds.setFilterGrid();
     },
 
     results:function () {
         console.log("Showing results");
         var views = [new App.ChartView({model:App.results})];
-        App.router.showViews("#content", views)
+        App.router.showViews("#content", views);
     },
 
     showViews:function (selector, views) {
