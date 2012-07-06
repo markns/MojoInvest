@@ -1,6 +1,13 @@
 {{<mustache/super}}
 {{$title}}Backtest | MojoInvest{{/title}}
 
+{{$head-scripts}}
+<link href="../css/filtergrid.css" rel="stylesheet" type="text/css"/>
+<script src="http://www.google.com/jsapi"></script>
+<script src="../lib/dygraph-combined.js"></script>
+<script src="../lib/tablefilter_all_min.js"></script>
+{{/head-scripts}}
+
 {{$content}}
 {{/content}}
 
@@ -219,7 +226,7 @@ App.UniverseView = Backbone.View.extend({
 
     render:function () {
         $(this.el).html(ich.universe(this.model.toJSON({})));
-//        this.$('universe-table').fixedHeaderTable({ footer:false, cloneHeadToFoot:false, fixedColumn:false });
+//        this.$('universe_table').fixedHeaderTable({ footer:false, cloneHeadToFoot:false, fixedColumn:false });
         return this;
     }
 
@@ -240,6 +247,7 @@ App.FundsView = Backbone.View.extend({
                 $(this).attr("checked", true);
             }
         });
+
 
         return this;
     },
@@ -311,7 +319,20 @@ var AppRouter = Backbone.Router.extend({
         console.log("Showing params");
         var views = [new App.ParamsView({model:App.params}),
             new App.FundsView()];
-        App.router.showViews("#content", views)
+        App.router.showViews("#content", views);
+
+        var table_Props = {
+            col_0:"none",
+            col_3:"select",
+            col_4:"select",
+            col_5:"select",
+            col_6:"select",
+            col_7:"select",
+            display_all_text:" [ Show all ] ",
+            sort_select:true
+        };
+
+        var y = setFilterGrid("universe_table", table_Props);
     },
 
     results:function () {
@@ -352,6 +373,7 @@ var AppRouter = Backbone.Router.extend({
     });
 
 </script>
+
 
 {{/foot-scripts}}
         {{/mustache/super}}

@@ -354,7 +354,7 @@ label {
     overflow: hidden;
 }
 
-#universe-table {
+#universe_table {
     font-size: 12px; /*Overridden by user agent stylesheet otherwise */
     font-family: Helvetica, Arial, sans-serif;
     background: #fff;
@@ -363,17 +363,17 @@ label {
     margin: 20px;
 }
 
-#universe-table th {
+#universe_table th {
     font-weight: normal;
     border-bottom: 1px solid;
     padding: 10px 8px;
 }
 
-#universe-table td {
+#universe_table td {
     border-bottom: 1px solid #ccc;
     padding: 6px 8px;
 }
 
-#universe-table tbody tr:hover td {
+#universe_table tbody tr:hover td {
     color: #009;
 }

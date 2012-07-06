@@ -2,6 +2,7 @@
 <head>
     <title>{{$title}}Default Title{{/title}}</title>
     {{$head}}{{/head}}
+
     <link href="../css/mojo.css" rel="stylesheet" type="text/css"/>
     <script src="../lib/jquery-1.7.2.min.js"></script>
     <script src="../lib/jquery-ui-1.8.20.custom.min.js"></script>
@@ -9,9 +10,6 @@
     <script src="../lib/underscore.js"></script>
     <script src="../lib/backbone.js"></script>
     <script src="../lib/ICanHaz.js"></script>
-    <script src="../lib/jquery.fixedheadertable.js"></script>
-    <script src="http://www.google.com/jsapi"></script>
-    <script src="../lib/dygraph-combined.js"></script>
 
     {{$head-scripts}}{{/head-scripts}}
 </head>
@@ -54,7 +52,10 @@
     </div>
 </div>
 
-{{$foot-scripts}}{{/foot-scripts}}
+{{$foot-scripts}}
+
+
+{{/foot-scripts}}
 
 </body>
 </html>

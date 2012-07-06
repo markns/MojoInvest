@@ -5,6 +5,7 @@
     <meta charset="utf-8">
     <link href="css/mojo.css" rel="stylesheet" type="text/css"/>
     <link href="css/smoothness/jquery-ui-1.8.20.custom.css" rel="stylesheet" type="text/css"/>
+    <link href="css/filtergrid.css" rel="stylesheet" type="text/css"/>
 </head>
 <body>
 <div id="back">
@@ -49,7 +50,7 @@
 <!--<script src="http://www.google.com/jsapi"></script>-->
 <script src="lib/dygraph-combined.js"></script>
 <script src="lib/jquery.fixedheadertable.js"></script>
-
+<script src="lib/tablefilter_all.js"></script>
 <script>
 
 window.App = {
@@ -355,13 +356,26 @@ var AppRouter = Backbone.Router.extend({
         console.log("Showing params");
         var views = [new App.ParamsView({model:App.params}),
             new App.FundsView()];
-        App.router.showViews("#content", views)
+        App.router.showViews("#content", views);
+
+        var table_Props = {
+            col_0:"none",
+            col_3:"select",
+            col_4:"select",
+            col_5:"select",
+            col_6:"select",
+            col_7:"select",
+            display_all_text:" [ Show all ] ",
+            sort_select:true
+        };
+
+        var y = setFilterGrid("universe_table", table_Props);
     },
 
     results:function () {
         console.log("Showing results");
         var views = [new App.ChartView({model:App.results})];
-        App.router.showViews("#content", views)
+        App.router.showViews("#content", views);
     },
 
     showViews:function (selector, views) {
