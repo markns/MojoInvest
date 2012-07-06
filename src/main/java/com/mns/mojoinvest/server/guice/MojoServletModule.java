@@ -48,7 +48,7 @@ public class MojoServletModule extends ServletModule {
         //TODO: Move this stuff to another module
         // Model object managers
         bind(ObjectifyFactory.class).in(Singleton.class);
-        bind(QuoteDao.class).to(ObjectifyQuoteDao.class);
+        bind(QuoteDao.class).to(BlobstoreQuoteDao.class);
         bind(FundDao.class).to(ObjectifyFundDao.class);
         bind(CalculatedValueDao.class).to(BlobstoreCalculatedValueDao.class);
 
