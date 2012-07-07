@@ -323,7 +323,9 @@ App.ChartView = Backbone.View.extend({
         var data = new google.visualization.DataTable(App.results.get('dataTable'));
         new Dygraph.GVizChart(this.$('#chart').get(0)).draw(data,
                 {
-                    showRangeSelector:true
+                    showRangeSelector:true,
+                    displayAnnotations:true,
+                    connectSeparatedPoints:true
                 });
     }
 

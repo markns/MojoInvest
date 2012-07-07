@@ -5,6 +5,10 @@ import com.google.inject.Inject;
 import com.google.visualization.datasource.base.TypeMismatchException;
 import com.google.visualization.datasource.datatable.ColumnDescription;
 import com.google.visualization.datasource.datatable.DataTable;
+import com.google.visualization.datasource.datatable.TableRow;
+import com.google.visualization.datasource.datatable.value.DateValue;
+import com.google.visualization.datasource.datatable.value.NumberValue;
+import com.google.visualization.datasource.datatable.value.TextValue;
 import com.google.visualization.datasource.datatable.value.ValueType;
 import com.ibm.icu.util.GregorianCalendar;
 import com.mns.mojoinvest.server.engine.model.Fund;
@@ -14,6 +18,8 @@ import com.mns.mojoinvest.server.engine.model.dao.QuoteDao;
 import com.mns.mojoinvest.server.engine.params.Params;
 import com.mns.mojoinvest.server.engine.portfolio.Portfolio;
 import com.mns.mojoinvest.server.engine.strategy.MomentumStrategy;
+import com.mns.mojoinvest.server.engine.transaction.BuyTransaction;
+import com.mns.mojoinvest.server.engine.transaction.Transaction;
 import com.mns.mojoinvest.server.util.TradingDayUtils;
 import org.apache.commons.lang.ArrayUtils;
 import org.joda.time.LocalDate;
@@ -132,6 +138,7 @@ public class StrategyResultBuilder {
         ArrayList<ColumnDescription> cd = new ArrayList<ColumnDescription>();
         cd.add(new ColumnDescription("Date", ValueType.DATE, "Date"));
         cd.add(new ColumnDescription("Portfolio", ValueType.NUMBER, "Portfolio Value"));
+        cd.add(new ColumnDescription("PortfolioTransactions", ValueType.TEXT, "Portfolio Transactions"));
         cd.add(new ColumnDescription("ShadowPortfolio", ValueType.NUMBER, "Shadow Portfolio Value"));
         cd.add(new ColumnDescription("ShadowPortfolioEC", ValueType.NUMBER, "Shadow Portfolio Equity Curve"));
 
@@ -140,19 +147,60 @@ public class StrategyResultBuilder {
         Map<LocalDate, BigDecimal> spv = additionalResults.get(MomentumStrategy.SHADOW_PORTFOLIO_MARKET_VALUE);
         Map<LocalDate, BigDecimal> sec = additionalResults.get(MomentumStrategy.SHADOW_EQUITY_CURVE);
 
+        SortedMap<LocalDate, TableRow> rows = new TreeMap<LocalDate, TableRow>();
         for (LocalDate date : dates) {
+            TableRow row = new TableRow();
+            row.addCell(new DateValue(getGregorianCalendar(date)));
+            row.addCell(portfolio.marketValue(date).doubleValue());
+            row.addCell(TextValue.getNullValue());
+            row.addCell(getNullSafeNumberValue(spv, date));
+            row.addCell(getNullSafeNumberValue(sec, date));
+            rows.put(date, row);
+        }
+
+        Map<LocalDate, List<Transaction>> transactionMap = new HashMap<LocalDate, List<Transaction>>();
+        for (Transaction transaction : portfolio.getTransactions()) {
+            if (!transactionMap.containsKey(transaction.getDate())) {
+                transactionMap.put(transaction.getDate(), new ArrayList<Transaction>());
+            }
+            transactionMap.get(transaction.getDate()).add(transaction);
+        }
+
+        for (LocalDate date : transactionMap.keySet()) {
+
+            StringBuilder annotation = new StringBuilder();
+            for (Transaction transaction : transactionMap.get(date)) {
+                String buySell = "Sell";
+                if (transaction instanceof BuyTransaction) {
+                    buySell = "Buy";
+                }
+                annotation.append(buySell).append(" ")
+                        .append(transaction.getFund()).append(" ")
+                        .append(transaction.getQuantity()).append(" @ ")
+                        .append(transaction.getPrice()).append("\n");
+            }
+
+            TableRow row = new TableRow();
+            row.addCell(new DateValue(getGregorianCalendar(date)));
+            row.addCell(portfolio.marketValue(date).doubleValue());
+            row.addCell(annotation.toString().trim());
+            row.addCell(NumberValue.getNullValue());
+            row.addCell(NumberValue.getNullValue());
+            rows.put(date, row);
+        }
+
+        for (TableRow tableRow : rows.values()) {
             try {
-                data.addRowFromValues(getGregorianCalendar(date),
-                        portfolio.marketValue(date),
-                        spv.get(date),
-                        sec.get(date));
+                data.addRow(tableRow);
             } catch (TypeMismatchException e) {
-                log.severe("Invalid type! " + e);
                 e.printStackTrace();
             }
         }
-        // Fill the data table.
         return data;
+    }
+
+    private NumberValue getNullSafeNumberValue(Map<LocalDate, BigDecimal> spv, LocalDate date) {
+        return spv.get(date) == null ? NumberValue.getNullValue() : new NumberValue(spv.get(date).doubleValue());
     }
 
     private static GregorianCalendar getGregorianCalendar(LocalDate date) {
