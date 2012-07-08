@@ -197,10 +197,6 @@ a.cs-active {
 
 /*App*/
 
-.params {
-    padding-top: 15px;
-}
-
 fieldset {
     border-left: 0;
     border-right: 0;
@@ -352,6 +348,7 @@ label {
     width: 960px;
     margin: 0 auto;
     overflow: hidden;
+    padding-top: 15px;
 }
 
 #universe_table {
@@ -375,5 +372,29 @@ label {
 }
 
 #universe_table tbody tr:hover td {
+    color: #009;
+}
+
+.results_table {
+    font-size: 12px; /*Overridden by user agent stylesheet otherwise */
+    font-family: Helvetica, Arial, sans-serif;
+    background: #fff;
+    border-collapse: collapse;
+    text-align: left;
+    margin: 20px;
+}
+
+.results_table th {
+    font-weight: bold;
+    border-bottom: 1px solid;
+    padding: 10px 8px;
+}
+
+.results_table td {
+    border-bottom: 1px solid #ccc;
+    padding: 6px 8px;
+}
+
+.results_table tbody tr:hover td {
     color: #009;
 }

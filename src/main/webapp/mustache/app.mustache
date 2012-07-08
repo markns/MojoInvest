@@ -3,9 +3,9 @@
 
 {{$head-scripts}}
 <link href="../css/filtergrid.css" rel="stylesheet" type="text/css"/>
-<script src="http://www.google.com/jsapi"></script>
 <script src="../lib/dygraph-combined.js"></script>
 <script src="../lib/tablefilter_all_min.js"></script>
+<script src="http://www.google.com/jsapi"></script>
 {{/head-scripts}}
 
 {{$content}}
@@ -214,7 +214,6 @@ App.ParamsView = Backbone.View.extend({
     error:function (jqXHR, textStatus, errorThrown) {
         console.log(jqXHR, textStatus, errorThrown);
         alert(jqXHR + " " + textStatus + " " + errorThrown);
-//        App.router.navigate('results', true);
     }
 
 });
@@ -237,10 +236,7 @@ App.FundsView = Backbone.View.extend({
     },
 
     render:function () {
-        //Todo: figure out why I have to wrap the funds in another object,
-        // even though when passing model they should be referenceable as #funds
         $(this.el).html(ich.funds(App));
-
         this.updateCheckedRows();
         return this;
     },
@@ -312,7 +308,8 @@ App.FundsView = Backbone.View.extend({
 App.ChartView = Backbone.View.extend({
 
     render:function () {
-        $(this.el).html(ich.results());
+        $(this.el).html(ich.results({stats:this.model.get("stats"),
+            transactions:this.model.get("transactions")}));
         console.log("ChartView render");
         google.load('visualization', '1', {'callback':this.drawVisualization,
             'packages':['linechart']});
@@ -328,7 +325,6 @@ App.ChartView = Backbone.View.extend({
                     connectSeparatedPoints:true
                 });
     }
-
 
 });
 

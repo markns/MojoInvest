@@ -1,7 +1,61 @@
-<div class="column grid_12">
+<div class="row">
     <fieldset>
         <legend>Chart</legend>
         <div id="chart" class="column grid_12"
              style="width: 900px; height:500px;"></div>
+    </fieldset>
+</div>
+<div class="row">
+    <fieldset class="column grid_4">
+        <legend>Stats</legend>
+        <table class="results_table">
+            <tr>
+                <td>Final Portfolio Value</td>
+                <td>{{stats.Total Return}}</td>
+            </tr>
+            <tr>
+                <td>CAGR</td>
+                <td>{{stats.CAGR}}</td>
+            </tr>
+            <tr>
+                <td>Max DD%</td>
+                <td>{{stats.Max DD%}}</td>
+            </tr>
+            <tr>
+                <td>CAGR/Max DD%</td>
+                <td>{{stats.CAGR/Max DD%}}</td>
+            </tr>
+            <tr>
+                <td>Num Trades</td>
+                <td>{{stats.Num Trades}}</td>
+            </tr>
+        </table>
+    </fieldset>
+    <fieldset class="column grid_7">
+        <legend>Transactions</legend>
+        <table class="results_table">
+            <thead>
+            <tr>
+                <td>Type</td>
+                <td>Fund</td>
+                <td>Date</td>
+                <td>Quantity</td>
+                <td>Price</td>
+                <td>Value</td>
+            </tr>
+            </thead>
+            <tbody>
+            {{#transactions}}
+            <tr>
+                <td>{{type}}</td>
+                <td>{{fund}}</td>
+                <td>{{date}}</td>
+                <td>{{quantity}}</td>
+                <td>{{price}}</td>
+                <td>{{cashValue}}</td>
+            </tr>
+            {{/transactions}}
+            </tbody>
+        </table>
     </fieldset>
 </div>
