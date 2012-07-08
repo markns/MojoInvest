@@ -270,19 +270,34 @@ App.FundsView = Backbone.View.extend({
         App.params.trigger('change:universe');
     },
 
+    addToUniverse:function (fund, universe) {
+        var index = $.inArray(fund, universe);
+        if (index == -1) {
+            universe.push(fund);
+        } else {
+            universe.splice(index, 1);
+        }
+        return index;
+    },
+
     includeAllFundsClicked:function (event) {
-
+        var universe = App.params.get("universe");
         var filteredData = this.fundTF.GetFilteredData(false);
-
-        for (var i = 0; i < filteredData.length; i++) {
-            var fund = filteredData[i][1][1];
-            var universe = App.params.get("universe");
-            var index = $.inArray(fund, universe);
-            if (index == -1) {
-                universe.push(fund);
-            } else {
-                universe.splice(index, 1);
-            }
+        if (filteredData.length == 0) {
+            var i = 0;
+            //No rows have been selected, so use jquery to iterate all rows
+            var thiz = this;
+            $('#universe_table tr').each(function () {
+                if (i > 1) {
+                    var fund = $(this).children()[1].innerHTML;
+                    thiz.addToUniverse(fund, universe);
+                }
+                i++;
+            })
+        }
+        for (var j = 0; i < filteredData.length; i++) {
+            var fund = filteredData[j][1][1];
+            var index = this.addToUniverse(fund, universe);
         }
 
         App.params.trigger('change:universe');

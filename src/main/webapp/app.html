@@ -253,7 +253,6 @@ App.ParamsView = Backbone.View.extend({
     error:function (jqXHR, textStatus, errorThrown) {
         console.log(jqXHR, textStatus, errorThrown);
         alert(jqXHR + " " + textStatus + " " + errorThrown);
-//        App.router.navigate('results', true);
     }
 
 });
@@ -310,19 +309,34 @@ App.FundsView = Backbone.View.extend({
         App.params.trigger('change:universe');
     },
 
+    addToUniverse:function (fund, universe) {
+        var index = $.inArray(fund, universe);
+        if (index == -1) {
+            universe.push(fund);
+        } else {
+            universe.splice(index, 1);
+        }
+        return index;
+    },
+
     includeAllFundsClicked:function (event) {
-
+        var universe = App.params.get("universe");
         var filteredData = this.fundTF.GetFilteredData(false);
-
-        for (var i = 0; i < filteredData.length; i++) {
-            var fund = filteredData[i][1][1];
-            var universe = App.params.get("universe");
-            var index = $.inArray(fund, universe);
-            if (index == -1) {
-                universe.push(fund);
-            } else {
-                universe.splice(index, 1);
-            }
+        if (filteredData.length == 0) {
+            var i = 0;
+            //No rows have been selected, so use jquery to iterate all rows
+            var thiz = this;
+            $('#universe_table tr').each(function () {
+                if (i > 1) {
+                    var fund = $(this).children()[1].innerHTML;
+                    thiz.addToUniverse(fund, universe);
+                }
+                i++;
+            })
+        }
+        for (var j = 0; i < filteredData.length; i++) {
+            var fund = filteredData[j][1][1];
+            var index = this.addToUniverse(fund, universe);
         }
 
         App.params.trigger('change:universe');
@@ -426,7 +440,7 @@ var AppRouter = Backbone.Router.extend({
 
     console.log("bootstrapping models");
 
-    App.params = new App.Params({"fromDate":"2000-01-01", "toDate":"2012-03-01", "creationDate":"1990-01-01", "initialInvestment":10000.0, "transactionCost":10.0, "portfolioSize":1, "rebalanceFrequency":1, "ma1":12, "ma2":26, "roc":26, "alpha":100, "castOff":8, "riskAdjusted":true, "stdDev":26, "tradeEquityCurve":true, "equityCurveWindow":52, "relativeStrengthStyle":"MA", "useSafeAsset":false, "safeAsset":"IGLT", "universe":["EWM", "EWW", "EWL", "EWU", "EWS", "EWH", "EWA", "EWJ", "EWG", "EWD", "EWK", "EWQ", "EWC", "EWN", "EWP", "EWI", "EWO"]});
+    App.params = new App.Params({"fromDate":"2000-01-01", "toDate":"2012-03-01", "creationDate":"1990-01-01", "initialInvestment":10000.0, "transactionCost":10.0, "portfolioSize":1, "rebalanceFrequency":1, "ma1":12, "ma2":26, "roc":26, "alpha":100, "castOff":8, "riskAdjusted":true, "stdDev":26, "tradeEquityCurve":true, "equityCurveWindow":52, "relativeStrengthStyle":"MA", "useSafeAsset":false, "safeAsset":"IGLT", "universe":["EWQ", "EWC", "EWN", "EWP", "EWI", "EWO"]});
     App.funds = [
         {"symbol":"EWA", "name":"iShares MSCI Australia Index", "category":"Pacific Stock", "provider":"iShares", "active":true, "country":"US", "index":"", "overview":"", "inceptionDate":"1996-04-01"},
         {"symbol":"EWC", "name":"iShares MSCI Canada Index", "category":"Foreign Stock", "provider":"iShares", "active":true, "country":"US", "index":"", "overview":"", "inceptionDate":"1996-04-01"},
