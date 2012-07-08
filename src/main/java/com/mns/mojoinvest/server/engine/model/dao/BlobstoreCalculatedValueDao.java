@@ -6,6 +6,7 @@ import com.google.appengine.api.files.FileService;
 import com.google.appengine.api.files.FileServiceFactory;
 import com.google.common.base.Splitter;
 import com.google.inject.Inject;
+import com.googlecode.objectify.NotFoundException;
 import com.mns.mojoinvest.server.engine.model.BlobstoreKeyRecord;
 import com.mns.mojoinvest.server.engine.model.Fund;
 import org.joda.time.LocalDate;
@@ -39,13 +40,14 @@ public class BlobstoreCalculatedValueDao implements CalculatedValueDao {
         Map<String, Map<LocalDate, BigDecimal>> cvs = new HashMap<String, Map<LocalDate, BigDecimal>>(funds.size());
 
         for (Fund fund : funds) {
-            BlobstoreKeyRecord record = recordDao.get(fund.getSymbol() + "|" + type + "|" + period);
-            AppEngineFile file = fileService.getBlobFile(record.getBlobKey());
             try {
+                BlobstoreKeyRecord record = recordDao.get(fund.getSymbol() + "|" + type + "|" + period);
+                AppEngineFile file = fileService.getBlobFile(record.getBlobKey());
                 cvs.put(fund.getSymbol(), readValuesFromFile(file));
+            } catch (NotFoundException e) {
+                log.warning(e.getMessage());
             } catch (IOException e) {
-                //TODO:throw new DataAccessException(e);
-                e.printStackTrace();
+                log.severe(e.getMessage());
             }
         }
         return cvs;
