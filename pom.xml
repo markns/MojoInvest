@@ -438,7 +438,7 @@
                 </executions>
             </plugin>
 
-            <!--            <plugin>
+            <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-install-plugin</artifactId>
                 <executions>
@@ -446,10 +446,10 @@
                         <id>hack-binary</id>
                         <phase>validate</phase>
                         <configuration>
-                            <file>${basedir}/lib/appengine-pipeline-patched.jar</file>
+                            <file>${basedir}/lib/appengine-pipeline.jar</file>
                             <repositoryLayout>default</repositoryLayout>
                             <groupId>com.google.appengine</groupId>
-                            <artifactId>appengine-pipeline-patched</artifactId>
+                            <artifactId>appengine-pipeline</artifactId>
                             <version>1.0</version>
                             <packaging>jar</packaging>
                             <generatePom>true</generatePom>
@@ -459,7 +459,7 @@
                         </goals>
                     </execution>
                 </executions>
-            </plugin>-->
+            </plugin>
 
             <!--<plugin>-->
             <!--<groupId>org.mojo.javascript-framework</groupId>-->
