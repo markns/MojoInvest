@@ -3,6 +3,7 @@
 
 {{$head-scripts}}
 <link href="../css/filtergrid.css" rel="stylesheet" type="text/css"/>
+<link href="../css/smoothness/jquery-ui-1.8.20.custom.css" rel="stylesheet" type="text/css"/>
 <script src="../lib/dygraph-combined.js"></script>
 <script src="../lib/tablefilter_all_min.js"></script>
 <script src="http://www.google.com/jsapi"></script>
@@ -294,10 +295,11 @@ App.FundsView = Backbone.View.extend({
                 }
                 i++;
             })
-        }
-        for (var j = 0; i < filteredData.length; i++) {
-            var fund = filteredData[j][1][1];
-            var index = this.addToUniverse(fund, universe);
+        } else {
+            for (var j = 0; j < filteredData.length; j++) {
+                var fund = filteredData[j][1][1];
+                var index = this.addToUniverse(fund, universe);
+            }
         }
 
         App.params.trigger('change:universe');
