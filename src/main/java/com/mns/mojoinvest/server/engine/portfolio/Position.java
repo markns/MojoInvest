@@ -2,6 +2,7 @@ package com.mns.mojoinvest.server.engine.portfolio;
 
 import com.mns.mojoinvest.server.engine.model.Fund;
 import com.mns.mojoinvest.server.engine.model.Quote;
+import com.mns.mojoinvest.server.engine.model.dao.DataAccessException;
 import com.mns.mojoinvest.server.engine.model.dao.QuoteDao;
 import com.mns.mojoinvest.server.engine.transaction.BuyTransaction;
 import com.mns.mojoinvest.server.engine.transaction.SellTransaction;
@@ -207,7 +208,7 @@ public class Position {
         return cashIn;
     }
 
-    public BigDecimal marketValue(LocalDate date) {
+    public BigDecimal marketValue(LocalDate date) throws PortfolioException {
         if (date.isBefore(openingDate))
             return BigDecimal.ZERO;
 
@@ -227,7 +228,7 @@ public class Position {
         return marketValue;
     }
 
-    public BigDecimal gain(LocalDate date) {
+    public BigDecimal gain(LocalDate date) throws PortfolioException {
         if (date.isBefore(openingDate))
             return BigDecimal.ZERO;
 
@@ -244,7 +245,7 @@ public class Position {
      * Then the gain percentage is calculated by:
      *  gain percentage = gain / cost basis
      */
-    public BigDecimal gainPercentage(LocalDate date) {
+    public BigDecimal gainPercentage(LocalDate date) throws PortfolioException {
         if (date.isBefore(openingDate))
             return BigDecimal.ZERO;
 
@@ -253,7 +254,7 @@ public class Position {
                 .multiply(BigDecimal.TEN.multiply(BigDecimal.TEN));
     }
 
-    public BigDecimal returnsGain(LocalDate date) {
+    public BigDecimal returnsGain(LocalDate date) throws PortfolioException {
         if (date.isBefore(openingDate))
             return BigDecimal.ZERO;
 
@@ -272,7 +273,7 @@ public class Position {
      * lots for the security, then the total return is calculated by:
      *  total return = returns gain / cash out
      */
-    public BigDecimal totalReturn(LocalDate date) {
+    public BigDecimal totalReturn(LocalDate date) throws PortfolioException {
         if (date.isBefore(openingDate))
             return BigDecimal.ZERO;
 
@@ -281,8 +282,13 @@ public class Position {
                 .multiply(BigDecimal.TEN.multiply(BigDecimal.TEN));
     }
 
-    private BigDecimal getClose(LocalDate date) {
-        Quote quote = quoteDao.get(fund, date);
+    private BigDecimal getClose(LocalDate date) throws PortfolioException {
+        Quote quote = null;
+        try {
+            quote = quoteDao.get(fund, date);
+        } catch (DataAccessException e) {
+            throw new PortfolioException("Unable to get close price for " + this + " on " + date);
+        }
         log.fine("Loaded quote " + quote);
         if (quote.getAdjClose() != null) {
             return quote.getAdjClose();

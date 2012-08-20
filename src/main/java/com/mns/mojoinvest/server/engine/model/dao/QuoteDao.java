@@ -18,13 +18,13 @@ public interface QuoteDao {
 
     Map<Key<Quote>, Quote> put(Iterable<Quote> quotes);
 
-    Quote get(String symbol, LocalDate date);
+    Quote get(String symbol, LocalDate date) throws DataAccessException;
 
-    Quote get(Fund fund, LocalDate date);
+    Quote get(Fund fund, LocalDate date) throws DataAccessException;
 
-    Collection<Quote> get(Fund fund, Collection<LocalDate> dates);
+    Collection<Quote> get(Fund fund, Collection<LocalDate> dates) throws DataAccessException;
 
-    Collection<Quote> get(Collection<String> symbols, Collection<LocalDate> dates);
+    Collection<Quote> get(Collection<String> symbols, Collection<LocalDate> dates) throws DataAccessException;
 
     //Query methods only used by QuoteViewerServlet
     List<Quote> query(String symbol);

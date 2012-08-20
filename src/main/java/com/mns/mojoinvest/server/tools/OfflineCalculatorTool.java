@@ -42,7 +42,7 @@ public class OfflineCalculatorTool {
 //        quoteDao.init("data/etf_asset_alloc_quotes.csv", "data/etf_quotes_compare.csv");
 //        fundDao.init("data/etf_asset_alloc_funds.csv");
 //        String outfile = "data/etf_asset_alloc_cvs.csv";
-        quoteDao.init("data/ishares_quotes.csv", "data/GSPC.csv");//"data/ishares_quotes_missing.csv",
+        quoteDao.init("data/ishares_quotes.csv");//"data/ishares_quotes_missing.csv",
         fundDao.init("data/ishares_funds.csv");
         String outfile = "data/ishares_cvs.csv";
 //        quoteDao.init("data/fidelity_quotes.csv", "data/fidelity_quotes_missing.csv", "data/etf_quotes_compare.csv");
@@ -51,9 +51,9 @@ public class OfflineCalculatorTool {
 
         CSVWriter writer = new CSVWriter(new FileWriter(outfile));
 
-        LocalDate latest = new LocalDate("2012-07-04");
+        LocalDate latest = new LocalDate("2012-07-22");
 //        LocalDate latest = new LocalDate("2012-05-02");
-        NavigableMap<LocalDate, BigDecimal> idxReturns = getIndexReturns("GSPC", latest);
+//        NavigableMap<LocalDate, BigDecimal> idxReturns = getIndexReturns("GSPC", latest);
 
 
         for (Fund fund : fundDao.list()) {

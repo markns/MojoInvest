@@ -53,8 +53,8 @@ public class AppResource {
 
     public Params getParams() {
 
-        LocalDate fromDate = new LocalDate("2000-01-01");
-        LocalDate toDate = new LocalDate("2012-03-01");
+        LocalDate fromDate = new LocalDate("2005-01-01");
+        LocalDate toDate = new LocalDate("2012-07-20");
 
         int portfolioSize = 1;
         int holdingPeriod = 1;
@@ -62,18 +62,18 @@ public class AppResource {
         int ma2 = 26;
         int roc = 26;
         int alpha = 100;
-        int castOff = 8;
+        int castOff = 5;
         boolean riskAdjust = true;
         int stddev = 26;
         boolean equityCurveTrading = true;
         int equityCurveWindow = 52;
-        boolean useSafeAsset = false;
+        boolean useSafeAsset = true;
         //String safeAsset = "FSUTX"; //fidelity
-        String safeAsset = "IGLT"; //ishares
+        String safeAsset = "INXG"; //ishares
         //String safeAsset = "GSPC";
-        String relativeStrengthStyle = "MA";
+        String relativeStrengthStyle = "ROC";
 
-        double initialInvestment = 10000d;
+        double initialInvestment = 100000d;
         double transactionCost = 10d;
         LocalDate creationDate = new LocalDate("1990-01-01");
 
@@ -85,7 +85,7 @@ public class AppResource {
 
 
     private List<String> getUniverse() {
-        String funds = "EWM|EWW|EWL|EWU|EWS|EWH|EWA|EWJ|EWG|EWD|EWK|EWQ|EWC|EWN|EWP|EWI|EWO";
+        String funds = "BRIC|FXC|IBZL|IEEM|IEER|IEMI|IEMS|IFFF|IGCC|IKOR|ISEM|ITKY|ITWN|LTAM|NFTY|RUSS";
         return toList(Splitter.on("|").split(funds));
     }
 

@@ -50,7 +50,7 @@ public class BlobstoreQuoteDao implements QuoteDao {
     Map<String, Map<String, String>> quoteCache = new HashMap<String, Map<String, String>>();
 
     @Override
-    public Quote get(String symbol, LocalDate date) {
+    public Quote get(String symbol, LocalDate date) throws DataAccessException {
 
         if (!quoteCache.containsKey(symbol) || !quoteCache.get(symbol).containsKey(date.toString())) {
             BlobstoreKeyRecord record = recordDao.get(symbol + "|" + date.getYear());
@@ -71,6 +71,8 @@ public class BlobstoreQuoteDao implements QuoteDao {
 
         String quoteStr = quoteCache.get(symbol).get(date.toString());
 
+        if (quoteStr == null || quoteStr.isEmpty())
+            throw new DataAccessException("Unable to find quote for " + symbol + " on " + date);
         return Quote.fromStr(quoteStr);
     }
 
@@ -99,12 +101,12 @@ public class BlobstoreQuoteDao implements QuoteDao {
     }
 
     @Override
-    public Quote get(Fund fund, LocalDate date) {
+    public Quote get(Fund fund, LocalDate date) throws DataAccessException {
         return get(fund.getSymbol(), date);
     }
 
     @Override
-    public Collection<Quote> get(Fund fund, Collection<LocalDate> dates) {
+    public Collection<Quote> get(Fund fund, Collection<LocalDate> dates) throws DataAccessException {
         Collection<Quote> quotes = new HashSet<Quote>();
         for (LocalDate date : dates) {
             quotes.add(get(fund.getSymbol(), date));
@@ -113,7 +115,7 @@ public class BlobstoreQuoteDao implements QuoteDao {
     }
 
     @Override
-    public Collection<Quote> get(Collection<String> symbols, Collection<LocalDate> dates) {
+    public Collection<Quote> get(Collection<String> symbols, Collection<LocalDate> dates) throws DataAccessException {
         Collection<Quote> quotes = new HashSet<Quote>();
         for (String symbol : symbols) {
             for (LocalDate date : dates) {

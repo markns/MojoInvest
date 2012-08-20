@@ -42,15 +42,15 @@ public interface Portfolio {
 
     BigDecimal cashOut(LocalDate date);
 
-    BigDecimal marketValue(LocalDate date);
+    BigDecimal marketValue(LocalDate date) throws PortfolioException;
 
-    BigDecimal gain(LocalDate date);
+    BigDecimal gain(LocalDate date) throws PortfolioException;
 
-    BigDecimal gainPercentage(LocalDate date);
+    BigDecimal gainPercentage(LocalDate date) throws PortfolioException;
 
-    BigDecimal overallReturn(LocalDate date);
+    BigDecimal overallReturn(LocalDate date) throws PortfolioException;
 
-    BigDecimal returnsGain(LocalDate date);
+    BigDecimal returnsGain(LocalDate date) throws PortfolioException;
 
     Params getParams();
 }

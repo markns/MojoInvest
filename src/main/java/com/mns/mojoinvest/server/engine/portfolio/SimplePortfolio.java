@@ -200,7 +200,7 @@ public class SimplePortfolio implements Portfolio {
     }
 
     @Override
-    public BigDecimal marketValue(LocalDate date) {
+    public BigDecimal marketValue(LocalDate date) throws PortfolioException {
         if (marketValueCache.containsKey(date))
             return marketValueCache.get(date);
         log.fine(date + " Calculating market value for " + this);
@@ -216,7 +216,7 @@ public class SimplePortfolio implements Portfolio {
     }
 
     @Override
-    public BigDecimal gain(LocalDate date) {
+    public BigDecimal gain(LocalDate date) throws PortfolioException {
         BigDecimal gain = BigDecimal.ZERO;
         for (Position position : positions.values()) {
             //adjust for currency
@@ -232,7 +232,7 @@ public class SimplePortfolio implements Portfolio {
 
 
     @Override
-    public BigDecimal gainPercentage(LocalDate date) {
+    public BigDecimal gainPercentage(LocalDate date) throws PortfolioException {
         BigDecimal costBasis = costBasis(date);
         if (costBasis.compareTo(BigDecimal.ZERO) == 0)
             return BigDecimal.ZERO;
@@ -248,7 +248,7 @@ public class SimplePortfolio implements Portfolio {
      * @return
      */
     @Override
-    public BigDecimal returnsGain(LocalDate date) {
+    public BigDecimal returnsGain(LocalDate date) throws PortfolioException {
         BigDecimal returnsGain = BigDecimal.ZERO;
         for (Position position : positions.values()) {
             //adjust for currency
@@ -269,7 +269,7 @@ public class SimplePortfolio implements Portfolio {
      * @return
      */
     @Override
-    public BigDecimal overallReturn(LocalDate date) {
+    public BigDecimal overallReturn(LocalDate date) throws PortfolioException {
         if (openPositionCount(date) == 0)
             return BigDecimal.ZERO;
         //negate cashOut in division to maintain direction of gain

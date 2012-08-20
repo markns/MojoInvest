@@ -2,6 +2,7 @@ package com.mns.mojoinvest.server.engine.execution;
 
 import com.google.inject.Inject;
 import com.mns.mojoinvest.server.engine.model.Quote;
+import com.mns.mojoinvest.server.engine.model.dao.DataAccessException;
 import com.mns.mojoinvest.server.engine.model.dao.QuoteDao;
 import com.mns.mojoinvest.server.engine.portfolio.Portfolio;
 import com.mns.mojoinvest.server.engine.portfolio.PortfolioException;
@@ -31,7 +32,12 @@ public class NextTradingDayExecutor implements Executor {
         //TODO: getRanking execution price should be mid between open and close of next days quote
 
         LocalDate executionDate = TradingDayUtils.rollForward(date.plusDays(1));
-        Quote executionQuote = quoteDao.get(fund, executionDate);
+        Quote executionQuote = null;
+        try {
+            executionQuote = quoteDao.get(fund, executionDate);
+        } catch (DataAccessException e) {
+            throw new PortfolioException("Unable to execute", e);
+        }
         log.fine("Loaded buy execution quote " + executionQuote);
 
         if (executionQuote == null) {
@@ -51,7 +57,12 @@ public class NextTradingDayExecutor implements Executor {
             throws PortfolioException {
         //TODO: getRanking execution price should be mid between open and close of next days quote
         LocalDate executionDate = TradingDayUtils.rollForward(date.plusDays(1));
-        Quote executionQuote = quoteDao.get(fund, executionDate);
+        Quote executionQuote = null;
+        try {
+            executionQuote = quoteDao.get(fund, executionDate);
+        } catch (DataAccessException e) {
+            throw new PortfolioException("Unable to execute", e);
+        }
 
         log.fine("Loaded sell execution quote " + executionQuote);
 

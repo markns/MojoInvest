@@ -2,6 +2,7 @@ package com.mns.mojoinvest.server.engine.portfolio;
 
 import com.mns.mojoinvest.server.engine.model.Fund;
 import com.mns.mojoinvest.server.engine.model.Quote;
+import com.mns.mojoinvest.server.engine.model.dao.DataAccessException;
 import com.mns.mojoinvest.server.engine.model.dao.QuoteDao;
 import com.mns.mojoinvest.server.engine.transaction.BuyTransaction;
 import com.mns.mojoinvest.server.engine.transaction.SellTransaction;
@@ -230,7 +231,7 @@ public class LotTests {
     public static final BigDecimal FIFTY = BigDecimal.TEN.multiply(new BigDecimal("5"));
 
     @Test
-    public void testMarketValueSeries() throws PortfolioException {
+    public void testMarketValueSeries() throws PortfolioException, DataAccessException {
         when(quoteDao.get(anyFund(), anyLocalDate())).thenReturn(dummyQuote);
         Lot lot = new Lot(quoteDao, buy);
         List<LocalDate> dates = Arrays.asList(buyDate.minusDays(1), buyDate, buyDate.plusDays(1),

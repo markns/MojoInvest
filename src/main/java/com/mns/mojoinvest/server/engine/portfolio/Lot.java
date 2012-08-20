@@ -1,6 +1,7 @@
 package com.mns.mojoinvest.server.engine.portfolio;
 
 import com.mns.mojoinvest.server.engine.model.Quote;
+import com.mns.mojoinvest.server.engine.model.dao.DataAccessException;
 import com.mns.mojoinvest.server.engine.model.dao.QuoteDao;
 import com.mns.mojoinvest.server.engine.transaction.BuyTransaction;
 import com.mns.mojoinvest.server.engine.transaction.SellTransaction;
@@ -272,14 +273,19 @@ public class Lot {
     }
 
 
-    public List<BigDecimal> marketValue(List<LocalDate> dates) {
+    public List<BigDecimal> marketValue(List<LocalDate> dates) throws PortfolioException {
         List<BigDecimal> quantities = getRemainingQuantity(dates);
         List<BigDecimal> lotValues = new ArrayList<BigDecimal>(dates.size());
         for (int i = 0; i < dates.size(); i++) {
             if (quantities.get(i).equals(BigDecimal.ZERO)) {
                 lotValues.add(BigDecimal.ZERO);
             } else {
-                Quote quote = quoteDao.get(openingTransaction.getFund(), dates.get(i));
+                Quote quote = null;
+                try {
+                    quote = quoteDao.get(openingTransaction.getFund(), dates.get(i));
+                } catch (DataAccessException e) {
+                    throw new PortfolioException("Unable to calculate market value of lot", e);
+                }
                 lotValues.add(quantities.get(i).multiply(quote.getAdjClose()));
             }
         }

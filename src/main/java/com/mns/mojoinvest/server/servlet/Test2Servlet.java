@@ -3,6 +3,7 @@ package com.mns.mojoinvest.server.servlet;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.mns.mojoinvest.server.engine.model.Quote;
+import com.mns.mojoinvest.server.engine.model.dao.DataAccessException;
 import com.mns.mojoinvest.server.engine.model.dao.QuoteDao;
 import com.mns.mojoinvest.server.servlet.util.ParameterNotFoundException;
 import com.mns.mojoinvest.server.servlet.util.ParameterParser;
@@ -49,6 +50,8 @@ public class Test2Servlet extends HttpServlet {
             try {
                 quote = dao.get(symbol, date);
             } catch (Exception e) {
+                e.printStackTrace();
+            } catch (DataAccessException e) {
                 e.printStackTrace();
             }
             resp.getWriter().println("<li>" + date + " - " + quote + "</li>");

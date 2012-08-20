@@ -61,8 +61,8 @@ public class FundFetcherJob extends Job0<List<Fund>> {
         //TODO: msn throws internal service error when less than 20 funds and page = 0
 //        params.add("page", "0");
         params.add("fam", "iShares");
-//        params.add("cat", "All");
-        params.add("cat", "Europe+Stock");
+        params.add("cat", "All");
+//        params.add("cat", "Europe+Stock");
         params.add("view", "View");
 
         log.info("Attempting to fetch all funds html");

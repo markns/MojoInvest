@@ -3,6 +3,7 @@ package com.mns.mojoinvest.server.servlet;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.mns.mojoinvest.server.engine.model.Quote;
+import com.mns.mojoinvest.server.engine.model.dao.DataAccessException;
 import com.mns.mojoinvest.server.engine.model.dao.QuoteDao;
 import com.mns.mojoinvest.server.servlet.util.ParameterNotFoundException;
 import com.mns.mojoinvest.server.servlet.util.ParameterParser;
@@ -41,7 +42,11 @@ public class QuoteViewerServlet extends HttpServlet {
             //pass
         }
         if (symbol != null && date != null) {
-            quotes.add(dao.get(symbol, date));
+            try {
+                quotes.add(dao.get(symbol, date));
+            } catch (DataAccessException e) {
+                e.printStackTrace();
+            }
         } else if (symbol != null) {
             quotes.addAll(dao.query(symbol));
         } else if (date != null) {

@@ -23,13 +23,13 @@ public class HolidayFinderUtil {
         Map<LocalDate, MutableInt> freq = new HashMap<LocalDate, MutableInt>();
 
         List<LocalDate> dates = TradingDayUtils.getDailySeries(
-                new LocalDate("1993-01-29"), new LocalDate("2012-02-24"), true);
+                new LocalDate("2000-01-29"), new LocalDate("2012-07-06"), true);
         for (LocalDate date : dates) {
             freq.put(date, new MutableInt(0));
         }
 
 
-        String[] files = new String[]{"/Users/marknuttallsmith/Projects/ETFData/consolidated_quotes.csv"};
+        String[] files = new String[]{"/Users/marknuttallsmith/Projects/MojoInvest/data/ishares_uk.csv"};
         for (String file : files) {
 
             CSVReader reader = new CSVReader(new BufferedReader(new FileReader(file)));

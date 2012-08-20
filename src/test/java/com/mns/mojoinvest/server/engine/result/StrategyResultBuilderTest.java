@@ -30,7 +30,7 @@ public class StrategyResultBuilderTest {
     }
 
     @Test
-    public void testGenerateDataTable() throws Exception {
+    public void testGenerateDataTable() throws Exception, ResultBuilderException {
         StrategyResultBuilder builder = new StrategyResultBuilder(quoteDao, fundDao);
         builder.generateDataTable(new ArrayList<LocalDate>());
     }

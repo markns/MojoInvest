@@ -108,8 +108,14 @@ public class RelativeStrengthCalculator {
             Map<String, BigDecimal> adjustedDate = new HashMap<String, BigDecimal>();
             for (String symbol : unadjusted.get(date).keySet()) {
                 if (stddevMap.containsKey(date) && stddevMap.get(date).containsKey(symbol)) {
-                    adjustedDate.put(symbol, unadjusted.get(date).get(symbol)
-                            .divide(stddevMap.get(date).get(symbol), RoundingMode.HALF_EVEN));
+                    BigDecimal stdDev = stddevMap.get(date).get(symbol);
+                    //if stdDev is 0 (because there has been no variation in price!), return unajusted rs
+                    if (stdDev.compareTo(BigDecimal.ZERO) == 0) {
+                        adjustedDate.put(symbol, unadjusted.get(date).get(symbol));
+                    } else {
+                        adjustedDate.put(symbol, unadjusted.get(date).get(symbol)
+                                .divide(stdDev, RoundingMode.HALF_EVEN));
+                    }
                 } else {
                     log.warning(date + " Unable to calculate adjusted RS for " + symbol + " on " + date + " no STDDEV|" + params.getStdDev());
                 }

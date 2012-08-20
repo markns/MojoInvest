@@ -1,6 +1,5 @@
 package com.mns.mojoinvest.server.engine.result;
 
-import au.com.bytecode.opencsv.CSVWriter;
 import com.google.inject.Inject;
 import com.google.visualization.datasource.base.TypeMismatchException;
 import com.google.visualization.datasource.datatable.ColumnDescription;
@@ -12,20 +11,18 @@ import com.google.visualization.datasource.datatable.value.TextValue;
 import com.google.visualization.datasource.datatable.value.ValueType;
 import com.ibm.icu.util.GregorianCalendar;
 import com.mns.mojoinvest.server.engine.model.Fund;
-import com.mns.mojoinvest.server.engine.model.Quote;
 import com.mns.mojoinvest.server.engine.model.dao.FundDao;
 import com.mns.mojoinvest.server.engine.model.dao.QuoteDao;
 import com.mns.mojoinvest.server.engine.params.Params;
 import com.mns.mojoinvest.server.engine.portfolio.Portfolio;
+import com.mns.mojoinvest.server.engine.portfolio.PortfolioException;
 import com.mns.mojoinvest.server.engine.strategy.MomentumStrategy;
 import com.mns.mojoinvest.server.engine.transaction.BuyTransaction;
 import com.mns.mojoinvest.server.engine.transaction.Transaction;
 import com.mns.mojoinvest.server.util.TradingDayUtils;
-import org.apache.commons.lang.ArrayUtils;
 import org.joda.time.LocalDate;
 import org.joda.time.Years;
 
-import java.io.IOException;
 import java.math.BigDecimal;
 import java.math.MathContext;
 import java.util.*;
@@ -87,8 +84,13 @@ public class StrategyResultBuilder {
         return new StrategyResult(dataTable, portfolio.getTransactions(), stats);
     }
 
-    private BigDecimal totalReturn() {
-        BigDecimal marketValue = portfolio.marketValue(params.getToDate());
+    private BigDecimal totalReturn() throws ResultBuilderException {
+        BigDecimal marketValue = null;
+        try {
+            marketValue = portfolio.marketValue(params.getToDate());
+        } catch (PortfolioException e) {
+            throw new ResultBuilderException("Unable to calculate strategy result", e);
+        }
         return marketValue;
     }
 
@@ -98,7 +100,12 @@ public class StrategyResultBuilder {
             throw new ResultBuilderException("No transactions in portfolio");
         LocalDate fromDate = portfolio.getTransactions().get(0).getDate();
 
-        BigDecimal marketValue = portfolio.marketValue(params.getToDate());
+        BigDecimal marketValue = null;
+        try {
+            marketValue = portfolio.marketValue(params.getToDate());
+        } catch (PortfolioException e) {
+            throw new ResultBuilderException("Unable to calculate strategy result", e);
+        }
         log.info("Final portfolio value: " + marketValue);
         double base = marketValue.divide(new BigDecimal(portfolio.getParams().getInitialInvestment())).doubleValue();
         double e = 1d / Years.yearsBetween(fromDate, params.getToDate()).getYears();
@@ -107,7 +114,7 @@ public class StrategyResultBuilder {
         return new BigDecimal(cagr);
     }
 
-    private BigDecimal maxDD(List<LocalDate> dates) {
+    private BigDecimal maxDD(List<LocalDate> dates) throws ResultBuilderException {
         List<DrawDown> drawDowns = new ArrayList<DrawDown>();
         DrawDown currentDD = null;
 
@@ -116,8 +123,12 @@ public class StrategyResultBuilder {
             if (rebalanceDate.isBefore(earliestTransactionDate.minusWeeks(2))) {
                 continue;
             }
-            currentDD = calculateDrawDowns(drawDowns, currentDD, rebalanceDate,
-                    portfolio.marketValue(rebalanceDate));
+            try {
+                currentDD = calculateDrawDowns(drawDowns, currentDD, rebalanceDate,
+                        portfolio.marketValue(rebalanceDate));
+            } catch (PortfolioException e) {
+                throw new ResultBuilderException("Unable to calculate strategy result", e);
+            }
         }
         BigDecimal maxDD = BigDecimal.ZERO;
         for (DrawDown drawDown : drawDowns) {
@@ -130,7 +141,7 @@ public class StrategyResultBuilder {
     }
 
 
-    public DataTable generateDataTable(List<LocalDate> dates) {
+    public DataTable generateDataTable(List<LocalDate> dates) throws ResultBuilderException {
 
         // Create a data table
         DataTable data = new DataTable();
@@ -151,7 +162,11 @@ public class StrategyResultBuilder {
         for (LocalDate date : dates) {
             TableRow row = new TableRow();
             row.addCell(new DateValue(getGregorianCalendar(date)));
-            row.addCell(portfolio.marketValue(date).doubleValue());
+            try {
+                row.addCell(portfolio.marketValue(date).doubleValue());
+            } catch (PortfolioException e) {
+                throw new ResultBuilderException("Unable to calculate strategy result", e);
+            }
             row.addCell(TextValue.getNullValue());
             row.addCell(getNullSafeNumberValue(spv, date));
             row.addCell(getNullSafeNumberValue(sec, date));
@@ -182,7 +197,11 @@ public class StrategyResultBuilder {
 
             TableRow row = new TableRow();
             row.addCell(new DateValue(getGregorianCalendar(date)));
-            row.addCell(portfolio.marketValue(date).doubleValue());
+            try {
+                row.addCell(portfolio.marketValue(date).doubleValue());
+            } catch (PortfolioException e) {
+                throw new ResultBuilderException("Unable to calculate strategy result", e);
+            }
             row.addCell(annotation.toString().trim());
             row.addCell(NumberValue.getNullValue());
             row.addCell(NumberValue.getNullValue());
@@ -247,78 +266,8 @@ public class StrategyResultBuilder {
     }
 
 
-    /*
-     * Csv writing stuff - non production
-    */
-
-
-    private void writeCsvHeader(Collection<Fund> universe, CSVWriter writer) {
-        String[] headCompare = new String[universe.size()];
-        int k = 0;
-        for (Fund fund : universe) {
-            headCompare[k] = fund.getSymbol();
-            k++;
-        }
-        String[] headStrat = new String[]{"Date", "Portfolio", "Portfolio Value", "Shadow", "Shadow Value", "Equity Curve"};
-        writer.writeNext((String[]) ArrayUtils.addAll(headStrat, headCompare));
-    }
-
-
-    private void initialiseComparisonsForCsv(Collection<Fund> universe, LocalDate rebalanceDate, BigDecimal marketValue) {
-        //Initialisation of comparison to portfolio results
-        for (Fund fund : universe) {
-            if (!initCompares.containsKey(fund.getSymbol())) {
-                Quote q = quoteDao.get(fund.getSymbol(), rebalanceDate);
-                if (q != null) {
-                    initCompares.put(fund.getSymbol(), q.getAdjClose());
-                    portfolioCompares.put(fund.getSymbol(), marketValue);
-                }
-            }
-        }
-    }
-
-    private String[] calculatePercentChangeForCsv(Collection<Fund> universe, LocalDate rebalanceDate) {
-        //Calculate % change for all the funds in universe for later comparison
-        String[] compares = new String[universe.size()];
-        int p = 0;
-        for (Fund fund : universe) {
-            if (initCompares.containsKey(fund.getSymbol())) {
-                double pct = (percentageChange(initCompares.get(fund.getSymbol()),
-                        quoteDao.get(fund.getSymbol(), rebalanceDate).getAdjClose()).doubleValue() + 1)
-                        * portfolioCompares.get(fund.getSymbol()).doubleValue();
-                compares[p] = pct + "";
-            } else {
-                compares[p] = "";
-            }
-            p++;
-        }
-        return compares;
-    }
-
     private static BigDecimal percentageChange(BigDecimal from, BigDecimal to) {
         BigDecimal change = to.subtract(from);
         return change.divide(from, MathContext.DECIMAL32);
-    }
-
-
-    private void writeCsvRow(Portfolio portfolio, Portfolio shadowPortfolio, CSVWriter writer, LocalDate rebalanceDate, BigDecimal marketValue, BigDecimal shadowMarketValue, BigDecimal equityCurveMA, String[] compares) {
-        String[] bodyStrat = new String[]{rebalanceDate + "",
-                portfolio.getActiveFunds(rebalanceDate) + "",
-                marketValue + " ",
-                shadowPortfolio.getActiveFunds(rebalanceDate) + "",
-                shadowMarketValue + " ",
-                equityCurveMA == null ? "" : equityCurveMA + ""
-        };
-
-        writer.writeNext((String[]) ArrayUtils.addAll(bodyStrat, compares));
-    }
-
-    private void flushCsvWriter(CSVWriter writer) {
-        try {
-            writer.flush();
-            writer.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
     }
 }

@@ -105,7 +105,12 @@ public class MomentumStrategy {
             List<String> selection = getSelection(date, params, strengths);
 
             //Shadow portfolio and equity curve calculation stuff
-            BigDecimal shadowMarketValue = shadowPortfolio.marketValue(date);
+            BigDecimal shadowMarketValue = null;
+            try {
+                shadowMarketValue = shadowPortfolio.marketValue(date);
+            } catch (PortfolioException e) {
+                throw new StrategyException("Unable to complete strategy run at " + date, e);
+            }
             shadowEquityCurve.addValue(shadowMarketValue.doubleValue());
             BigDecimal equityCurveMA = null;
             if (shadowEquityCurve.getN() >= params.getEquityCurveWindow()) {
@@ -194,8 +199,7 @@ public class MomentumStrategy {
                 } catch (PortfolioException e) {
                     throw new StrategyException("Unable to sell losers " + selection +
                             " on " + rebalanceDate +
-                            ", current portfolio: " + portfolio.getActiveFunds(rebalanceDate) +
-                            ", value: " + portfolio.marketValue(rebalanceDate), e);
+                            ", current portfolio: " + portfolio.getActiveFunds(rebalanceDate));
                 }
             }
         }
@@ -228,8 +232,7 @@ public class MomentumStrategy {
                 } catch (PortfolioException e) {
                     throw new StrategyException("Unable to buy winners " + selection +
                             " on " + rebalanceDate +
-                            ", current portfolio: " + portfolio.getActiveFunds(rebalanceDate) +
-                            ", value: " + portfolio.marketValue(rebalanceDate), e);
+                            ", current portfolio: " + portfolio.getActiveFunds(rebalanceDate));
                 }
             }
         }
