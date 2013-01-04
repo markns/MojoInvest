@@ -21,7 +21,7 @@ public class ISharesFundDetailFetcherBatchJobTest {
     @Test
     public void testScrapeDetails() throws IOException {
 
-        URL url = ClassLoader.getSystemResource("ishares_iaex_detail.html");
+        URL url = ClassLoader.getSystemResource("IAEX.html");
         String html = FileUtils.readFileToString(new File(url.getFile()));
         Fund fund = job.buildFund(html);
         System.out.println(fund);

@@ -10,7 +10,6 @@ import com.mns.mojoinvest.server.engine.model.Fund;
 import com.mns.mojoinvest.server.engine.model.Quote;
 import com.mns.mojoinvest.server.engine.model.dao.ObjectifyQuoteDao;
 import com.mns.mojoinvest.server.engine.model.dao.QuoteDao;
-import com.mns.mojoinvest.server.pipeline.PipelineException;
 import com.mns.mojoinvest.server.util.QuoteUtils;
 import org.joda.time.LocalDate;
 
@@ -34,7 +33,7 @@ public class YahooQuoteFetcherBatchJob extends Job2<String, List<Fund>, LocalDat
             throws IOException, ClassNotFoundException {
         ObjectifyFactory factory = ObjectifyService.factory();
         dao = new ObjectifyQuoteDao(factory);
-        dao.registerObjects(factory);
+//        dao.registerObjects(factory);
         messages = new ArrayList<String>();
         fetcher = new YahooQuoteFetcher();
     }
@@ -46,33 +45,41 @@ public class YahooQuoteFetcherBatchJob extends Job2<String, List<Fund>, LocalDat
         messages.add(message);
         log.info(message);
         for (Fund fund : funds) {
-            List<Quote> quotes = downloadLastWeekOfQuotes(date, fund);
-            testReceivedTodaysQuote(date, fund, quotes);
+            try {
+                List<Quote> quotes = downloadLastWeekOfQuotes(date, fund);
+                testReceivedTodaysQuote(date, fund, quotes);
 
-            boolean changed = testForChanges(quotes.subList(1, quotes.size()));
-            if (changed) {
-                quotes = downloadAllHistoricQuotes(fund, date);
+                boolean changed = testForChanges(quotes.subList(1, quotes.size()));
+                if (changed) {
+                    quotes = downloadAllHistoricQuotes(fund, date);
+                }
+
+                allQuotes.addAll(quotes);
+            } catch (QuoteFetcherException e) {
+                addMessageAndLog(e.getMessage() + " - " + e.getCause());
             }
-
-            allQuotes.addAll(quotes);
         }
-        messages.add(message = "Saving " + allQuotes.size() + " quotes");
-        log.info(message);
+        addMessageAndLog("Saving " + allQuotes.size() + " quotes");
         dao.put(allQuotes);
 
         return immediate(Joiner.on("\n").join(messages));
     }
 
-    private List<Quote> downloadLastWeekOfQuotes(LocalDate date, Fund fund) {
+    private void addMessageAndLog(String message) {
+        messages.add(message);
+        log.info(message);
+    }
+
+    private List<Quote> downloadLastWeekOfQuotes(LocalDate date, Fund fund) throws QuoteFetcherException {
         List<Quote> quotes = fetcher.run(fund, date.minusWeeks(1), date);
         QuoteUtils.sortByDateDesc(quotes);
         return quotes;
     }
 
-    private void testReceivedTodaysQuote(LocalDate date, Fund fund, List<Quote> quotes) {
+    private void testReceivedTodaysQuote(LocalDate date, Fund fund, List<Quote> quotes) throws QuoteFetcherException {
         Quote todays = quotes.get(0);
         if (todays.getDate().equals(date))
-            throw new PipelineException("Didn't get a " + fund + " quote for " + date);
+            throw new QuoteFetcherException("Didn't get a " + fund + " quote for " + date);
     }
 
     private boolean testForChanges(List<Quote> quotes) {
@@ -104,7 +111,7 @@ public class YahooQuoteFetcherBatchJob extends Job2<String, List<Fund>, LocalDat
         return false;
     }
 
-    private List<Quote> downloadAllHistoricQuotes(Fund fund, LocalDate date) {
+    private List<Quote> downloadAllHistoricQuotes(Fund fund, LocalDate date) throws QuoteFetcherException {
         return fetcher.run(fund, fund.getInceptionDate(), date);
     }
 

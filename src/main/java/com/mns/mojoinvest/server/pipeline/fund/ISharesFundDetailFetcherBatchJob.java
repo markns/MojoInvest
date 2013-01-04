@@ -6,7 +6,6 @@ import com.google.common.annotations.VisibleForTesting;
 import com.mns.mojoinvest.server.engine.model.Fund;
 import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.WebResource;
-import org.joda.time.LocalDate;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 import org.jsoup.Jsoup;
@@ -85,10 +84,9 @@ public class ISharesFundDetailFetcherBatchJob extends Job1<List<Fund>, List<Stri
         return details;
     }
 
-    private Fund buildFund(Map<String, String> details) {
-        DateTimeFormatter fmt = DateTimeFormat.forPattern("dd/MM/yy");
-        LocalDate inceptionDate = null;
+    private static DateTimeFormatter fmt = DateTimeFormat.forPattern("dd/MM/yy");
 
+    private Fund buildFund(Map<String, String> details) {
         return new Fund(details.get("Ticker"),
                 details.get("Name"),
                 details.get("category"),
@@ -97,7 +95,7 @@ public class ISharesFundDetailFetcherBatchJob extends Job1<List<Fund>, List<Stri
                 details.get("Domicile"),
                 details.get("Benchmark Name"),
                 details.get("Description"),
-                inceptionDate);
+                fmt.parseLocalDate(details.get("Inception Date")));
     }
 
 

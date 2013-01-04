@@ -13,7 +13,7 @@ public class YahooQuoteFetcherTest {
 
 
     @Test
-    public void testRun() throws Exception {
+    public void testRun() throws QuoteFetcherException {
         Fund fund = new Fund("SPY", "", "", "", true, "", "", "", new LocalDate("1993-03-03"));
         YahooQuoteFetcher job = new YahooQuoteFetcher();
         List<Quote> quotes = job.run(fund, new LocalDate("2012-03-16"), new LocalDate("2012-03-22"));

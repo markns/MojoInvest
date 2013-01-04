@@ -4,9 +4,7 @@ import com.google.appengine.api.datastore.KeyFactory;
 import com.google.appengine.tools.pipeline.FutureValue;
 import com.google.appengine.tools.pipeline.Job1;
 import com.google.appengine.tools.pipeline.Value;
-import com.mns.mojoinvest.server.engine.model.Fund;
-import com.mns.mojoinvest.server.pipeline.fund.FundUpdaterJob;
-import com.mns.mojoinvest.server.pipeline.fund.ISharesFundFetcherJob;
+import com.mns.mojoinvest.server.pipeline.quote.YahooQuoteFetcherJob;
 import com.mns.mojoinvest.server.util.HolidayUtils;
 import org.joda.time.LocalDate;
 
@@ -36,9 +34,12 @@ public class DailyPipeline extends Job1<Void, LocalDate> {
 
         //TODO: Delete pipeline job records more than one week old
 
-        FutureValue<List<Fund>> funds = futureCall(new ISharesFundFetcherJob());
-        messages.add(futureCall(new FundUpdaterJob(), funds));
-//        messages.add(futureCall(new YahooQuoteFetcherJob(), funds, immediate(date)));
+//        FutureValue<List<Fund>> funds = futureCall(new ISharesFundFetcherJob());
+//        FutureValue<String> fundsUpdatedMessage = futureCall(new FundUpdaterJob(), funds);
+//        messages.add(fundsUpdatedMessage);
+        FutureValue<String> fundsUpdatedMessage = futureCall(new ImmediateReturnJob());
+
+        messages.add(futureCall(new YahooQuoteFetcherJob(), immediate(date), waitFor(fundsUpdatedMessage)));
 
 //        futureCall(new RunCalculationsGeneratorJob(), immediate(date), funds);
 //        //for each of the parameter combinations (1M, 2M, 6M etc) call
