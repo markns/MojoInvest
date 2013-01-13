@@ -29,7 +29,11 @@ public class PipelineServlet extends HttpServlet {
         PipelineService service = PipelineServiceFactory.newPipelineService();
         String pipelineId = service.startNewPipeline(new DailyPipeline(), date);
 
-        log.info("Daily pipeline '" + pipelineId + "' started for date " + date);
-        log.info("Pipeline console available at /_ah/pipeline/status.html?root=" + pipelineId);
+        String msg = "Daily pipeline '" + pipelineId + "' started for date " + date + "\n" +
+                "Pipeline console available at /_ah/pipeline/status.html?root=" + pipelineId;
+        log.info(msg);
+
+        resp.setContentType("text/html");
+        resp.getWriter().println(msg);
     }
 }
