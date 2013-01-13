@@ -32,6 +32,7 @@ import com.mns.mojoinvest.server.engine.model.dao.blobstore.BlobstoreQuoteDao;
 import com.mns.mojoinvest.server.engine.model.dao.objectify.ObjectifyFundDao;
 import com.mns.mojoinvest.server.mustache.MustacheViewProcessor;
 import com.mns.mojoinvest.server.servlet.*;
+import com.mns.mojoinvest.server.servlet.blob.DeleteBlobs;
 import com.mns.mojoinvest.server.servlet.blob.PersistBlobWorker;
 import com.mns.mojoinvest.server.servlet.blob.Serve;
 import com.mns.mojoinvest.server.servlet.blob.SuccessfulUploadServlet;
@@ -94,6 +95,7 @@ public class MojoServletModule extends ServletModule {
         serve("/tools/cvblobs").with(CreateCVBlobsServlet.class);
         serve("/tools/serve").with(Serve.class);
         serve("/tools/quoteblobs").with(CreateQuoteBlobsServlet.class);
+        serve("/tools/deleteblobs").with(DeleteBlobs.class);
 //        serve("/tools/calculator").with(SMACalculatorServlet.class);
 //        serve("/tools/clearcache").with(ClearCacheServlet.class);
 //        serve("/tools/test2").with(Test2Servlet.class);
