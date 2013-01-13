@@ -28,8 +28,8 @@ public class ISharesFundDetailFetcherBatchJob extends Job1<List<Fund>, List<Stri
         log.info("Attempting to retrieve details for batch: " + symbols);
         for (String symbol : symbols) {
             //TODO: Figure out why this fund is screwing up
-            if ("IDVY".equals(symbol))
-                continue;
+//            if ("IDVY".equals(symbol))
+//                continue;
             Fund fund = runOne(symbol);
             if (fund != null) {
                 funds.add(fund);
@@ -58,7 +58,6 @@ public class ISharesFundDetailFetcherBatchJob extends Job1<List<Fund>, List<Stri
     protected Fund buildFund(String html) {
         return buildFund(scrapeDetails(html));
     }
-
 
     private Map<String, String> scrapeDetails(String html) {
 

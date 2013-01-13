@@ -19,7 +19,6 @@ public class ImportQuotesFromBlobstoreMapper extends
 
     public static final DateTimeFormatter fmt = DateTimeFormat.forPattern("yyyy-MM-dd");
 
-    @Override
     public void map(BlobstoreRecordKey key, byte[] segment, Context context) {
 
         String line = new String(segment);

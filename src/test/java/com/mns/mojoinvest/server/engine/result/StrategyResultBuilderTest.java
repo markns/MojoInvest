@@ -4,8 +4,8 @@ import com.google.appengine.tools.development.testing.LocalDatastoreServiceTestC
 import com.google.appengine.tools.development.testing.LocalServiceTestHelper;
 import com.googlecode.objectify.ObjectifyService;
 import com.mns.mojoinvest.server.engine.model.dao.FundDao;
-import com.mns.mojoinvest.server.engine.model.dao.ObjectifyFundDao;
 import com.mns.mojoinvest.server.engine.model.dao.QuoteDao;
+import com.mns.mojoinvest.server.engine.model.dao.objectify.ObjectifyFundDao;
 import org.joda.time.LocalDate;
 import org.junit.Test;
 import org.mockito.Mock;

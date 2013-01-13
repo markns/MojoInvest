@@ -5,10 +5,10 @@ import com.google.appengine.tools.pipeline.Job1;
 import com.google.appengine.tools.pipeline.Value;
 import com.google.common.base.Joiner;
 import com.googlecode.objectify.ObjectifyFactory;
-import com.googlecode.objectify.ObjectifyService;
 import com.mns.mojoinvest.server.engine.model.Fund;
 import com.mns.mojoinvest.server.engine.model.dao.FundDao;
-import com.mns.mojoinvest.server.engine.model.dao.ObjectifyFundDao;
+import com.mns.mojoinvest.server.engine.model.dao.objectify.MyTypeConverters;
+import com.mns.mojoinvest.server.engine.model.dao.objectify.ObjectifyFundDao;
 import org.joda.time.LocalDate;
 
 import java.util.ArrayList;
@@ -20,14 +20,15 @@ public class YahooQuoteFetcherJob extends Job1<String, LocalDate> {
 
     private static final Logger log = Logger.getLogger(YahooQuoteFetcherJob.class.getName());
 
-    private static final int BATCH_SIZE = 50;
-
-    private FundDao fundDao;
+    private static final int BATCH_SIZE = 20;
 
     @Override
     public Value<String> run(LocalDate date) {
 
-        initializeFundDao();
+        ObjectifyFactory factory = new ObjectifyFactory();
+        factory.register(Fund.class);
+        factory.getConversions().add(new MyTypeConverters());
+        FundDao fundDao = new ObjectifyFundDao(factory);
 
         Collection<Fund> funds = fundDao.list();
 
@@ -49,14 +50,6 @@ public class YahooQuoteFetcherJob extends Job1<String, LocalDate> {
         }
 
         return futureCall(new MergeMessagesJob(), futureList(messages));
-    }
-
-    private void initializeFundDao() {
-        //TODO: Figure out how to inject and serialize DAOs
-        ObjectifyFactory factory = ObjectifyService.factory();
-        fundDao = new ObjectifyFundDao(factory);
-        fundDao.registerObjects(factory);
-        //
     }
 
     private static class MergeMessagesJob extends Job1<String, List<String>> {

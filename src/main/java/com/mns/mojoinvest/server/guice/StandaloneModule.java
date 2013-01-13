@@ -1,7 +1,12 @@
 package com.mns.mojoinvest.server.guice;
 
 import com.google.inject.AbstractModule;
-import com.mns.mojoinvest.server.engine.model.dao.*;
+import com.mns.mojoinvest.server.engine.model.dao.CalculatedValueDao;
+import com.mns.mojoinvest.server.engine.model.dao.FundDao;
+import com.mns.mojoinvest.server.engine.model.dao.QuoteDao;
+import com.mns.mojoinvest.server.engine.model.dao.inmemory.InMemoryCalculatedValueDao;
+import com.mns.mojoinvest.server.engine.model.dao.inmemory.InMemoryFundDao;
+import com.mns.mojoinvest.server.engine.model.dao.inmemory.InMemoryQuoteDao;
 
 public class StandaloneModule extends AbstractModule {
 

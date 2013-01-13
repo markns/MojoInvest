@@ -3,9 +3,9 @@ package com.mns.mojoinvest.server.engine.strategy;
 import com.googlecode.objectify.ObjectifyService;
 import com.mns.mojoinvest.server.engine.calculator.RelativeStrengthCalculator;
 import com.mns.mojoinvest.server.engine.model.CalculatedValue;
-import com.mns.mojoinvest.server.engine.model.dao.BlobstoreCalculatedValueDao;
-import com.mns.mojoinvest.server.engine.model.dao.BlobstoreKeyRecordDao;
 import com.mns.mojoinvest.server.engine.model.dao.CalculatedValueDao;
+import com.mns.mojoinvest.server.engine.model.dao.blobstore.BlobstoreCalculatedValueDao;
+import com.mns.mojoinvest.server.engine.model.dao.objectify.ObjectifyEntryRecordDao;
 import com.mns.mojoinvest.server.util.TradingDayUtils;
 import org.joda.time.LocalDate;
 import org.junit.Test;
@@ -18,7 +18,7 @@ import java.util.List;
 public class RelativeStrengthCalculatorTest {
 
     private CalculatedValueDao cvDao = new BlobstoreCalculatedValueDao(
-            new BlobstoreKeyRecordDao(ObjectifyService.factory()));
+            new ObjectifyEntryRecordDao(ObjectifyService.factory()));
 
 
     @Test

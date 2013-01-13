@@ -15,7 +15,6 @@ public class ImportCalculatedValuesFromBlobstoreMapper extends
 
     //"1996-06-27|EWM|SMA|4","8.425000"
 
-    @Override
     public void map(BlobstoreRecordKey key, byte[] segment, Context context) {
 
         String line = new String(segment);

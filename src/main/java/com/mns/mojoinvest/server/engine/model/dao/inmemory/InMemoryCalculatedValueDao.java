@@ -1,9 +1,10 @@
-package com.mns.mojoinvest.server.engine.model.dao;
+package com.mns.mojoinvest.server.engine.model.dao.inmemory;
 
 import au.com.bytecode.opencsv.CSVReader;
 import com.google.inject.Singleton;
 import com.mns.mojoinvest.server.engine.model.CalculatedValue;
 import com.mns.mojoinvest.server.engine.model.Fund;
+import com.mns.mojoinvest.server.engine.model.dao.CalculatedValueDao;
 import org.joda.time.LocalDate;
 
 import java.io.BufferedReader;

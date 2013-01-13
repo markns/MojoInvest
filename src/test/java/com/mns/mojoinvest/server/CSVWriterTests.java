@@ -7,6 +7,7 @@ import com.mns.mojoinvest.server.engine.transaction.AbstractTransaction;
 import com.mns.mojoinvest.server.engine.transaction.BuyTransaction;
 import com.mns.mojoinvest.server.engine.transaction.SellTransaction;
 import com.mns.mojoinvest.server.engine.transaction.Transaction;
+import com.mns.mojoinvest.server.util.QuoteUtils;
 import org.joda.time.LocalDate;
 import org.junit.Test;
 
@@ -35,7 +36,7 @@ public class CSVWriterTests {
     public void testQuoteFromStringArr() {
         Quote expected = new Quote("TEST", new LocalDate("2011-01-01"), BigDecimal.ZERO, BigDecimal.ZERO, BigDecimal.ZERO, BigDecimal.ZERO, BigDecimal.ZERO, BigDecimal.ZERO, BigDecimal.ZERO, BigDecimal.ZERO, false);
         String[] arr = new String[]{"TEST", "2011-01-01", "0", "0", "0", "0", "0", "0", "0", "0", "false"};
-        Quote quote = Quote.fromStrArr(arr);
+        Quote quote = QuoteUtils.fromStringArray(arr);
         assertEquals(expected, quote);
     }
 

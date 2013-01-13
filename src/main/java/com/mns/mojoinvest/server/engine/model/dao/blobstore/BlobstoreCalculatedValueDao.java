@@ -1,4 +1,4 @@
-package com.mns.mojoinvest.server.engine.model.dao;
+package com.mns.mojoinvest.server.engine.model.dao.blobstore;
 
 import com.google.appengine.api.files.AppEngineFile;
 import com.google.appengine.api.files.FileReadChannel;
@@ -7,8 +7,10 @@ import com.google.appengine.api.files.FileServiceFactory;
 import com.google.common.base.Splitter;
 import com.google.inject.Inject;
 import com.googlecode.objectify.NotFoundException;
-import com.mns.mojoinvest.server.engine.model.BlobstoreKeyRecord;
+import com.mns.mojoinvest.server.engine.model.BlobstoreEntryRecord;
 import com.mns.mojoinvest.server.engine.model.Fund;
+import com.mns.mojoinvest.server.engine.model.dao.CalculatedValueDao;
+import com.mns.mojoinvest.server.engine.model.dao.objectify.ObjectifyEntryRecordDao;
 import org.joda.time.LocalDate;
 
 import java.io.BufferedReader;
@@ -26,12 +28,12 @@ public class BlobstoreCalculatedValueDao implements CalculatedValueDao {
 
     private static final Logger log = Logger.getLogger(BlobstoreCalculatedValueDao.class.getName());
 
-    private final BlobstoreKeyRecordDao recordDao;
+    private final ObjectifyEntryRecordDao recordDao;
 
     private final FileService fileService = FileServiceFactory.getFileService();
 
     @Inject
-    public BlobstoreCalculatedValueDao(BlobstoreKeyRecordDao recordDao) {
+    public BlobstoreCalculatedValueDao(ObjectifyEntryRecordDao recordDao) {
         this.recordDao = recordDao;
     }
 
@@ -41,7 +43,7 @@ public class BlobstoreCalculatedValueDao implements CalculatedValueDao {
 
         for (Fund fund : funds) {
             try {
-                BlobstoreKeyRecord record = recordDao.get(fund.getSymbol() + "|" + type + "|" + period);
+                BlobstoreEntryRecord record = recordDao.get(fund.getSymbol() + "|" + type + "|" + period);
                 AppEngineFile file = fileService.getBlobFile(record.getBlobKey());
                 cvs.put(fund.getSymbol(), readValuesFromFile(file));
             } catch (NotFoundException e) {

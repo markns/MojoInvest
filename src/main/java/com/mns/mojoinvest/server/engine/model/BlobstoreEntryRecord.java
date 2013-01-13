@@ -7,7 +7,7 @@ import com.googlecode.objectify.annotation.Unindexed;
 import javax.persistence.Id;
 
 @Cached
-public class BlobstoreKeyRecord {
+public class BlobstoreEntryRecord {
 
     @Id
     private String key;
@@ -15,12 +15,12 @@ public class BlobstoreKeyRecord {
     @Unindexed
     private BlobKey blobKey;
 
-    public BlobstoreKeyRecord(String key, BlobKey blobKey) {
+    public BlobstoreEntryRecord(String key, BlobKey blobKey) {
         this.key = key;
         this.blobKey = blobKey;
     }
 
-    public BlobstoreKeyRecord() {
+    public BlobstoreEntryRecord() {
         //For Objectify
     }
 

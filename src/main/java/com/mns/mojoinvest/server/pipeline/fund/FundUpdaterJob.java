@@ -4,10 +4,10 @@ import com.google.appengine.tools.pipeline.Job1;
 import com.google.appengine.tools.pipeline.Value;
 import com.googlecode.objectify.NotFoundException;
 import com.googlecode.objectify.ObjectifyFactory;
-import com.googlecode.objectify.ObjectifyService;
 import com.mns.mojoinvest.server.engine.model.Fund;
 import com.mns.mojoinvest.server.engine.model.dao.FundDao;
-import com.mns.mojoinvest.server.engine.model.dao.ObjectifyFundDao;
+import com.mns.mojoinvest.server.engine.model.dao.objectify.MyTypeConverters;
+import com.mns.mojoinvest.server.engine.model.dao.objectify.ObjectifyFundDao;
 
 import java.util.Collection;
 import java.util.HashSet;
@@ -22,9 +22,12 @@ public class FundUpdaterJob extends Job1<String, List<Fund>> {
     public Value<String> run(List<Fund> current) {
 
         //TODO: Figure out how to inject and serialize DAOs
-        ObjectifyFactory factory = ObjectifyService.factory();
+
+        ObjectifyFactory factory = new ObjectifyFactory();
+        factory.register(Fund.class);
+        factory.getConversions().add(new MyTypeConverters());
         FundDao dao = new ObjectifyFundDao(factory);
-        dao.registerObjects(factory);
+//        dao.registerObjects(factory);
         //
 
         Collection<Fund> existing = null;

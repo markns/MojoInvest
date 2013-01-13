@@ -7,8 +7,8 @@ import com.google.appengine.api.files.FileServiceFactory;
 import com.google.appengine.api.files.FileWriteChannel;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
-import com.mns.mojoinvest.server.engine.model.BlobstoreKeyRecord;
-import com.mns.mojoinvest.server.engine.model.dao.BlobstoreKeyRecordDao;
+import com.mns.mojoinvest.server.engine.model.BlobstoreEntryRecord;
+import com.mns.mojoinvest.server.engine.model.dao.objectify.ObjectifyEntryRecordDao;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -24,10 +24,10 @@ public class PersistBlobWorker extends HttpServlet {
     // Get a file service
     private FileService fileService = FileServiceFactory.getFileService();
 
-    private BlobstoreKeyRecordDao dao;
+    private ObjectifyEntryRecordDao dao;
 
     @Inject
-    public PersistBlobWorker(BlobstoreKeyRecordDao dao) {
+    public PersistBlobWorker(ObjectifyEntryRecordDao dao) {
         this.dao = dao;
     }
 
@@ -46,7 +46,7 @@ public class PersistBlobWorker extends HttpServlet {
     private void writeBlobstoreKeyRecord(String key, AppEngineFile file) {
         // Now read from the file using the Blobstore API
         BlobKey blobKey = fileService.getBlobKey(file);
-        BlobstoreKeyRecord record = new BlobstoreKeyRecord(key, blobKey);
+        BlobstoreEntryRecord record = new BlobstoreEntryRecord(key, blobKey);
         dao.put(record);
     }
 

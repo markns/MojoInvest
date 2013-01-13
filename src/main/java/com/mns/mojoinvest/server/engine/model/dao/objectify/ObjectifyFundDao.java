@@ -1,9 +1,10 @@
-package com.mns.mojoinvest.server.engine.model.dao;
+package com.mns.mojoinvest.server.engine.model.dao.objectify;
 
 import com.google.inject.Inject;
 import com.googlecode.objectify.Key;
 import com.googlecode.objectify.ObjectifyFactory;
 import com.mns.mojoinvest.server.engine.model.Fund;
+import com.mns.mojoinvest.server.engine.model.dao.FundDao;
 
 import java.util.*;
 import java.util.logging.Logger;

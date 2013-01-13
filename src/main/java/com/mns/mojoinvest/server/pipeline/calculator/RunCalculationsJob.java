@@ -8,8 +8,8 @@ import com.mns.mojoinvest.server.engine.calculator.CalculationService;
 import com.mns.mojoinvest.server.engine.model.CalculatedValue;
 import com.mns.mojoinvest.server.engine.model.Fund;
 import com.mns.mojoinvest.server.engine.model.dao.CalculatedValueDao;
-import com.mns.mojoinvest.server.engine.model.dao.ObjectifyQuoteDao;
 import com.mns.mojoinvest.server.engine.model.dao.QuoteDao;
+import com.mns.mojoinvest.server.engine.model.dao.objectify.ObjectifyQuoteDao;
 import org.joda.time.LocalDate;
 
 import java.io.IOException;

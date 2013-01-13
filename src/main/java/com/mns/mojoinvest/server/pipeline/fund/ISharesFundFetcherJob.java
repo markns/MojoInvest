@@ -2,6 +2,7 @@ package com.mns.mojoinvest.server.pipeline.fund;
 
 import com.google.appengine.tools.pipeline.FutureValue;
 import com.google.appengine.tools.pipeline.Job0;
+import com.google.appengine.tools.pipeline.Job1;
 import com.google.appengine.tools.pipeline.Value;
 import com.google.common.annotations.VisibleForTesting;
 import com.mns.mojoinvest.server.engine.model.Fund;
@@ -28,7 +29,7 @@ public class ISharesFundFetcherJob extends Job0<List<Fund>> {
 
     private static final Logger log = Logger.getLogger(ISharesFundFetcherJob.class.getName());
 
-    private static final int BATCH_SIZE = 30;
+    private static final int BATCH_SIZE = 20;
 
     @Override
     public Value<List<Fund>> run() {
@@ -36,7 +37,7 @@ public class ISharesFundFetcherJob extends Job0<List<Fund>> {
         List<String> symbols = scrapeSymbols(html);
 
         //TODO: Scrape and persist categories
-        scrapeCategories(html);
+//        scrapeCategories(html);
 
         log.info("Attempting to retrieve details for " + symbols.size() + " funds");
         List<FutureValue<List<Fund>>> fundLists = new ArrayList<FutureValue<List<Fund>>>();
@@ -104,16 +105,28 @@ public class ISharesFundFetcherJob extends Job0<List<Fund>> {
             JsonParser jp = factory.createJsonParser(json);
             JsonNode root = mapper.readTree(jp);
 
-            System.out.println(root);
-            for (JsonNode node1 : root.get("children")) {
-                System.out.println(node1);
-            }
+//            System.out.println(root);
+//            for (JsonNode node1 : root.get("children")) {
+//                System.out.println(node1);
+//            }
         } catch (IOException e) {
             e.printStackTrace();
         }
 
     }
 
+
+    private static class MergeFundListJob extends Job1<List<Fund>, List<List<Fund>>> {
+
+        @Override
+        public Value<List<Fund>> run(List<List<Fund>> lists) {
+            List<Fund> funds = new ArrayList<Fund>();
+            for (List<Fund> list : lists) {
+                funds.addAll(list);
+            }
+            return immediate(funds);
+        }
+    }
 
 }
 

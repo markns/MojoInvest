@@ -1,5 +1,6 @@
 package com.mns.mojoinvest.server.util;
 
+import com.google.common.base.Joiner;
 import com.mns.mojoinvest.server.engine.model.Quote;
 import org.joda.time.LocalDate;
 
@@ -145,5 +146,24 @@ public class QuoteUtils {
         arr[7] = quote.getAdjClose() + "";
         arr[8] = quote.isRolled() + "";
         return arr;
+    }
+
+
+    public static Quote fromString(String line) {
+        line = line.replaceAll("\"", "");
+        String[] row = line.split(",");
+        return new Quote(row[0],
+                new LocalDate(row[1]),
+                row[2].isEmpty() ? null : new BigDecimal(row[2]),
+                row[3].isEmpty() ? null : new BigDecimal(row[3]),
+                row[4].isEmpty() ? null : new BigDecimal(row[4]),
+                row[5].isEmpty() ? null : new BigDecimal(row[5]),
+                null, null, row[6].isEmpty() ? null : new BigDecimal(row[6]),
+                row[7].isEmpty() ? null : new BigDecimal(row[7]),
+                false);
+    }
+
+    public static String toString(Quote quote) {
+        return "\"" + Joiner.on("\",\"").join(toStringArray(quote)) + "\"";
     }
 }

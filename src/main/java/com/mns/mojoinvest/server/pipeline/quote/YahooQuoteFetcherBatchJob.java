@@ -5,16 +5,16 @@ import com.google.appengine.tools.pipeline.Value;
 import com.google.common.base.Joiner;
 import com.googlecode.objectify.Key;
 import com.googlecode.objectify.ObjectifyFactory;
-import com.googlecode.objectify.ObjectifyService;
+import com.mns.mojoinvest.server.engine.model.BlobstoreEntryRecord;
 import com.mns.mojoinvest.server.engine.model.Fund;
 import com.mns.mojoinvest.server.engine.model.Quote;
-import com.mns.mojoinvest.server.engine.model.dao.ObjectifyQuoteDao;
 import com.mns.mojoinvest.server.engine.model.dao.QuoteDao;
+import com.mns.mojoinvest.server.engine.model.dao.blobstore.BlobstoreQuoteDao;
+import com.mns.mojoinvest.server.engine.model.dao.objectify.MyTypeConverters;
+import com.mns.mojoinvest.server.engine.model.dao.objectify.ObjectifyEntryRecordDao;
 import com.mns.mojoinvest.server.util.QuoteUtils;
 import org.joda.time.LocalDate;
 
-import java.io.IOException;
-import java.io.ObjectInputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
@@ -23,50 +23,46 @@ public class YahooQuoteFetcherBatchJob extends Job2<String, List<Fund>, LocalDat
 
     private static final Logger log = Logger.getLogger(YahooQuoteFetcherBatchJob.class.getName());
 
-    private transient QuoteDao dao;
-
     private transient YahooQuoteFetcher fetcher;
-
-    private transient List<String> messages;
-
-    private void readObject(ObjectInputStream in)
-            throws IOException, ClassNotFoundException {
-        ObjectifyFactory factory = ObjectifyService.factory();
-        dao = new ObjectifyQuoteDao(factory);
-//        dao.registerObjects(factory);
-        messages = new ArrayList<String>();
-        fetcher = new YahooQuoteFetcher();
-    }
 
     @Override
     public Value<String> run(List<Fund> funds, LocalDate date) {
+
+        fetcher = new YahooQuoteFetcher();
+
+        ObjectifyFactory factory = new ObjectifyFactory();
+        factory.register(BlobstoreEntryRecord.class);
+        factory.getConversions().add(new MyTypeConverters());
+        QuoteDao dao = new BlobstoreQuoteDao(new ObjectifyEntryRecordDao(factory));
+
+        List<Value<String>> messages = new ArrayList<Value<String>>();
+
         List<Quote> allQuotes = new ArrayList<Quote>();
-        String message = "Attempting to retrieve quotes for " + funds.size() + " funds: " + funds;
-        messages.add(message);
-        log.info(message);
+        addMessageAndLog(messages, "Attempting to retrieve quotes for " + funds.size() + " funds: " + funds);
+
         for (Fund fund : funds) {
             try {
                 List<Quote> quotes = downloadLastWeekOfQuotes(date, fund);
                 testReceivedTodaysQuote(date, fund, quotes);
 
-                boolean changed = testForChanges(quotes.subList(1, quotes.size()));
+                boolean changed = testForChanges(quotes.subList(1, quotes.size()), messages);
                 if (changed) {
                     quotes = downloadAllHistoricQuotes(fund, date);
                 }
 
                 allQuotes.addAll(quotes);
             } catch (QuoteFetcherException e) {
-                addMessageAndLog(e.getMessage() + " - " + e.getCause());
+                addMessageAndLog(messages, e.getMessage() + " - " + e.getCause());
             }
         }
-        addMessageAndLog("Saving " + allQuotes.size() + " quotes");
+        addMessageAndLog(messages, "Saving " + allQuotes.size() + " quotes");
         dao.put(allQuotes);
 
         return immediate(Joiner.on("\n").join(messages));
     }
 
-    private void addMessageAndLog(String message) {
-        messages.add(message);
+    private void addMessageAndLog(List<Value<String>> messages, String message) {
+        messages.add(immediate(message));
         log.info(message);
     }
 
@@ -82,7 +78,7 @@ public class YahooQuoteFetcherBatchJob extends Job2<String, List<Fund>, LocalDat
             throw new QuoteFetcherException("Didn't get a " + fund + " quote for " + date);
     }
 
-    private boolean testForChanges(List<Quote> quotes) {
+    private boolean testForChanges(List<Quote> quotes, List<Value<String>> messages) {
         List<Key<Quote>> keys = new ArrayList<Key<Quote>>(quotes.size());
         for (Quote quote : quotes) {
             quote.getKey();
@@ -92,8 +88,8 @@ public class YahooQuoteFetcherBatchJob extends Job2<String, List<Fund>, LocalDat
         QuoteUtils.sortByDateDesc(existing);
         String message;
         if (quotes.size() != existing.size()) {
-            messages.add(message = "Number of existing " + quotes.get(0).getSymbol() +
-                    " quotes doesn't match newly retrieved number, redownloading.");
+            messages.add(immediate(message = "Number of existing " + quotes.get(0).getSymbol() +
+                    " quotes doesn't match newly retrieved number, redownloading."));
             log.warning(message);
             return true;
         }
@@ -101,9 +97,9 @@ public class YahooQuoteFetcherBatchJob extends Job2<String, List<Fund>, LocalDat
         for (int i = 0; i < quotes.size(); i++) {
             //TODO: We might only want to test adjClose here to prevent excessive downloading
             if (!quotes.get(i).equals(existing.get(i))) {
-                messages.add(message = "New " + quotes.get(i).getSymbol() + " quotes don't match existing quotes\n" +
+                messages.add(immediate(message = "New " + quotes.get(i).getSymbol() + " quotes don't match existing quotes\n" +
                         "Existing: " + existing.get(i).toDescriptiveString() +
-                        "\n     New: " + quotes.get(i).toDescriptiveString() + ", redownloading");
+                        "\n     New: " + quotes.get(i).toDescriptiveString() + ", redownloading"));
                 log.warning(message);
                 return true;
             }

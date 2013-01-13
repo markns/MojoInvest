@@ -228,33 +228,6 @@ public class Quote implements Serializable {
     }
 
 
-    public static Quote fromStrArr(String[] row) {
-        return new Quote(row[0],
-                new LocalDate(row[1]),
-                row[2].isEmpty() ? null : new BigDecimal(row[2]),
-                row[3].isEmpty() ? null : new BigDecimal(row[3]),
-                row[4].isEmpty() ? null : new BigDecimal(row[4]),
-                row[5].isEmpty() ? null : new BigDecimal(row[5]),
-                null, null, row[6].isEmpty() ? null : new BigDecimal(row[6]),
-                row[7].isEmpty() ? null : new BigDecimal(row[7]),
-                false);
-    }
-
-
-    public static Quote fromStr(String line) {
-        line = line.replaceAll("\"", "");
-        String[] row = line.split(",");
-        return new Quote(row[0],
-                new LocalDate(row[1]),
-                row[2].isEmpty() ? null : new BigDecimal(row[2]),
-                row[3].isEmpty() ? null : new BigDecimal(row[3]),
-                row[4].isEmpty() ? null : new BigDecimal(row[4]),
-                row[5].isEmpty() ? null : new BigDecimal(row[5]),
-                null, null, row[6].isEmpty() ? null : new BigDecimal(row[6]),
-                row[7].isEmpty() ? null : new BigDecimal(row[7]),
-                false);
-    }
-
     public String[] toStrArr() {
         return new String[]{
                 symbol,
