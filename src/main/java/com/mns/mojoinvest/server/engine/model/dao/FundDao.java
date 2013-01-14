@@ -18,6 +18,8 @@ public interface FundDao {
 
     Collection<Fund> get(Collection<String> symbols);
 
+    void put(Fund fund);
+
     Map<Key<Fund>, Fund> put(Set<Fund> funds);
 
 }

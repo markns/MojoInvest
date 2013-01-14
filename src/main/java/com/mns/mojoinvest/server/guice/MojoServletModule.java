@@ -31,11 +31,17 @@ import com.mns.mojoinvest.server.engine.model.dao.blobstore.BlobstoreCalculatedV
 import com.mns.mojoinvest.server.engine.model.dao.blobstore.BlobstoreQuoteDao;
 import com.mns.mojoinvest.server.engine.model.dao.objectify.ObjectifyFundDao;
 import com.mns.mojoinvest.server.mustache.MustacheViewProcessor;
-import com.mns.mojoinvest.server.servlet.*;
+import com.mns.mojoinvest.server.servlet.PipelineServlet;
 import com.mns.mojoinvest.server.servlet.blob.DeleteBlobs;
 import com.mns.mojoinvest.server.servlet.blob.PersistBlobWorker;
 import com.mns.mojoinvest.server.servlet.blob.Serve;
 import com.mns.mojoinvest.server.servlet.blob.SuccessfulUploadServlet;
+import com.mns.mojoinvest.server.servlet.test.TestServlet;
+import com.mns.mojoinvest.server.servlet.utils.CreateCVBlobsServlet;
+import com.mns.mojoinvest.server.servlet.utils.CreateQuoteBlobsServlet;
+import com.mns.mojoinvest.server.servlet.viewer.CalculatedValueViewerServlet;
+import com.mns.mojoinvest.server.servlet.viewer.FundViewerServlet;
+import com.mns.mojoinvest.server.servlet.viewer.QuoteViewerServlet;
 import com.sun.jersey.api.core.ResourceConfig;
 import com.sun.jersey.api.json.JSONConfiguration;
 import com.sun.jersey.guice.spi.container.servlet.GuiceContainer;
@@ -70,7 +76,7 @@ public class MojoServletModule extends ServletModule {
         params.put("com.sun.jersey.config.property.packages", "com.mns.mojoinvest.server.resource");
         params.put(ServletContainer.PROPERTY_WEB_PAGE_CONTENT_REGEX,
                 "/(_ah|jsp|css|images|js|lib|mustache|mapreduce|pipeline|blobworker|" +
-                        "upload|upload-success|appstats|tools/).*");
+                        "upload|upload-success|appstats|test/|tools/).*");
         params.put(ResourceConfig.FEATURE_DISABLE_WADL, "true");
         filter("/*").through(GuiceContainer.class, params);
 
@@ -98,7 +104,7 @@ public class MojoServletModule extends ServletModule {
         serve("/tools/deleteblobs").with(DeleteBlobs.class);
 //        serve("/tools/calculator").with(SMACalculatorServlet.class);
 //        serve("/tools/clearcache").with(ClearCacheServlet.class);
-//        serve("/tools/test2").with(Test2Servlet.class);
+        serve("/test/test").with(TestServlet.class);
 
         serve("/appstats/*").with(AppstatsServlet.class);
         bind(AppstatsServlet.class).in(Singleton.class);

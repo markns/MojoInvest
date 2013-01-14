@@ -15,7 +15,7 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
-public class YahooQuoteFetcherBatchJobTest {
+public class QuoteFetcherBatchJobTest {
 
     private final QuoteDao quoteDao = new ObjectifyQuoteDao(ObjectifyService.factory());
 
@@ -44,7 +44,7 @@ public class YahooQuoteFetcherBatchJobTest {
 
     @Test
     public void testRun() throws Exception {
-        YahooQuoteFetcherBatchJob job = new YahooQuoteFetcherBatchJob();
+        QuoteFetcherBatchJob job = new QuoteFetcherBatchJob();
         List<Fund> funds = new ArrayList<Fund>(2);
         funds.add(new Fund("SPY", "", "", "", true, "", "", "", new LocalDate("1993-03-03")));
         funds.add(new Fund("QQQ", "", "", "", true, "", "", "", new LocalDate("1993-03-03")));
@@ -54,7 +54,7 @@ public class YahooQuoteFetcherBatchJobTest {
 
     @Test
     public void testSymbolNotAvailable() throws Exception {
-        YahooQuoteFetcherBatchJob job = new YahooQuoteFetcherBatchJob();
+        QuoteFetcherBatchJob job = new QuoteFetcherBatchJob();
         List<Fund> funds = new ArrayList<Fund>(2);
         funds.add(new Fund("BARL", "", "", "", true, "", "", "", new LocalDate("1993-03-03")));
 

@@ -1,0 +1,6 @@
+1. Quote job test for changes needs to load quotes
+2. Update fund with latest quote loaded
+3. Roll quotes if required
+4. Run calculated value jobs
+
+5. Create a version for the US - longer quote history - put it in the same app, but discriminate via fund.

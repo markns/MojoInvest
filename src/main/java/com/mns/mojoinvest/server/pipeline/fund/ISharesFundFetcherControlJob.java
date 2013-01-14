@@ -25,11 +25,11 @@ import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class ISharesFundFetcherJob extends Job0<List<Fund>> {
+public class ISharesFundFetcherControlJob extends Job0<List<Fund>> {
 
-    private static final Logger log = Logger.getLogger(ISharesFundFetcherJob.class.getName());
+    private static final Logger log = Logger.getLogger(ISharesFundFetcherControlJob.class.getName());
 
-    private static final int BATCH_SIZE = 20;
+    private static final int BATCH_SIZE = 2;
 
     @Override
     public Value<List<Fund>> run() {
@@ -49,6 +49,7 @@ public class ISharesFundFetcherJob extends Job0<List<Fund>> {
                 List<String> clone = new ArrayList<String>(batch);
                 fundLists.add(futureCall(new ISharesFundDetailFetcherBatchJob(), immediate(clone)));
                 batch.clear();
+                break;
             }
         }
         if (batch.size() > 0) {

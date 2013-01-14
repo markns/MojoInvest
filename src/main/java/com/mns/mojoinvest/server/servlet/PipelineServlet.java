@@ -4,7 +4,7 @@ import com.google.appengine.tools.pipeline.PipelineService;
 import com.google.appengine.tools.pipeline.PipelineServiceFactory;
 import com.google.inject.Singleton;
 import com.mns.mojoinvest.server.pipeline.DailyPipeline;
-import com.mns.mojoinvest.server.servlet.util.ParameterParser;
+import com.mns.mojoinvest.server.servlet.params.ParameterParser;
 import org.joda.time.LocalDate;
 
 import javax.servlet.ServletException;

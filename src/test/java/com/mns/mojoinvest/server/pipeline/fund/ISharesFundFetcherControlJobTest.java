@@ -9,9 +9,9 @@ import java.net.URL;
 
 import static junit.framework.Assert.assertEquals;
 
-public class ISharesFundFetcherJobTest {
+public class ISharesFundFetcherControlJobTest {
 
-    ISharesFundFetcherJob job = new ISharesFundFetcherJob();
+    ISharesFundFetcherControlJob job = new ISharesFundFetcherControlJob();
 
     @Test
     public void testScrapeSymbols() throws IOException {

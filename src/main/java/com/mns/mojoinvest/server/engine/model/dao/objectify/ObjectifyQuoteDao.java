@@ -3,7 +3,6 @@ package com.mns.mojoinvest.server.engine.model.dao.objectify;
 import com.google.inject.Inject;
 import com.googlecode.objectify.Key;
 import com.googlecode.objectify.ObjectifyFactory;
-import com.googlecode.objectify.Query;
 import com.mns.mojoinvest.server.engine.model.Fund;
 import com.mns.mojoinvest.server.engine.model.Quote;
 import com.mns.mojoinvest.server.engine.model.dao.QuoteDao;
@@ -13,7 +12,6 @@ import org.joda.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import java.util.Map;
 import java.util.logging.Logger;
 
 public class ObjectifyQuoteDao extends DAOBase implements QuoteDao {
@@ -40,27 +38,8 @@ public class ObjectifyQuoteDao extends DAOBase implements QuoteDao {
     }
 
     @Override
-    public Key<Quote> put(Quote quote) {
-        return ofy().put(quote);
-    }
-
-    @Override
-    public Map<Key<Quote>, Quote> put(Iterable<Quote> quotes) {
-        return ofy().put(quotes);
-    }
-
-    @Override
-    public List<Quote> query(String symbol) {
-        Query<Quote> q = ofy().query(Quote.class);
-        q.filter("symbol", symbol);
-        return q.list();
-    }
-
-    @Override
-    public List<Quote> query(LocalDate date) {
-        Query<Quote> q = ofy().query(Quote.class);
-        q.filter("date", date.toDate());
-        return q.list();
+    public void put(Iterable<Quote> quotes) {
+        ofy().put(quotes);
     }
 
     @Override
@@ -79,28 +58,12 @@ public class ObjectifyQuoteDao extends DAOBase implements QuoteDao {
     }
 
     @Override
-    public Collection<Quote> get(Collection<String> symbols, Collection<LocalDate> dates) {
-        List<Key<Quote>> keys = getKeys(symbols, dates);
-        return get(keys);
-    }
-
-    @Override
     public Collection<Quote> get(Fund fund, Collection<LocalDate> dates) {
         List<Key<Quote>> keys = new ArrayList<Key<Quote>>();
         for (LocalDate date : dates) {
             keys.add(new Key<Quote>(Quote.class, QuoteUtils.quoteId(fund.getSymbol(), date)));
         }
         return get(keys);
-    }
-
-    private List<Key<Quote>> getKeys(Collection<String> symbols, Collection<LocalDate> dates) {
-        List<Key<Quote>> keys = new ArrayList<Key<Quote>>();
-        for (LocalDate date : dates) {
-            for (String symbol : symbols) {
-                keys.add(new Key<Quote>(Quote.class, QuoteUtils.quoteId(symbol, date)));
-            }
-        }
-        return keys;
     }
 
 

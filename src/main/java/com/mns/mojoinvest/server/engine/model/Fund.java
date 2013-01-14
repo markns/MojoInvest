@@ -7,8 +7,6 @@ import org.joda.time.LocalDate;
 
 import javax.persistence.Id;
 import java.io.Serializable;
-import java.math.BigDecimal;
-import java.util.Date;
 
 @Cached
 public class Fund implements Serializable, Comparable<Fund> {
@@ -32,8 +30,9 @@ public class Fund implements Serializable, Comparable<Fund> {
 
     private LocalDate inceptionDate;
 
-    //TODO: Update this each time the fund is updated from msn
-    private Date lastUpdated;
+    private LocalDate earliestQuoteDate;
+
+    private LocalDate latestQuoteDate;
 
 //    private BigDecimal aum;
 //
@@ -56,20 +55,6 @@ public class Fund implements Serializable, Comparable<Fund> {
         this.index = index;
         this.overview = overview;
         this.inceptionDate = inceptionDate;
-        this.lastUpdated = new Date();
-    }
-
-    @Deprecated
-    public Fund(String symbol, String name, String category, String provider, BigDecimal aum,
-                BigDecimal expenseRatio, LocalDate inceptionDate, BigDecimal averageVol) {
-        this.symbol = symbol;
-        this.name = name;
-        this.category = category;
-        this.provider = provider;
-//        this.aum = aum;
-//        this.expenseRatio = expenseRatio;
-        this.inceptionDate = inceptionDate;
-//        this.averageVol = averageVol;
     }
 
     public String getSymbol() {
@@ -145,6 +130,24 @@ public class Fund implements Serializable, Comparable<Fund> {
         this.overview = overview;
     }
 
+    @JsonSerialize(using = CustomLocalDateSerializer.class)
+    public LocalDate getEarliestQuoteDate() {
+        return earliestQuoteDate;
+    }
+
+    public void setEarliestQuoteDate(LocalDate earliestQuoteDate) {
+        this.earliestQuoteDate = earliestQuoteDate;
+    }
+
+    @JsonSerialize(using = CustomLocalDateSerializer.class)
+    public LocalDate getLatestQuoteDate() {
+        return latestQuoteDate;
+    }
+
+    public void setLatestQuoteDate(LocalDate latestQuoteDate) {
+        this.latestQuoteDate = latestQuoteDate;
+    }
+
     @Override
     public int compareTo(Fund o) {
         return symbol.compareTo(o.getSymbol());
@@ -152,9 +155,18 @@ public class Fund implements Serializable, Comparable<Fund> {
 
     @Override
     public String toString() {
-        return symbol;
+        return "Fund{" +
+                "symbol='" + symbol + '\'' +
+                ", name='" + name + '\'' +
+                ", category='" + category + '\'' +
+                ", provider='" + provider + '\'' +
+                ", active=" + active +
+                ", country='" + country + '\'' +
+                ", index='" + index + '\'' +
+                ", inceptionDate=" + inceptionDate +
+                ", latestQuoteDate=" + latestQuoteDate +
+                '}';
     }
-
 
     @Override
     public boolean equals(Object o) {

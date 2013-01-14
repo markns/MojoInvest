@@ -2,7 +2,7 @@
 // All rights reserved.  Use of this class is limited.
 // Please see the LICENSE for more information.
 
-package com.mns.mojoinvest.server.servlet.util;
+package com.mns.mojoinvest.server.servlet.params;
 
 import org.joda.time.LocalDate;
 

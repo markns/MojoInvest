@@ -1,4 +1,4 @@
-package com.mns.mojoinvest.server.servlet;
+package com.mns.mojoinvest.server.servlet.viewer;
 
 import au.com.bytecode.opencsv.CSVWriter;
 import com.google.inject.Inject;

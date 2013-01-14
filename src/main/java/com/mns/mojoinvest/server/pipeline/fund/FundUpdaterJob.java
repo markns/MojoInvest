@@ -9,9 +9,7 @@ import com.mns.mojoinvest.server.engine.model.dao.FundDao;
 import com.mns.mojoinvest.server.engine.model.dao.objectify.MyTypeConverters;
 import com.mns.mojoinvest.server.engine.model.dao.objectify.ObjectifyFundDao;
 
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.List;
+import java.util.*;
 import java.util.logging.Logger;
 
 public class FundUpdaterJob extends Job1<String, List<Fund>> {
@@ -27,14 +25,17 @@ public class FundUpdaterJob extends Job1<String, List<Fund>> {
         factory.register(Fund.class);
         factory.getConversions().add(new MyTypeConverters());
         FundDao dao = new ObjectifyFundDao(factory);
-//        dao.registerObjects(factory);
-        //
 
-        Collection<Fund> existing = null;
+        Collection<Fund> existing;
         try {
             existing = dao.list();
         } catch (NotFoundException e) {
             existing = new HashSet<Fund>(0);
+        }
+
+        Map<String, Fund> existingMap = new HashMap<String, Fund>(existing.size());
+        for (Fund fund : existing) {
+            existingMap.put(fund.getSymbol(), fund);
         }
 
         //Subtract set of current funds from existing to find inactive.
@@ -51,6 +52,11 @@ public class FundUpdaterJob extends Job1<String, List<Fund>> {
         log.info(message);
         returnMessage = returnMessage + "\n" + message;
 
+        //Set properties that need to be transfered from persisted version here.
+        for (Fund fund : current) {
+            fund.setLatestQuoteDate(existingMap.get(fund.getSymbol()).getLatestQuoteDate());
+            fund.setEarliestQuoteDate(existingMap.get(fund.getSymbol()).getEarliestQuoteDate());
+        }
         dao.put(new HashSet<Fund>(current));
 
         return immediate(returnMessage);

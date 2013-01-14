@@ -4,7 +4,6 @@ import au.com.bytecode.opencsv.CSVReader;
 import com.google.common.base.Predicates;
 import com.google.common.collect.Maps;
 import com.google.inject.Singleton;
-import com.googlecode.objectify.Key;
 import com.googlecode.objectify.ObjectifyFactory;
 import com.mns.mojoinvest.server.engine.model.Fund;
 import com.mns.mojoinvest.server.engine.model.Quote;
@@ -60,32 +59,13 @@ public class InMemoryQuoteDao implements QuoteDao {
     }
 
     @Override
-    public Key<Quote> put(Quote quote) {
-        throw new NotImplementedException();
-    }
-
-    @Override
-    public Map<Key<Quote>, Quote> put(Iterable<Quote> quotes) {
-        throw new NotImplementedException();
-    }
-
-    @Override
-    public List<Quote> query(String symbol) {
-        Map<LocalDate, Quote> quoteMap = map.get(symbol);
-        if (quoteMap == null)
-            return new ArrayList<Quote>(0);
-        return new ArrayList<Quote>(quoteMap.values());
-    }
-
-    @Override
-    public List<Quote> query(LocalDate date) {
+    public void put(Iterable<Quote> quotes) {
         throw new NotImplementedException();
     }
 
     @Override
     public Quote get(Fund fund, LocalDate date) {
         return map.get(fund.getSymbol()).get(date);
-
     }
 
     @Override
@@ -94,11 +74,6 @@ public class InMemoryQuoteDao implements QuoteDao {
             return null;
 
         return map.get(symbol).get(date);
-    }
-
-    @Override
-    public Collection<Quote> get(Collection<String> symbols, Collection<LocalDate> dates) {
-        throw new NotImplementedException();
     }
 
     public List<Quote> get(Fund fund, final Collection<LocalDate> dates) {

@@ -1,33 +1,22 @@
 package com.mns.mojoinvest.server.engine.model.dao;
 
-import com.googlecode.objectify.Key;
 import com.googlecode.objectify.ObjectifyFactory;
 import com.mns.mojoinvest.server.engine.model.Fund;
 import com.mns.mojoinvest.server.engine.model.Quote;
 import org.joda.time.LocalDate;
 
 import java.util.Collection;
-import java.util.List;
-import java.util.Map;
 
 public interface QuoteDao {
 
     void registerObjects(ObjectifyFactory ofyFactory);
 
-    Key<Quote> put(Quote quote);
+    void put(Iterable<Quote> quotes) throws DataAccessException;
 
-    Map<Key<Quote>, Quote> put(Iterable<Quote> quotes);
+    Quote get(String symbol, LocalDate date) throws QuoteUnavailableException, DataAccessException;
 
-    Quote get(String symbol, LocalDate date) throws DataAccessException;
+    Quote get(Fund fund, LocalDate date) throws QuoteUnavailableException, DataAccessException;
 
-    Quote get(Fund fund, LocalDate date) throws DataAccessException;
+    Collection<Quote> get(Fund fund, Collection<LocalDate> dates) throws QuoteUnavailableException, DataAccessException;
 
-    Collection<Quote> get(Fund fund, Collection<LocalDate> dates) throws DataAccessException;
-
-    Collection<Quote> get(Collection<String> symbols, Collection<LocalDate> dates) throws DataAccessException;
-
-    //Query methods only used by QuoteViewerServlet
-    List<Quote> query(String symbol);
-
-    List<Quote> query(LocalDate date);
 }

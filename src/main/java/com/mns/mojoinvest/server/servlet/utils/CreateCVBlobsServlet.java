@@ -1,4 +1,4 @@
-package com.mns.mojoinvest.server.servlet;
+package com.mns.mojoinvest.server.servlet.utils;
 
 import au.com.bytecode.opencsv.CSVReader;
 import com.google.appengine.api.blobstore.BlobKey;

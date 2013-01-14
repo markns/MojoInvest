@@ -28,11 +28,17 @@ public class DeleteBlobs extends HttpServlet {
         log.info("Delete all blobs called");
         List<BlobInfo> blobsToDelete = new LinkedList<BlobInfo>();
         Iterator<BlobInfo> iterator = new BlobInfoFactory().queryBlobInfos();
-        while (iterator.hasNext())
-            blobsToDelete.add(iterator.next());
+
+        resp.setContentType("text/html");
+        resp.getWriter().println("<ul>");
+        while (iterator.hasNext()) {
+            BlobInfo info = iterator.next();
+            resp.getWriter().println("<li>" + info + "</li>");
+            blobsToDelete.add(info);
+        }
+        resp.getWriter().println("</ul>");
 
         log.info("Found " + blobsToDelete.size() + " blobs to delete");
-
         BlobstoreService blobstoreService = BlobstoreServiceFactory.getBlobstoreService();
         for (BlobInfo blobInfo : blobsToDelete)
             blobstoreService.delete(blobInfo.getBlobKey());

@@ -16,11 +16,11 @@ import java.util.Collection;
 import java.util.List;
 import java.util.logging.Logger;
 
-public class YahooQuoteFetcherJob extends Job1<String, LocalDate> {
+public class QuoteFetcherControlJob extends Job1<String, LocalDate> {
 
-    private static final Logger log = Logger.getLogger(YahooQuoteFetcherJob.class.getName());
+    private static final Logger log = Logger.getLogger(QuoteFetcherControlJob.class.getName());
 
-    private static final int BATCH_SIZE = 20;
+    private static final int BATCH_SIZE = 2;
 
     @Override
     public Value<String> run(LocalDate date) {
@@ -41,12 +41,13 @@ public class YahooQuoteFetcherJob extends Job1<String, LocalDate> {
             batch.add(fund);
             if (batch.size() == BATCH_SIZE) {
                 List<Fund> clone = new ArrayList<Fund>(batch);
-                messages.add(futureCall(new YahooQuoteFetcherBatchJob(), immediate(clone), immediate(date)));
+                messages.add(futureCall(new QuoteFetcherBatchJob(), immediate(clone), immediate(date)));
                 batch.clear();
+                break;
             }
         }
         if (batch.size() > 0) {
-            messages.add(futureCall(new YahooQuoteFetcherBatchJob(), immediate(batch), immediate(date)));
+            messages.add(futureCall(new QuoteFetcherBatchJob(), immediate(batch), immediate(date)));
         }
 
         return futureCall(new MergeMessagesJob(), futureList(messages));

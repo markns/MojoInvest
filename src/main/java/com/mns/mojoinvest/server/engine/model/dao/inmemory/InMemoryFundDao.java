@@ -66,6 +66,11 @@ public class InMemoryFundDao implements FundDao {
     }
 
     @Override
+    public void put(Fund fund) {
+        throw new NotImplementedException();
+    }
+
+    @Override
     public Map<Key<Fund>, Fund> put(Set<Fund> funds) {
         throw new NotImplementedException();
     }

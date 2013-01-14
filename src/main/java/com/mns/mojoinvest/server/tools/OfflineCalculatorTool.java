@@ -15,7 +15,10 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.math.MathContext;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.NavigableMap;
 
 public class OfflineCalculatorTool {
 
@@ -58,7 +61,7 @@ public class OfflineCalculatorTool {
 
         for (Fund fund : fundDao.list()) {
 
-            List<Quote> quotes = quoteDao.query(fund.getSymbol());
+            List<Quote> quotes = null;//quoteDao.query(fund.getSymbol());
             if (quotes == null)
                 continue;
             QuoteUtils.sortByDateAsc(quotes);
@@ -140,24 +143,25 @@ public class OfflineCalculatorTool {
     private NavigableMap<LocalDate, BigDecimal> getIndexReturns(String idx, LocalDate latest) {
 
         Fund index = new Fund(idx, "", "", "", true, "", "", "", new LocalDate());
-        List<Quote> idxQuotes = quoteDao.query(index.getSymbol());
-        QuoteUtils.sortByDateAsc(idxQuotes);
-
-        LocalDate earliest = idxQuotes.get(0).getDate();
-
-        List<LocalDate> dates = TradingDayUtils.getEndOfWeekSeries(earliest, latest, 1);
-        List<Quote> weeklySeries = new ArrayList<Quote>(quoteDao.get(index, dates));
-
-        NavigableMap<LocalDate, BigDecimal> idxReturns = new TreeMap<LocalDate, BigDecimal>();
-
-        Quote from = null;
-        for (Quote to : weeklySeries) {
-            if (from != null) {
-                idxReturns.put(to.getDate(), percentageReturn(from.getAdjClose(), to.getAdjClose()));
-            }
-            from = to;
-        }
-        return idxReturns;
+//        List<Quote> idxQuotes = quoteDao.query(index.getSymbol());
+//        QuoteUtils.sortByDateAsc(idxQuotes);
+//
+//        LocalDate earliest = idxQuotes.get(0).getDate();
+//
+//        List<LocalDate> dates = TradingDayUtils.getEndOfWeekSeries(earliest, latest, 1);
+//        List<Quote> weeklySeries = new ArrayList<Quote>(quoteDao.get(index, dates));
+//
+//        NavigableMap<LocalDate, BigDecimal> idxReturns = new TreeMap<LocalDate, BigDecimal>();
+//
+//        Quote from = null;
+//        for (Quote to : weeklySeries) {
+//            if (from != null) {
+//                idxReturns.put(to.getDate(), percentageReturn(from.getAdjClose(), to.getAdjClose()));
+//            }
+//            from = to;
+//        }
+//        return idxReturns;
+        return null;
     }
 
     private BigDecimal percentageReturn(BigDecimal from, BigDecimal to) {

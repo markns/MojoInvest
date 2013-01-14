@@ -1,4 +1,4 @@
-package com.mns.mojoinvest.server.servlet;
+package com.mns.mojoinvest.server.servlet.viewer;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;

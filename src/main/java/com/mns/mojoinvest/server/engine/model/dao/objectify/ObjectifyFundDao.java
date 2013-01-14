@@ -53,6 +53,11 @@ public class ObjectifyFundDao extends DAOBase implements FundDao {
     }
 
     @Override
+    public void put(Fund fund) {
+        ofy().put(fund);
+    }
+
+    @Override
     public Map<Key<Fund>, Fund> put(Set<Fund> funds) {
         return ofy().put(funds);
     }
