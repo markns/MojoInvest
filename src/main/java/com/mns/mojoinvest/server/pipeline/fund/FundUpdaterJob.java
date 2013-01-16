@@ -54,8 +54,10 @@ public class FundUpdaterJob extends Job1<String, List<Fund>> {
 
         //Set properties that need to be transfered from persisted version here.
         for (Fund fund : current) {
-            fund.setLatestQuoteDate(existingMap.get(fund.getSymbol()).getLatestQuoteDate());
-            fund.setEarliestQuoteDate(existingMap.get(fund.getSymbol()).getEarliestQuoteDate());
+            if (existingMap.get(fund.getSymbol()) != null) {
+                fund.setLatestQuoteDate(existingMap.get(fund.getSymbol()).getLatestQuoteDate());
+                fund.setEarliestQuoteDate(existingMap.get(fund.getSymbol()).getEarliestQuoteDate());
+            }
         }
         dao.put(new HashSet<Fund>(current));
 

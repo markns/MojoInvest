@@ -28,14 +28,14 @@ public class QuoteFetcherBatchJob extends Job2<String, List<Fund>, LocalDate> {
 
     private static final Logger log = Logger.getLogger(QuoteFetcherBatchJob.class.getName());
 
-    private transient YahooQuoteFetcher fetcher;
+    private transient GoogleQuoteFetcher fetcher;
 
     private transient QuoteDao quoteDao;
 
     @Override
     public Value<String> run(List<Fund> funds, LocalDate date) {
 
-        fetcher = new YahooQuoteFetcher();
+        fetcher = new GoogleQuoteFetcher();
 
         ObjectifyFactory factory = new ObjectifyFactory();
         factory.register(BlobstoreEntryRecord.class);
