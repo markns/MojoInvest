@@ -48,6 +48,8 @@ public class ISharesFundDetailFetcherBatchJob extends Job1<List<Fund>, List<Stri
 
     private String fetchFundDetailHtml(String symbol) {
         Client c = Client.create();
+//        c.addFilter(new LoggingFilter(System.out));
+
         c.setReadTimeout(10000);
         c.setConnectTimeout(10000);
         WebResource r = c.resource("http://uk.ishares.com/en/rc/products/" + symbol);

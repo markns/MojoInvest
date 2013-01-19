@@ -19,6 +19,8 @@ public class DailyPipeline extends Job1<Void, LocalDate> {
 
     private static final Logger log = Logger.getLogger(DailyPipeline.class.getName());
 
+    private static final String USER_EMAIL = "marknuttallsmith@gmail.com";
+
     @Override
     public Value<Void> run(LocalDate date) {
 
@@ -31,7 +33,7 @@ public class DailyPipeline extends Job1<Void, LocalDate> {
             String message = "Not running pipeline, today is " + HolidayUtils.get(date);
             log.info(message);
             messages.add(immediate(message));
-            futureCall(new EmailStatusJob(), futureList(messages));
+            futureCall(new EmailStatusJob(), immediate(USER_EMAIL), futureList(messages));
             return null;
         }
 
@@ -41,7 +43,11 @@ public class DailyPipeline extends Job1<Void, LocalDate> {
         FutureValue<String> fundsUpdatedMessage = futureCall(new FundUpdaterJob(), funds);
         messages.add(fundsUpdatedMessage);
 //        FutureValue<String> fundsUpdatedMessage = futureCall(new ImmediateReturnJob());
-        messages.add(futureCall(new QuoteFetcherControlJob(), immediate(date), waitFor(fundsUpdatedMessage)));
+
+        FutureValue<String> sessionId = futureCall(new ExternalAgentJob(), immediate(USER_EMAIL));
+
+        messages.add(futureCall(new QuoteFetcherControlJob(), sessionId, waitFor(fundsUpdatedMessage)));
+
 
 //        futureCall(new RunCalculationsGeneratorJob(), immediate(date), funds);
 //        //for each of the parameter combinations (1M, 2M, 6M etc) call
@@ -51,7 +57,7 @@ public class DailyPipeline extends Job1<Void, LocalDate> {
 //        }
 
         //TODO: Send email on failure also
-        futureCall(new EmailStatusJob(), futureList(messages));
+        futureCall(new EmailStatusJob(), immediate(USER_EMAIL), futureList(messages));
 
         return null;
     }

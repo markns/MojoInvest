@@ -1,4 +1,4 @@
-package com.mns.mojoinvest.server.servlet;
+package com.mns.mojoinvest.server.pipeline.servlet;
 
 import com.google.appengine.tools.pipeline.PipelineService;
 import com.google.appengine.tools.pipeline.PipelineServiceFactory;
@@ -29,8 +29,8 @@ public class PipelineServlet extends HttpServlet {
         PipelineService service = PipelineServiceFactory.newPipelineService();
         String pipelineId = service.startNewPipeline(new DailyPipeline(), date);
 
-        String msg = "Daily pipeline '" + pipelineId + "' started for date " + date + "\n" +
-                "Pipeline console available at /_ah/pipeline/status.html?root=" + pipelineId;
+        String msg = "Daily pipeline '" + pipelineId + "' started for date " + date + "<br/>" +
+                "<a href=\"/_ah/pipeline/status.html?root=" + pipelineId + "\">Pipeline Console</a>";
         log.info(msg);
 
         resp.setContentType("text/html");

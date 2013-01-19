@@ -9,21 +9,22 @@ import com.mns.mojoinvest.server.engine.model.Fund;
 import com.mns.mojoinvest.server.engine.model.dao.FundDao;
 import com.mns.mojoinvest.server.engine.model.dao.objectify.MyTypeConverters;
 import com.mns.mojoinvest.server.engine.model.dao.objectify.ObjectifyFundDao;
-import org.joda.time.LocalDate;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.logging.Logger;
 
-public class QuoteFetcherControlJob extends Job1<String, LocalDate> {
+public class QuoteFetcherControlJob extends Job1<String, String> {
 
     private static final Logger log = Logger.getLogger(QuoteFetcherControlJob.class.getName());
 
     private static final int BATCH_SIZE = 2;
 
     @Override
-    public Value<String> run(LocalDate date) {
+    public Value<String> run(String sessionId) {
+
+        log.info(sessionId);
 
         ObjectifyFactory factory = new ObjectifyFactory();
         factory.register(Fund.class);
@@ -41,13 +42,13 @@ public class QuoteFetcherControlJob extends Job1<String, LocalDate> {
             batch.add(fund);
             if (batch.size() == BATCH_SIZE) {
                 List<Fund> clone = new ArrayList<Fund>(batch);
-                messages.add(futureCall(new QuoteFetcherBatchJob(), immediate(clone), immediate(date)));
+//                messages.add(futureCall(new QuoteFetcherBatchJob(), immediate(clone), immediate(date)));
                 batch.clear();
                 break;
             }
         }
         if (batch.size() > 0) {
-            messages.add(futureCall(new QuoteFetcherBatchJob(), immediate(batch), immediate(date)));
+//            messages.add(futureCall(new QuoteFetcherBatchJob(), immediate(batch), immediate(date)));
         }
 
         return futureCall(new MergeMessagesJob(), futureList(messages));
