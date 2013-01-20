@@ -4,12 +4,13 @@ package com.mns.mojoinvest.server.pipeline.quote;
 import com.google.appengine.tools.pipeline.Job2;
 import com.google.appengine.tools.pipeline.Value;
 import com.mns.mojoinvest.server.engine.model.Quote;
+import com.mns.mojoinvest.server.engine.model.dao.QuoteDao;
 import com.mns.mojoinvest.server.pipeline.PipelineException;
+import com.mns.mojoinvest.server.pipeline.PipelineHelper;
 import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.WebResource;
 import com.sun.jersey.core.util.MultivaluedMapImpl;
-import jxl.Cell;
 import jxl.Workbook;
 import jxl.read.biff.BiffException;
 
@@ -27,11 +28,7 @@ public class ISharesQuoteFetcherJob extends Job2<String, String, String> {
     @Override
     public Value<String> run(String category, String sessionId) {
 
-        Client client = Client.create();
-
-        client.setFollowRedirects(true);
-        client.setReadTimeout(10000);
-        client.setConnectTimeout(10000);
+        Client client = PipelineHelper.getClient();
 
         WebResource webResource = client.resource(BASE_URL);
         WebResource.Builder builder = webResource.getRequestBuilder();
@@ -51,19 +48,15 @@ public class ISharesQuoteFetcherJob extends Job2<String, String, String> {
         try {
             workbook = Workbook.getWorkbook(response.getEntityInputStream());
             List<Quote> quotes = ISharesExcelParser.parse(workbook);
-
-
+            QuoteDao dao = PipelineHelper.getQuoteDao();
+            dao.put(quotes);
         } catch (IOException e) {
             throw new PipelineException("Unable to retrieve excel file " + category, e);
         } catch (BiffException e) {
             throw new PipelineException("Unable to retrieve excel file " + category, e);
         }
 
-        for (Cell cell : workbook.getSheet(0).getRow(0)) {
-            System.out.println(cell.getContents());
-        }
-
-        return immediate("quote retrieval done");
+        return immediate(category + " quote retrieval complete");
     }
 
 

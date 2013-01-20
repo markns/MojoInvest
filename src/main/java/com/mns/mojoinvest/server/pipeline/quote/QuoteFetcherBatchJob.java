@@ -3,19 +3,13 @@ package com.mns.mojoinvest.server.pipeline.quote;
 import com.google.appengine.tools.pipeline.Job2;
 import com.google.appengine.tools.pipeline.Value;
 import com.google.common.base.Joiner;
-import com.googlecode.objectify.ObjectifyFactory;
-import com.mns.mojoinvest.server.engine.model.BlobstoreEntryRecord;
 import com.mns.mojoinvest.server.engine.model.Fund;
 import com.mns.mojoinvest.server.engine.model.Quote;
 import com.mns.mojoinvest.server.engine.model.dao.FundDao;
 import com.mns.mojoinvest.server.engine.model.dao.QuoteDao;
 import com.mns.mojoinvest.server.engine.model.dao.QuoteUnavailableException;
-import com.mns.mojoinvest.server.engine.model.dao.blobstore.BlobstoreQuoteDao;
-import com.mns.mojoinvest.server.engine.model.dao.objectify.MyTypeConverters;
-import com.mns.mojoinvest.server.engine.model.dao.objectify.ObjectifyEntryRecordDao;
-import com.mns.mojoinvest.server.engine.model.dao.objectify.ObjectifyFundDao;
+import com.mns.mojoinvest.server.pipeline.PipelineHelper;
 import com.mns.mojoinvest.server.util.FundUtils;
-import com.mns.mojoinvest.server.util.QuoteUtils;
 import org.joda.time.LocalDate;
 
 import java.util.ArrayList;
@@ -28,21 +22,16 @@ public class QuoteFetcherBatchJob extends Job2<String, List<Fund>, LocalDate> {
 
     private static final Logger log = Logger.getLogger(QuoteFetcherBatchJob.class.getName());
 
-    private transient GoogleQuoteFetcher fetcher;
+//    private transient GoogleQuoteFetcher fetcher;
 
     private transient QuoteDao quoteDao;
 
     @Override
     public Value<String> run(List<Fund> funds, LocalDate date) {
 
-        fetcher = new GoogleQuoteFetcher();
+//        fetcher = null;//new GoogleQuoteFetcher();
 
-        ObjectifyFactory factory = new ObjectifyFactory();
-        factory.register(BlobstoreEntryRecord.class);
-        factory.register(Fund.class);
-        factory.getConversions().add(new MyTypeConverters());
-        quoteDao = new BlobstoreQuoteDao(new ObjectifyEntryRecordDao(factory));
-        FundDao fundDao = new ObjectifyFundDao(factory);
+        FundDao fundDao = PipelineHelper.getFundDao();
 
         List<Value<String>> messages = new ArrayList<Value<String>>();
 
@@ -84,15 +73,18 @@ public class QuoteFetcherBatchJob extends Job2<String, List<Fund>, LocalDate> {
         } else {
             fromDate = fund.getInceptionDate();
         }
-        List<Quote> quotes = fetcher.run(fund, fromDate, date);
-        QuoteUtils.sortByDateDesc(quotes);
-        return quotes;
+//        List<Quote> quotes = fetcher.run(fund, fromDate, date);
+//        QuoteUtils.sortByDateDesc(quotes);
+//        return quotes;
+        return null;
     }
 
     private List<Quote> downloadAllHistoricQuotes(Fund fund, LocalDate date) throws QuoteFetcherException {
-        List<Quote> quotes = fetcher.run(fund, fund.getInceptionDate(), date);
-        QuoteUtils.sortByDateDesc(quotes);
-        return quotes;
+//        List<Quote> quotes = fetcher.run(fund, fund.getInceptionDate(), date);
+//        QuoteUtils.sortByDateDesc(quotes);
+//        return quotes;
+        return null;
+
     }
 
     private boolean testForChanges(List<Quote> quotes, List<Value<String>> messages) {

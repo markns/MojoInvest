@@ -4,11 +4,9 @@ import com.google.appengine.tools.pipeline.FutureValue;
 import com.google.appengine.tools.pipeline.Job1;
 import com.google.appengine.tools.pipeline.Value;
 import com.google.common.base.Joiner;
-import com.googlecode.objectify.ObjectifyFactory;
 import com.mns.mojoinvest.server.engine.model.Fund;
 import com.mns.mojoinvest.server.engine.model.dao.FundDao;
-import com.mns.mojoinvest.server.engine.model.dao.objectify.MyTypeConverters;
-import com.mns.mojoinvest.server.engine.model.dao.objectify.ObjectifyFundDao;
+import com.mns.mojoinvest.server.pipeline.PipelineHelper;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -26,10 +24,7 @@ public class QuoteFetcherControlJob extends Job1<String, String> {
 
         log.info(sessionId);
 
-        ObjectifyFactory factory = new ObjectifyFactory();
-        factory.register(Fund.class);
-        factory.getConversions().add(new MyTypeConverters());
-        FundDao fundDao = new ObjectifyFundDao(factory);
+        FundDao fundDao = PipelineHelper.getFundDao();
 
         Collection<Fund> funds = fundDao.list();
 

@@ -4,6 +4,7 @@ import com.google.appengine.tools.pipeline.Job1;
 import com.google.appengine.tools.pipeline.Value;
 import com.google.common.annotations.VisibleForTesting;
 import com.mns.mojoinvest.server.engine.model.Fund;
+import com.mns.mojoinvest.server.pipeline.PipelineHelper;
 import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.WebResource;
 import org.joda.time.format.DateTimeFormat;
@@ -27,9 +28,6 @@ public class ISharesFundDetailFetcherBatchJob extends Job1<List<Fund>, List<Stri
         List<Fund> funds = new ArrayList<Fund>();
         log.info("Attempting to retrieve details for batch: " + symbols);
         for (String symbol : symbols) {
-            //TODO: Figure out why this fund is screwing up
-//            if ("IDVY".equals(symbol))
-//                continue;
             Fund fund = runOne(symbol);
             if (fund != null) {
                 funds.add(fund);
@@ -47,12 +45,8 @@ public class ISharesFundDetailFetcherBatchJob extends Job1<List<Fund>, List<Stri
     }
 
     private String fetchFundDetailHtml(String symbol) {
-        Client c = Client.create();
-//        c.addFilter(new LoggingFilter(System.out));
-
-        c.setReadTimeout(10000);
-        c.setConnectTimeout(10000);
-        WebResource r = c.resource("http://uk.ishares.com/en/rc/products/" + symbol);
+        Client client = PipelineHelper.getClient();
+        WebResource r = client.resource("http://uk.ishares.com/en/rc/products/" + symbol);
         return r.get(String.class);
     }
 

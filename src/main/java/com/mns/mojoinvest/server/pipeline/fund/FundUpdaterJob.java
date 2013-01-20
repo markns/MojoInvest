@@ -3,11 +3,9 @@ package com.mns.mojoinvest.server.pipeline.fund;
 import com.google.appengine.tools.pipeline.Job1;
 import com.google.appengine.tools.pipeline.Value;
 import com.googlecode.objectify.NotFoundException;
-import com.googlecode.objectify.ObjectifyFactory;
 import com.mns.mojoinvest.server.engine.model.Fund;
 import com.mns.mojoinvest.server.engine.model.dao.FundDao;
-import com.mns.mojoinvest.server.engine.model.dao.objectify.MyTypeConverters;
-import com.mns.mojoinvest.server.engine.model.dao.objectify.ObjectifyFundDao;
+import com.mns.mojoinvest.server.pipeline.PipelineHelper;
 
 import java.util.*;
 import java.util.logging.Logger;
@@ -19,12 +17,7 @@ public class FundUpdaterJob extends Job1<String, List<Fund>> {
     @Override
     public Value<String> run(List<Fund> current) {
 
-        //TODO: Figure out how to inject and serialize DAOs
-
-        ObjectifyFactory factory = new ObjectifyFactory();
-        factory.register(Fund.class);
-        factory.getConversions().add(new MyTypeConverters());
-        FundDao dao = new ObjectifyFundDao(factory);
+        FundDao dao = PipelineHelper.getFundDao();
 
         Collection<Fund> existing;
         try {
@@ -63,4 +56,6 @@ public class FundUpdaterJob extends Job1<String, List<Fund>> {
 
         return immediate(returnMessage);
     }
+
+
 }

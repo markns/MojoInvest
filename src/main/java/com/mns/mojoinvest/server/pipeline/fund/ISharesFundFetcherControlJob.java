@@ -6,6 +6,7 @@ import com.google.appengine.tools.pipeline.Job1;
 import com.google.appengine.tools.pipeline.Value;
 import com.google.common.annotations.VisibleForTesting;
 import com.mns.mojoinvest.server.engine.model.Fund;
+import com.mns.mojoinvest.server.pipeline.PipelineHelper;
 import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.WebResource;
 import com.sun.jersey.core.util.MultivaluedMapImpl;
@@ -61,11 +62,9 @@ public class ISharesFundFetcherControlJob extends Job0<List<Fund>> {
 
 
     private String fetchAllFundsHtml() {
-        Client c = Client.create();
-        c.setReadTimeout(60000);
-        c.setConnectTimeout(60000);
+        Client client = PipelineHelper.getClient();
 
-        WebResource r = c.resource("http://uk.ishares.com/en/rc/products/overview");
+        WebResource r = client.resource("http://uk.ishares.com/en/rc/products/overview");
         MultivaluedMap<String, String> params = new MultivaluedMapImpl();
 
         log.info("Attempting to fetch all funds html");
