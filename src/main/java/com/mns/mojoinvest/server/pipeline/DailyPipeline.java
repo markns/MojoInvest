@@ -7,7 +7,7 @@ import com.google.appengine.tools.pipeline.Value;
 import com.mns.mojoinvest.server.engine.model.Fund;
 import com.mns.mojoinvest.server.pipeline.fund.FundUpdaterJob;
 import com.mns.mojoinvest.server.pipeline.fund.ISharesFundFetcherControlJob;
-import com.mns.mojoinvest.server.pipeline.quote.QuoteFetcherControlJob;
+import com.mns.mojoinvest.server.pipeline.quote.ISharesQuoteFetcherJob;
 import com.mns.mojoinvest.server.util.HolidayUtils;
 import org.joda.time.LocalDate;
 
@@ -40,14 +40,14 @@ public class DailyPipeline extends Job1<Void, LocalDate> {
         //TODO: Delete pipeline job records more than one week old
 
         FutureValue<List<Fund>> funds = futureCall(new ISharesFundFetcherControlJob());
+        //TODO: Should prevent ISharesFundFetcherControlJob from returning all funds as they get serialized to db
         FutureValue<String> fundsUpdatedMessage = futureCall(new FundUpdaterJob(), funds);
         messages.add(fundsUpdatedMessage);
 //        FutureValue<String> fundsUpdatedMessage = futureCall(new ImmediateReturnJob());
 
         FutureValue<String> sessionId = futureCall(new ExternalAgentJob(), immediate(USER_EMAIL));
 
-        messages.add(futureCall(new QuoteFetcherControlJob(), sessionId, waitFor(fundsUpdatedMessage)));
-
+        messages.add(futureCall(new ISharesQuoteFetcherJob(), sessionId, waitFor(fundsUpdatedMessage)));
 
 //        futureCall(new RunCalculationsGeneratorJob(), immediate(date), funds);
 //        //for each of the parameter combinations (1M, 2M, 6M etc) call
