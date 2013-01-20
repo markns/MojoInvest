@@ -1,8 +1,5 @@
 package com.mns.mojoinvest.server.engine.model;
 
-import com.googlecode.objectify.Key;
-import com.googlecode.objectify.annotation.Cached;
-import com.googlecode.objectify.annotation.Unindexed;
 import com.mns.mojoinvest.server.util.QuoteUtils;
 import org.joda.time.LocalDate;
 
@@ -10,7 +7,6 @@ import javax.persistence.Id;
 import java.io.Serializable;
 import java.math.BigDecimal;
 
-@Cached
 public class Quote implements Serializable {
 
     @Id
@@ -20,160 +16,59 @@ public class Quote implements Serializable {
 
     private LocalDate date;
 
-    @Unindexed
-    private BigDecimal open;
+    private BigDecimal index;
 
-    @Unindexed
-    private BigDecimal high;
+    private BigDecimal nav;
 
-    @Unindexed
-    private BigDecimal low;
+    private BigDecimal trNav;
 
-    @Unindexed
-    private BigDecimal close;
+    private BigDecimal dividend;
 
-    @Unindexed
-    private BigDecimal bid;
-
-    @Unindexed
-    private BigDecimal ask;
-
-    @Unindexed
-    private BigDecimal volume;
-
-    @Unindexed
-    private BigDecimal adjClose;
-
-    @Unindexed
     private boolean rolled = false;
 
-    public Quote() {
-        //no arg for objectify
-    }
-
-    public Quote(String symbol, LocalDate date, BigDecimal open, BigDecimal high, BigDecimal low,
-                 BigDecimal close, BigDecimal bid, BigDecimal ask,
-                 BigDecimal volume, BigDecimal adjClose, boolean rolled) {
+    public Quote(String symbol, LocalDate date, BigDecimal index, BigDecimal nav,
+                 BigDecimal trNav, BigDecimal dividend, boolean rolled) {
         this.id = QuoteUtils.quoteId(symbol, date);
         this.symbol = symbol;
         this.date = date;
-        this.open = open;
-        this.high = high;
-        this.low = low;
-        this.close = close;
-        this.bid = bid;
-        this.ask = ask;
-        this.volume = volume;
-        this.adjClose = adjClose;
+        this.nav = nav;
+        this.index = index;
+        this.trNav = trNav;
+        this.dividend = dividend;
         this.rolled = rolled;
-    }
-
-    public Quote(String symbol, LocalDate date, BigDecimal close) {
-        this.id = QuoteUtils.quoteId(symbol, date);
-        this.symbol = symbol;
-        this.date = date;
-        this.open = BigDecimal.ZERO;
-        this.high = BigDecimal.ZERO;
-        this.low = BigDecimal.ZERO;
-        this.close = close;
-        this.bid = BigDecimal.ZERO;
-        this.ask = BigDecimal.ZERO;
-        this.volume = BigDecimal.ZERO;
-        this.adjClose = BigDecimal.ZERO;
-        this.rolled = false;
-    }
-
-    public String getId() {
-        return id;
     }
 
     public String getSymbol() {
         return symbol;
     }
 
-    public void setSymbol(String symbol) {
-        this.symbol = symbol;
-    }
-
     public LocalDate getDate() {
         return date;
     }
 
-    public void setDate(LocalDate date) {
-        this.date = date;
+    public BigDecimal getIndex() {
+        return index;
     }
 
-    public BigDecimal getOpen() {
-        return open;
+    public BigDecimal getNav() {
+        return nav;
     }
 
-    public void setOpen(BigDecimal open) {
-        this.open = open;
+    public BigDecimal getTrNav() {
+        return trNav;
     }
 
-    public BigDecimal getHigh() {
-        return high;
-    }
-
-    public void setHigh(BigDecimal high) {
-        this.high = high;
-    }
-
-    public BigDecimal getLow() {
-        return low;
-    }
-
-    public void setLow(BigDecimal low) {
-        this.low = low;
-    }
-
-    public BigDecimal getClose() {
-        return close;
-    }
-
-    public void setClose(BigDecimal close) {
-        this.close = close;
-    }
-
-    public BigDecimal getVolume() {
-        return volume;
-    }
-
-    public void setVolume(BigDecimal volume) {
-        this.volume = volume;
-    }
-
-    public BigDecimal getAdjClose() {
-        return adjClose;
-    }
-
-    public void setAdjClose(BigDecimal adjClose) {
-        this.adjClose = adjClose;
+    public BigDecimal getDividend() {
+        return dividend;
     }
 
     public boolean isRolled() {
         return rolled;
     }
 
-    public void setRolled(boolean rolled) {
-        this.rolled = rolled;
-    }
-
     @Override
     public String toString() {
         return id;
-//        return "Quote{" +
-//                "id=" + id +
-//                ", symbol='" + symbol + '\'' +
-//                ", date='" + date + '\'' +
-//                ", open=" + open +
-//                ", high=" + high +
-//                ", low=" + low +
-//                ", close=" + close +
-//                ", volume=" + volume +
-//                ", adjClose=" + adjClose +
-//                ", rolled=" + rolled +
-//                '}';
     }
 
     public String toDescriptiveString() {
@@ -181,12 +76,9 @@ public class Quote implements Serializable {
                 "id=" + id +
                 ", symbol='" + symbol + '\'' +
                 ", date='" + date + '\'' +
-                ", open=" + open +
-                ", high=" + high +
-                ", low=" + low +
-                ", close=" + close +
-                ", volume=" + volume +
-                ", adjClose=" + adjClose +
+                ", nav=" + nav +
+                ", trNav=" + trNav +
+                ", divdend=" + dividend +
                 ", rolled=" + rolled +
                 '}';
     }
@@ -199,15 +91,12 @@ public class Quote implements Serializable {
         Quote quote = (Quote) o;
 
         if (rolled != quote.rolled) return false;
-        if (adjClose != null ? !adjClose.equals(quote.adjClose) : quote.adjClose != null) return false;
-        if (close != null ? !close.equals(quote.close) : quote.close != null) return false;
+        if (dividend != null ? !dividend.equals(quote.dividend) : quote.dividend != null) return false;
+        if (nav != null ? !nav.equals(quote.nav) : quote.nav != null) return false;
         if (date != null ? !date.equals(quote.date) : quote.date != null) return false;
-        if (high != null ? !high.equals(quote.high) : quote.high != null) return false;
         if (id != null ? !id.equals(quote.id) : quote.id != null) return false;
-        if (low != null ? !low.equals(quote.low) : quote.low != null) return false;
-        if (open != null ? !open.equals(quote.open) : quote.open != null) return false;
         if (symbol != null ? !symbol.equals(quote.symbol) : quote.symbol != null) return false;
-        if (volume != null ? !volume.equals(quote.volume) : quote.volume != null) return false;
+        if (trNav != null ? !trNav.equals(quote.trNav) : quote.trNav != null) return false;
 
         return true;
     }
@@ -217,12 +106,9 @@ public class Quote implements Serializable {
         int result = id != null ? id.hashCode() : 0;
         result = 31 * result + (symbol != null ? symbol.hashCode() : 0);
         result = 31 * result + (date != null ? date.hashCode() : 0);
-        result = 31 * result + (open != null ? open.hashCode() : 0);
-        result = 31 * result + (high != null ? high.hashCode() : 0);
-        result = 31 * result + (low != null ? low.hashCode() : 0);
-        result = 31 * result + (close != null ? close.hashCode() : 0);
-        result = 31 * result + (volume != null ? volume.hashCode() : 0);
-        result = 31 * result + (adjClose != null ? adjClose.hashCode() : 0);
+        result = 31 * result + (nav != null ? nav.hashCode() : 0);
+        result = 31 * result + (trNav != null ? trNav.hashCode() : 0);
+        result = 31 * result + (dividend != null ? dividend.hashCode() : 0);
         result = 31 * result + (rolled ? 1 : 0);
         return result;
     }
@@ -232,19 +118,12 @@ public class Quote implements Serializable {
         return new String[]{
                 symbol,
                 date + "",
-                open + "",
-                high + "",
-                low + "",
-                close + "",
-                bid + "",
-                ask + "",
-                volume + "",
-                adjClose + "",
+                nav + "",
+                index + "",
+                trNav + "",
+                dividend + "",
                 rolled + ""};
 
     }
 
-    public Key<Quote> getKey() {
-        return new Key<Quote>(Quote.class, QuoteUtils.quoteId(symbol, date));
-    }
 }

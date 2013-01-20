@@ -66,26 +66,26 @@ public class PortfolioTests {
 
     public static final List<Quote> quotes = Arrays.asList(
             new Quote("ABC", buy100Date, BigDecimal.ZERO, BigDecimal.ZERO, BigDecimal.ZERO,
-                    new BigDecimal("400"), BigDecimal.ZERO, BigDecimal.ZERO, BigDecimal.ZERO, BigDecimal.ZERO, false),
+                    new BigDecimal("400"), false),
             new Quote("ABC", buy200Date, BigDecimal.ZERO, BigDecimal.ZERO, BigDecimal.ZERO,
-                    new BigDecimal("500"), BigDecimal.ZERO, BigDecimal.ZERO, BigDecimal.ZERO, BigDecimal.ZERO, false),
+                    new BigDecimal("500"), false),
             new Quote("ABC", sell50Date, BigDecimal.ZERO, BigDecimal.ZERO, BigDecimal.ZERO,
-                    new BigDecimal("550"), BigDecimal.ZERO, BigDecimal.ZERO, BigDecimal.ZERO, BigDecimal.ZERO, false),
+                    new BigDecimal("550"), false),
             new Quote("ABC", sell100Date, BigDecimal.ZERO, BigDecimal.ZERO, BigDecimal.ZERO,
-                    new BigDecimal("490"), BigDecimal.ZERO, BigDecimal.ZERO, BigDecimal.ZERO, BigDecimal.ZERO, false),
+                    new BigDecimal("490"), false),
             new Quote("ABC", sell200Date, BigDecimal.ZERO, BigDecimal.ZERO, BigDecimal.ZERO,
-                    new BigDecimal("510"), BigDecimal.ZERO, BigDecimal.ZERO, BigDecimal.ZERO, BigDecimal.ZERO, false),
+                    new BigDecimal("510"), false),
 
             new Quote("DEF", buy100Date, BigDecimal.ZERO, BigDecimal.ZERO, BigDecimal.ZERO,
-                    new BigDecimal("400"), BigDecimal.ZERO, BigDecimal.ZERO, BigDecimal.ZERO, BigDecimal.ZERO, false),
+                    new BigDecimal("400"), false),
             new Quote("DEF", buy200Date, BigDecimal.ZERO, BigDecimal.ZERO, BigDecimal.ZERO,
-                    new BigDecimal("500"), BigDecimal.ZERO, BigDecimal.ZERO, BigDecimal.ZERO, BigDecimal.ZERO, false),
+                    new BigDecimal("500"), false),
             new Quote("DEF", sell50Date, BigDecimal.ZERO, BigDecimal.ZERO, BigDecimal.ZERO,
-                    new BigDecimal("550"), BigDecimal.ZERO, BigDecimal.ZERO, BigDecimal.ZERO, BigDecimal.ZERO, false),
+                    new BigDecimal("550"), false),
             new Quote("DEF", sell100Date, BigDecimal.ZERO, BigDecimal.ZERO, BigDecimal.ZERO,
-                    new BigDecimal("490"), BigDecimal.ZERO, BigDecimal.ZERO, BigDecimal.ZERO, BigDecimal.ZERO, false),
+                    new BigDecimal("490"), false),
             new Quote("DEF", sell200Date, BigDecimal.ZERO, BigDecimal.ZERO, BigDecimal.ZERO,
-                    new BigDecimal("510"), BigDecimal.ZERO, BigDecimal.ZERO, BigDecimal.ZERO, BigDecimal.ZERO, false)
+                    new BigDecimal("510"), false)
     );
 
     @Before

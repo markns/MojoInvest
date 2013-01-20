@@ -3,6 +3,7 @@ package com.mns.mojoinvest.server.pipeline.quote;
 import au.com.bytecode.opencsv.CSVReader;
 import com.mns.mojoinvest.server.engine.model.Fund;
 import com.mns.mojoinvest.server.engine.model.Quote;
+import com.mns.mojoinvest.server.util.QuoteUtils;
 import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.UniformInterfaceException;
 import com.sun.jersey.api.client.WebResource;
@@ -14,7 +15,6 @@ import org.joda.time.format.DateTimeFormatter;
 import javax.ws.rs.core.MultivaluedMap;
 import java.io.IOException;
 import java.io.StringReader;
-import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
@@ -74,16 +74,7 @@ public class GoogleQuoteFetcher {
 
     private static Quote fromStrArr(String symbol, String[] row) {
         //System.out.println(Joiner.on(" - ").join(row));
-        return new Quote(symbol,
-                fmt.parseLocalDate(row[0]),
-                "-".equals(row[1]) ? null : new BigDecimal(row[1]),
-                "-".equals(row[2]) ? null : new BigDecimal(row[2]),
-                "-".equals(row[3]) ? null : new BigDecimal(row[3]),
-                "-".equals(row[4]) ? null : new BigDecimal(row[4]),
-                null, null,
-                "-".equals(row[5]) ? null : new BigDecimal(row[5]),
-                null,
-                false);
+        return QuoteUtils.fromStringArray(row);
     }
 
 

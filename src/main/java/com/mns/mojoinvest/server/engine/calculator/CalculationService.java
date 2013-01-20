@@ -18,7 +18,7 @@ public class CalculationService {
         List<CalculatedValue> cvs = new ArrayList<CalculatedValue>();
         DescriptiveStatistics stats = new DescriptiveStatistics(period);
         for (Quote quote : quotes) {
-            stats.addValue(quote.getAdjClose().doubleValue());
+            stats.addValue(quote.getDividend().doubleValue());
             if (stats.getN() >= period) {
                 CalculatedValue cv = new CalculatedValue(quote.getDate(), quote.getSymbol(),
                         "SMA", period, stats.getMean());
@@ -32,7 +32,7 @@ public class CalculationService {
         List<CalculatedValue> cvs = new ArrayList<CalculatedValue>();
         DescriptiveStatistics stats = new DescriptiveStatistics(period);
         for (Quote quote : quotes) {
-            stats.addValue(quote.getAdjClose().doubleValue());
+            stats.addValue(quote.getDividend().doubleValue());
             if (stats.getN() >= period) {
                 CalculatedValue cv = new CalculatedValue(quote.getDate(), quote.getSymbol(),
                         "STDDEV", period, stats.getStandardDeviation());
@@ -53,8 +53,8 @@ public class CalculationService {
         for (int i = 0; i + period < quotes.size(); i++) {
             Quote fromQuote = quotes.get(i);
             Quote toQuote = quotes.get(i + period);
-            BigDecimal roc = toQuote.getAdjClose().subtract(fromQuote.getAdjClose())
-                    .divide(fromQuote.getAdjClose(), MathContext.DECIMAL32)
+            BigDecimal roc = toQuote.getDividend().subtract(fromQuote.getDividend())
+                    .divide(fromQuote.getDividend(), MathContext.DECIMAL32)
                     .multiply(HUNDRED).setScale(3, RoundingMode.HALF_EVEN);
 
             cvs.add(new CalculatedValue(toQuote.getDate(), toQuote.getSymbol(), "ROC", period,
@@ -71,7 +71,7 @@ public class CalculationService {
             int x = 0;
             for (Quote quote : quotes.subList(i, i + period)) {
 //                System.out.println(quote.getDate() + "," + quote.getAdjClose().doubleValue());
-                regression.addData(x, quote.getAdjClose().doubleValue());
+                regression.addData(x, quote.getDividend().doubleValue());
                 x++;
             }
             Quote lastQuote = quotes.get(i + period);
@@ -94,7 +94,7 @@ public class CalculationService {
         Quote from = null;
         for (Quote to : quotes) {
             if (from != null) {
-                returns.put(to.getDate(), percentageReturn(from.getAdjClose(), to.getAdjClose()));
+                returns.put(to.getDate(), percentageReturn(from.getDividend(), to.getDividend()));
             }
             from = to;
         }

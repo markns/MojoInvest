@@ -58,7 +58,7 @@ public class QuoteViewerServlet extends HttpServlet {
         resp.setContentType("text/html");
         resp.getWriter().println("<ul>");
         for (Quote quote : quotes) {
-            resp.getWriter().println("<li>" + quote + ", close=" + quote.getClose() + ", rolled=" + quote.isRolled() + "</li>");
+            resp.getWriter().println("<li>" + quote + ", close=" + quote.getNav() + ", rolled=" + quote.isRolled() + "</li>");
         }
 
         resp.getWriter().println("</ul>");

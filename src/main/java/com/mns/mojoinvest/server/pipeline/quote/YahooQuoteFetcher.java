@@ -3,6 +3,7 @@ package com.mns.mojoinvest.server.pipeline.quote;
 import au.com.bytecode.opencsv.CSVReader;
 import com.mns.mojoinvest.server.engine.model.Fund;
 import com.mns.mojoinvest.server.engine.model.Quote;
+import com.mns.mojoinvest.server.util.QuoteUtils;
 import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.UniformInterfaceException;
 import com.sun.jersey.api.client.WebResource;
@@ -12,7 +13,6 @@ import org.joda.time.LocalDate;
 import javax.ws.rs.core.MultivaluedMap;
 import java.io.IOException;
 import java.io.StringReader;
-import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -70,15 +70,6 @@ public class YahooQuoteFetcher {
     }
 
     private static Quote fromStrArr(String symbol, String[] row) {
-        return new Quote(symbol,
-                new LocalDate(row[0]),
-                row[1].isEmpty() ? null : new BigDecimal(row[1]),
-                row[2].isEmpty() ? null : new BigDecimal(row[2]),
-                row[3].isEmpty() ? null : new BigDecimal(row[3]),
-                row[4].isEmpty() ? null : new BigDecimal(row[4]),
-                null, null,
-                row[5].isEmpty() ? null : new BigDecimal(row[5]),
-                row[6].isEmpty() ? null : new BigDecimal(row[6]),
-                false);
+        return QuoteUtils.fromStringArray(row);
     }
 }

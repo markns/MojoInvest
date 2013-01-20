@@ -7,11 +7,11 @@ import com.mns.mojoinvest.server.engine.model.Fund;
 import com.mns.mojoinvest.server.engine.model.Quote;
 import com.mns.mojoinvest.server.engine.model.dao.QuoteDao;
 import com.mns.mojoinvest.server.engine.model.dao.objectify.ObjectifyQuoteDao;
+import com.mns.mojoinvest.server.util.QuoteUtils;
 import org.joda.time.LocalDate;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -63,15 +63,6 @@ public class QuoteFetcherBatchJobTest {
 
 
     private static Quote fromStrArr(String symbol, String[] row) {
-        return new Quote(symbol,
-                new LocalDate(row[0]),
-                row[1].isEmpty() ? null : new BigDecimal(row[1]),
-                row[2].isEmpty() ? null : new BigDecimal(row[2]),
-                row[3].isEmpty() ? null : new BigDecimal(row[3]),
-                row[4].isEmpty() ? null : new BigDecimal(row[4]),
-                null, null,
-                row[5].isEmpty() ? null : new BigDecimal(row[5]),
-                row[6].isEmpty() ? null : new BigDecimal(row[6]),
-                false);
+        return QuoteUtils.fromStringArray(row);
     }
 }

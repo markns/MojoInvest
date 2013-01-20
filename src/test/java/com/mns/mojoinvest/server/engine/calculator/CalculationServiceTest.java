@@ -19,15 +19,15 @@ public class CalculationServiceTest {
 
         List<Quote> quotes = new ArrayList<Quote>();
         quotes.add(new Quote("A", new LocalDate(2011, 1, 7), BigDecimal.ZERO, BigDecimal.ZERO,
-                BigDecimal.ZERO, BigDecimal.ZERO, null, null, BigDecimal.ZERO, new BigDecimal("1"), false));
+                BigDecimal.ZERO, new BigDecimal("1"), false));
         quotes.add(new Quote("A", new LocalDate(2011, 1, 14), BigDecimal.ZERO, BigDecimal.ZERO,
-                BigDecimal.ZERO, BigDecimal.ZERO, null, null, BigDecimal.ZERO, new BigDecimal("1"), false));
+                BigDecimal.ZERO, new BigDecimal("1"), false));
         quotes.add(new Quote("A", new LocalDate(2011, 1, 21), BigDecimal.ZERO, BigDecimal.ZERO,
-                BigDecimal.ZERO, BigDecimal.ZERO, null, null, BigDecimal.ZERO, new BigDecimal("3"), false));
+                BigDecimal.ZERO, new BigDecimal("3"), false));
         quotes.add(new Quote("A", new LocalDate(2011, 1, 28), BigDecimal.ZERO, BigDecimal.ZERO,
-                BigDecimal.ZERO, BigDecimal.ZERO, null, null, BigDecimal.ZERO, new BigDecimal("4"), false));
+                BigDecimal.ZERO, new BigDecimal("4"), false));
         quotes.add(new Quote("A", new LocalDate(2011, 2, 4), BigDecimal.ZERO, BigDecimal.ZERO,
-                BigDecimal.ZERO, BigDecimal.ZERO, null, null, BigDecimal.ZERO, new BigDecimal("5"), false));
+                BigDecimal.ZERO, new BigDecimal("5"), false));
 
         CalculationService service = new CalculationService();
         List<CalculatedValue> values = service.calculateSMA(quotes, 2);
@@ -43,15 +43,15 @@ public class CalculationServiceTest {
     public void testCalculateStandardDeviation() throws Exception {
         List<Quote> quotes = new ArrayList<Quote>();
         quotes.add(new Quote("A", new LocalDate(2011, 1, 7), BigDecimal.ZERO, BigDecimal.ZERO,
-                BigDecimal.ZERO, BigDecimal.ZERO, null, null, BigDecimal.ZERO, new BigDecimal("1"), false));
+                BigDecimal.ZERO, new BigDecimal("1"), false));
         quotes.add(new Quote("A", new LocalDate(2011, 1, 14), BigDecimal.ZERO, BigDecimal.ZERO,
-                BigDecimal.ZERO, BigDecimal.ZERO, null, null, BigDecimal.ZERO, new BigDecimal("1"), false));
+                BigDecimal.ZERO, new BigDecimal("1"), false));
         quotes.add(new Quote("A", new LocalDate(2011, 1, 21), BigDecimal.ZERO, BigDecimal.ZERO,
-                BigDecimal.ZERO, BigDecimal.ZERO, null, null, BigDecimal.ZERO, new BigDecimal("3"), false));
+                BigDecimal.ZERO, new BigDecimal("3"), false));
         quotes.add(new Quote("A", new LocalDate(2011, 1, 28), BigDecimal.ZERO, BigDecimal.ZERO,
-                BigDecimal.ZERO, BigDecimal.ZERO, null, null, BigDecimal.ZERO, new BigDecimal("4"), false));
+                BigDecimal.ZERO, new BigDecimal("4"), false));
         quotes.add(new Quote("A", new LocalDate(2011, 2, 4), BigDecimal.ZERO, BigDecimal.ZERO,
-                BigDecimal.ZERO, BigDecimal.ZERO, null, null, BigDecimal.ZERO, new BigDecimal("5"), false));
+                BigDecimal.ZERO, new BigDecimal("5"), false));
 
         CalculationService service = new CalculationService();
         List<CalculatedValue> values = service.calculateStandardDeviation(quotes, 2);
@@ -69,15 +69,15 @@ public class CalculationServiceTest {
 
         List<Quote> quotes = new ArrayList<Quote>();
         quotes.add(new Quote("A", new LocalDate(2011, 1, 7), BigDecimal.ZERO, BigDecimal.ZERO,
-                BigDecimal.ZERO, BigDecimal.ZERO, null, null, BigDecimal.ZERO, new BigDecimal("1"), false));
+                BigDecimal.ZERO, new BigDecimal("1"), false));
         quotes.add(new Quote("A", new LocalDate(2011, 1, 14), BigDecimal.ZERO, BigDecimal.ZERO,
-                BigDecimal.ZERO, BigDecimal.ZERO, null, null, BigDecimal.ZERO, new BigDecimal("1"), false));
+                BigDecimal.ZERO, new BigDecimal("1"), false));
         quotes.add(new Quote("A", new LocalDate(2011, 1, 21), BigDecimal.ZERO, BigDecimal.ZERO,
-                BigDecimal.ZERO, BigDecimal.ZERO, null, null, BigDecimal.ZERO, new BigDecimal("3"), false));
+                BigDecimal.ZERO, new BigDecimal("3"), false));
         quotes.add(new Quote("A", new LocalDate(2011, 1, 28), BigDecimal.ZERO, BigDecimal.ZERO,
-                BigDecimal.ZERO, BigDecimal.ZERO, null, null, BigDecimal.ZERO, new BigDecimal("4"), false));
+                BigDecimal.ZERO, new BigDecimal("4"), false));
         quotes.add(new Quote("A", new LocalDate(2011, 2, 4), BigDecimal.ZERO, BigDecimal.ZERO,
-                BigDecimal.ZERO, BigDecimal.ZERO, null, null, BigDecimal.ZERO, new BigDecimal("5"), false));
+                BigDecimal.ZERO, new BigDecimal("5"), false));
 
         CalculationService service = new CalculationService();
         List<CalculatedValue> values = service.calculateROC(quotes, 2);

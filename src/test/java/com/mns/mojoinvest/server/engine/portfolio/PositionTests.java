@@ -50,12 +50,12 @@ public class PositionTests {
     private final LocalServiceTestHelper helper = new LocalServiceTestHelper(config);
 
     public static final List<Quote> quotes = Arrays.asList(
-            new Quote("TEST", buy100Date, BigDecimal.ZERO, BigDecimal.ZERO, BigDecimal.ZERO, new BigDecimal("400"), BigDecimal.ZERO, BigDecimal.ZERO, BigDecimal.ZERO, new BigDecimal("400"), false),
-            new Quote("TEST", buy200Date, BigDecimal.ZERO, BigDecimal.ZERO, BigDecimal.ZERO, new BigDecimal("500"), BigDecimal.ZERO, BigDecimal.ZERO, BigDecimal.ZERO, new BigDecimal("500"), false),
-            new Quote("TEST", sell50Date, BigDecimal.ZERO, BigDecimal.ZERO, BigDecimal.ZERO, new BigDecimal("550"), BigDecimal.ZERO, BigDecimal.ZERO, BigDecimal.ZERO, new BigDecimal("550"), false),
-            new Quote("TEST", sell50_2Date, BigDecimal.ZERO, BigDecimal.ZERO, BigDecimal.ZERO, new BigDecimal("550"), BigDecimal.ZERO, BigDecimal.ZERO, BigDecimal.ZERO, new BigDecimal("550"), false),
-            new Quote("TEST", sell100Date, BigDecimal.ZERO, BigDecimal.ZERO, BigDecimal.ZERO, new BigDecimal("490"), BigDecimal.ZERO, BigDecimal.ZERO, BigDecimal.ZERO, new BigDecimal("490"), false),
-            new Quote("TEST", sell200Date, BigDecimal.ZERO, BigDecimal.ZERO, BigDecimal.ZERO, new BigDecimal("510"), BigDecimal.ZERO, BigDecimal.ZERO, BigDecimal.ZERO, new BigDecimal("510"), false)
+            new Quote("TEST", buy100Date, BigDecimal.ZERO, new BigDecimal("400"), BigDecimal.ZERO, new BigDecimal("400"), false),
+            new Quote("TEST", buy200Date, BigDecimal.ZERO, new BigDecimal("500"), BigDecimal.ZERO, new BigDecimal("500"), false),
+            new Quote("TEST", sell50Date, BigDecimal.ZERO, new BigDecimal("550"), BigDecimal.ZERO, new BigDecimal("550"), false),
+            new Quote("TEST", sell50_2Date, BigDecimal.ZERO, new BigDecimal("550"), BigDecimal.ZERO, new BigDecimal("550"), false),
+            new Quote("TEST", sell100Date, BigDecimal.ZERO, new BigDecimal("490"), BigDecimal.ZERO, new BigDecimal("490"), false),
+            new Quote("TEST", sell200Date, BigDecimal.ZERO, new BigDecimal("510"), BigDecimal.ZERO, new BigDecimal("510"), false)
     );
 
     @Before

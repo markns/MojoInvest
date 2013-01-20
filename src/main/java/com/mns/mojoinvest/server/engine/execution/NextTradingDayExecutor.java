@@ -43,12 +43,12 @@ public class NextTradingDayExecutor implements Executor {
         if (executionQuote == null) {
             throw new PortfolioException(date + " Unable to buy " + fund + " - quote was null");
         }
-        BigDecimal shares = allocation.divide(executionQuote.getAdjClose(), 0, BigDecimal.ROUND_DOWN);
+        BigDecimal shares = allocation.divide(executionQuote.getDividend(), 0, BigDecimal.ROUND_DOWN);
         if (!portfolio.isShadow())
             log.fine(executionDate.dayOfWeek().getAsShortText() + " " + executionDate +
-                    " Buy " + shares + " " + fund + " at " + executionQuote.getAdjClose());
+                    " Buy " + shares + " " + fund + " at " + executionQuote.getDividend());
         BuyTransaction tx = new BuyTransaction(fund, executionDate, shares,
-                executionQuote.getAdjClose(), portfolio.getTransactionCost());
+                executionQuote.getDividend(), portfolio.getTransactionCost());
         portfolio.add(tx);
     }
 
@@ -72,9 +72,9 @@ public class NextTradingDayExecutor implements Executor {
         Position position = portfolio.getPosition(fund);
         if (!portfolio.isShadow())
             log.fine(executionDate.dayOfWeek().getAsShortText() + " " + executionDate +
-                    " Sell " + position.shares(executionDate) + " " + fund + " at " + executionQuote.getAdjClose());
+                    " Sell " + position.shares(executionDate) + " " + fund + " at " + executionQuote.getDividend());
         SellTransaction tx = new SellTransaction(fund, executionDate, position.shares(executionDate),
-                executionQuote.getAdjClose(), portfolio.getTransactionCost());
+                executionQuote.getDividend(), portfolio.getTransactionCost());
         portfolio.add(tx);
     }
 }

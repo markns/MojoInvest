@@ -222,7 +222,6 @@ public class LotTests {
 
 
     private final Quote dummyQuote = new Quote("DUMMY", new LocalDate("2000-01-15"),
-            BigDecimal.ONE, BigDecimal.ONE, BigDecimal.ONE, new BigDecimal("2"),
             BigDecimal.ONE, BigDecimal.ONE, BigDecimal.ONE, BigDecimal.ONE, false);
 
     public static final BigDecimal ZERO = BigDecimal.ZERO;

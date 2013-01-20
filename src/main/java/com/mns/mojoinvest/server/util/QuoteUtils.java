@@ -97,9 +97,9 @@ public class QuoteUtils {
     }
 
     private static Quote rollQuote(Quote quote, LocalDate date) {
-        return new Quote(quote.getSymbol(), date, quote.getOpen(),
-                quote.getHigh(), quote.getLow(), quote.getClose(), null, null, quote.getVolume(),
-                quote.getAdjClose(), true);
+        return new Quote(quote.getSymbol(), date, quote.getNav(), quote.getIndex(),
+                quote.getTrNav(),
+                quote.getDividend(), true);
     }
 
 
@@ -124,27 +124,22 @@ public class QuoteUtils {
     public static Quote fromStringArray(String[] row) {
         return new Quote(row[0],
                 new LocalDate(row[1]),
-                row[2].isEmpty() ? null : new BigDecimal(row[2]),
-                row[3].isEmpty() ? null : new BigDecimal(row[3]),
+                row[3].isEmpty() ? null : new BigDecimal(row[3]), row[2].isEmpty() ? null : new BigDecimal(row[2]),
                 row[4].isEmpty() ? null : new BigDecimal(row[4]),
                 row[5].isEmpty() ? null : new BigDecimal(row[5]),
-                null, null, row[6].isEmpty() ? null : new BigDecimal(row[6]),
-                row[7].isEmpty() ? null : new BigDecimal(row[7]),
-                false);
+                Boolean.parseBoolean(row[6]));
     }
 
 
     public static String[] toStringArray(Quote quote) {
-        String[] arr = new String[9];
+        String[] arr = new String[6];
         arr[0] = quote.getSymbol();
         arr[1] = quote.getDate() + "";
-        arr[2] = quote.getOpen() + "";
-        arr[3] = quote.getHigh() + "";
-        arr[4] = quote.getLow() + "";
-        arr[5] = quote.getClose() + "";
-        arr[6] = quote.getVolume() + "";
-        arr[7] = quote.getAdjClose() + "";
-        arr[8] = quote.isRolled() + "";
+        arr[2] = quote.getNav() + "";
+        arr[3] = quote.getIndex() + "";
+        arr[4] = quote.getTrNav() + "";
+        arr[5] = quote.getDividend() + "";
+        arr[6] = quote.isRolled() + "";
         return arr;
     }
 
@@ -152,15 +147,7 @@ public class QuoteUtils {
     public static Quote fromString(String line) {
         line = line.replaceAll("\"", "");
         String[] row = line.split(",");
-        return new Quote(row[0],
-                new LocalDate(row[1]),
-                row[2].isEmpty() ? null : new BigDecimal(row[2]),
-                row[3].isEmpty() ? null : new BigDecimal(row[3]),
-                row[4].isEmpty() ? null : new BigDecimal(row[4]),
-                row[5].isEmpty() ? null : new BigDecimal(row[5]),
-                null, null, row[6].isEmpty() ? null : new BigDecimal(row[6]),
-                row[7].isEmpty() ? null : new BigDecimal(row[7]),
-                false);
+        return fromStringArray(row);
     }
 
     public static String toString(Quote quote) {

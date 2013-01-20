@@ -286,7 +286,7 @@ public class Lot {
                 } catch (DataAccessException e) {
                     throw new PortfolioException("Unable to calculate market value of lot", e);
                 }
-                lotValues.add(quantities.get(i).multiply(quote.getAdjClose()));
+                lotValues.add(quantities.get(i).multiply(quote.getDividend()));
             }
         }
         return lotValues;

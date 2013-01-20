@@ -40,7 +40,6 @@ public class MomentumStrategyTests {
     private final LocalServiceTestHelper helper = new LocalServiceTestHelper(config);
 
     private final Quote dummyQuote = new Quote("DUMMY", new LocalDate("2000-01-15"),
-            BigDecimal.ONE, BigDecimal.ONE, BigDecimal.ONE, BigDecimal.ONE,
             BigDecimal.ONE, BigDecimal.ONE, BigDecimal.ONE, BigDecimal.ONE, false);
 
     Map<String, Fund> funds = new HashMap<String, Fund>() {

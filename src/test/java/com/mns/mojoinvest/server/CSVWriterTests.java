@@ -21,7 +21,7 @@ public class CSVWriterTests {
 
     @Test
     public void testQuoteToStringArr() {
-        Quote quote = new Quote("TEST", new LocalDate("2011-01-01"), BigDecimal.ZERO, BigDecimal.ZERO, BigDecimal.ZERO, BigDecimal.ZERO, BigDecimal.ZERO, BigDecimal.ZERO, BigDecimal.ZERO, BigDecimal.ZERO, false);
+        Quote quote = new Quote("TEST", new LocalDate("2011-01-01"), BigDecimal.ZERO, BigDecimal.ZERO, BigDecimal.ZERO, BigDecimal.ZERO, false);
 
         StringWriter stringWriter = new StringWriter();
         CSVWriter writer = new CSVWriter(stringWriter);
@@ -34,7 +34,7 @@ public class CSVWriterTests {
 
     @Test
     public void testQuoteFromStringArr() {
-        Quote expected = new Quote("TEST", new LocalDate("2011-01-01"), BigDecimal.ZERO, BigDecimal.ZERO, BigDecimal.ZERO, BigDecimal.ZERO, BigDecimal.ZERO, BigDecimal.ZERO, BigDecimal.ZERO, BigDecimal.ZERO, false);
+        Quote expected = new Quote("TEST", new LocalDate("2011-01-01"), BigDecimal.ZERO, BigDecimal.ZERO, BigDecimal.ZERO, BigDecimal.ZERO, false);
         String[] arr = new String[]{"TEST", "2011-01-01", "0", "0", "0", "0", "0", "0", "0", "0", "false"};
         Quote quote = QuoteUtils.fromStringArray(arr);
         assertEquals(expected, quote);

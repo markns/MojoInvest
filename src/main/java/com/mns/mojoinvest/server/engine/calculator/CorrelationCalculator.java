@@ -46,7 +46,7 @@ public class CorrelationCalculator {
                 for (int i = 0; i < range; i++) {
                     Object o = arr[i];
                     Quote l = (Quote) o;
-                    data[i][j] = l.getClose().doubleValue();
+                    data[i][j] = l.getNav().doubleValue();
                 }
 
             }

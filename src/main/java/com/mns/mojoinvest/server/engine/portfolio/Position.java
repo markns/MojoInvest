@@ -290,10 +290,10 @@ public class Position {
             throw new PortfolioException("Unable to get close price for " + this + " on " + date);
         }
         log.fine("Loaded quote " + quote);
-        if (quote.getAdjClose() != null) {
-            return quote.getAdjClose();
+        if (quote.getDividend() != null) {
+            return quote.getDividend();
         } else {
-            return quote.getClose();
+            return quote.getNav();
         }
     }
 
