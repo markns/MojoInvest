@@ -47,7 +47,10 @@ public class DailyPipeline extends Job1<Void, LocalDate> {
 
         FutureValue<String> sessionId = futureCall(new ExternalAgentJob(), immediate(USER_EMAIL));
 
-        messages.add(futureCall(new ISharesQuoteFetcherJob(), sessionId, waitFor(fundsUpdatedMessage)));
+        String[] categories = new String[]{"DUB_alternatives", "DUB_developedequity", "DUB_emergingequity", "DUB_fixedincome"};
+        for (String category : categories) {
+            messages.add(futureCall(new ISharesQuoteFetcherJob(), immediate(category), sessionId, waitFor(fundsUpdatedMessage)));
+        }
 
 //        futureCall(new RunCalculationsGeneratorJob(), immediate(date), funds);
 //        //for each of the parameter combinations (1M, 2M, 6M etc) call
