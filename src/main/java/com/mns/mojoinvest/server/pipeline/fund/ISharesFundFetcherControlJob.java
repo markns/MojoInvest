@@ -5,10 +5,11 @@ import com.google.appengine.tools.pipeline.Job0;
 import com.google.appengine.tools.pipeline.Job1;
 import com.google.appengine.tools.pipeline.Value;
 import com.google.common.annotations.VisibleForTesting;
-import com.mns.mojoinvest.server.engine.model.Fund;
+import com.google.common.base.Joiner;
 import com.mns.mojoinvest.server.pipeline.PipelineHelper;
 import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.WebResource;
+import com.sun.jersey.api.client.filter.LoggingFilter;
 import com.sun.jersey.core.util.MultivaluedMapImpl;
 import org.codehaus.jackson.JsonFactory;
 import org.codehaus.jackson.JsonNode;
@@ -26,44 +27,45 @@ import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class ISharesFundFetcherControlJob extends Job0<List<Fund>> {
+public class ISharesFundFetcherControlJob extends Job0<String> {
 
     private static final Logger log = Logger.getLogger(ISharesFundFetcherControlJob.class.getName());
 
-    private static final int BATCH_SIZE = 2;
+    private static final int BATCH_SIZE = 30;
 
     @Override
-    public Value<List<Fund>> run() {
+    public Value<String> run() {
+
         String html = fetchAllFundsHtml();
-        List<String> symbols = scrapeSymbols(html);
+        List<String> links = scrapeLinks(html);
 
         //TODO: Scrape and persist categories
 //        scrapeCategories(html);
-
-        log.info("Attempting to retrieve details for " + symbols.size() + " funds");
-        List<FutureValue<List<Fund>>> fundLists = new ArrayList<FutureValue<List<Fund>>>();
+        log.info("Attempting to retrieve details for " + links.size() + " funds");
         List<String> batch = new ArrayList<String>(BATCH_SIZE);
 
-        for (String symbol : symbols) {
-            batch.add(symbol);
+        List<FutureValue<String>> fundsUpdated = new ArrayList<FutureValue<String>>();
+
+        for (String link : links) {
+            batch.add(link);
             if (batch.size() == BATCH_SIZE) {
                 List<String> clone = new ArrayList<String>(batch);
-                fundLists.add(futureCall(new ISharesFundDetailFetcherBatchJob(), immediate(clone)));
+                fundsUpdated.add(futureCall(new ISharesFundDetailFetcherBatchJob(), immediate(clone)));
                 batch.clear();
-                break;
             }
         }
         if (batch.size() > 0) {
-            fundLists.add(futureCall(new ISharesFundDetailFetcherBatchJob(), immediate(batch)));
+            fundsUpdated.add(futureCall(new ISharesFundDetailFetcherBatchJob(), immediate(batch)));
         }
-
-        return futureCall(new MergeFundListJob(), futureList(fundLists));
+        log.info("Fund fetcher control job is complete");
+        return futureCall(new MergeListJob(), futureList(fundsUpdated));
     }
 
 
     private String fetchAllFundsHtml() {
         Client client = PipelineHelper.getClient();
 
+        client.addFilter(new LoggingFilter());
         WebResource r = client.resource("http://uk.ishares.com/en/rc/products/overview");
         MultivaluedMap<String, String> params = new MultivaluedMapImpl();
 
@@ -73,16 +75,19 @@ public class ISharesFundFetcherControlJob extends Job0<List<Fund>> {
         return html;
     }
 
+    //    <td class="grid_data fund fund_en string"> <span><a href="/en/rc/products;jsessionid=CF7CC7F2BCAE95A00F65F140A1C55EF7.isharesnet-pea02/ITPS">iShares Barclays $ TIPS</a></span></td>
     @VisibleForTesting
-    protected List<String> scrapeSymbols(String html) {
+    protected List<String> scrapeLinks(String html) {
         Document doc = Jsoup.parse(html);
-
-        List<String> symbols = new ArrayList<String>();
+        List<String> links = new ArrayList<String>();
         for (Element e : doc.select("table#fund_overview").select("tbody").select("tr")) {
-            symbols.add(e.select("td.ticker").text());
+            String link = e.getElementsByTag("a").get(0).attr("href");
+            if (link.contains(";jsessionid=")) {
+                link = link.replaceFirst(";jsessionid=\\w+\\.\\w+-\\w+\\d+", "");
+            }
+            links.add(link);
         }
-
-        return symbols;
+        return links;
     }
 
     @VisibleForTesting
@@ -116,16 +121,13 @@ public class ISharesFundFetcherControlJob extends Job0<List<Fund>> {
     }
 
 
-    private static class MergeFundListJob extends Job1<List<Fund>, List<List<Fund>>> {
+    private static class MergeListJob extends Job1<String, List<String>> {
 
         @Override
-        public Value<List<Fund>> run(List<List<Fund>> lists) {
-            List<Fund> funds = new ArrayList<Fund>();
-            for (List<Fund> list : lists) {
-                funds.addAll(list);
-            }
-            return immediate(funds);
+        public Value<String> run(List<String> strings) {
+            return immediate(Joiner.on("\n").join(strings));
         }
+
     }
 
 }

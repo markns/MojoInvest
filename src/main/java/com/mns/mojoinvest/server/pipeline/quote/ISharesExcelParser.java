@@ -37,7 +37,8 @@ public class ISharesExcelParser {
     }
 
     private static String parseSymbol(Sheet sheet, int column) {
-        String s = sheet.getCell(column, 2).getContents();
+        //Use column + 1 as column is the name of the tracked index, which can have a different symbol.
+        String s = sheet.getCell(column + 1, 2).getContents();
         return s.split(" - ")[0];
     }
 

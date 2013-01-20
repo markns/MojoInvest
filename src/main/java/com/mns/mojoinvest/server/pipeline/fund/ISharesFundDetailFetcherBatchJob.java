@@ -4,6 +4,7 @@ import com.google.appengine.tools.pipeline.Job1;
 import com.google.appengine.tools.pipeline.Value;
 import com.google.common.annotations.VisibleForTesting;
 import com.mns.mojoinvest.server.engine.model.Fund;
+import com.mns.mojoinvest.server.engine.model.dao.FundDao;
 import com.mns.mojoinvest.server.pipeline.PipelineHelper;
 import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.WebResource;
@@ -13,40 +14,42 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Logger;
 
-public class ISharesFundDetailFetcherBatchJob extends Job1<List<Fund>, List<String>> {
+public class ISharesFundDetailFetcherBatchJob extends Job1<String, List<String>> {
 
     private static final Logger log = Logger.getLogger(ISharesFundDetailFetcherBatchJob.class.getName());
 
     @Override
-    public Value<List<Fund>> run(List<String> symbols) {
-        List<Fund> funds = new ArrayList<Fund>();
-        log.info("Attempting to retrieve details for batch: " + symbols);
-        for (String symbol : symbols) {
-            Fund fund = runOne(symbol);
+    public Value<String> run(List<String> links) {
+        log.info("Attempting to retrieve details for funds: " + links);
+        FundDao dao = PipelineHelper.getFundDao();
+        for (String link : links) {
+
+            Fund fund = runOne(link);
             if (fund != null) {
-                funds.add(fund);
+                dao.put(fund);
             }
         }
-        return immediate(funds);
+        String msg = "Finished updating funds: " + links;
+        log.info(msg);
+        return immediate(msg);
     }
 
-    public Fund runOne(String symbol) {
-        log.info("Attempting to fetch html for " + symbol);
-        String html = fetchFundDetailHtml(symbol);
+    public Fund runOne(String link) {
+        log.info("Attempting to fetch html at " + link);
+        String html = fetchFundDetailHtml(link);
         Fund fund = buildFund(html);
         log.info("Constructed fund " + fund);
         return fund;
     }
 
-    private String fetchFundDetailHtml(String symbol) {
+    private String fetchFundDetailHtml(String link) {
         Client client = PipelineHelper.getClient();
-        WebResource r = client.resource("http://uk.ishares.com/en/rc/products/" + symbol);
+        WebResource r = client.resource("http://uk.ishares.com" + link);
         return r.get(String.class);
     }
 

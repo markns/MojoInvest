@@ -132,7 +132,7 @@ public class QuoteUtils {
 
 
     public static String[] toStringArray(Quote quote) {
-        String[] arr = new String[6];
+        String[] arr = new String[7];
         arr[0] = quote.getSymbol();
         arr[1] = quote.getDate() + "";
         arr[2] = quote.getNav() + "";

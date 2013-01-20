@@ -4,8 +4,6 @@ import com.google.appengine.api.datastore.KeyFactory;
 import com.google.appengine.tools.pipeline.FutureValue;
 import com.google.appengine.tools.pipeline.Job1;
 import com.google.appengine.tools.pipeline.Value;
-import com.mns.mojoinvest.server.engine.model.Fund;
-import com.mns.mojoinvest.server.pipeline.fund.FundUpdaterJob;
 import com.mns.mojoinvest.server.pipeline.fund.ISharesFundFetcherControlJob;
 import com.mns.mojoinvest.server.pipeline.quote.ISharesQuoteFetcherJob;
 import com.mns.mojoinvest.server.util.HolidayUtils;
@@ -39,15 +37,12 @@ public class DailyPipeline extends Job1<Void, LocalDate> {
 
         //TODO: Delete pipeline job records more than one week old
 
-        FutureValue<List<Fund>> funds = futureCall(new ISharesFundFetcherControlJob());
-        //TODO: Should prevent ISharesFundFetcherControlJob from returning all funds as they get serialized to db
-        FutureValue<String> fundsUpdatedMessage = futureCall(new FundUpdaterJob(), funds);
-        messages.add(fundsUpdatedMessage);
+        FutureValue<String> fundsUpdatedMessage = futureCall(new ISharesFundFetcherControlJob());
 //        FutureValue<String> fundsUpdatedMessage = futureCall(new ImmediateReturnJob());
-
+        //F9B1CFCA12B2E6ACAD33A55457A1432F.isharestools-pea01
         FutureValue<String> sessionId = futureCall(new ExternalAgentJob(), immediate(USER_EMAIL));
 
-        String[] categories = new String[]{"DUB_alternatives", "DUB_developedequity", "DUB_emergingequity", "DUB_fixedincome"};
+        String[] categories = new String[]{"DUB_alternatives", "DUB_developedequity", "DUB_emergingequity", "DUB_fixedincome", "DUB_commodities"};
         for (String category : categories) {
             messages.add(futureCall(new ISharesQuoteFetcherJob(), immediate(category), sessionId, waitFor(fundsUpdatedMessage)));
         }

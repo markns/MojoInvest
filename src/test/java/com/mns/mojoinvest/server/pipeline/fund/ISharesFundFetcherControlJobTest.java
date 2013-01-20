@@ -17,7 +17,7 @@ public class ISharesFundFetcherControlJobTest {
     public void testScrapeSymbols() throws IOException {
         URL url = ClassLoader.getSystemResource("ishares_product_overview.html");
         String html = FileUtils.readFileToString(new File(url.getFile()));
-        assertEquals(131, job.scrapeSymbols(html).size());
+        assertEquals(131, job.scrapeLinks(html).size());
     }
 
 

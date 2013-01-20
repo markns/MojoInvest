@@ -12,6 +12,14 @@ import com.sun.jersey.api.client.Client;
 
 public class PipelineHelper {
 
+    private static ObjectifyFactory factory = new ObjectifyFactory();
+
+    static {
+        factory.register(Fund.class);
+        factory.register(BlobstoreEntryRecord.class);
+        factory.getConversions().add(new MyTypeConverters());
+    }
+
     public static Client getClient() {
         Client client = Client.create();
         client.setFollowRedirects(true);
@@ -21,16 +29,10 @@ public class PipelineHelper {
     }
 
     public static FundDao getFundDao() {
-        ObjectifyFactory factory = new ObjectifyFactory();
-        factory.register(Fund.class);
-        factory.getConversions().add(new MyTypeConverters());
         return new ObjectifyFundDao(factory);
     }
 
     public static BlobstoreQuoteDao getQuoteDao() {
-        ObjectifyFactory factory = new ObjectifyFactory();
-        factory.register(BlobstoreEntryRecord.class);
-        factory.getConversions().add(new MyTypeConverters());
         return new BlobstoreQuoteDao(new ObjectifyEntryRecordDao(factory));
     }
 
