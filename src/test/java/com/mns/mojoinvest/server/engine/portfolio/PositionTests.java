@@ -22,10 +22,10 @@ import static junit.framework.Assert.*;
 public class PositionTests {
 
     private final QuoteDao quoteDao = new ObjectifyQuoteDao(ObjectifyService.factory());
-    private final Fund fund = new Fund("TEST", "Test fund", "Category", "Provider", true,
+    private final Fund fund = new Fund("TEST", "1", "Test fund", "Category", "Provider", true,
             "US", "Index", "Blah blah", new LocalDate("2011-01-01"));
 
-    private final Fund wrongfund = new Fund("WRONG", "Test fund", "Category", "Provider", true,
+    private final Fund wrongfund = new Fund("WRONG", "1", "Test fund", "Category", "Provider", true,
             "US", "Index", "Blah blah", new LocalDate("2011-01-01"));
 
     public static final BigDecimal COMMISSION = new BigDecimal("15");

@@ -18,8 +18,9 @@ public class ISharesExcelParser {
     public static List<Quote> parse(Workbook workbook) {
         List<Quote> quotes = new ArrayList<Quote>();
         Sheet sheet = workbook.getSheet(0);
+        String symbol = parseSymbol(sheet);
         for (int column = 1; column < sheet.getColumns(); column += 5) {
-            String symbol = parseSymbol(sheet, column);
+
             for (int row = 3; row < sheet.getRows(); row++) {
                 LocalDate date = parseDate(sheet, row);
                 BigDecimal index = parseBigDecimal(sheet, column, row);
@@ -36,9 +37,9 @@ public class ISharesExcelParser {
         return quotes;
     }
 
-    private static String parseSymbol(Sheet sheet, int column) {
+    private static String parseSymbol(Sheet sheet) {
         //Use column + 1 as column is the name of the tracked index, which can have a different symbol.
-        String s = sheet.getCell(column + 1, 2).getContents();
+        String s = sheet.getCell(0, 0).getContents();
         return s.split(" - ")[0];
     }
 

@@ -44,16 +44,16 @@ public class MomentumStrategyTests {
 
     Map<String, Fund> funds = new HashMap<String, Fund>() {
         {
-            put("A", new Fund("A", "A", "", "", true, "", "", "", new LocalDate("2001-01-01")));
-            put("B", new Fund("B", "B", "", "", true, "", "", "", new LocalDate("2001-01-01")));
-            put("C", new Fund("C", "C", "", "", true, "", "", "", new LocalDate("2001-01-01")));
-            put("D", new Fund("D", "D", "", "", true, "", "", "", new LocalDate("2001-01-01")));
-            put("E", new Fund("E", "E", "", "", true, "", "", "", new LocalDate("2001-01-01")));
-            put("F", new Fund("F", "F", "", "", true, "", "", "", new LocalDate("2001-01-01")));
-            put("G", new Fund("G", "G", "", "", true, "", "", "", new LocalDate("2001-01-01")));
-            put("H", new Fund("H", "H", "", "", true, "", "", "", new LocalDate("2001-01-01")));
-            put("I", new Fund("I", "I", "", "", true, "", "", "", new LocalDate("2001-01-01")));
-            put("J", new Fund("J", "J", "", "", true, "", "", "", new LocalDate("2001-01-01")));
+            put("A", new Fund("A", "1", "A", "", "", true, "", "", "", new LocalDate("2001-01-01")));
+            put("B", new Fund("B", "1", "B", "", "", true, "", "", "", new LocalDate("2001-01-01")));
+            put("C", new Fund("C", "1", "C", "", "", true, "", "", "", new LocalDate("2001-01-01")));
+            put("D", new Fund("D", "1", "D", "", "", true, "", "", "", new LocalDate("2001-01-01")));
+            put("E", new Fund("E", "1", "E", "", "", true, "", "", "", new LocalDate("2001-01-01")));
+            put("F", new Fund("F", "1", "F", "", "", true, "", "", "", new LocalDate("2001-01-01")));
+            put("G", new Fund("G", "1", "G", "", "", true, "", "", "", new LocalDate("2001-01-01")));
+            put("H", new Fund("H", "1", "H", "", "", true, "", "", "", new LocalDate("2001-01-01")));
+            put("I", new Fund("I", "1", "I", "", "", true, "", "", "", new LocalDate("2001-01-01")));
+            put("J", new Fund("J", "1", "J", "", "", true, "", "", "", new LocalDate("2001-01-01")));
         }
     };
 

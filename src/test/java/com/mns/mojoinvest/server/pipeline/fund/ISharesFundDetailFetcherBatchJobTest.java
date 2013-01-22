@@ -6,11 +6,17 @@ import org.codehaus.jackson.JsonFactory;
 import org.codehaus.jackson.JsonNode;
 import org.codehaus.jackson.JsonParser;
 import org.codehaus.jackson.map.ObjectMapper;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
 import org.junit.Test;
 
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -37,18 +43,27 @@ public class ISharesFundDetailFetcherBatchJobTest {
 
     }
 
+
     @Test
     public void testParseCategoryJs() throws IOException {
 
-        URL url = ClassLoader.getSystemResource("categories.js");
-        String js = FileUtils.readFileToString(new File(url.getFile()));
+        URL url = ClassLoader.getSystemResource("ishares_product_overview.html");
 
-        Pattern pattern = Pattern.compile("return (\\{.+\\})");
 
-        Matcher matcher = pattern.matcher(js);
-        matcher.find();
+        String html = FileUtils.readFileToString(new File(url.getFile()));
 
-        String json = matcher.group(1).replaceAll("s0", "\"s0\"");
+        Document doc = Jsoup.parse(html);
+        Elements scripts = doc.getElementsByTag("script");
+        String json = "";
+        for (Element script : scripts) {
+            if (script.html().contains("var fundMenu")) {
+                Pattern pattern = Pattern.compile("return (\\{.*\\})");
+                Matcher matcher = pattern.matcher(script.html());
+                matcher.find();
+                json = matcher.group(1).replaceAll("s0", "\"s0\"");
+                break;
+            }
+        }
 
         ObjectMapper mapper = new ObjectMapper();
         mapper.configure(JsonParser.Feature.ALLOW_UNQUOTED_FIELD_NAMES, true);
@@ -56,13 +71,24 @@ public class ISharesFundDetailFetcherBatchJobTest {
         JsonParser jp = factory.createJsonParser(json);
         JsonNode root = mapper.readTree(jp);
 
-        System.out.println(root);
-        for (JsonNode node1 : root.get("children")) {
-            System.out.println(node1);
+        Map<String, String> map = new HashMap<String, String>();
+        for (JsonNode level1 : root.get("children")) {
+
+            for (JsonNode level2 : level1.get("children")) {
+
+                for (JsonNode level3 : level2.get("children")) {
+                    for (JsonNode level4 : level3.get("children")) {
+                        map.put(level4.get("fund_id").toString(),
+                                level4.get("absoluteTicker").asText());
+                    }
+                }
+            }
         }
 
+        for (String s : map.keySet()) {
+            System.out.println(s + ",");
+        }
 
-//        System.out.println(node);
     }
 
 

@@ -43,7 +43,7 @@ public class CSVWriterTests {
     @Test
     public void testFundToStringArr() {
 
-        Fund fund = new Fund("ABC", "ABC fund", "Category", "Provider", true,
+        Fund fund = new Fund("ABC", "1", "ABC fund", "Category", "Provider", true,
                 "US", "Index", "Blah blah", new LocalDate("2011-01-01"));
 
         StringWriter stringWriter = new StringWriter();
@@ -57,7 +57,7 @@ public class CSVWriterTests {
 
     @Test
     public void testFundFromStringArr() {
-        Fund expected = new Fund("ABC", "ABC fund", "Category", "Provider", true,
+        Fund expected = new Fund("ABC", "1", "ABC fund", "Category", "Provider", true,
                 "US", "Index", "Blah blah", new LocalDate("2011-01-01"));
         String[] arr = new String[]{"ABC", "ABC fund", "Category", "Provider", "true",
                 "US", "Index", "Blah blah", "2011-01-01"};
@@ -67,7 +67,7 @@ public class CSVWriterTests {
 
     @Test
     public void testTransactionToStringArr() {
-        Fund fund = new Fund("ABC", "ABC fund", "Category", "Provider", true,
+        Fund fund = new Fund("ABC", "1", "ABC fund", "Category", "Provider", true,
                 "US", "Index", "Blah blah", new LocalDate("2011-01-01"));
         BuyTransaction buy = new BuyTransaction("ABC", new LocalDate("2011-01-01"), new BigDecimal("100"), new BigDecimal("471.09"), BigDecimal.TEN);
         SellTransaction sell = new SellTransaction("ABC", new LocalDate("2011-01-01"), new BigDecimal("100"), new BigDecimal("471.09"), BigDecimal.TEN);
@@ -85,7 +85,7 @@ public class CSVWriterTests {
 
     @Test
     public void testTransactionFromStrArr() {
-        Fund fund = new Fund("ABC", "ABC fund", "Category", "Provider", true,
+        Fund fund = new Fund("ABC", "1", "ABC fund", "Category", "Provider", true,
                 "US", "Index", "Blah blah", new LocalDate("2011-01-01"));
 
         BuyTransaction expectedBuy = new BuyTransaction("ABC", new LocalDate("2011-01-01"), new BigDecimal("100"), new BigDecimal("471.09"), BigDecimal.TEN);

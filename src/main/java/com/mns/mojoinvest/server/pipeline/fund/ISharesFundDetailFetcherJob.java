@@ -1,6 +1,6 @@
 package com.mns.mojoinvest.server.pipeline.fund;
 
-import com.google.appengine.tools.pipeline.Job1;
+import com.google.appengine.tools.pipeline.Job2;
 import com.google.appengine.tools.pipeline.Value;
 import com.google.common.annotations.VisibleForTesting;
 import com.mns.mojoinvest.server.engine.model.Fund;
@@ -15,47 +15,39 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.logging.Logger;
 
-public class ISharesFundDetailFetcherBatchJob extends Job1<String, List<String>> {
+public class ISharesFundDetailFetcherJob extends Job2<String, String, String> {
 
     private static final Logger log = Logger.getLogger(ISharesFundDetailFetcherBatchJob.class.getName());
 
     @Override
-    public Value<String> run(List<String> links) {
-        log.info("Attempting to retrieve details for funds: " + links);
+    public Value<String> run(String fundId, String absoluteTicker) {
+        log.info("Attempting to retrieve details for funds: " + absoluteTicker);
         FundDao dao = PipelineHelper.getFundDao();
-        for (String link : links) {
 
-            Fund fund = runOne(link);
-            if (fund != null) {
-                dao.put(fund);
-            }
+        String html = fetchFundDetailHtml(absoluteTicker);
+        Fund fund = buildFund(fundId, html);
+        if (fund != null) {
+            dao.put(fund);
         }
-        String msg = "Finished updating funds: " + links;
+
+        String msg = "Finished updating fund: " + fund;
         log.info(msg);
         return immediate(msg);
+
     }
 
-    public Fund runOne(String link) {
-        log.info("Attempting to fetch html at " + link);
-        String html = fetchFundDetailHtml(link);
-        Fund fund = buildFund(html);
-        log.info("Constructed fund " + fund);
-        return fund;
-    }
-
-    private String fetchFundDetailHtml(String link) {
+    private String fetchFundDetailHtml(String absoluteTicker) {
         Client client = PipelineHelper.getClient();
-        WebResource r = client.resource("http://uk.ishares.com" + link);
+        WebResource r = client.resource("http://uk.ishares.com/en/rc/products/" + absoluteTicker);
         return r.get(String.class);
     }
 
     @VisibleForTesting
-    protected Fund buildFund(String html) {
-        return buildFund(scrapeDetails(html));
+    protected Fund buildFund(String fundId, String html) {
+        return buildFund(fundId, scrapeDetails(html));
     }
 
     private Map<String, String> scrapeDetails(String html) {
@@ -84,8 +76,9 @@ public class ISharesFundDetailFetcherBatchJob extends Job1<String, List<String>>
 
     private static DateTimeFormatter fmt = DateTimeFormat.forPattern("dd/MM/yy");
 
-    private Fund buildFund(Map<String, String> details) {
-        return new Fund(details.get("Ticker"), "",
+    private Fund buildFund(String fundId, Map<String, String> details) {
+        return new Fund(details.get("Ticker"),
+                fundId,
                 details.get("Name"),
                 details.get("category"),
                 "iShares",
@@ -95,6 +88,4 @@ public class ISharesFundDetailFetcherBatchJob extends Job1<String, List<String>>
                 details.get("Description"),
                 fmt.parseLocalDate(details.get("Inception Date")));
     }
-
-
 }

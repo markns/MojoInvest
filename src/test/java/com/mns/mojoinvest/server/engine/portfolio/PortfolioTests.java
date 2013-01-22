@@ -30,12 +30,12 @@ public class PortfolioTests {
 
     private final QuoteDao quoteDao = new ObjectifyQuoteDao(ObjectifyService.factory());
     private final FundDao fundDao = new ObjectifyFundDao(ObjectifyService.factory());
-    private final Fund ABC = new Fund("ABC", "ABC fund", "Category", "Provider", true,
+    private final Fund ABC = new Fund("ABC", "1", "ABC fund", "Category", "Provider", true,
             "US", "Index", "Blah blah", new LocalDate("2011-01-01"));
-    private final Fund DEF = new Fund("DEF", "DEF fund", "Category", "Provider", true,
+    private final Fund DEF = new Fund("DEF", "1", "DEF fund", "Category", "Provider", true,
             "US", "Index", "Blah blah", new LocalDate("2011-01-01"));
 
-    private final Fund wrongfund = new Fund("WRONG", "Test fund", "Category", "Provider", true,
+    private final Fund wrongfund = new Fund("WRONG", "1", "Test fund", "Category", "Provider", true,
             "US", "Index", "Blah blah", new LocalDate("2011-01-01"));
 
     public static final BigDecimal COMMISSION = new BigDecimal("15");

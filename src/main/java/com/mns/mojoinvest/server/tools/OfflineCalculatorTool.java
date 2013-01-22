@@ -142,7 +142,7 @@ public class OfflineCalculatorTool {
 
     private NavigableMap<LocalDate, BigDecimal> getIndexReturns(String idx, LocalDate latest) {
 
-        Fund index = new Fund(idx, "", "", "", true, "", "", "", new LocalDate());
+        Fund index = new Fund(idx, "", "", "", "", true, "", "", "", new LocalDate());
 //        List<Quote> idxQuotes = quoteDao.query(index.getSymbol());
 //        QuoteUtils.sortByDateAsc(idxQuotes);
 //

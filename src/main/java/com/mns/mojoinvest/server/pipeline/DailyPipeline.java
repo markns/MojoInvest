@@ -4,8 +4,7 @@ import com.google.appengine.api.datastore.KeyFactory;
 import com.google.appengine.tools.pipeline.FutureValue;
 import com.google.appengine.tools.pipeline.Job1;
 import com.google.appengine.tools.pipeline.Value;
-import com.mns.mojoinvest.server.pipeline.fund.ISharesFundFetcherControlJob;
-import com.mns.mojoinvest.server.pipeline.quote.ISharesQuoteFetcherJob;
+import com.mns.mojoinvest.server.pipeline.quote.ISharesQuoteFetcherControlJob;
 import com.mns.mojoinvest.server.util.HolidayUtils;
 import org.joda.time.LocalDate;
 
@@ -37,15 +36,14 @@ public class DailyPipeline extends Job1<Void, LocalDate> {
 
         //TODO: Delete pipeline job records more than one week old
 
-        FutureValue<String> fundsUpdatedMessage = futureCall(new ISharesFundFetcherControlJob());
-//        FutureValue<String> fundsUpdatedMessage = futureCall(new ImmediateReturnJob());
-        //F9B1CFCA12B2E6ACAD33A55457A1432F.isharestools-pea01
-        FutureValue<String> sessionId = futureCall(new ExternalAgentJob(), immediate(USER_EMAIL));
+//        FutureValue<String> fundsUpdatedMessage = futureCall(new ISharesFundFetcherControlJob());
+        FutureValue<String> fundsUpdatedMessage = futureCall(new ImmediateReturnJob());
 
-        String[] categories = new String[]{"DUB_alternatives", "DUB_developedequity", "DUB_emergingequity", "DUB_fixedincome", "DUB_commodities"};
-        for (String category : categories) {
-            messages.add(futureCall(new ISharesQuoteFetcherJob(), immediate(category), sessionId, waitFor(fundsUpdatedMessage)));
-        }
+//        Value<String> sessionId = futureCall(new ExternalAgentJob(), immediate(USER_EMAIL));
+        Value<String> sessionId = immediate("3902AE034D1F9D9C9D2531C57E0E0076.isharestools-pea02");
+
+        FutureValue<String> quotesUpdatedMessage = futureCall(new ISharesQuoteFetcherControlJob(), sessionId, waitFor(fundsUpdatedMessage));
+
 
 //        futureCall(new RunCalculationsGeneratorJob(), immediate(date), funds);
 //        //for each of the parameter combinations (1M, 2M, 6M etc) call
@@ -55,7 +53,7 @@ public class DailyPipeline extends Job1<Void, LocalDate> {
 //        }
 
         //TODO: Send email on failure also
-        futureCall(new EmailStatusJob(), immediate(USER_EMAIL), futureList(messages));
+        futureCall(new EmailStatusJob(), immediate(USER_EMAIL), futureList(messages), waitFor(quotesUpdatedMessage));
 
         return null;
     }

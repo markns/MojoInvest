@@ -46,8 +46,8 @@ public class QuoteFetcherBatchJobTest {
     public void testRun() throws Exception {
         QuoteFetcherBatchJob job = new QuoteFetcherBatchJob();
         List<Fund> funds = new ArrayList<Fund>(2);
-        funds.add(new Fund("SPY", "", "", "", true, "", "", "", new LocalDate("1993-03-03")));
-        funds.add(new Fund("QQQ", "", "", "", true, "", "", "", new LocalDate("1993-03-03")));
+        funds.add(new Fund("SPY", "1", "", "", "", true, "", "", "", new LocalDate("1993-03-03")));
+        funds.add(new Fund("QQQ", "1", "", "", "", true, "", "", "", new LocalDate("1993-03-03")));
 
         job.run(funds, new LocalDate("2012-03-23"));
     }
@@ -56,7 +56,7 @@ public class QuoteFetcherBatchJobTest {
     public void testSymbolNotAvailable() throws Exception {
         QuoteFetcherBatchJob job = new QuoteFetcherBatchJob();
         List<Fund> funds = new ArrayList<Fund>(2);
-        funds.add(new Fund("BARL", "", "", "", true, "", "", "", new LocalDate("1993-03-03")));
+        funds.add(new Fund("BARL", "1", "", "", "", true, "", "", "", new LocalDate("1993-03-03")));
 
         job.run(funds, new LocalDate("2012-03-23"));
     }

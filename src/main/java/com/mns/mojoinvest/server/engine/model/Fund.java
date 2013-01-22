@@ -33,6 +33,7 @@ public class Fund implements Serializable, Comparable<Fund> {
     private LocalDate earliestQuoteDate;
 
     private LocalDate latestQuoteDate;
+    private String fundId;
 
 //    private BigDecimal aum;
 //
@@ -44,9 +45,10 @@ public class Fund implements Serializable, Comparable<Fund> {
         //No arg for objectify
     }
 
-    public Fund(String symbol, String name, String category, String provider, boolean active, String country,
+    public Fund(String symbol, String fundId, String name, String category, String provider, boolean active, String country,
                 String index, String overview, LocalDate inceptionDate) {
         this.symbol = symbol;
+        this.fundId = fundId;
         this.name = name;
         this.category = category;
         this.provider = provider;
@@ -59,6 +61,10 @@ public class Fund implements Serializable, Comparable<Fund> {
 
     public String getSymbol() {
         return symbol;
+    }
+
+    public String getFundId() {
+        return fundId;
     }
 
     public void setSymbol(String symbol) {
@@ -186,7 +192,7 @@ public class Fund implements Serializable, Comparable<Fund> {
     }
 
     public static Fund fromStrArr(String[] arr) {
-        return new Fund(arr[0],
+        return new Fund(arr[0], "",
                 arr[1],
                 arr[2],
                 arr[3],

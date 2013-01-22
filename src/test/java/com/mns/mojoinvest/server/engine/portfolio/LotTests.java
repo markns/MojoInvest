@@ -26,7 +26,7 @@ public class LotTests {
 
     public static final BigDecimal COMMISSION = new BigDecimal("15");
 
-    private final Fund fund = new Fund("TEST", "Test fund", "Category", "Provider", true,
+    private final Fund fund = new Fund("TEST", "1", "Test fund", "Category", "Provider", true,
             "US", "Index", "Blah blah", new LocalDate("2011-01-01"));
     private final LocalDate buyDate = new LocalDate("2011-02-01");
     private final LocalDate sell1Date = new LocalDate("2011-03-01");

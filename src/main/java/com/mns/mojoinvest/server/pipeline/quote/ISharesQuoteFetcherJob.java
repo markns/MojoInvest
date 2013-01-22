@@ -22,18 +22,16 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.MultivaluedMap;
 import java.io.IOException;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public class ISharesQuoteFetcherJob extends Job2<String, String, String> {
 
     public static final String BASE_URL = "http://tools.ishares.com/tec6/download_data.do";
 
     @Override
-    public Value<String> run(String category, String sessionId) {
+    public Value<String> run(String fundId, String sessionId) {
 
-        ClientResponse response = downloadISharesData(category, sessionId);
+        ClientResponse response = downloadISharesData(fundId, sessionId);
 
         Workbook workbook;
         try {
@@ -46,18 +44,18 @@ public class ISharesQuoteFetcherJob extends Job2<String, String, String> {
                 //Todo: set property requiring all cvs be recalculated
             }
             dao.put(quotes);
-            updateLatestQuoteDates(quotes);
+            updateQuoteDatesOnFund(quotes);
 
         } catch (IOException e) {
-            throw new PipelineException("Unable to retrieve excel file " + category, e);
+            throw new PipelineException("Unable to retrieve excel file " + fundId, e);
         } catch (BiffException e) {
-            throw new PipelineException("Unable to retrieve excel file " + category, e);
+            throw new PipelineException("Unable to retrieve excel file " + fundId, e);
         }
 
-        return immediate(category + " quote retrieval complete");
+        return immediate(fundId + " quote retrieval complete");
     }
 
-    private ClientResponse downloadISharesData(String category, String sessionId) {
+    private ClientResponse downloadISharesData(String fundId, String sessionId) {
         Client client = PipelineHelper.getClient();
 
         WebResource webResource = client.resource(BASE_URL);
@@ -67,30 +65,28 @@ public class ISharesQuoteFetcherJob extends Job2<String, String, String> {
         builder.cookie(new Cookie("JSESSIONID", sessionId));
 
         MultivaluedMap<String, String> formData = new MultivaluedMapImpl();
-        formData.put("action", Arrays.asList("downloadByCategory"));
-        formData.put("fromDate", Arrays.asList(""));
-        formData.put("toDate", Arrays.asList(""));
-        formData.put("categoryCode", Arrays.asList(category));
+        formData.put("action", Arrays.asList("downloadByFund"));
+        formData.put("fundId", Arrays.asList(fundId));
 
         return builder.post(ClientResponse.class, formData);
     }
 
-    private static void updateLatestQuoteDates(List<Quote> quotes) {
+    private static void updateQuoteDatesOnFund(List<Quote> quotes) {
 
-        Map<String, LocalDate> latestQuotes = new HashMap<String, LocalDate>();
-        for (Quote quote : quotes) {
-            if (latestQuotes.get(quote.getSymbol()) == null) {
-                latestQuotes.put(quote.getSymbol(), quote.getDate());
+        if (quotes.size() > 0) {
+            LocalDate earliestQuote = quotes.get(0).getDate();
+            LocalDate latestQuote = quotes.get(0).getDate();
+            for (Quote quote : quotes) {
+                if (quote.getDate().isBefore(earliestQuote))
+                    earliestQuote = quote.getDate();
+                if (quote.getDate().isAfter(latestQuote)) {
+                    latestQuote = quote.getDate();
+                }
             }
-            if (quote.getDate().isAfter(latestQuotes.get(quote.getSymbol()))) {
-                latestQuotes.put(quote.getSymbol(), quote.getDate());
-            }
-        }
-
-        FundDao dao = PipelineHelper.getFundDao();
-        for (Map.Entry<String, LocalDate> latestQuote : latestQuotes.entrySet()) {
-            Fund fund = dao.get(latestQuote.getKey());
-            fund.setLatestQuoteDate(latestQuote.getValue());
+            FundDao dao = PipelineHelper.getFundDao();
+            Fund fund = dao.get(quotes.get(0).getSymbol());
+            fund.setEarliestQuoteDate(earliestQuote);
+            fund.setLatestQuoteDate(latestQuote);
             dao.put(fund);
         }
     }

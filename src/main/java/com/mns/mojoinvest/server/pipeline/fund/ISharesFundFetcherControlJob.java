@@ -2,14 +2,13 @@ package com.mns.mojoinvest.server.pipeline.fund;
 
 import com.google.appengine.tools.pipeline.FutureValue;
 import com.google.appengine.tools.pipeline.Job0;
-import com.google.appengine.tools.pipeline.Job1;
 import com.google.appengine.tools.pipeline.Value;
 import com.google.common.annotations.VisibleForTesting;
-import com.google.common.base.Joiner;
+import com.mns.mojoinvest.server.pipeline.GenericPipelines;
+import com.mns.mojoinvest.server.pipeline.PipelineException;
 import com.mns.mojoinvest.server.pipeline.PipelineHelper;
 import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.WebResource;
-import com.sun.jersey.api.client.filter.LoggingFilter;
 import com.sun.jersey.core.util.MultivaluedMapImpl;
 import org.codehaus.jackson.JsonFactory;
 import org.codehaus.jackson.JsonNode;
@@ -18,11 +17,14 @@ import org.codehaus.jackson.map.ObjectMapper;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
 
 import javax.ws.rs.core.MultivaluedMap;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -37,35 +39,81 @@ public class ISharesFundFetcherControlJob extends Job0<String> {
     public Value<String> run() {
 
         String html = fetchAllFundsHtml();
-        List<String> links = scrapeLinks(html);
 
-        //TODO: Scrape and persist categories
+        Map<String, String> funds = scrapeFunds(html);
 //        scrapeCategories(html);
-        log.info("Attempting to retrieve details for " + links.size() + " funds");
-        List<String> batch = new ArrayList<String>(BATCH_SIZE);
+
+//        List<String> links = scrapeLinks(html);
+
+
+        log.info("Attempting to retrieve details for " + funds.size() + " funds");
+//        List<String> batch = new ArrayList<String>(BATCH_SIZE);
 
         List<FutureValue<String>> fundsUpdated = new ArrayList<FutureValue<String>>();
 
-        for (String link : links) {
-            batch.add(link);
-            if (batch.size() == BATCH_SIZE) {
-                List<String> clone = new ArrayList<String>(batch);
-                fundsUpdated.add(futureCall(new ISharesFundDetailFetcherBatchJob(), immediate(clone)));
-                batch.clear();
+        for (Map.Entry<String, String> fund : funds.entrySet()) {
+            fundsUpdated.add(futureCall(new ISharesFundDetailFetcherJob(), immediate(fund.getKey()), immediate(fund.getValue())));
+        }
+
+//        for (String link : links) {
+//            batch.add(link);
+//            if (batch.size() == BATCH_SIZE) {
+//                List<String> clone = new ArrayList<String>(batch);
+//                fundsUpdated.add(futureCall(new ISharesFundDetailFetcherBatchJob(), immediate(clone)));
+//                batch.clear();
+//            }
+//        }
+//        if (batch.size() > 0) {
+//            fundsUpdated.add(futureCall(new ISharesFundDetailFetcherBatchJob(), immediate(batch)));
+//        }
+        log.info("Fund fetcher control job is complete");
+        return futureCall(new GenericPipelines.MergeListJob(), futureList(fundsUpdated));
+    }
+
+    private Map<String, String> scrapeFunds(String html) throws PipelineException {
+        Document doc = Jsoup.parse(html);
+        Elements scripts = doc.getElementsByTag("script");
+        String json = "";
+        for (Element script : scripts) {
+            if (script.html().contains("var fundMenu")) {
+                Pattern pattern = Pattern.compile("return (\\{.*\\})");
+                Matcher matcher = pattern.matcher(script.html());
+                matcher.find();
+                json = matcher.group(1).replaceAll("s0", "\"s0\"");
+                break;
             }
         }
-        if (batch.size() > 0) {
-            fundsUpdated.add(futureCall(new ISharesFundDetailFetcherBatchJob(), immediate(batch)));
+        ObjectMapper mapper = new ObjectMapper();
+        mapper.configure(JsonParser.Feature.ALLOW_UNQUOTED_FIELD_NAMES, true);
+        JsonFactory factory = mapper.getJsonFactory();
+        JsonNode root;
+        try {
+            JsonParser jp = factory.createJsonParser(json);
+            root = mapper.readTree(jp);
+        } catch (IOException e) {
+            throw new PipelineException("Unable to parse json for fund static", e);
         }
-        log.info("Fund fetcher control job is complete");
-        return futureCall(new MergeListJob(), futureList(fundsUpdated));
+
+        Map<String, String> map = new HashMap<String, String>();
+        for (JsonNode level1 : root.get("children")) {
+
+            for (JsonNode level2 : level1.get("children")) {
+
+                for (JsonNode level3 : level2.get("children")) {
+                    for (JsonNode level4 : level3.get("children")) {
+                        map.put(level4.get("fund_id").asText(),
+                                level4.get("absoluteTicker").asText());
+                    }
+                }
+            }
+        }
+
+        return map;
     }
 
 
     private String fetchAllFundsHtml() {
         Client client = PipelineHelper.getClient();
-
-        client.addFilter(new LoggingFilter());
         WebResource r = client.resource("http://uk.ishares.com/en/rc/products/overview");
         MultivaluedMap<String, String> params = new MultivaluedMapImpl();
 
@@ -92,43 +140,42 @@ public class ISharesFundFetcherControlJob extends Job0<String> {
 
     @VisibleForTesting
     protected void scrapeCategories(String html) {
-        Document doc = Jsoup.parse(html);
 
-        String js = doc.select("div#left script").get(2).data();
-
-        Pattern pattern = Pattern.compile("return (\\{.+\\})");
-
-        Matcher matcher = pattern.matcher(js);
-        matcher.find();
-
-        String json = matcher.group(1).replaceAll("s0", "\"s0\"");
-
-        ObjectMapper mapper = new ObjectMapper();
-        mapper.configure(JsonParser.Feature.ALLOW_UNQUOTED_FIELD_NAMES, true);
-        JsonFactory factory = mapper.getJsonFactory();
-        try {
-            JsonParser jp = factory.createJsonParser(json);
-            JsonNode root = mapper.readTree(jp);
-
-//            System.out.println(root);
-//            for (JsonNode node1 : root.get("children")) {
-//                System.out.println(node1);
+//        URL url = ClassLoader.getSystemResource("categories.js");
+//        String js = FileUtils.readFileToString(new File(url.getFile()));
+//
+//        js = js.replace("\n", "");
+//        Pattern pattern = Pattern.compile("return (\\{.*\\})");
+//
+//        Matcher matcher = pattern.matcher(js);
+//        matcher.find();
+//
+//        String json = matcher.group(1).replaceAll("s0", "\"s0\"");
+//
+//
+//        ObjectMapper mapper = new ObjectMapper();
+//        mapper.configure(JsonParser.Feature.ALLOW_UNQUOTED_FIELD_NAMES, true);
+//        JsonFactory factory = mapper.getJsonFactory();
+//        JsonParser jp = factory.createJsonParser(json);
+//        JsonNode root = mapper.readTree(jp);
+//
+//        Map<String, String> map = new HashMap<String, String>();
+//        for (JsonNode level1 : root.get("children")) {
+//
+//            for (JsonNode level2 : level1.get("children")) {
+//
+//                for (JsonNode level3 : level2.get("children")) {
+//                    for (JsonNode level4 : level3.get("children")) {
+//                        map.put(level4.get("fund_id").toString(),
+//                                level4.get("absoluteTicker").asText());
+//                    }
+//                }
 //            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+//        }
+
 
     }
 
-
-    private static class MergeListJob extends Job1<String, List<String>> {
-
-        @Override
-        public Value<String> run(List<String> strings) {
-            return immediate(Joiner.on("\n").join(strings));
-        }
-
-    }
 
 }
 
