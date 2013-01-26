@@ -219,7 +219,7 @@ public class Position {
         BigDecimal marketValue = BigDecimal.ZERO;
         for (Lot lot : lots) {
             if (!lot.openedAfter(date) && !lot.closed(date)) {
-                BigDecimal close = getClose(date);
+                BigDecimal close = getNav(date);
                 marketValue = marketValue.add(lot.marketValue(date, close));
             }
         }
@@ -235,7 +235,7 @@ public class Position {
         BigDecimal gain = BigDecimal.ZERO;
         for (Lot lot : lots) {
             if (!lot.openedAfter(date)) {
-                gain = gain.add(lot.gain(date, getClose(date)));
+                gain = gain.add(lot.gain(date, getNav(date)));
             }
         }
         return gain;
@@ -261,7 +261,7 @@ public class Position {
         BigDecimal returnsGain = BigDecimal.ZERO;
         for (Lot lot : lots) {
             if (!lot.openedAfter(date)) {
-                returnsGain = returnsGain.add(lot.returnsGain(date, getClose(date)));
+                returnsGain = returnsGain.add(lot.returnsGain(date, getNav(date)));
             }
         }
         return returnsGain;
@@ -282,19 +282,15 @@ public class Position {
                 .multiply(BigDecimal.TEN.multiply(BigDecimal.TEN));
     }
 
-    private BigDecimal getClose(LocalDate date) throws PortfolioException {
-        Quote quote = null;
+    private BigDecimal getNav(LocalDate date) throws PortfolioException {
+        Quote quote;
         try {
             quote = quoteDao.get(fund, date);
         } catch (DataAccessException e) {
             throw new PortfolioException("Unable to get close price for " + this + " on " + date);
         }
         log.fine("Loaded quote " + quote);
-        if (quote.getDividend() != null) {
-            return quote.getDividend();
-        } else {
-            return quote.getNav();
-        }
+        return quote.getTrNav();
     }
 
     @Override
