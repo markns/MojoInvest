@@ -43,6 +43,7 @@ public class DailyPipeline extends Job4<Void, LocalDate, String, Boolean, Boolea
         } else {
             fundsUpdatedMessage = futureCall(new ImmediateReturnJob(), immediate("Skipping fund retrieval"));
         }
+        //TODO: why does this cause failures - messages.add(fundsUpdatedMessage);
 
         Value<String> sessionId;
         if (sessionIdStr == null) {
@@ -58,6 +59,7 @@ public class DailyPipeline extends Job4<Void, LocalDate, String, Boolean, Boolea
         } else {
             quotesUpdatedMessage = futureCall(new ImmediateReturnJob(), immediate("Skipping quote retrieval"));
         }
+        //TODO: why does this cause failures - messages.add(quotesUpdatedMessage);
 
 //        futureCall(new RunCalculationsGeneratorJob(), immediate(date), funds);
 //        //for each of the parameter combinations (1M, 2M, 6M etc) call

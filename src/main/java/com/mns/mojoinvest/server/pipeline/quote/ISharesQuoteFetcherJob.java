@@ -33,7 +33,7 @@ public class ISharesQuoteFetcherJob extends Job2<String, String, String> {
         //response from webservice is 200 regardless of success
         //content-disposition is only set if a real file is returned
         if (response.getHeaders().containsKey("content-disposition")) {
-            return processClientResponse(fundId, response);
+            return processResponse(fundId, response);
         } else {
             return processFailedResponse(fundId);
         }
@@ -55,7 +55,7 @@ public class ISharesQuoteFetcherJob extends Job2<String, String, String> {
         return builder.post(ClientResponse.class, formData);
     }
 
-    private Value<String> processClientResponse(String fundId, ClientResponse response) {
+    private Value<String> processResponse(String fundId, ClientResponse response) {
         Workbook workbook;
         try {
             workbook = Workbook.getWorkbook(response.getEntityInputStream());

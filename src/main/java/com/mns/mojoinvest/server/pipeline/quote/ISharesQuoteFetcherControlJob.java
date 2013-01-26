@@ -17,7 +17,6 @@ public class ISharesQuoteFetcherControlJob extends Job1<String, String> {
 
     private static final Logger log = Logger.getLogger(ISharesQuoteFetcherControlJob.class.getName());
 
-
     @Override
     public Value<String> run(String sessionId) {
 
