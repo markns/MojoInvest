@@ -33,8 +33,6 @@ public class ISharesFundFetcherControlJob extends Job0<String> {
 
     private static final Logger log = Logger.getLogger(ISharesFundFetcherControlJob.class.getName());
 
-    private static final int BATCH_SIZE = 30;
-
     @Override
     public Value<String> run() {
 
@@ -43,29 +41,15 @@ public class ISharesFundFetcherControlJob extends Job0<String> {
         Map<String, String> funds = scrapeFunds(html);
 //        scrapeCategories(html);
 
-//        List<String> links = scrapeLinks(html);
-
-
         log.info("Attempting to retrieve details for " + funds.size() + " funds");
-//        List<String> batch = new ArrayList<String>(BATCH_SIZE);
-
         List<FutureValue<String>> fundsUpdated = new ArrayList<FutureValue<String>>();
 
+//        int c = 0;
         for (Map.Entry<String, String> fund : funds.entrySet()) {
             fundsUpdated.add(futureCall(new ISharesFundDetailFetcherJob(), immediate(fund.getKey()), immediate(fund.getValue())));
+//            if (c++ == 2)
+//                break;
         }
-
-//        for (String link : links) {
-//            batch.add(link);
-//            if (batch.size() == BATCH_SIZE) {
-//                List<String> clone = new ArrayList<String>(batch);
-//                fundsUpdated.add(futureCall(new ISharesFundDetailFetcherBatchJob(), immediate(clone)));
-//                batch.clear();
-//            }
-//        }
-//        if (batch.size() > 0) {
-//            fundsUpdated.add(futureCall(new ISharesFundDetailFetcherBatchJob(), immediate(batch)));
-//        }
         log.info("Fund fetcher control job is complete");
         return futureCall(new GenericPipelines.MergeListJob(), futureList(fundsUpdated));
     }

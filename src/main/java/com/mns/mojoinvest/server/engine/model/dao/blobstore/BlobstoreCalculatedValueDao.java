@@ -2,14 +2,14 @@ package com.mns.mojoinvest.server.engine.model.dao.blobstore;
 
 import com.google.appengine.api.files.AppEngineFile;
 import com.google.appengine.api.files.FileReadChannel;
-import com.google.appengine.api.files.FileService;
-import com.google.appengine.api.files.FileServiceFactory;
 import com.google.common.base.Splitter;
 import com.google.inject.Inject;
-import com.googlecode.objectify.NotFoundException;
 import com.mns.mojoinvest.server.engine.model.BlobstoreEntryRecord;
+import com.mns.mojoinvest.server.engine.model.CalculatedValue;
 import com.mns.mojoinvest.server.engine.model.Fund;
 import com.mns.mojoinvest.server.engine.model.dao.CalculatedValueDao;
+import com.mns.mojoinvest.server.engine.model.dao.CalculatedValueUnavailableException;
+import com.mns.mojoinvest.server.engine.model.dao.DataAccessException;
 import com.mns.mojoinvest.server.engine.model.dao.objectify.ObjectifyEntryRecordDao;
 import org.joda.time.LocalDate;
 
@@ -17,43 +17,111 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.nio.channels.Channels;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
+import java.util.*;
 import java.util.logging.Logger;
 
-public class BlobstoreCalculatedValueDao implements CalculatedValueDao {
+public class BlobstoreCalculatedValueDao extends BlobstoreDao implements CalculatedValueDao {
 
 
     private static final Logger log = Logger.getLogger(BlobstoreCalculatedValueDao.class.getName());
 
-    private final ObjectifyEntryRecordDao recordDao;
-
-    private final FileService fileService = FileServiceFactory.getFileService();
 
     @Inject
     public BlobstoreCalculatedValueDao(ObjectifyEntryRecordDao recordDao) {
-        this.recordDao = recordDao;
+        super(recordDao);
     }
 
     @Override
-    public Map<String, Map<LocalDate, BigDecimal>> get(Collection<Fund> funds, String type, int period) {
-        Map<String, Map<LocalDate, BigDecimal>> cvs = new HashMap<String, Map<LocalDate, BigDecimal>>(funds.size());
+    public Map<String, Map<LocalDate, CalculatedValue>> get(Collection<Fund> funds, String type, int period) {
+        Map<String, Map<LocalDate, CalculatedValue>> cvs = new HashMap<String, Map<LocalDate, CalculatedValue>>(funds.size());
 
         for (Fund fund : funds) {
-            try {
-                BlobstoreEntryRecord record = recordDao.get(fund.getSymbol() + "|" + type + "|" + period);
-                AppEngineFile file = fileService.getBlobFile(record.getBlobKey());
-                cvs.put(fund.getSymbol(), readValuesFromFile(file));
-            } catch (NotFoundException e) {
-                log.warning(e.getMessage());
-            } catch (IOException e) {
-                log.severe(e.getMessage());
-            }
+            cvs.put(fund.getSymbol(), get(fund.getSymbol(), type, period));
         }
         return cvs;
     }
+
+    private Map<LocalDate, CalculatedValue> get(String symbol, String type, int period)
+            throws CalculatedValueUnavailableException, DataAccessException {
+
+        String key = symbol + "|" + type + "|" + period;
+
+        BlobstoreEntryRecord record = recordDao.get(key);
+        if (record == null) {
+            throw new CalculatedValueUnavailableException("Unable to find calculated values for " +
+                    symbol + "  " + type + " " + period);
+        }
+        AppEngineFile file = fileService.getBlobFile(record.getBlobKey());
+
+        Map<LocalDate, BigDecimal> dateCalculatedValueMap;
+        try {
+            dateCalculatedValueMap = readValuesFromFile(file);
+            Map<LocalDate, CalculatedValue> cvMap = new HashMap<LocalDate, CalculatedValue>();
+            for (Map.Entry<LocalDate, BigDecimal> e : dateCalculatedValueMap.entrySet()) {
+                cvMap.put(e.getKey(), new CalculatedValue(e.getKey(), symbol, type, period, e.getValue()));
+            }
+            return cvMap;
+        } catch (Exception e) {
+            throw new DataAccessException("Unable to read values from " + file + " for " + key, e);
+        }
+    }
+
+
+    @Override
+    public void put(Iterable<CalculatedValue> cvs) throws DataAccessException {
+
+        //Construct map of symbol|type|period -> List<CalculatedValue>
+        Map<String, List<CalculatedValue>> recordKeyToCalculatedValues = new HashMap<String, List<CalculatedValue>>();
+        for (CalculatedValue calculatedValue : cvs) {
+            String key = calculatedValue.getKey();
+            if (!recordKeyToCalculatedValues.containsKey(key)) {
+                recordKeyToCalculatedValues.put(key, new ArrayList<CalculatedValue>());
+            }
+            recordKeyToCalculatedValues.get(key).add(calculatedValue);
+        }
+
+        //For each symbol|type|period key
+        for (Map.Entry<String, List<CalculatedValue>> keyToCalculatedValues : recordKeyToCalculatedValues.entrySet()) {
+
+            Map<LocalDate, BigDecimal> dateToValueStr = new HashMap<LocalDate, BigDecimal>();
+
+            //Check if record (symbol|year) exists
+            BlobstoreEntryRecord record = recordDao.get(keyToCalculatedValues.getKey());
+            if (record != null) {
+                AppEngineFile file = fileService.getBlobFile(record.getBlobKey());
+                try {
+                    dateToValueStr.putAll(readValuesFromFile(file));
+                } catch (Exception e) {
+                    throw new DataAccessException("Unable to read values from " + file + " for " +
+                            keyToCalculatedValues.getKey(), e);
+                }
+            }
+            //Add all new quotes to the dateToQuoteStrMap, overwriting as necessary
+            for (CalculatedValue calculatedValue : keyToCalculatedValues.getValue()) {
+                dateToValueStr.put(calculatedValue.getDate(), calculatedValue.getValue());
+            }
+
+            List<String> cvStrings = new ArrayList<String>(dateToValueStr.size());
+            for (Map.Entry<LocalDate, BigDecimal> e : dateToValueStr.entrySet()) {
+                cvStrings.add(e.getKey() + "|" + e.getValue());
+            }
+
+            try {
+                //write all values in keyToCalculatedValues to a new AppEngineFile
+                AppEngineFile file = writeValuesToBlob(keyToCalculatedValues.getKey(), cvStrings);
+                //Update blobstoreEntryRecordDao - add new key, delete old one
+                writeBlobstoreKeyRecord(keyToCalculatedValues.getKey(), file);
+            } catch (Exception e) {
+                throw new DataAccessException("Unable to write calculated values to blobstore", e);
+            }
+
+            if (record != null) {
+                //delete old blob - remember it's not possible to update
+                blobService.delete(record.getBlobKey());
+            }
+        }
+    }
+
 
     private static final Splitter SPLITTER = Splitter.on('|')
             .trimResults()
@@ -79,8 +147,10 @@ public class BlobstoreCalculatedValueDao implements CalculatedValueDao {
             dateValueMap.put(date, value);
         }
 
+
         readChannel.close();
         return dateValueMap;
     }
+
 
 }

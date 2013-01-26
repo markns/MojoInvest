@@ -4,6 +4,7 @@ import com.google.appengine.api.datastore.KeyFactory;
 import com.google.appengine.tools.pipeline.FutureValue;
 import com.google.appengine.tools.pipeline.Job4;
 import com.google.appengine.tools.pipeline.Value;
+import com.mns.mojoinvest.server.pipeline.calculator.RunCalculationsGeneratorJob;
 import com.mns.mojoinvest.server.pipeline.fund.ISharesFundFetcherControlJob;
 import com.mns.mojoinvest.server.pipeline.quote.ISharesQuoteFetcherControlJob;
 import com.mns.mojoinvest.server.util.HolidayUtils;
@@ -61,15 +62,11 @@ public class DailyPipeline extends Job4<Void, LocalDate, String, Boolean, Boolea
         }
         //TODO: why does this cause failures - messages.add(quotesUpdatedMessage);
 
-//        futureCall(new RunCalculationsGeneratorJob(), immediate(date), funds);
-//        //for each of the parameter combinations (1M, 2M, 6M etc) call
-//        for (Integer integer : Arrays.asList(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 18, 24)) {
-//            RankingParams params = new RankingParams(integer);
-//            futureCall(new PerformanceRankingJob(), immediate(date), immediate(params), waitFor(quotesUpdated));
-//        }
+        FutureValue<String> calculationsUpdatedMessage = futureCall(new RunCalculationsGeneratorJob(),
+                waitFor(quotesUpdatedMessage));
 
         //TODO: Send email on failure also
-        futureCall(new EmailStatusJob(), immediate(USER_EMAIL), futureList(messages), waitFor(quotesUpdatedMessage));
+        futureCall(new EmailStatusJob(), immediate(USER_EMAIL), futureList(messages), waitFor(calculationsUpdatedMessage));
 
         return null;
     }

@@ -6,7 +6,8 @@ import com.googlecode.objectify.ObjectifyService;
 import com.mns.mojoinvest.server.engine.model.Fund;
 import com.mns.mojoinvest.server.engine.model.Quote;
 import com.mns.mojoinvest.server.engine.model.dao.QuoteDao;
-import com.mns.mojoinvest.server.engine.model.dao.objectify.ObjectifyQuoteDao;
+import com.mns.mojoinvest.server.engine.model.dao.blobstore.BlobstoreQuoteDao;
+import com.mns.mojoinvest.server.engine.model.dao.objectify.ObjectifyEntryRecordDao;
 import com.mns.mojoinvest.server.engine.transaction.BuyTransaction;
 import com.mns.mojoinvest.server.engine.transaction.SellTransaction;
 import org.joda.time.LocalDate;
@@ -21,7 +22,7 @@ import static junit.framework.Assert.*;
 
 public class PositionTests {
 
-    private final QuoteDao quoteDao = new ObjectifyQuoteDao(ObjectifyService.factory());
+    private final QuoteDao quoteDao = new BlobstoreQuoteDao(new ObjectifyEntryRecordDao(ObjectifyService.factory()));
     private final Fund fund = new Fund("TEST", "1", "Test fund", "Category", "Provider", true,
             "US", "Index", "Blah blah", new LocalDate("2011-01-01"));
 

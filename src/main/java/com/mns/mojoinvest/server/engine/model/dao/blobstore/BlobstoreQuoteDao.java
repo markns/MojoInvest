@@ -1,11 +1,8 @@
 package com.mns.mojoinvest.server.engine.model.dao.blobstore;
 
-import com.google.appengine.api.blobstore.BlobKey;
-import com.google.appengine.api.blobstore.BlobstoreService;
-import com.google.appengine.api.blobstore.BlobstoreServiceFactory;
-import com.google.appengine.api.files.*;
+import com.google.appengine.api.files.AppEngineFile;
+import com.google.appengine.api.files.FileReadChannel;
 import com.google.inject.Inject;
-import com.googlecode.objectify.ObjectifyFactory;
 import com.mns.mojoinvest.server.engine.model.BlobstoreEntryRecord;
 import com.mns.mojoinvest.server.engine.model.Fund;
 import com.mns.mojoinvest.server.engine.model.Quote;
@@ -17,27 +14,16 @@ import com.mns.mojoinvest.server.util.QuoteUtils;
 import org.joda.time.LocalDate;
 
 import java.io.BufferedReader;
-import java.io.PrintWriter;
 import java.nio.channels.Channels;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class BlobstoreQuoteDao implements QuoteDao {
-
-    private final ObjectifyEntryRecordDao recordDao;
-
-    private final FileService fileService = FileServiceFactory.getFileService();
-    private final BlobstoreService blobService = BlobstoreServiceFactory.getBlobstoreService();
+public class BlobstoreQuoteDao extends BlobstoreDao implements QuoteDao {
 
     @Inject
     public BlobstoreQuoteDao(ObjectifyEntryRecordDao recordDao) {
-        this.recordDao = recordDao;
-    }
-
-    @Override
-    public void registerObjects(ObjectifyFactory ofyFactory) {
-        recordDao.registerObjects(ofyFactory);
+        super(recordDao);
     }
 
     @Override
@@ -68,8 +54,6 @@ public class BlobstoreQuoteDao implements QuoteDao {
                     throw new DataAccessException("Unable to read values from " + file + " for " +
                             keyToQuotes.getKey(), e);
                 }
-                //delete old blob - remember it's not possible to update
-                blobService.delete(record.getBlobKey());
             }
             //Add all new quotes to the dateToQuoteStrMap, overwriting as necessary
             for (Quote quote : keyToQuotes.getValue()) {
@@ -85,6 +69,10 @@ public class BlobstoreQuoteDao implements QuoteDao {
                 throw new DataAccessException("Unable to write quotes to blobstore", e);
             }
 
+            if (record != null) {
+                //delete old blob - remember it's not possible to update
+                blobService.delete(record.getBlobKey());
+            }
         }
     }
 
@@ -127,10 +115,10 @@ public class BlobstoreQuoteDao implements QuoteDao {
     }
 
     @Override
-    public Collection<Quote> get(Fund fund, Collection<LocalDate> dates)
+    public List<Quote> get(Fund fund, Collection<LocalDate> dates)
             throws QuoteUnavailableException, DataAccessException {
 
-        Collection<Quote> quotes = new HashSet<Quote>();
+        List<Quote> quotes = new ArrayList<Quote>();
         for (LocalDate date : dates) {
             quotes.add(get(fund.getSymbol(), date));
         }
@@ -157,33 +145,4 @@ public class BlobstoreQuoteDao implements QuoteDao {
         return dateStrQuoteStrMap;
     }
 
-    private void writeBlobstoreKeyRecord(String key, AppEngineFile file) {
-        // Now read from the file using the Blobstore API
-        BlobKey blobKey = fileService.getBlobKey(file);
-        BlobstoreEntryRecord record = new BlobstoreEntryRecord(key, blobKey);
-        recordDao.put(record);
-    }
-
-    private AppEngineFile writeValuesToBlob(String key, Collection<String> values) throws Exception {
-        // Create a new Blob file with mime-type "text/plain"
-        AppEngineFile file = fileService.createNewBlobFile("text/plain", key);
-
-        // Open a channel to write to it
-        boolean lock = true;
-        FileWriteChannel writeChannel = fileService.openWriteChannel(file, lock);
-
-        // Different standard Java ways of writing to the channel
-        // are possible. Here we use a PrintWriter:
-        PrintWriter writer = new PrintWriter(Channels.newWriter(writeChannel, "UTF8"));
-        for (String value : values) {
-            writer.println(value);
-        }
-
-        // Close without finalizing and save the file path for writing later
-        writer.close();
-
-        // Now finalize
-        writeChannel.closeFinally();
-        return file;
-    }
 }

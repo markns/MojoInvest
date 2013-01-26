@@ -33,6 +33,9 @@ public class Fund implements Serializable, Comparable<Fund> {
     private LocalDate earliestQuoteDate;
 
     private LocalDate latestQuoteDate;
+
+    private LocalDate latestCalculationDate;
+
     private String fundId;
 
 //    private BigDecimal aum;
@@ -154,6 +157,15 @@ public class Fund implements Serializable, Comparable<Fund> {
         this.latestQuoteDate = latestQuoteDate;
     }
 
+    @JsonSerialize(using = CustomLocalDateSerializer.class)
+    public LocalDate getLatestCalculationDate() {
+        return latestCalculationDate;
+    }
+
+    public void setLatestCalculationDate(LocalDate latestCalculationDate) {
+        this.latestCalculationDate = latestCalculationDate;
+    }
+
     @Override
     public int compareTo(Fund o) {
         return symbol.compareTo(o.getSymbol());
@@ -171,6 +183,7 @@ public class Fund implements Serializable, Comparable<Fund> {
                 ", index='" + index + '\'' +
                 ", inceptionDate=" + inceptionDate +
                 ", latestQuoteDate=" + latestQuoteDate +
+                ", latestQuoteDate=" + latestCalculationDate +
                 '}';
     }
 

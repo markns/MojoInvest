@@ -10,7 +10,6 @@ import org.joda.time.LocalDate;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
-import java.math.BigDecimal;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
@@ -37,16 +36,16 @@ public class InMemoryCalculatedValueDao implements CalculatedValueDao {
     private void readCVFile(String file) throws IOException {
         CSVReader reader = new CSVReader(new BufferedReader(new FileReader(file)));
         for (String[] row : reader.readAll()) {
-            CalculatedValue cv = CalculatedValue.fromStrArr(row);
-            if (cv != null)
-                calculatedValues.put(cv.getKey(), cv);
+//            CalculatedValue cv = CalculatedValueUtils.fromStringArray(row);
+//            if (cv != null)
+//                calculatedValues.put(cv.getKey(), cv);
         }
         reader.close();
     }
 
     @Override
-    public Map<String, Map<LocalDate, BigDecimal>> get(Collection<Fund> funds, String type, int period) {
-        Map<String, Map<LocalDate, BigDecimal>> cvs = new HashMap<String, Map<LocalDate, BigDecimal>>(funds.size());
+    public Map<String, Map<LocalDate, CalculatedValue>> get(Collection<Fund> funds, String type, int period) {
+        Map<String, Map<LocalDate, CalculatedValue>> cvs = new HashMap<String, Map<LocalDate, CalculatedValue>>(funds.size());
 //        for (LocalDate date : dates) {
 //            for (Fund fund : funds) {
 //                CalculatedValue cv = calculatedValues.get(
@@ -58,4 +57,8 @@ public class InMemoryCalculatedValueDao implements CalculatedValueDao {
         return cvs;
     }
 
+    @Override
+    public void put(Iterable<CalculatedValue> cvs) {
+
+    }
 }

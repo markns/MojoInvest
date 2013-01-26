@@ -3,7 +3,9 @@ package com.mns.mojoinvest.server.pipeline;
 import com.googlecode.objectify.ObjectifyFactory;
 import com.mns.mojoinvest.server.engine.model.BlobstoreEntryRecord;
 import com.mns.mojoinvest.server.engine.model.Fund;
+import com.mns.mojoinvest.server.engine.model.dao.CalculatedValueDao;
 import com.mns.mojoinvest.server.engine.model.dao.FundDao;
+import com.mns.mojoinvest.server.engine.model.dao.blobstore.BlobstoreCalculatedValueDao;
 import com.mns.mojoinvest.server.engine.model.dao.blobstore.BlobstoreQuoteDao;
 import com.mns.mojoinvest.server.engine.model.dao.objectify.MyTypeConverters;
 import com.mns.mojoinvest.server.engine.model.dao.objectify.ObjectifyEntryRecordDao;
@@ -40,4 +42,7 @@ public class PipelineHelper {
         return new BlobstoreQuoteDao(new ObjectifyEntryRecordDao(factory));
     }
 
+    public static CalculatedValueDao getCalculatedValueDao() {
+        return new BlobstoreCalculatedValueDao(new ObjectifyEntryRecordDao(factory));
+    }
 }

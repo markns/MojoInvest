@@ -14,11 +14,11 @@ import java.util.*;
 //TODO: Consider splitting this class into a set of calculator classes
 public class CalculationService {
 
-    public List<CalculatedValue> calculateSMA(List<Quote> quotes, int period) {
+    public static List<CalculatedValue> calculateSMA(List<Quote> quotes, int period) {
         List<CalculatedValue> cvs = new ArrayList<CalculatedValue>();
         DescriptiveStatistics stats = new DescriptiveStatistics(period);
         for (Quote quote : quotes) {
-            stats.addValue(quote.getDividend().doubleValue());
+            stats.addValue(quote.getTrNav().doubleValue());
             if (stats.getN() >= period) {
                 CalculatedValue cv = new CalculatedValue(quote.getDate(), quote.getSymbol(),
                         "SMA", period, stats.getMean());
@@ -28,11 +28,11 @@ public class CalculationService {
         return cvs;
     }
 
-    public List<CalculatedValue> calculateStandardDeviation(List<Quote> quotes, int period) {
+    public static List<CalculatedValue> calculateStandardDeviation(List<Quote> quotes, int period) {
         List<CalculatedValue> cvs = new ArrayList<CalculatedValue>();
         DescriptiveStatistics stats = new DescriptiveStatistics(period);
         for (Quote quote : quotes) {
-            stats.addValue(quote.getDividend().doubleValue());
+            stats.addValue(quote.getTrNav().doubleValue());
             if (stats.getN() >= period) {
                 CalculatedValue cv = new CalculatedValue(quote.getDate(), quote.getSymbol(),
                         "STDDEV", period, stats.getStandardDeviation());
@@ -44,7 +44,7 @@ public class CalculationService {
 
     private static BigDecimal HUNDRED = BigDecimal.TEN.multiply(BigDecimal.TEN);
 
-    public List<CalculatedValue> calculateROC(List<Quote> quotes, int period) {
+    public static List<CalculatedValue> calculateROC(List<Quote> quotes, int period) {
 //        cv = 100 * ((toQuote - fromQuote) / fromQuote)
         List<CalculatedValue> cvs = new ArrayList<CalculatedValue>();
 //        Collections.reverse(quotes);
@@ -53,8 +53,8 @@ public class CalculationService {
         for (int i = 0; i + period < quotes.size(); i++) {
             Quote fromQuote = quotes.get(i);
             Quote toQuote = quotes.get(i + period);
-            BigDecimal roc = toQuote.getDividend().subtract(fromQuote.getDividend())
-                    .divide(fromQuote.getDividend(), MathContext.DECIMAL32)
+            BigDecimal roc = toQuote.getTrNav().subtract(fromQuote.getTrNav())
+                    .divide(fromQuote.getTrNav(), MathContext.DECIMAL32)
                     .multiply(HUNDRED).setScale(3, RoundingMode.HALF_EVEN);
 
             cvs.add(new CalculatedValue(toQuote.getDate(), toQuote.getSymbol(), "ROC", period,
@@ -63,7 +63,7 @@ public class CalculationService {
         return cvs;
     }
 
-    public List<CalculatedValue> calculateRSquared(List<Quote> quotes, int period) {
+    public static List<CalculatedValue> calculateRSquared(List<Quote> quotes, int period) {
         List<CalculatedValue> cvs = new ArrayList<CalculatedValue>();
         int i = 0;
         while (i + period < quotes.size()) {
@@ -71,7 +71,7 @@ public class CalculationService {
             int x = 0;
             for (Quote quote : quotes.subList(i, i + period)) {
 //                System.out.println(quote.getDate() + "," + quote.getAdjClose().doubleValue());
-                regression.addData(x, quote.getDividend().doubleValue());
+                regression.addData(x, quote.getTrNav().doubleValue());
                 x++;
             }
             Quote lastQuote = quotes.get(i + period);
@@ -87,14 +87,14 @@ public class CalculationService {
         return cvs;
     }
 
-    public List<CalculatedValue> calculateAlpha(List<Quote> quotes, NavigableMap<LocalDate, BigDecimal> idxReturns,
-                                                int period) {
+    public static List<CalculatedValue> calculateAlpha(List<Quote> quotes, NavigableMap<LocalDate, BigDecimal> idxReturns,
+                                                       int period) {
         List<CalculatedValue> cvs = new ArrayList<CalculatedValue>();
         NavigableMap<LocalDate, BigDecimal> returns = new TreeMap<LocalDate, BigDecimal>();
         Quote from = null;
         for (Quote to : quotes) {
             if (from != null) {
-                returns.put(to.getDate(), percentageReturn(from.getDividend(), to.getDividend()));
+                returns.put(to.getDate(), percentageReturn(from.getTrNav(), to.getTrNav()));
             }
             from = to;
         }
@@ -121,7 +121,7 @@ public class CalculationService {
     }
 
 
-    private BigDecimal percentageReturn(BigDecimal from, BigDecimal to) {
+    private static BigDecimal percentageReturn(BigDecimal from, BigDecimal to) {
         BigDecimal change = to.subtract(from);
         return change.divide(from, MathContext.DECIMAL32);
     }

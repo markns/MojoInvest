@@ -4,7 +4,6 @@ import au.com.bytecode.opencsv.CSVReader;
 import com.google.common.base.Predicates;
 import com.google.common.collect.Maps;
 import com.google.inject.Singleton;
-import com.googlecode.objectify.ObjectifyFactory;
 import com.mns.mojoinvest.server.engine.model.Fund;
 import com.mns.mojoinvest.server.engine.model.Quote;
 import com.mns.mojoinvest.server.engine.model.dao.QuoteDao;
@@ -51,11 +50,6 @@ public class InMemoryQuoteDao implements QuoteDao {
                 map.get(symbol).put(quote.getDate(), quote);
         }
         reader.close();
-    }
-
-    @Override
-    public void registerObjects(ObjectifyFactory ofyFactory) {
-        throw new NotImplementedException();
     }
 
     @Override

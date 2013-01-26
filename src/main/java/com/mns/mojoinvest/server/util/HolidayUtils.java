@@ -247,6 +247,14 @@ public class HolidayUtils {
         aMap.put(new LocalDate("2009-08-31"), "Summer Bank Holiday");
         aMap.put(new LocalDate("2009-12-25"), "Christmas Merry Christmas!");
         aMap.put(new LocalDate("2009-12-28"), "Boxing Day (observed)");
+        aMap.put(new LocalDate("2010-01-01"), "New Year's Day Have a wonderful new year!");
+        aMap.put(new LocalDate("2010-04-02"), "Good Friday");
+        aMap.put(new LocalDate("2010-04-05"), "Easter Monday (observed)");
+        aMap.put(new LocalDate("2010-05-03"), "May Day (Early May Bank Holiday)");
+        aMap.put(new LocalDate("2010-05-31"), "Spring Bank Holiday");
+        aMap.put(new LocalDate("2010-08-30"), "Summer Bank Holiday");
+        aMap.put(new LocalDate("2010-12-27"), "Christmas Merry Christmas!");
+        aMap.put(new LocalDate("2010-12-28"), "Boxing Day (observed)");
         aMap.put(new LocalDate("2011-01-03"), "New Year's Day (observed)");
         aMap.put(new LocalDate("2011-04-22"), "Good Friday");
         aMap.put(new LocalDate("2011-04-25"), "Easter Monday (observed)");

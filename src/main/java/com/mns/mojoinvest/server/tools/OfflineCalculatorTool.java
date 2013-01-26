@@ -7,6 +7,7 @@ import com.mns.mojoinvest.server.engine.model.Fund;
 import com.mns.mojoinvest.server.engine.model.Quote;
 import com.mns.mojoinvest.server.engine.model.dao.inmemory.InMemoryFundDao;
 import com.mns.mojoinvest.server.engine.model.dao.inmemory.InMemoryQuoteDao;
+import com.mns.mojoinvest.server.util.CalculatedValueUtils;
 import com.mns.mojoinvest.server.util.QuoteUtils;
 import com.mns.mojoinvest.server.util.TradingDayUtils;
 import org.joda.time.LocalDate;
@@ -129,7 +130,7 @@ public class OfflineCalculatorTool {
 
             int i = 0;
             for (CalculatedValue cv : cvs) {
-                writer.writeNext(cv.toStrArr());
+                writer.writeNext(CalculatedValueUtils.toStringArray(cv));
                 if (i++ == 5000)
                     writer.flush();
 

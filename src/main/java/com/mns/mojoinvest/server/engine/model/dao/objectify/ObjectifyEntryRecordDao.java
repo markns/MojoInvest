@@ -48,4 +48,7 @@ public class ObjectifyEntryRecordDao extends DAOBase {
         }
     }
 
+    public void delete(BlobstoreEntryRecord record) {
+        ofy().delete(record);
+    }
 }

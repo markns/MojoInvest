@@ -2,6 +2,7 @@ package com.mns.mojoinvest.server.servlet.viewer;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
+import com.mns.mojoinvest.server.engine.model.CalculatedValue;
 import com.mns.mojoinvest.server.engine.model.Fund;
 import com.mns.mojoinvest.server.engine.model.dao.CalculatedValueDao;
 import com.mns.mojoinvest.server.engine.model.dao.FundDao;
@@ -13,7 +14,6 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.math.BigDecimal;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
@@ -43,7 +43,7 @@ public class CalculatedValueViewerServlet extends HttpServlet {
 
         long start = System.currentTimeMillis();
         log.fine("Attempting to retrieve " + dates.size() * funds.size() + " cvs");
-        Map<String, Map<LocalDate, BigDecimal>> cvs = cvDao.get(funds, "SMA", 12);
+        Map<String, Map<LocalDate, CalculatedValue>> cvs = cvDao.get(funds, "SMA", 12);
         log.fine("Loading " + cvs.size() + " cvs took " + (System.currentTimeMillis() - start) + " ms");
 
 //        resp.setContentType("text/html");

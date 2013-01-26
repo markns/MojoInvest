@@ -8,8 +8,9 @@ import com.mns.mojoinvest.server.engine.model.Fund;
 import com.mns.mojoinvest.server.engine.model.Quote;
 import com.mns.mojoinvest.server.engine.model.dao.FundDao;
 import com.mns.mojoinvest.server.engine.model.dao.QuoteDao;
+import com.mns.mojoinvest.server.engine.model.dao.blobstore.BlobstoreQuoteDao;
+import com.mns.mojoinvest.server.engine.model.dao.objectify.ObjectifyEntryRecordDao;
 import com.mns.mojoinvest.server.engine.model.dao.objectify.ObjectifyFundDao;
-import com.mns.mojoinvest.server.engine.model.dao.objectify.ObjectifyQuoteDao;
 import com.mns.mojoinvest.server.engine.params.Params;
 import com.mns.mojoinvest.server.engine.transaction.BuyTransaction;
 import com.mns.mojoinvest.server.engine.transaction.SellTransaction;
@@ -28,7 +29,7 @@ public class PortfolioTests {
     private final Params params = getParams();
     private final Params loadsofcash = getLoadsOfCashParams();
 
-    private final QuoteDao quoteDao = new ObjectifyQuoteDao(ObjectifyService.factory());
+    private final QuoteDao quoteDao = new BlobstoreQuoteDao(new ObjectifyEntryRecordDao(ObjectifyService.factory()));
     private final FundDao fundDao = new ObjectifyFundDao(ObjectifyService.factory());
     private final Fund ABC = new Fund("ABC", "1", "ABC fund", "Category", "Provider", true,
             "US", "Index", "Blah blah", new LocalDate("2011-01-01"));

@@ -124,7 +124,8 @@ public class QuoteUtils {
     public static Quote fromStringArray(String[] row) {
         return new Quote(row[0],
                 new LocalDate(row[1]),
-                row[3].isEmpty() ? null : new BigDecimal(row[3]), row[2].isEmpty() ? null : new BigDecimal(row[2]),
+                row[2].isEmpty() ? null : new BigDecimal(row[2]),
+                row[3].isEmpty() ? null : new BigDecimal(row[3]),
                 row[4].isEmpty() ? null : new BigDecimal(row[4]),
                 row[5].isEmpty() ? null : new BigDecimal(row[5]),
                 Boolean.parseBoolean(row[6]));
@@ -134,11 +135,11 @@ public class QuoteUtils {
     public static String[] toStringArray(Quote quote) {
         String[] arr = new String[7];
         arr[0] = quote.getSymbol();
-        arr[1] = quote.getDate() + "";
-        arr[2] = quote.getNav() + "";
-        arr[3] = quote.getIndex() + "";
-        arr[4] = quote.getTrNav() + "";
-        arr[5] = quote.getDividend() + "";
+        arr[1] = quote.getDate().toString();
+        arr[2] = quote.getIndex() == null ? "" : quote.getIndex().toString();
+        arr[3] = quote.getNav() == null ? "" : quote.getNav().toString();
+        arr[4] = quote.getTrNav() == null ? "" : quote.getTrNav().toString();
+        arr[5] = quote.getDividend() == null ? "" : quote.getDividend().toString();
         arr[6] = quote.isRolled() + "";
         return arr;
     }
