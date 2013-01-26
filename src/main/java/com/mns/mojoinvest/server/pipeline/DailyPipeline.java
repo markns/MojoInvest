@@ -2,8 +2,9 @@ package com.mns.mojoinvest.server.pipeline;
 
 import com.google.appengine.api.datastore.KeyFactory;
 import com.google.appengine.tools.pipeline.FutureValue;
-import com.google.appengine.tools.pipeline.Job2;
+import com.google.appengine.tools.pipeline.Job4;
 import com.google.appengine.tools.pipeline.Value;
+import com.mns.mojoinvest.server.pipeline.fund.ISharesFundFetcherControlJob;
 import com.mns.mojoinvest.server.pipeline.quote.ISharesQuoteFetcherControlJob;
 import com.mns.mojoinvest.server.util.HolidayUtils;
 import org.joda.time.LocalDate;
@@ -12,14 +13,14 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
 
-public class DailyPipeline extends Job2<Void, LocalDate, String> {
+public class DailyPipeline extends Job4<Void, LocalDate, String, Boolean, Boolean> {
 
     private static final Logger log = Logger.getLogger(DailyPipeline.class.getName());
 
     private static final String USER_EMAIL = "marknuttallsmith@gmail.com";
 
     @Override
-    public Value<Void> run(LocalDate date, String sessionIdStr) {
+    public Value<Void> run(LocalDate date, String sessionIdStr, Boolean getFunds, Boolean getQuotes) {
 
         List<Value<String>> messages = new ArrayList<Value<String>>();
 
@@ -36,18 +37,27 @@ public class DailyPipeline extends Job2<Void, LocalDate, String> {
 
         //TODO: Delete pipeline job records more than one week old
 
-//        FutureValue<String> fundsUpdatedMessage = futureCall(new ISharesFundFetcherControlJob());
-        FutureValue<String> fundsUpdatedMessage = futureCall(new ImmediateReturnJob());
-
-        Value<String> sessionId;
-        if (sessionIdStr != null) {
-            sessionId = immediate(sessionIdStr);
+        FutureValue<String> fundsUpdatedMessage;
+        if (getFunds) {
+            fundsUpdatedMessage = futureCall(new ISharesFundFetcherControlJob());
         } else {
-            sessionId = futureCall(new ExternalAgentJob(), immediate(USER_EMAIL));
+            fundsUpdatedMessage = futureCall(new ImmediateReturnJob(), immediate("Skipping fund retrieval"));
         }
 
-        FutureValue<String> quotesUpdatedMessage = futureCall(new ISharesQuoteFetcherControlJob(), sessionId, waitFor(fundsUpdatedMessage));
+        Value<String> sessionId;
+        if (sessionIdStr == null) {
+            sessionId = futureCall(new ExternalAgentJob(), immediate(USER_EMAIL));
+        } else {
+            sessionId = immediate(sessionIdStr);
+        }
 
+        FutureValue<String> quotesUpdatedMessage;
+        if (getQuotes) {
+            quotesUpdatedMessage = futureCall(new ISharesQuoteFetcherControlJob(), sessionId,
+                    waitFor(fundsUpdatedMessage));
+        } else {
+            quotesUpdatedMessage = futureCall(new ImmediateReturnJob(), immediate("Skipping quote retrieval"));
+        }
 
 //        futureCall(new RunCalculationsGeneratorJob(), immediate(date), funds);
 //        //for each of the parameter combinations (1M, 2M, 6M etc) call
