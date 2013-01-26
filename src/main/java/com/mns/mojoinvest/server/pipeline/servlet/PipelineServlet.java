@@ -33,7 +33,7 @@ public class PipelineServlet extends HttpServlet {
         String pipelineId = service.startNewPipeline(new DailyPipeline(), date, sessionId, funds, quotes);
 
         String msg = "Daily pipeline '" + pipelineId + "' started for date " + date + "<br/>" +
-                "<a href=\"/_ah/pipeline/status.html?root=" + pipelineId + "\">Pipeline Console</a>";
+                "<a href=\"/_ah/pipeline/status.html?root=" + pipelineId + "\" target=\"_blank\">Pipeline Console</a>";
         log.info(msg);
 
         resp.setContentType("text/html");

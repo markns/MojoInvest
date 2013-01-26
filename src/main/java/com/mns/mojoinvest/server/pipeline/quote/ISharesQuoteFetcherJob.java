@@ -9,6 +9,7 @@ import com.mns.mojoinvest.server.engine.model.dao.FundDao;
 import com.mns.mojoinvest.server.engine.model.dao.QuoteDao;
 import com.mns.mojoinvest.server.pipeline.PipelineException;
 import com.mns.mojoinvest.server.pipeline.PipelineHelper;
+import com.mns.mojoinvest.server.util.QuoteUtils;
 import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.WebResource;
@@ -66,6 +67,9 @@ public class ISharesQuoteFetcherJob extends Job2<String, String, String> {
             if (testForChanges(quotes)) {
                 //Todo: set property requiring all cvs be recalculated
             }
+
+            quotes.addAll(QuoteUtils.rollMissingQuotes(quotes));
+
             dao.put(quotes);
             updateQuoteDatesOnFund(quotes);
             return immediate(fundId + " quote retrieval complete");

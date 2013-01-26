@@ -52,50 +52,6 @@ public class QuoteUtils {
 
     }
 
-
-    @Deprecated
-    public static List<Quote> getMissingQuotes(LocalDate fromDate, LocalDate toDate, List<Quote> quotes) {
-
-        sortByDateAsc(quotes);
-        List<LocalDate> dates = TradingDayUtils.getDailySeries(fromDate, toDate, true);
-
-        List<Quote> missingQuotes = new ArrayList<Quote>();
-        Iterator<Quote> quoteIter = quotes.iterator();
-        Quote quote = quoteIter.next();
-        Quote earliestQuote = quote;
-        Quote previousQuote = null;
-
-        for (LocalDate date : dates) {
-            if (date.isBefore(earliestQuote.getDate())) {
-//                System.out.println("before");
-                missingQuotes.add(rollQuote(quote, date));
-                continue;
-            }
-            while (date.isAfter(quote.getDate())) {
-//                System.out.println("after " + quote.getId());
-                previousQuote = quote;
-                if (quoteIter.hasNext()) {
-                    quote = quoteIter.next();
-                } else {
-                    break;
-                }
-            }
-
-            if (date.equals(quote.getDate())) {
-//                System.out.println("equals");
-                previousQuote = quote;
-                if (quoteIter.hasNext()) {
-                    quote = quoteIter.next();
-                }
-            } else {
-//                System.out.println("added missing " + previousQuote);
-                missingQuotes.add(rollQuote(previousQuote, date));
-            }
-
-        }
-        return missingQuotes;
-    }
-
     private static Quote rollQuote(Quote quote, LocalDate date) {
         return new Quote(quote.getSymbol(), date, quote.getNav(), quote.getIndex(),
                 quote.getTrNav(),

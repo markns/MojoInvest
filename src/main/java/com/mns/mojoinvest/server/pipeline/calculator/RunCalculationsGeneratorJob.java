@@ -16,8 +16,12 @@ import org.joda.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.logging.Logger;
 
 public class RunCalculationsGeneratorJob extends Job0<String> {
+
+    private static final Logger log = Logger.getLogger(RunCalculationsGeneratorJob.class.getName());
+
 
     @Override
     public Value<String> run() {
@@ -36,6 +40,11 @@ public class RunCalculationsGeneratorJob extends Job0<String> {
             }
 
             LocalDate to = fund.getLatestQuoteDate();
+
+            if (from == null || to == null) {
+                log.warning("Unable to calculate values for " + fund + " - no quotes persisted");
+                continue;
+            }
 
             List<LocalDate> dates = TradingDayUtils.getEndOfWeekSeries(from, to, 1);
             List<Quote> quotes = quoteDao.get(fund, dates);
