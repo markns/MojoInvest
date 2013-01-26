@@ -25,12 +25,8 @@ public class ISharesQuoteFetcherControlJob extends Job1<String, String> {
 
         FundDao dao = PipelineHelper.getFundDao();
         for (Fund fund : dao.list()) {
-//            quotesUpdated.add(futureCall(new ISharesQuoteFetcherJob(), immediate(fund.getFundId()),
-//                    immediate(sessionId)));
-            FutureValue<String> s = futureCall(new ISharesQuoteFetcherJob(), immediate("200306"),
-                    immediate(sessionId));
-            log.info(s.getSourceJobHandle());
-            break;
+            quotesUpdated.add(futureCall(new ISharesQuoteFetcherJob(), immediate(fund.getFundId()),
+                    immediate(sessionId)));
         }
 
         return futureCall(new GenericPipelines.MergeListJob(), futureList(quotesUpdated));
