@@ -28,6 +28,10 @@ public class PipelineHelper {
         return client;
     }
 
+
+    //I'll just get an injector out of a singleton in the JobRecord subclasses.
+    //https://groups.google.com/forum/#!topic/app-engine-pipeline-api/k4ul8XbFPoc
+
     public static FundDao getFundDao() {
         return new ObjectifyFundDao(factory);
     }
