@@ -10,9 +10,13 @@ import com.mns.mojoinvest.server.pipeline.PipelineHelper;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Logger;
 
 
 public class ISharesQuoteFetcherControlJob extends Job1<String, String> {
+
+    private static final Logger log = Logger.getLogger(ISharesQuoteFetcherControlJob.class.getName());
+
 
     @Override
     public Value<String> run(String sessionId) {
@@ -21,8 +25,12 @@ public class ISharesQuoteFetcherControlJob extends Job1<String, String> {
 
         FundDao dao = PipelineHelper.getFundDao();
         for (Fund fund : dao.list()) {
-            quotesUpdated.add(futureCall(new ISharesQuoteFetcherJob(), immediate(fund.getFundId()),
-                    immediate(sessionId)));
+//            quotesUpdated.add(futureCall(new ISharesQuoteFetcherJob(), immediate(fund.getFundId()),
+//                    immediate(sessionId)));
+            FutureValue<String> s = futureCall(new ISharesQuoteFetcherJob(), immediate("200306"),
+                    immediate(sessionId));
+            log.info(s.getSourceJobHandle());
+            break;
         }
 
         return futureCall(new GenericPipelines.MergeListJob(), futureList(quotesUpdated));

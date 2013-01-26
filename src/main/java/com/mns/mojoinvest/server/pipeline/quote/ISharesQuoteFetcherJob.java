@@ -1,8 +1,8 @@
 package com.mns.mojoinvest.server.pipeline.quote;
 
 
-import com.google.appengine.tools.pipeline.Job2;
-import com.google.appengine.tools.pipeline.Value;
+import com.google.appengine.tools.pipeline.*;
+import com.google.appengine.tools.pipeline.impl.model.JobRecord;
 import com.mns.mojoinvest.server.engine.model.Fund;
 import com.mns.mojoinvest.server.engine.model.Quote;
 import com.mns.mojoinvest.server.engine.model.dao.FundDao;
@@ -14,13 +14,11 @@ import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.WebResource;
 import com.sun.jersey.core.util.MultivaluedMapImpl;
 import jxl.Workbook;
-import jxl.read.biff.BiffException;
 import org.joda.time.LocalDate;
 
 import javax.ws.rs.core.Cookie;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.MultivaluedMap;
-import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 
@@ -32,27 +30,13 @@ public class ISharesQuoteFetcherJob extends Job2<String, String, String> {
     public Value<String> run(String fundId, String sessionId) {
 
         ClientResponse response = downloadISharesData(fundId, sessionId);
-
-        Workbook workbook;
-        try {
-            workbook = Workbook.getWorkbook(response.getEntityInputStream());
-            List<Quote> quotes = ISharesExcelParser.parse(workbook);
-            QuoteDao dao = PipelineHelper.getQuoteDao();
-
-            //Todo: Test for changes
-            if (testForChanges(quotes)) {
-                //Todo: set property requiring all cvs be recalculated
-            }
-            dao.put(quotes);
-            updateQuoteDatesOnFund(quotes);
-
-        } catch (IOException e) {
-            throw new PipelineException("Unable to retrieve excel file " + fundId, e);
-        } catch (BiffException e) {
-            throw new PipelineException("Unable to retrieve excel file " + fundId, e);
+        //response from webservice is 200 regardless of success
+        //content-disposition is only set if a real file is returned
+        if (response.getHeaders().containsKey("content-disposition")) {
+            return processClientResponse(fundId, response);
+        } else {
+            return processFailedResponse(fundId);
         }
-
-        return immediate(fundId + " quote retrieval complete");
     }
 
     private ClientResponse downloadISharesData(String fundId, String sessionId) {
@@ -69,6 +53,27 @@ public class ISharesQuoteFetcherJob extends Job2<String, String, String> {
         formData.put("fundId", Arrays.asList(fundId));
 
         return builder.post(ClientResponse.class, formData);
+    }
+
+    private Value<String> processClientResponse(String fundId, ClientResponse response) {
+        Workbook workbook;
+        try {
+            workbook = Workbook.getWorkbook(response.getEntityInputStream());
+            List<Quote> quotes = ISharesExcelParser.parse(workbook);
+            QuoteDao dao = PipelineHelper.getQuoteDao();
+
+            //Todo: Test for changes
+            if (testForChanges(quotes)) {
+                //Todo: set property requiring all cvs be recalculated
+            }
+            dao.put(quotes);
+            updateQuoteDatesOnFund(quotes);
+            return immediate(fundId + " quote retrieval complete");
+
+        } catch (Exception e) {
+            String filename = response.getHeaders().get("content-disposition").get(0);
+            throw new PipelineException("Unable to process excel file " + filename + " for fund " + fundId, e);
+        }
     }
 
     private static void updateQuoteDatesOnFund(List<Quote> quotes) {
@@ -88,6 +93,24 @@ public class ISharesQuoteFetcherJob extends Job2<String, String, String> {
             fund.setEarliestQuoteDate(earliestQuote);
             fund.setLatestQuoteDate(latestQuote);
             dao.put(fund);
+        }
+    }
+
+    private Value<String> processFailedResponse(String fundId) {
+        PipelineService service = PipelineServiceFactory.newPipelineService();
+
+        JobRecord jobRecord;
+        try {
+            jobRecord = (JobRecord) service.getJobInfo(getJobKey().getName());
+            if (jobRecord.getAttemptNumber() == 2) {
+                return immediate("Unable to retrieve quotes for fund " + fundId + " after " +
+                        jobRecord.getAttemptNumber() + " attempts - aborting");
+            } else {
+                throw new PipelineException("Unable to retrieve quotes for fund " + fundId + " on attempt " +
+                        jobRecord.getAttemptNumber() + " - retrying");
+            }
+        } catch (NoSuchObjectException e) {
+            throw new PipelineException("Unable to find JobRecord for fund " + fundId + " during failure processing", e);
         }
     }
 

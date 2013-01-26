@@ -25,9 +25,10 @@ public class PipelineServlet extends HttpServlet {
 
         ParameterParser parser = new ParameterParser(req);
         LocalDate date = parser.getLocalDateParameter("date", new LocalDate());
+        String sessionId = parser.getStringParameter("sessionid", null);
 
         PipelineService service = PipelineServiceFactory.newPipelineService();
-        String pipelineId = service.startNewPipeline(new DailyPipeline(), date);
+        String pipelineId = service.startNewPipeline(new DailyPipeline(), date, sessionId);
 
         String msg = "Daily pipeline '" + pipelineId + "' started for date " + date + "<br/>" +
                 "<a href=\"/_ah/pipeline/status.html?root=" + pipelineId + "\">Pipeline Console</a>";

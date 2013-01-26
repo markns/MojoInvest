@@ -2,7 +2,7 @@ package com.mns.mojoinvest.server.pipeline;
 
 import com.google.appengine.api.datastore.KeyFactory;
 import com.google.appengine.tools.pipeline.FutureValue;
-import com.google.appengine.tools.pipeline.Job1;
+import com.google.appengine.tools.pipeline.Job2;
 import com.google.appengine.tools.pipeline.Value;
 import com.mns.mojoinvest.server.pipeline.quote.ISharesQuoteFetcherControlJob;
 import com.mns.mojoinvest.server.util.HolidayUtils;
@@ -12,14 +12,14 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
 
-public class DailyPipeline extends Job1<Void, LocalDate> {
+public class DailyPipeline extends Job2<Void, LocalDate, String> {
 
     private static final Logger log = Logger.getLogger(DailyPipeline.class.getName());
 
     private static final String USER_EMAIL = "marknuttallsmith@gmail.com";
 
     @Override
-    public Value<Void> run(LocalDate date) {
+    public Value<Void> run(LocalDate date, String sessionIdStr) {
 
         List<Value<String>> messages = new ArrayList<Value<String>>();
 
@@ -39,8 +39,12 @@ public class DailyPipeline extends Job1<Void, LocalDate> {
 //        FutureValue<String> fundsUpdatedMessage = futureCall(new ISharesFundFetcherControlJob());
         FutureValue<String> fundsUpdatedMessage = futureCall(new ImmediateReturnJob());
 
-//        Value<String> sessionId = futureCall(new ExternalAgentJob(), immediate(USER_EMAIL));
-        Value<String> sessionId = immediate("3902AE034D1F9D9C9D2531C57E0E0076.isharestools-pea02");
+        Value<String> sessionId;
+        if (sessionIdStr != null) {
+            sessionId = immediate(sessionIdStr);
+        } else {
+            sessionId = futureCall(new ExternalAgentJob(), immediate(USER_EMAIL));
+        }
 
         FutureValue<String> quotesUpdatedMessage = futureCall(new ISharesQuoteFetcherControlJob(), sessionId, waitFor(fundsUpdatedMessage));
 
