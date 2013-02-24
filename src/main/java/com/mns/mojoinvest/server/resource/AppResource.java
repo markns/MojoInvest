@@ -56,7 +56,7 @@ public class AppResource {
         LocalDate fromDate = new LocalDate("2005-01-01");
         LocalDate toDate = new LocalDate();
 
-        int portfolioSize = 1;
+        int portfolioSize = 3;
         int holdingPeriod = 1;
         int minHoldingPeriod = 6;
         int ma1 = 12;
