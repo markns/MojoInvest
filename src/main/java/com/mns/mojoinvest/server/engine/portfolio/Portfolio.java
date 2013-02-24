@@ -20,7 +20,7 @@ public interface Portfolio {
 
     boolean contains(String fund, LocalDate date);
 
-    Position getPosition(String fund);
+    Position getPosition(String symbol);
 
     void add(Transaction transaction) throws PortfolioException;
 

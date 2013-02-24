@@ -39,7 +39,7 @@ public class ISharesFundFetcherControlJob extends Job0<String> {
         String html = fetchAllFundsHtml();
 
         Map<String, String> funds = scrapeFunds(html);
-//        scrapeCategories(html);
+        scrapeCategories(html);
 
         log.info("Attempting to retrieve details for " + funds.size() + " funds");
         List<FutureValue<String>> fundsUpdated = new ArrayList<FutureValue<String>>();

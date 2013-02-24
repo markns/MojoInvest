@@ -96,8 +96,8 @@ public class SimplePortfolio implements Portfolio {
     }
 
     @Override
-    public Position getPosition(String fund) {
-        return positions.get(fund);
+    public Position getPosition(String symbol) {
+        return positions.get(symbol);
     }
 
     @Override

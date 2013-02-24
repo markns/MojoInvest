@@ -29,20 +29,20 @@ window.App = {
     };
 })(jQuery);
 $.datepicker.setDefaults({
-    dateFormat:"yy-mm-dd"
+    dateFormat: "yy-mm-dd"
 });
 $('#content')
         .ajaxStart(function () {
 //            http://malsup.com/jquery/block/#demos
-            $.blockUI({ css:{
-                message:'Please wait...',
-                border:'none',
-                padding:'15px',
-                backgroundColor:'#000',
-                '-webkit-border-radius':'10px',
-                '-moz-border-radius':'10px',
-                opacity:.5,
-                color:'#fff'
+            $.blockUI({ css: {
+                message: 'Please wait...',
+                border: 'none',
+                padding: '15px',
+                backgroundColor: '#000',
+                '-webkit-border-radius': '10px',
+                '-moz-border-radius': '10px',
+                opacity: .5,
+                color: '#fff'
             } });
         })
         .ajaxStop(function () {
@@ -55,7 +55,7 @@ tpl = {
     // Recursively pre-load all the templates for the app.
     // This implementation should be changed in a production environment. All the template files should be
     // concatenated in a single file.
-    loadTemplates:function (names, callback) {
+    loadTemplates: function (names, callback) {
 
         var loadTemplate = function (index) {
             var name = names[index];
@@ -75,7 +75,7 @@ tpl = {
     },
 
     // Get template by name from hash of preloaded templates
-    get:function (name) {
+    get: function (name) {
         return this.templates[name];
     }
 
@@ -88,12 +88,12 @@ App.AppModel = Backbone.Model.extend({});
 
 App.ParamsView = Backbone.View.extend({
 
-    initialize:function () {
+    initialize: function () {
         this.model.bind("change", this.render, this);
         this.model.bind("destroy", this.close, this);
     },
 
-    render:function () {
+    render: function () {
         $(this.el).html(ich.params(this.model.toJSON({})));
         this.$("#fromDate").datepicker();
         this.$("#toDate").datepicker();
@@ -139,12 +139,12 @@ App.ParamsView = Backbone.View.extend({
         return this;
     },
 
-    events:{
-        "click input[name='relativeStrengthStyle']:radio":"rsRadioClicked",
-        "click #runbacktest":"runBacktest"
+    events: {
+        "click input[name='relativeStrengthStyle']:radio": "rsRadioClicked",
+        "click #runbacktest": "runBacktest"
     },
 
-    rsRadioClicked:function (event) {
+    rsRadioClicked: function (event) {
         // find out which radio button was clicked and
         // disable/enable appropriate input elements
         switch (event.currentTarget.id) {
@@ -170,49 +170,50 @@ App.ParamsView = Backbone.View.extend({
 
     },
 
-    runBacktest:function (event) {
+    runBacktest: function (event) {
 
         this.model.set({
-            "initialInvestment":$('#initialInvestment').val(),
-            "transactionCost":$('#transactionCost').val(),
-            "portfolioSize":$('#portfolioSize').val(),
-            "relativeStrengthStyle":$('input[name=relativeStrengthStyle]:checked', '#relativeStrength').val(),
-            "ma1":$('#ma1').val(),
-            "ma2":$('#ma2').val(),
-            "roc":$('#roc').val(),
-            "alpha":$('#alpha').val(),
-            "rebalanceFrequency":$('#rebalanceFrequency').val(),
-            "castOff":$('#castOff').val(),
-            "riskAdjusted":$('#riskAdjusted').is(':checked'),
-            "stdDev":$('#stdDev').val(),
-            "tradeEquityCurve":$('#tradeEquityCurve').is(':checked'),
-            "equityCurveWindow":$('#equityCurveWindow').val(),
-            "useSafeAsset":$('#useSafeAsset').is(':checked'),
-            "safeAsset":$('#safeAsset').val(),
-            "fromDate":$('#fromDate').val(),
-            "toDate":$('#toDate').val(),
-            "creationDate":$('#fromDate').val()
+            "initialInvestment": $('#initialInvestment').val(),
+            "transactionCost": $('#transactionCost').val(),
+            "portfolioSize": $('#portfolioSize').val(),
+            "relativeStrengthStyle": $('input[name=relativeStrengthStyle]:checked', '#relativeStrength').val(),
+            "ma1": $('#ma1').val(),
+            "ma2": $('#ma2').val(),
+            "roc": $('#roc').val(),
+            "alpha": $('#alpha').val(),
+            "rebalanceFrequency": $('#rebalanceFrequency').val(),
+            "minHoldingPeriod": $('#minHoldingPeriod').val(),
+            "castOff": $('#castOff').val(),
+            "riskAdjusted": $('#riskAdjusted').is(':checked'),
+            "stdDev": $('#stdDev').val(),
+            "tradeEquityCurve": $('#tradeEquityCurve').is(':checked'),
+            "equityCurveWindow": $('#equityCurveWindow').val(),
+            "useSafeAsset": $('#useSafeAsset').is(':checked'),
+            "safeAsset": $('#safeAsset').val(),
+            "fromDate": $('#fromDate').val(),
+            "toDate": $('#toDate').val(),
+            "creationDate": $('#fromDate').val()
         });
         $.ajax({
-            type:'POST',
-            url:"api/backtest",
-            data:JSON.stringify(this.model),
-            success:this.success,
-            error:this.error,
-            contentType:"application/json;charset=utf-8",
-            dataType:'json'
+            type: 'POST',
+            url: "api/backtest",
+            data: JSON.stringify(this.model),
+            success: this.success,
+            error: this.error,
+            contentType: "application/json;charset=utf-8",
+            dataType: 'json'
         });
 
         console.log(JSON.stringify(this.model));
         return false;
     },
 
-    success:function (data) {
+    success: function (data) {
         App.results = new App.Results(data);
         App.router.navigate('results', true);
     },
 
-    error:function (jqXHR, textStatus, errorThrown) {
+    error: function (jqXHR, textStatus, errorThrown) {
         console.log(jqXHR, textStatus, errorThrown);
         alert(jqXHR + " " + textStatus + " " + errorThrown);
     }
@@ -220,11 +221,11 @@ App.ParamsView = Backbone.View.extend({
 });
 
 App.UniverseView = Backbone.View.extend({
-    initialize:function () {
+    initialize: function () {
         this.model.bind("change:universe", this.render, this);
     },
 
-    render:function () {
+    render: function () {
         $(this.el).html(ich.universe(this.model.toJSON({})));
         return this;
     }
@@ -233,20 +234,20 @@ App.UniverseView = Backbone.View.extend({
 
 App.FundsView = Backbone.View.extend({
 
-    initialize:function () {
+    initialize: function () {
     },
 
-    render:function () {
+    render: function () {
         $(this.el).html(ich.funds(App));
         this.updateCheckedRows();
         return this;
     },
-    events:{
-        "click input[name='includeFundCheck']:checkbox":"includeFundClicked",
-        "click input[name='includeAllFundsCheck']:checkbox":"includeAllFundsClicked"
+    events: {
+        "click input[name='includeFundCheck']:checkbox": "includeFundClicked",
+        "click input[name='includeAllFundsCheck']:checkbox": "includeAllFundsClicked"
     },
 
-    updateCheckedRows:function () {
+    updateCheckedRows: function () {
         var universe = App.params.get("universe");
         this.$("input[name='includeFundCheck']:checkbox").each(function (index) {
             if ($.inArray($(this).val(), universe) != -1) {
@@ -255,7 +256,7 @@ App.FundsView = Backbone.View.extend({
         });
     },
 
-    includeFundClicked:function (event) {
+    includeFundClicked: function (event) {
         var fund = event.currentTarget.value;
         var universe = App.params.get("universe");
         var index = $.inArray(fund, universe);
@@ -271,7 +272,7 @@ App.FundsView = Backbone.View.extend({
         App.params.trigger('change:universe');
     },
 
-    addToUniverse:function (fund, universe) {
+    addToUniverse: function (fund, universe) {
         var index = $.inArray(fund, universe);
         if (index == -1) {
             universe.push(fund);
@@ -281,7 +282,7 @@ App.FundsView = Backbone.View.extend({
         return index;
     },
 
-    includeAllFundsClicked:function (event) {
+    includeAllFundsClicked: function (event) {
         var universe = App.params.get("universe");
         var filteredData = this.fundTF.GetFilteredData(false);
         if (filteredData.length == 0) {
@@ -306,16 +307,16 @@ App.FundsView = Backbone.View.extend({
         this.updateCheckedRows();
     },
 
-    setFilterGrid:function () {
+    setFilterGrid: function () {
         var table_Props = {
-            col_0:"none",
-            col_3:"select",
-            col_4:"select",
-            col_5:"select",
-            col_6:"select",
-            col_7:"select",
-            display_all_text:" [ Show all ] ",
-            sort_select:true
+            col_0: "none",
+            col_3: "select",
+            col_4: "select",
+            col_5: "select",
+            col_6: "select",
+            col_7: "select",
+            display_all_text: " [ Show all ] ",
+            sort_select: true
         };
         this.fundTF = setFilterGrid("universe_table", table_Props);
     }
@@ -324,22 +325,22 @@ App.FundsView = Backbone.View.extend({
 
 App.ChartView = Backbone.View.extend({
 
-    render:function () {
-        $(this.el).html(ich.results({stats:this.model.get("stats"),
-            transactions:this.model.get("transactions")}));
+    render: function () {
+        $(this.el).html(ich.results({stats: this.model.get("stats"),
+            transactions: this.model.get("transactions")}));
         console.log("ChartView render");
-        google.load('visualization', '1', {'callback':this.drawVisualization,
-            'packages':['linechart']});
+        google.load('visualization', '1', {'callback': this.drawVisualization,
+            'packages': ['linechart']});
         return this;
     },
 
-    drawVisualization:function () {
+    drawVisualization: function () {
         var data = new google.visualization.DataTable(App.results.get('dataTable'));
         new Dygraph.GVizChart(this.$('#chart').get(0)).draw(data,
                 {
-                    showRangeSelector:true,
-                    displayAnnotations:true,
-                    connectSeparatedPoints:true
+                    showRangeSelector: true,
+                    displayAnnotations: true,
+                    connectSeparatedPoints: true
                 });
     }
 
@@ -357,18 +358,18 @@ Backbone.View.prototype.close = function () {
 
 var AppRouter = Backbone.Router.extend({
 
-    initialize:function () {
+    initialize: function () {
         console.log("initializing AppRouter");
     },
 
-    routes:{
-        "":"params",
-        "results":"results"
+    routes: {
+        "": "params",
+        "results": "results"
     },
 
-    params:function () {
+    params: function () {
         console.log("Showing params");
-        var params = new App.ParamsView({model:App.params});
+        var params = new App.ParamsView({model: App.params});
         var funds = new App.FundsView();
         App.router.showViews("#content", [params, funds]);
 
@@ -376,13 +377,13 @@ var AppRouter = Backbone.Router.extend({
         funds.setFilterGrid();
     },
 
-    results:function () {
+    results: function () {
         console.log("Showing results");
-        var views = [new App.ChartView({model:App.results})];
+        var views = [new App.ChartView({model: App.results})];
         App.router.showViews("#content", views);
     },
 
-    showViews:function (selector, views) {
+    showViews: function (selector, views) {
         if (this.currentViews) {
             for (var i = 0; i < this.currentViews.length; i++) {
                 this.currentViews[i].close();
@@ -417,4 +418,4 @@ var AppRouter = Backbone.Router.extend({
 
 
 {{/foot-scripts}}
-        {{/mustache/super}}
+{{/mustache/super}}

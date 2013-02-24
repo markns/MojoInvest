@@ -1,5 +1,6 @@
 package com.mns.mojoinvest.server.engine.portfolio;
 
+import com.google.common.collect.Iterables;
 import com.mns.mojoinvest.server.engine.model.Fund;
 import com.mns.mojoinvest.server.engine.model.Quote;
 import com.mns.mojoinvest.server.engine.model.dao.DataAccessException;
@@ -291,6 +292,13 @@ public class Position {
         }
         log.fine("Loaded quote " + quote);
         return quote.getTrNav();
+    }
+
+    public boolean canSellOn(LocalDate rebalanceDate, int minHoldingPeriod) {
+        LocalDate lastTransactionDate = Iterables.getLast(transactions).getDate();
+        if (lastTransactionDate.plusWeeks(minHoldingPeriod).isAfter(rebalanceDate))
+            return false;
+        return true;
     }
 
     @Override

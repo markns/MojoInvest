@@ -273,6 +273,7 @@ public class PortfolioTests {
 
         int portfolioSize = 1;
         int holdingPeriod = 1;
+        int minHoldingPeriod = 6;
         int ma1 = 12;
         int ma2 = 26;
         int roc = 26;
@@ -293,9 +294,9 @@ public class PortfolioTests {
         LocalDate creationDate = new LocalDate("2011-01-01");
 
         return new Params(fromDate, toDate, creationDate, initialInvestment, transactionCost,
-                portfolioSize, holdingPeriod, ma1, ma2, roc, alpha,
-                castOff, riskAdjust, stddev, equityCurveTrading, equityCurveWindow,
-                relativeStrengthStyle, useSafeAsset, safeAsset, null);
+                portfolioSize, holdingPeriod, minHoldingPeriod, ma1, ma2, roc,
+                alpha, castOff, riskAdjust, stddev, equityCurveTrading,
+                equityCurveWindow, relativeStrengthStyle, useSafeAsset, safeAsset, null);
     }
 
     public Params getLoadsOfCashParams() {
@@ -305,6 +306,7 @@ public class PortfolioTests {
 
         int portfolioSize = 1;
         int holdingPeriod = 1;
+        int minHoldingPeriod = 6;
         int ma1 = 12;
         int ma2 = 26;
         int roc = 26;
@@ -325,9 +327,9 @@ public class PortfolioTests {
         LocalDate creationDate = new LocalDate("2011-01-01");
 
         return new Params(fromDate, toDate, creationDate, initialInvestment, transactionCost,
-                portfolioSize, holdingPeriod, ma1, ma2, roc, alpha,
-                castOff, riskAdjust, stddev, equityCurveTrading, equityCurveWindow,
-                relativeStrengthStyle, useSafeAsset, safeAsset, null);
+                portfolioSize, holdingPeriod, minHoldingPeriod, ma1, ma2, roc,
+                alpha, castOff, riskAdjust, stddev, equityCurveTrading,
+                equityCurveWindow, relativeStrengthStyle, useSafeAsset, safeAsset, null);
     }
 
 

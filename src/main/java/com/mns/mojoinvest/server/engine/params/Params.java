@@ -18,6 +18,7 @@ public class Params {
     private Double transactionCost;
     private int portfolioSize;
     private int rebalanceFrequency;
+    private int minHoldingPeriod;
     private int ma1;
     private int ma2;
     private int roc;
@@ -33,7 +34,7 @@ public class Params {
     private List<String> universe;
 
     public Params(LocalDate fromDate, LocalDate toDate, LocalDate creationDate, Double initialInvestment,
-                  Double transactionCost, int portfolioSize, int rebalanceFrequency, int ma1, int ma2,
+                  Double transactionCost, int portfolioSize, int rebalanceFrequency, int minHoldingPeriod, int ma1, int ma2,
                   int roc, int alpha, int castOff, boolean riskAdjusted, int stdDev, boolean tradeEquityCurve,
                   int equityCurveWindow, String relativeStrengthStyle, boolean useSafeAsset,
                   String safeAsset, List<String> universe) {
@@ -44,6 +45,7 @@ public class Params {
         this.transactionCost = transactionCost;
         this.portfolioSize = portfolioSize;
         this.rebalanceFrequency = rebalanceFrequency;
+        this.minHoldingPeriod = minHoldingPeriod;
         this.ma1 = ma1;
         this.ma2 = ma2;
         this.roc = roc;
@@ -123,6 +125,14 @@ public class Params {
 
     public void setRebalanceFrequency(int rebalanceFrequency) {
         this.rebalanceFrequency = rebalanceFrequency;
+    }
+
+    public int getMinHoldingPeriod() {
+        return minHoldingPeriod;
+    }
+
+    public void setMinHoldingPeriod(int minHoldingPeriod) {
+        this.minHoldingPeriod = minHoldingPeriod;
     }
 
     public int getMa1() {
@@ -239,6 +249,7 @@ public class Params {
                 ", transactionCost=" + transactionCost +
                 ", portfolioSize=" + portfolioSize +
                 ", rebalanceFrequency=" + rebalanceFrequency +
+                ", minHoldingPeriod=" + minHoldingPeriod +
                 ", ma1=" + ma1 +
                 ", ma2=" + ma2 +
                 ", roc=" + roc +

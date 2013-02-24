@@ -60,15 +60,14 @@ public class MomentumStrategy {
         if (params.isTradeEquityCurve()) {
             runStrategyWithEquityCurve(portfolio, params, rebalanceDates, relativeStrengthsMap, additionalResults);
         } else {
-            runStrategy(portfolio, params, rebalanceDates, relativeStrengthsMap, additionalResults);
+            runStrategy(portfolio, params, rebalanceDates, relativeStrengthsMap);
         }
         log.fine("Rebalancing took " + (System.currentTimeMillis() - start) + " ms");
         return additionalResults;
     }
 
     private void runStrategy(Portfolio portfolio, Params params, List<LocalDate> rebalanceDates,
-                             SortedMap<LocalDate, Map<String, BigDecimal>> relativeStrengthsMap,
-                             Map<String, Map<LocalDate, BigDecimal>> additionalResults) throws StrategyException {
+                             SortedMap<LocalDate, Map<String, BigDecimal>> relativeStrengthsMap) throws StrategyException {
         for (LocalDate date : rebalanceDates) {
             Map<String, BigDecimal> strengths = relativeStrengthsMap.get(date);
             if (strengths.size() < params.getCastOff()) {
@@ -124,7 +123,7 @@ public class MomentumStrategy {
                 if (!belowEquityCurve) {
                     log.fine("Crossed below equity curve");
                     belowEquityCurve = true;
-                    sellEverything(portfolio, date);
+                    sellEverything(portfolio, date, params);
                     if (params.isUseSafeAsset()) {
                         buySafeAsset(portfolio, params, date);
                     }
@@ -184,18 +183,19 @@ public class MomentumStrategy {
     }
 
     private void rebalance(Portfolio portfolio, LocalDate rebalanceDate, List<String> selection, Params params) throws StrategyException {
-        sellLosers(portfolio, rebalanceDate, selection);
+        sellLosers(portfolio, rebalanceDate, selection, params);
         buyWinners(portfolio, params, rebalanceDate, selection);
     }
 
 
-    private void sellLosers(Portfolio portfolio, LocalDate rebalanceDate, List<String> selection)
+    private void sellLosers(Portfolio portfolio, LocalDate rebalanceDate, List<String> selection, Params params)
             throws StrategyException {
 
         for (String symbol : portfolio.getActiveFunds(rebalanceDate)) {
             if (!selection.contains(symbol)) {
                 try {
-                    executor.sellAll(portfolio, symbol, rebalanceDate);
+                    if (portfolio.getPosition(symbol).canSellOn(rebalanceDate, params.getMinHoldingPeriod()))
+                        executor.sellAll(portfolio, symbol, rebalanceDate);
                 } catch (PortfolioException e) {
                     throw new StrategyException("Unable to sell losers " + selection +
                             " on " + rebalanceDate +
@@ -238,10 +238,11 @@ public class MomentumStrategy {
         }
     }
 
-    private void sellEverything(Portfolio portfolio, LocalDate date) throws StrategyException {
+    private void sellEverything(Portfolio portfolio, LocalDate date, Params params) throws StrategyException {
         for (String symbol : portfolio.getActiveFunds(date)) {
             try {
-                executor.sellAll(portfolio, symbol, date);
+                if (portfolio.getPosition(symbol).canSellOn(date, params.getMinHoldingPeriod()))
+                    executor.sellAll(portfolio, symbol, date);
             } catch (PortfolioException e) {
                 throw new StrategyException("Unable to sell funds when portfolio value " +
                         "moved under equity curve", e);
@@ -263,7 +264,8 @@ public class MomentumStrategy {
         if (params.isUseSafeAsset() &&
                 portfolio.contains(params.getSafeAsset(), date)) {
             try {
-                executor.sellAll(portfolio, params.getSafeAsset(), date);
+                if (portfolio.getPosition(params.getSafeAsset()).canSellOn(date, params.getMinHoldingPeriod()))
+                    executor.sellAll(portfolio, params.getSafeAsset(), date);
             } catch (PortfolioException e) {
                 throw new StrategyException(date + " Unable to move out of safe asset", e);
             }
