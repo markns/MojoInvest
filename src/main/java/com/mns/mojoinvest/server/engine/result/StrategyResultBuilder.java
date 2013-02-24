@@ -77,7 +77,7 @@ public class StrategyResultBuilder {
         BigDecimal cagr = cagr();
         stats.put("Max DD%", maxDD);
         stats.put("CAGR", cagr);
-        stats.put("CAGR/Max DD%", maxDD.divide(cagr, MathContext.DECIMAL32));
+        stats.put("CAGR/Max DD%", cagr.divide(maxDD, MathContext.DECIMAL32));
         stats.put("Total Return", totalReturn());
         stats.put("Num Trades", portfolio.getTransactions().size());
 
