@@ -159,13 +159,13 @@ public class PortfolioTests {
     public void testGetActiveFunds() throws PortfolioException {
         Portfolio portfolio = new SimplePortfolio(fundDao, quoteDao, loadsofcash, false);
         portfolio.add(buyABC100);
-        assertEquals(1, portfolio.getActiveFunds(buy100Date).size());
+        assertEquals(1, portfolio.getActiveSymbols(buy100Date).size());
         portfolio.add(buyDEF200);
-        assertEquals(1, portfolio.getActiveFunds(buy100Date).size());
-        assertEquals(2, portfolio.getActiveFunds(buy200Date).size());
+        assertEquals(1, portfolio.getActiveSymbols(buy100Date).size());
+        assertEquals(2, portfolio.getActiveSymbols(buy200Date).size());
         portfolio.add(sellABC100);
-        assertEquals(1, portfolio.getActiveFunds(sell100Date).size());
-        assertEquals(2, portfolio.getActiveFunds(sell100Date.minusDays(1)).size());
+        assertEquals(1, portfolio.getActiveSymbols(sell100Date).size());
+        assertEquals(2, portfolio.getActiveSymbols(sell100Date.minusDays(1)).size());
     }
 
     @Test

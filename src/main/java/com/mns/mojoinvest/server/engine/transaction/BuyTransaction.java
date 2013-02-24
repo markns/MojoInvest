@@ -11,6 +11,11 @@ public class BuyTransaction extends AbstractTransaction {
         super(fund, date, units, price, commission);
     }
 
+    @Override
+    public String getType() {
+        return "Buy";
+    }
+
     public BigDecimal getInitialInvestment() {
         return units.multiply(price).add(commission);
     }

@@ -11,6 +11,11 @@ public class SellTransaction extends AbstractTransaction {
         super(fund, date, units, price, commission);
     }
 
+    @Override
+    public String getType() {
+        return "Sell";
+    }
+
     public BigDecimal getCashValue() {
         return units.multiply(price).subtract(commission);
     }

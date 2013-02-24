@@ -10,6 +10,10 @@
         <legend>Stats</legend>
         <table class="results_table">
             <tr>
+                <td>Current Portfolio</td>
+                <td>{{stats.Current portfolio}}</td>
+            </tr>
+            <tr>
                 <td>Final Portfolio Value</td>
                 <td>{{stats.Total Return}}</td>
             </tr>
@@ -45,16 +49,16 @@
             </tr>
             </thead>
             <tbody>
-            {{#transactions}}
-            <tr>
-                <td>{{type}}</td>
-                <td>{{fund}}</td>
-                <td>{{date}}</td>
-                <td>{{quantity}}</td>
-                <td>{{price}}</td>
-                <td>{{cashValue}}</td>
-            </tr>
-            {{/transactions}}
+                {{#transactions}}
+                <tr>
+                    <td>{{type}}</td>
+                    <td>{{fund}}</td>
+                    <td>{{date}}</td>
+                    <td>{{quantity}}</td>
+                    <td>{{price}}</td>
+                    <td>{{cashValue}}</td>
+                </tr>
+                {{/transactions}}
             </tbody>
         </table>
     </fieldset>

@@ -59,6 +59,8 @@ import java.math.BigDecimal;
  */
 public interface Transaction {
 
+    String getType();
+
     String getRef();
 
     String getFund();

@@ -215,7 +215,7 @@ public class Position {
 
         if (marketValueCache.containsKey(date))
             return marketValueCache.get(date);
-        log.fine(date + " Calculating market value for " + this);
+        //log.fine(date + " Calculating market value for " + this);
 
         BigDecimal marketValue = BigDecimal.ZERO;
         for (Lot lot : lots) {
@@ -304,7 +304,7 @@ public class Position {
     @Override
     public String toString() {
         return "Position{" +
-                "fund=" + fund +
+                "fund=" + fund.getSymbol() +
                 ", lots=" + lots.size() +
                 '}';
     }

@@ -38,7 +38,7 @@ public class NextTradingDayExecutor implements Executor {
         } catch (DataAccessException e) {
             throw new PortfolioException("Unable to execute", e);
         }
-        log.fine("Loaded buy execution quote " + executionQuote);
+        log.fine(executionDate + " Loaded buy execution quote " + executionQuote);
 
         if (executionQuote == null) {
             throw new PortfolioException(date + " Unable to buy " + fund + " - quote was null");
@@ -64,7 +64,7 @@ public class NextTradingDayExecutor implements Executor {
             throw new PortfolioException("Unable to execute", e);
         }
 
-        log.fine("Loaded sell execution quote " + executionQuote);
+        log.fine(executionDate + " Loaded sell execution quote " + executionQuote);
 
         if (executionQuote == null) {
             throw new PortfolioException(date + " Unable to sell " + fund + " - quote was null");

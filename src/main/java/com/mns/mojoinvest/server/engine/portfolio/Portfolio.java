@@ -36,7 +36,7 @@ public interface Portfolio {
 
     int openPositionCount(LocalDate date);
 
-    Collection<String> getActiveFunds(LocalDate date);
+    Collection<String> getActiveSymbols(LocalDate date);
 
     BigDecimal costBasis(LocalDate date);
 
@@ -53,4 +53,8 @@ public interface Portfolio {
     BigDecimal returnsGain(LocalDate date) throws PortfolioException;
 
     Params getParams();
+
+    boolean inSafeAsset();
+
+    void setInSafeAsset(boolean inSafeAsset);
 }

@@ -53,6 +53,8 @@ public class SimplePortfolio implements Portfolio {
     private Params params;
     private Map<LocalDate, BigDecimal> marketValueCache = new HashMap<LocalDate, BigDecimal>();
 
+    private boolean inSafeAsset;
+
     @Inject
     public SimplePortfolio(FundDao fundDao, QuoteDao quoteDao, @Assisted Params params, @Assisted boolean shadow) {
         this.fundDao = fundDao;
@@ -70,6 +72,16 @@ public class SimplePortfolio implements Portfolio {
     @Override
     public boolean isShadow() {
         return shadow;
+    }
+
+    @Override
+    public void setInSafeAsset(boolean inSafeAsset) {
+        this.inSafeAsset = inSafeAsset;
+    }
+
+    @Override
+    public boolean inSafeAsset() {
+        return inSafeAsset;
     }
 
     @Override
@@ -167,7 +179,7 @@ public class SimplePortfolio implements Portfolio {
     }
 
     @Override
-    public Collection<String> getActiveFunds(LocalDate date) {
+    public Collection<String> getActiveSymbols(LocalDate date) {
         return getOpenPositions(date).keySet();
     }
 
@@ -279,8 +291,11 @@ public class SimplePortfolio implements Portfolio {
 
     @Override
     public String toString() {
-        return "SimplePortfolio{" +
-                "positions=" + positions.keySet() +
-                '}';
+        if (isShadow()) {
+            return "Shadow Portfolio - " +
+                    "positions=" + positions.keySet();
+        }
+        return "Main Portfolio - " +
+                "positions=" + positions.keySet();
     }
 }

@@ -1,5 +1,6 @@
 package com.mns.mojoinvest.server.engine.result;
 
+import com.google.appengine.labs.repackaged.com.google.common.collect.Iterables;
 import com.google.inject.Inject;
 import com.google.visualization.datasource.base.TypeMismatchException;
 import com.google.visualization.datasource.datatable.ColumnDescription;
@@ -80,6 +81,7 @@ public class StrategyResultBuilder {
         stats.put("CAGR/Max DD%", cagr.divide(maxDD, MathContext.DECIMAL32));
         stats.put("Total Return", totalReturn());
         stats.put("Num Trades", portfolio.getTransactions().size());
+        stats.put("Current portfolio", portfolio.getActiveSymbols(Iterables.getLast(rebalanceDates)));
 
         return new StrategyResult(dataTable, portfolio.getTransactions(), stats);
     }
@@ -107,7 +109,8 @@ public class StrategyResultBuilder {
             throw new ResultBuilderException("Unable to calculate strategy result", e);
         }
         log.info("Final portfolio value: " + marketValue);
-        double base = marketValue.divide(new BigDecimal(portfolio.getParams().getInitialInvestment())).doubleValue();
+        double base = marketValue.divide(new BigDecimal(portfolio.getParams().getInitialInvestment()),
+                MathContext.DECIMAL32).doubleValue();
         double e = 1d / Years.yearsBetween(fromDate, params.getToDate()).getYears();
         double cagr = (1 - Math.pow(base, e)) * -100;
         log.info("CAGR: " + cagr + "%");
