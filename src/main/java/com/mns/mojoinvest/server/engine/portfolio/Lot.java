@@ -202,7 +202,7 @@ public class Lot {
         if (marketValueCache.containsKey(date))
             return marketValueCache.get(date);
         BigDecimal marketValue = getRemainingQuantity(date).multiply(sharePrice);
-        log.fine(date + " Calculated market value for " + this + " as " + marketValue);
+//        log.fine(date + " Calculated market value for " + this + " as " + marketValue);
         marketValueCache.put(date, marketValue);
         return marketValue;
     }

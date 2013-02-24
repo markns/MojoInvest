@@ -38,15 +38,18 @@ public class NextTradingDayExecutor implements Executor {
         } catch (DataAccessException e) {
             throw new PortfolioException("Unable to execute", e);
         }
-        log.fine(executionDate + " Loaded buy execution quote " + executionQuote);
+        //log.fine(executionDate + " Loaded buy execution quote " + executionQuote);
 
         if (executionQuote == null) {
             throw new PortfolioException(date + " Unable to buy " + fund + " - quote was null");
         }
         BigDecimal shares = allocation.divide(executionQuote.getTrNav(), 0, BigDecimal.ROUND_DOWN);
+        if (BigDecimal.ZERO.compareTo(shares) == 0) {
+            return;
+        }
+
         if (!portfolio.isShadow())
-            log.fine(executionDate.dayOfWeek().getAsShortText() + " " + executionDate +
-                    " Buy " + shares + " " + fund + " at " + executionQuote.getTrNav());
+            log.fine(executionDate + " Buy " + shares + " " + fund + " at " + executionQuote.getTrNav());
         BuyTransaction tx = new BuyTransaction(fund, executionDate, shares,
                 executionQuote.getTrNav(), portfolio.getTransactionCost());
         portfolio.add(tx);
@@ -64,15 +67,14 @@ public class NextTradingDayExecutor implements Executor {
             throw new PortfolioException("Unable to execute", e);
         }
 
-        log.fine(executionDate + " Loaded sell execution quote " + executionQuote);
+        //log.fine(executionDate + " Loaded sell execution quote " + executionQuote);
 
         if (executionQuote == null) {
             throw new PortfolioException(date + " Unable to sell " + fund + " - quote was null");
         }
         Position position = portfolio.getPosition(fund);
         if (!portfolio.isShadow())
-            log.fine(executionDate.dayOfWeek().getAsShortText() + " " + executionDate +
-                    " Sell " + position.shares(executionDate) + " " + fund + " at " + executionQuote.getTrNav());
+            log.fine(executionDate + " Sell " + position.shares(executionDate) + " " + fund + " at " + executionQuote.getTrNav());
         SellTransaction tx = new SellTransaction(fund, executionDate, position.shares(executionDate),
                 executionQuote.getTrNav(), portfolio.getTransactionCost());
         portfolio.add(tx);

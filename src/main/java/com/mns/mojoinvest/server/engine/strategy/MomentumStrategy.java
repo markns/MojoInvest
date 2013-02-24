@@ -109,6 +109,7 @@ public class MomentumStrategy {
             BigDecimal shadowMarketValue = null;
             try {
                 shadowMarketValue = shadowPortfolio.marketValue(date);
+                log.fine(date + " Shadow portfolio market value: " + shadowMarketValue);
             } catch (PortfolioException e) {
                 throw new StrategyException("Unable to complete strategy run at " + date, e);
             }
@@ -120,22 +121,30 @@ public class MomentumStrategy {
             additionalResults.get(SHADOW_PORTFOLIO_MARKET_VALUE).put(date, shadowMarketValue);
             additionalResults.get(SHADOW_EQUITY_CURVE).put(date, equityCurveMA);
 
+            log.fine(date + " Rebalancing shadow portfolio");
             rebalance(shadowPortfolio, date, selection, params);
             if (equityCurveMA != null && shadowMarketValue.compareTo(equityCurveMA) < 0) {
                 if (!belowEquityCurve) {
                     log.fine(date + " Crossed below equity curve");
                     belowEquityCurve = true;
-                    sellEverything(portfolio, date, params);
-                    if (params.isUseSafeAsset()) {
-                        buySafeAsset(portfolio, params, date);
-                    }
+                } else {
+                    log.fine(date + " Remaining below equity curve");
                 }
+                log.fine(date + " Rebalancing real portfolio");
+                sellEverything(portfolio, date, params);
+                if (params.isUseSafeAsset()) {
+                    buySafeAsset(portfolio, params, date);
+                }
+
             } else {
                 if (belowEquityCurve) {
                     log.fine(date + " Crossed above equity curve");
-                    sellSafeAsset(portfolio, params, date);
                     belowEquityCurve = false;
+                } else {
+                    log.fine(date + " Remaining above equity curve");
                 }
+                log.fine(date + " Rebalancing real portfolio");
+                sellSafeAsset(portfolio, params, date);
                 rebalance(portfolio, date, selection, params);
             }
 
@@ -181,6 +190,11 @@ public class MomentumStrategy {
         SortedMap<String, BigDecimal> sorted = ImmutableSortedMap.copyOf(rs, valueComparator);
 //        log.fine(date + " RS(" + params.getRelativeStrengthStyle() + "): " + sorted);
         List<String> rank = new ArrayList<String>(sorted.keySet());
+        if (params.isUseSafeAsset()) {
+            int i = rank.indexOf(params.getSafeAsset());
+            if (i != -1)
+                rank.remove(i);
+        }
         return rank.subList(0, params.getCastOff());
     }
 
@@ -226,7 +240,7 @@ public class MomentumStrategy {
 
         int added = 0;
         for (String symbol : selection) {
-            if (numEmpty == added || portfolio.inSafeAsset())
+            if (numEmpty == added)
                 break;
             if (!portfolio.contains(symbol, rebalanceDate)) {
                 try {
@@ -246,6 +260,8 @@ public class MomentumStrategy {
 
     private void sellEverything(Portfolio portfolio, LocalDate date, Params params) throws StrategyException {
         for (String symbol : portfolio.getActiveSymbols(date)) {
+            if (symbol.equals(params.getSafeAsset()))
+                continue;
             try {
                 if (portfolio.getPosition(symbol).canSellOn(date, params.getMinHoldingPeriod())) {
                     executor.sellAll(portfolio, symbol, date);
@@ -269,7 +285,6 @@ public class MomentumStrategy {
                 .subtract(portfolio.getTransactionCost());
         try {
             executor.buy(portfolio, params.getSafeAsset(), date, availableCash);
-            portfolio.setInSafeAsset(true);
         } catch (PortfolioException e) {
             log.warning(date + " Unable to move into safe asset: " + e.getMessage());
         }
@@ -281,7 +296,6 @@ public class MomentumStrategy {
             try {
                 if (portfolio.getPosition(params.getSafeAsset()).canSellOn(date, params.getMinHoldingPeriod())) {
                     executor.sellAll(portfolio, params.getSafeAsset(), date);
-                    portfolio.setInSafeAsset(false);
                 } else {
                     log.fine(date + " Unable to sell safe asset " + params.getSafeAsset() + " due to minimum holding period");
                 }

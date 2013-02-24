@@ -224,7 +224,8 @@ public class Position {
                 marketValue = marketValue.add(lot.marketValue(date, close));
             }
         }
-        log.fine(date + " Calculated market value for " + this + " as " + marketValue);
+//        if (BigDecimal.ZERO.compareTo(marketValue) != 0)
+//            log.fine(date + " Calculated market value for " + this + " as " + marketValue);
         marketValueCache.put(date, marketValue);
         return marketValue;
     }
@@ -290,7 +291,7 @@ public class Position {
         } catch (DataAccessException e) {
             throw new PortfolioException("Unable to get close price for " + this + " on " + date);
         }
-        log.fine("Loaded quote " + quote);
+//        log.fine("Loaded quote " + quote);
         return quote.getTrNav();
     }
 

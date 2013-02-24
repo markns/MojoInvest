@@ -53,8 +53,6 @@ public class SimplePortfolio implements Portfolio {
     private Params params;
     private Map<LocalDate, BigDecimal> marketValueCache = new HashMap<LocalDate, BigDecimal>();
 
-    private boolean inSafeAsset;
-
     @Inject
     public SimplePortfolio(FundDao fundDao, QuoteDao quoteDao, @Assisted Params params, @Assisted boolean shadow) {
         this.fundDao = fundDao;
@@ -72,16 +70,6 @@ public class SimplePortfolio implements Portfolio {
     @Override
     public boolean isShadow() {
         return shadow;
-    }
-
-    @Override
-    public void setInSafeAsset(boolean inSafeAsset) {
-        this.inSafeAsset = inSafeAsset;
-    }
-
-    @Override
-    public boolean inSafeAsset() {
-        return inSafeAsset;
     }
 
     @Override
@@ -215,14 +203,14 @@ public class SimplePortfolio implements Portfolio {
     public BigDecimal marketValue(LocalDate date) throws PortfolioException {
         if (marketValueCache.containsKey(date))
             return marketValueCache.get(date);
-        log.fine(date + " Calculating market value for " + this);
+//        log.fine(date + " Calculating market value for " + this);
         BigDecimal marketValue = BigDecimal.ZERO;
         for (Position position : positions.values()) {
             //adjust for currency
             marketValue = marketValue.add(position.marketValue(date));
         }
         marketValue = marketValue.add(getCash(date));
-        log.fine(date + " Calculated market value for " + this + " as " + marketValue);
+//        log.fine(date + " Calculated market value for " + this + " as " + marketValue);
         marketValueCache.put(date, marketValue);
         return marketValue;
     }

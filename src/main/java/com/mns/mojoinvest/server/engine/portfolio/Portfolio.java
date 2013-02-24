@@ -54,7 +54,4 @@ public interface Portfolio {
 
     Params getParams();
 
-    boolean inSafeAsset();
-
-    void setInSafeAsset(boolean inSafeAsset);
 }
