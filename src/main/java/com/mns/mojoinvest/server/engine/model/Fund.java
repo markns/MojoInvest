@@ -2,6 +2,7 @@ package com.mns.mojoinvest.server.engine.model;
 
 import com.googlecode.objectify.annotation.Cached;
 import com.mns.mojoinvest.server.serialization.CustomLocalDateSerializer;
+import org.codehaus.jackson.annotate.JsonIgnore;
 import org.codehaus.jackson.map.annotate.JsonSerialize;
 import org.joda.time.LocalDate;
 
@@ -131,6 +132,7 @@ public class Fund implements Serializable, Comparable<Fund> {
         this.index = index;
     }
 
+    @JsonIgnore
     public String getOverview() {
         return overview;
     }
