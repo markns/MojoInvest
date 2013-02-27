@@ -24,8 +24,11 @@ public class ISharesFundFetcherControlJobTest {
     @Test
     public void testParseCategoryJson() throws IOException {
 
-        URL url = ClassLoader.getSystemResource("categories.json");
-        String json = FileUtils.readFileToString(new File(url.getFile()));
+        URL url = ClassLoader.getSystemResource("ishares_product_overview.html");
+        String html = FileUtils.readFileToString(new File(url.getFile()));
+
+        ISharesFundFetcherControlJob job = new ISharesFundFetcherControlJob();
+        job.scrapeFunds(html);
 
 
 //        System.out.println(node);

@@ -1,6 +1,6 @@
 package com.mns.mojoinvest.server.pipeline.fund;
 
-import com.google.appengine.tools.pipeline.Job2;
+import com.google.appengine.tools.pipeline.Job3;
 import com.google.appengine.tools.pipeline.Value;
 import com.google.common.annotations.VisibleForTesting;
 import com.mns.mojoinvest.server.engine.model.Fund;
@@ -18,17 +18,17 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Logger;
 
-public class ISharesFundDetailFetcherJob extends Job2<String, String, String> {
+public class ISharesFundDetailFetcherJob extends Job3<String, String, String, String> {
 
     private static final Logger log = Logger.getLogger(ISharesFundDetailFetcherBatchJob.class.getName());
 
     @Override
-    public Value<String> run(String fundId, String absoluteTicker) {
+    public Value<String> run(String fundId, String absoluteTicker, String category) {
         log.info("Attempting to retrieve details for funds: " + absoluteTicker);
         FundDao dao = PipelineHelper.getFundDao();
 
         String html = fetchFundDetailHtml(absoluteTicker);
-        Fund fund = buildFund(fundId, html);
+        Fund fund = buildFund(fundId, html, category);
         if (fund != null) {
             dao.put(fund);
         }
@@ -46,8 +46,8 @@ public class ISharesFundDetailFetcherJob extends Job2<String, String, String> {
     }
 
     @VisibleForTesting
-    protected Fund buildFund(String fundId, String html) {
-        return buildFund(fundId, scrapeDetails(html));
+    protected Fund buildFund(String fundId, String html, String category) {
+        return buildFund(fundId, scrapeDetails(html), category);
     }
 
     private Map<String, String> scrapeDetails(String html) {
@@ -76,11 +76,11 @@ public class ISharesFundDetailFetcherJob extends Job2<String, String, String> {
 
     private static DateTimeFormatter fmt = DateTimeFormat.forPattern("dd/MM/yy");
 
-    private Fund buildFund(String fundId, Map<String, String> details) {
+    private Fund buildFund(String fundId, Map<String, String> details, String category) {
         return new Fund(details.get("Ticker"),
                 fundId,
                 details.get("Name"),
-                details.get("category"),
+                category,
                 "iShares",
                 true,
                 details.get("Domicile"),
