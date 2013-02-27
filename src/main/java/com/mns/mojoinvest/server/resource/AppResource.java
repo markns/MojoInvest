@@ -54,7 +54,7 @@ public class AppResource {
     public Params getParams() {
 
         LocalDate fromDate = new LocalDate("2005-01-01");
-        LocalDate toDate = new LocalDate("2013-02-15");
+        LocalDate toDate = new LocalDate();
 
         int portfolioSize = 3;
         int holdingPeriod = 1;
