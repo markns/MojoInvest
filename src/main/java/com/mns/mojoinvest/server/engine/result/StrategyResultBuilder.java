@@ -38,7 +38,7 @@ public class StrategyResultBuilder {
 
     private Portfolio portfolio;
     private Portfolio shadowPortfolio;
-    private Map<String, Map<LocalDate, BigDecimal>> additionalResults;
+    private Map<String, Object> additionalResults;
 
     private Collection<Fund> universe;
     private Map<String, BigDecimal> initCompares = new HashMap<String, BigDecimal>();
@@ -61,7 +61,7 @@ public class StrategyResultBuilder {
         return this;
     }
 
-    public StrategyResultBuilder setAdditionalResults(Map<String, Map<LocalDate, BigDecimal>> additionalResults) {
+    public StrategyResultBuilder setAdditionalResults(Map<String, Object> additionalResults) {
         this.additionalResults = additionalResults;
         return this;
     }
@@ -82,6 +82,7 @@ public class StrategyResultBuilder {
         stats.put("Total Return", totalReturn());
         stats.put("Num Trades", portfolio.getTransactions().size());
         stats.put("Current portfolio", portfolio.getActiveSymbols(Iterables.getLast(rebalanceDates)));
+        stats.put("Current selection", additionalResults.get(MomentumStrategy.CURRENT_SELECTION));
 
         return new StrategyResult(dataTable, portfolio.getTransactions(), stats);
     }
@@ -158,8 +159,8 @@ public class StrategyResultBuilder {
 
         data.addColumns(cd);
 
-        Map<LocalDate, BigDecimal> spv = additionalResults.get(MomentumStrategy.SHADOW_PORTFOLIO_MARKET_VALUE);
-        Map<LocalDate, BigDecimal> sec = additionalResults.get(MomentumStrategy.SHADOW_EQUITY_CURVE);
+        Map<LocalDate, BigDecimal> spv = (Map<LocalDate, BigDecimal>) additionalResults.get(MomentumStrategy.SHADOW_PORTFOLIO_MARKET_VALUE);
+        Map<LocalDate, BigDecimal> sec = (Map<LocalDate, BigDecimal>) additionalResults.get(MomentumStrategy.SHADOW_EQUITY_CURVE);
 
         SortedMap<LocalDate, TableRow> rows = new TreeMap<LocalDate, TableRow>();
         for (LocalDate date : dates) {

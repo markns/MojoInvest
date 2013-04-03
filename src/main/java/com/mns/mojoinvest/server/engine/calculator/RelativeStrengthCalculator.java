@@ -104,6 +104,7 @@ public class RelativeStrengthCalculator {
         log.fine("Building intermediate data structure");
         Map<LocalDate, Map<String, BigDecimal>> stddevMap = buildDateCalcValueMap(stddevs);
 
+        BigDecimal scaling = new BigDecimal("1");
         long start = System.currentTimeMillis();
         for (LocalDate date : unadjusted.keySet()) {
             Map<String, BigDecimal> adjustedDate = new HashMap<String, BigDecimal>();
@@ -115,7 +116,7 @@ public class RelativeStrengthCalculator {
                         adjustedDate.put(symbol, unadjusted.get(date).get(symbol));
                     } else {
                         adjustedDate.put(symbol, unadjusted.get(date).get(symbol)
-                                .divide(stdDev, RoundingMode.HALF_EVEN));
+                                .divide(stdDev.multiply(scaling), RoundingMode.HALF_EVEN));
                     }
                 } else {
                     log.warning(date + " Unable to calculate adjusted RS for " + symbol + " on " + date + " no STDDEV|" + params.getStdDev());

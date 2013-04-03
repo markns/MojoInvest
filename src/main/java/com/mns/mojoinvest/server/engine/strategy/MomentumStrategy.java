@@ -30,6 +30,7 @@ public class MomentumStrategy {
 
     public static final String SHADOW_EQUITY_CURVE = "Shadow Equity Curve";
     public static final String SHADOW_PORTFOLIO_MARKET_VALUE = "Shadow Portfolio Market Value";
+    public static final String CURRENT_SELECTION = "Current Selection";
 
     @Inject
     public MomentumStrategy(RelativeStrengthCalculator relativeStrengthCalculator,
@@ -39,8 +40,8 @@ public class MomentumStrategy {
         this.executor = executor;
     }
 
-    public Map<String, Map<LocalDate, BigDecimal>> execute(Portfolio portfolio, Params params,
-                                                           Collection<Fund> universe)
+    public Map<String, Object> execute(Portfolio portfolio, Params params,
+                                       Collection<Fund> universe)
             throws StrategyException {
 
         List<LocalDate> rebalanceDates = getRebalanceDates(params);
@@ -53,7 +54,7 @@ public class MomentumStrategy {
                     params, rebalanceDates);
         }
 
-        Map<String, Map<LocalDate, BigDecimal>> additionalResults = new HashMap<String, Map<LocalDate, BigDecimal>>();
+        Map<String, Object> additionalResults = new HashMap<String, Object>();
 
         log.fine("Running strategy");
         long start = System.currentTimeMillis();
@@ -80,9 +81,9 @@ public class MomentumStrategy {
         }
     }
 
-    private Map<String, Map<LocalDate, BigDecimal>> runStrategyWithEquityCurve(Portfolio portfolio, Params params, List<LocalDate> rebalanceDates,
-                                                                               SortedMap<LocalDate, Map<String, BigDecimal>> relativeStrengthsMap,
-                                                                               Map<String, Map<LocalDate, BigDecimal>> additionalResults)
+    private Map<String, Object> runStrategyWithEquityCurve(Portfolio portfolio, Params params, List<LocalDate> rebalanceDates,
+                                                           SortedMap<LocalDate, Map<String, BigDecimal>> relativeStrengthsMap,
+                                                           Map<String, Object> additionalResults)
             throws StrategyException {
 
         Portfolio shadowPortfolio = portfolioFactory.create(params, true);
@@ -104,6 +105,7 @@ public class MomentumStrategy {
             }
 
             List<String> selection = getSelection(date, params, strengths);
+            additionalResults.put(CURRENT_SELECTION, selection);
 
             //Shadow portfolio and equity curve calculation stuff
             BigDecimal shadowMarketValue = null;
@@ -118,8 +120,8 @@ public class MomentumStrategy {
             if (shadowEquityCurve.getN() >= params.getEquityCurveWindow()) {
                 equityCurveMA = new BigDecimal(shadowEquityCurve.getMean(), MathContext.DECIMAL32);
             }
-            additionalResults.get(SHADOW_PORTFOLIO_MARKET_VALUE).put(date, shadowMarketValue);
-            additionalResults.get(SHADOW_EQUITY_CURVE).put(date, equityCurveMA);
+            ((Map<LocalDate, BigDecimal>) additionalResults.get(SHADOW_PORTFOLIO_MARKET_VALUE)).put(date, shadowMarketValue);
+            ((Map<LocalDate, BigDecimal>) additionalResults.get(SHADOW_EQUITY_CURVE)).put(date, equityCurveMA);
 
             log.fine(date + " Rebalancing shadow portfolio");
             rebalance(shadowPortfolio, date, selection, params);

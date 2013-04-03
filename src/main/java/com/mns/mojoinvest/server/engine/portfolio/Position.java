@@ -5,6 +5,7 @@ import com.mns.mojoinvest.server.engine.model.Fund;
 import com.mns.mojoinvest.server.engine.model.Quote;
 import com.mns.mojoinvest.server.engine.model.dao.DataAccessException;
 import com.mns.mojoinvest.server.engine.model.dao.QuoteDao;
+import com.mns.mojoinvest.server.engine.model.dao.QuoteUnavailableException;
 import com.mns.mojoinvest.server.engine.transaction.BuyTransaction;
 import com.mns.mojoinvest.server.engine.transaction.SellTransaction;
 import com.mns.mojoinvest.server.engine.transaction.Transaction;
@@ -288,10 +289,16 @@ public class Position {
         Quote quote;
         try {
             quote = quoteDao.get(fund, date);
+        } catch (QuoteUnavailableException e) {
+            if (date.isAfter(fund.getLatestQuoteDate())) {
+                log.warning("Date " + date + " is after last available quote for " + fund.getSymbol() + " - Rolling latest quote");
+                quote = quoteDao.get(fund, fund.getLatestQuoteDate());
+            } else {
+                throw new PortfolioException("Unable to get close price for " + this + " on " + date);
+            }
         } catch (DataAccessException e) {
             throw new PortfolioException("Unable to get close price for " + this + " on " + date);
         }
-//        log.fine("Loaded quote " + quote);
         return quote.getTrNav();
     }
 

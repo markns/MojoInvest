@@ -13,14 +13,12 @@ import com.mns.mojoinvest.server.engine.result.StrategyResult;
 import com.mns.mojoinvest.server.engine.result.StrategyResultBuilder;
 import com.mns.mojoinvest.server.engine.strategy.MomentumStrategy;
 import com.mns.mojoinvest.server.engine.strategy.StrategyException;
-import org.joda.time.LocalDate;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
-import java.math.BigDecimal;
 import java.util.Collection;
 import java.util.Map;
 import java.util.logging.Logger;
@@ -68,7 +66,7 @@ public class BacktestResource {
         Portfolio portfolio = portfolioFactory.create(params, false);
 
         long step = System.currentTimeMillis();
-        Map<String, Map<LocalDate, BigDecimal>> additionalResults =
+        Map<String, Object> additionalResults =
                 strategy.execute(portfolio, params, universe);
         log.info("Total run strategy time: " + (System.currentTimeMillis() - step));
         //Should we use assisted inject here?

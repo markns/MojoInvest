@@ -68,6 +68,25 @@ public class TradingDayUtils {
         return dates;
     }
 
+    public static List<LocalDate> getTuesdaySeries(LocalDate fromDate, LocalDate toDate, int frequency) {
+
+        List<LocalDate> dates = new ArrayList<LocalDate>();
+        LocalDate tuesday = fromDate.withDayOfWeek(DateTimeConstants.TUESDAY);
+
+        //Check that rolling holidays for the first date didn't roll before the start date.
+        if (rollHoliday(tuesday).isBefore(fromDate)) {
+            tuesday = tuesday.plusWeeks(frequency);
+        }
+
+        while (!rollHoliday(tuesday).isAfter(toDate)) {
+            dates.add(rollHoliday(tuesday));
+            tuesday = tuesday.plusWeeks(frequency);
+
+        }
+
+        return dates;
+    }
+
 
     public static List<LocalDate> getDailySeries(LocalDate fromDate, LocalDate toDate, boolean forwards) {
         List<LocalDate> dates = new ArrayList<LocalDate>();

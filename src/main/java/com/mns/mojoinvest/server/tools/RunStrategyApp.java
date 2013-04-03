@@ -25,7 +25,6 @@ import com.mns.mojoinvest.server.guice.StandaloneModule;
 import com.mns.mojoinvest.server.guice.TradingStrategyModule;
 import org.joda.time.LocalDate;
 
-import java.math.BigDecimal;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
@@ -98,7 +97,7 @@ public class RunStrategyApp {
         Portfolio portfolio = portfolioFactory.create(params, false);
 
         try {
-            Map<String, Map<LocalDate, BigDecimal>> additionalResults =
+            Map<String, Object> additionalResults =
                     strategy.execute(portfolio, params, universe);
             //Should we use assisted inject here?
             resultBuilder.setPortfolio(portfolio)
