@@ -7,6 +7,7 @@ import com.mns.mojoinvest.server.engine.model.Fund;
 import com.mns.mojoinvest.server.engine.model.dao.FundDao;
 import com.mns.mojoinvest.server.pipeline.GenericPipelines;
 import com.mns.mojoinvest.server.pipeline.PipelineHelper;
+import org.joda.time.LocalDate;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,6 +25,8 @@ public class RunCalculationsGeneratorJob extends Job0<String> {
         for (Fund fund : dao.list()) {
             quotesUpdated.add(futureCall(new RunCalculationsJob(), immediate(fund.getSymbol())));
         }
+
+        quotesUpdated.add(futureCall(new RunCorrelationCalculatorJob(), immediate(new LocalDate("2013-03-07"))));
 
         return futureCall(new GenericPipelines.MergeListJob(), futureList(quotesUpdated));
     }

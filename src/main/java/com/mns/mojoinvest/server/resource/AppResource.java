@@ -56,7 +56,7 @@ public class AppResource {
         LocalDate fromDate = new LocalDate("2005-01-01");
         LocalDate toDate = new LocalDate();
 
-        int portfolioSize = 3;
+        int portfolioSize = 2;
         int holdingPeriod = 1;
         int minHoldingPeriod = 6;
         int ma1 = 12;
@@ -78,10 +78,14 @@ public class AppResource {
         double transactionCost = 10d;
         LocalDate creationDate = new LocalDate("1990-01-01");
 
+        boolean useCorrelationFilter = true;
+        double correlationThreshold = 0.98;
+
         return new Params(fromDate, toDate, creationDate, initialInvestment, transactionCost,
                 portfolioSize, holdingPeriod, minHoldingPeriod, ma1, ma2, roc,
                 alpha, castOff, riskAdjust, stddev, equityCurveTrading,
-                equityCurveWindow, relativeStrengthStyle, useSafeAsset, safeAsset, getUniverse());
+                equityCurveWindow, relativeStrengthStyle, useSafeAsset, safeAsset, getUniverse(),
+                useCorrelationFilter, correlationThreshold);
     }
 
 

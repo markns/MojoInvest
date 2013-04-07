@@ -141,7 +141,7 @@ public class RunStrategyApp {
         return new Params(fromDate, toDate, creationDate, initialInvestment, transactionCost,
                 portfolioSize, holdingPeriod, minHoldingPeriod, ma1, ma2, roc,
                 alpha, castOff, riskAdjust, stddev, equityCurveTrading,
-                equityCurveWindow, relativeStrengthStyle, useSafeAsset, safeAsset, getUniverse());
+                equityCurveWindow, relativeStrengthStyle, useSafeAsset, safeAsset, getUniverse(), true, 0.98);
     }
 
 

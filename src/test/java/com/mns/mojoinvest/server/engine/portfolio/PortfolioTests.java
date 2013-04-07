@@ -296,7 +296,7 @@ public class PortfolioTests {
         return new Params(fromDate, toDate, creationDate, initialInvestment, transactionCost,
                 portfolioSize, holdingPeriod, minHoldingPeriod, ma1, ma2, roc,
                 alpha, castOff, riskAdjust, stddev, equityCurveTrading,
-                equityCurveWindow, relativeStrengthStyle, useSafeAsset, safeAsset, null);
+                equityCurveWindow, relativeStrengthStyle, useSafeAsset, safeAsset, null, true, 0.98);
     }
 
     public Params getLoadsOfCashParams() {
@@ -329,7 +329,7 @@ public class PortfolioTests {
         return new Params(fromDate, toDate, creationDate, initialInvestment, transactionCost,
                 portfolioSize, holdingPeriod, minHoldingPeriod, ma1, ma2, roc,
                 alpha, castOff, riskAdjust, stddev, equityCurveTrading,
-                equityCurveWindow, relativeStrengthStyle, useSafeAsset, safeAsset, null);
+                equityCurveWindow, relativeStrengthStyle, useSafeAsset, safeAsset, null, true, 0.98);
     }
 
 

@@ -32,12 +32,14 @@ public class Params {
     private boolean useSafeAsset;
     private String safeAsset;
     private List<String> universe;
+    private boolean useCorrelationFilter;
+    private double correlationThreshold;
 
     public Params(LocalDate fromDate, LocalDate toDate, LocalDate creationDate, Double initialInvestment,
                   Double transactionCost, int portfolioSize, int rebalanceFrequency, int minHoldingPeriod, int ma1, int ma2,
                   int roc, int alpha, int castOff, boolean riskAdjusted, int stdDev, boolean tradeEquityCurve,
                   int equityCurveWindow, String relativeStrengthStyle, boolean useSafeAsset,
-                  String safeAsset, List<String> universe) {
+                  String safeAsset, List<String> universe, boolean useCorrelationFilter, double correlationThreshold) {
         this.fromDate = fromDate;
         this.toDate = toDate;
         this.creationDate = creationDate;
@@ -59,6 +61,8 @@ public class Params {
         this.useSafeAsset = useSafeAsset;
         this.safeAsset = safeAsset;
         this.universe = universe;
+        this.useCorrelationFilter = useCorrelationFilter;
+        this.correlationThreshold = correlationThreshold;
     }
 
     public Params() {
@@ -239,6 +243,22 @@ public class Params {
         this.universe = universe;
     }
 
+    public boolean isUseCorrelationFilter() {
+        return useCorrelationFilter;
+    }
+
+    public void setUseCorrelationFilter(boolean useCorrelationFilter) {
+        this.useCorrelationFilter = useCorrelationFilter;
+    }
+
+    public double getCorrelationThreshold() {
+        return correlationThreshold;
+    }
+
+    public void setCorrelationThreshold(double correlationThreshold) {
+        this.correlationThreshold = correlationThreshold;
+    }
+
     @Override
     public String toString() {
         return "Params{" +
@@ -262,6 +282,8 @@ public class Params {
                 ", relativeStrengthStyle='" + relativeStrengthStyle + '\'' +
                 ", useSafeAsset=" + useSafeAsset +
                 ", safeAsset='" + safeAsset + '\'' +
+                ", useCorrelationFilter='" + useCorrelationFilter + '\'' +
+                ", correlationThreshold='" + correlationThreshold + '\'' +
                 ", universe=" + universe +
                 '}';
     }

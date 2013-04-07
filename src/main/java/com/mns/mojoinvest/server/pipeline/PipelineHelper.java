@@ -4,7 +4,9 @@ import com.googlecode.objectify.ObjectifyFactory;
 import com.mns.mojoinvest.server.engine.model.BlobstoreEntryRecord;
 import com.mns.mojoinvest.server.engine.model.Fund;
 import com.mns.mojoinvest.server.engine.model.dao.CalculatedValueDao;
+import com.mns.mojoinvest.server.engine.model.dao.CorrelationDao;
 import com.mns.mojoinvest.server.engine.model.dao.FundDao;
+import com.mns.mojoinvest.server.engine.model.dao.ObjectifyCorrelationDao;
 import com.mns.mojoinvest.server.engine.model.dao.blobstore.BlobstoreCalculatedValueDao;
 import com.mns.mojoinvest.server.engine.model.dao.blobstore.BlobstoreQuoteDao;
 import com.mns.mojoinvest.server.engine.model.dao.objectify.MyTypeConverters;
@@ -44,5 +46,9 @@ public class PipelineHelper {
 
     public static CalculatedValueDao getCalculatedValueDao() {
         return new BlobstoreCalculatedValueDao(new ObjectifyEntryRecordDao(factory));
+    }
+
+    public static CorrelationDao getCorrelationDao() {
+        return new ObjectifyCorrelationDao(factory);
     }
 }

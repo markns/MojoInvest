@@ -135,6 +135,8 @@ App.ParamsView = Backbone.View.extend({
         this.$("#equityCurveWindow").attr('disabled', !this.model.get("tradeEquityCurve"));
         this.$("#useSafeAsset").attr('checked', this.model.get("useSafeAsset"));
         this.$("#safeAsset").attr('disabled', !this.model.get("useSafeAsset"));
+        this.$("#useCorrelationFilter").attr('checked', this.model.get("useCorrelationFilter"));
+        this.$("#correlationThreshold").attr('disabled', !this.model.get("useCorrelationFilter"));
         //TODO: Need to disable and uncheck useSafeAsset when trade equity curve is unchecked
         return this;
     },
@@ -190,6 +192,8 @@ App.ParamsView = Backbone.View.extend({
             "equityCurveWindow": $('#equityCurveWindow').val(),
             "useSafeAsset": $('#useSafeAsset').is(':checked'),
             "safeAsset": $('#safeAsset').val(),
+            "useCorrelationFilter": $('#useCorrelationFilter').is(':checked'),
+            "correlationThreshold": $('#correlationThreshold').val(),
             "fromDate": $('#fromDate').val(),
             "toDate": $('#toDate').val(),
             "creationDate": $('#fromDate').val()

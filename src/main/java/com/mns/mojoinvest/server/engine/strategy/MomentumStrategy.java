@@ -6,7 +6,9 @@ import com.google.common.collect.Ordering;
 import com.google.inject.Inject;
 import com.mns.mojoinvest.server.engine.calculator.RelativeStrengthCalculator;
 import com.mns.mojoinvest.server.engine.execution.Executor;
+import com.mns.mojoinvest.server.engine.model.Correlation;
 import com.mns.mojoinvest.server.engine.model.Fund;
+import com.mns.mojoinvest.server.engine.model.dao.CorrelationDao;
 import com.mns.mojoinvest.server.engine.params.Params;
 import com.mns.mojoinvest.server.engine.portfolio.Portfolio;
 import com.mns.mojoinvest.server.engine.portfolio.PortfolioException;
@@ -25,6 +27,7 @@ public class MomentumStrategy {
     private static final Logger log = Logger.getLogger(MomentumStrategy.class.getName());
 
     private final RelativeStrengthCalculator relativeStrengthCalculator;
+    private final CorrelationDao correlationDao;
     private final Executor executor;
     private final PortfolioFactory portfolioFactory;
 
@@ -34,8 +37,10 @@ public class MomentumStrategy {
 
     @Inject
     public MomentumStrategy(RelativeStrengthCalculator relativeStrengthCalculator,
+                            CorrelationDao correlationDao,
                             PortfolioFactory portfolioFactory, Executor executor) {
         this.relativeStrengthCalculator = relativeStrengthCalculator;
+        this.correlationDao = correlationDao;
         this.portfolioFactory = portfolioFactory;
         this.executor = executor;
     }
@@ -197,6 +202,26 @@ public class MomentumStrategy {
             if (i != -1)
                 rank.remove(i);
         }
+        if (params.isUseCorrelationFilter()) {
+            Correlation correlation = correlationDao.get(new LocalDate("2013-03-07"), 6);
+            List<String> uncorrelatedRank = new ArrayList<String>();
+            for (String symbol : rank) {
+                boolean uncorrelated = true;
+                for (String selected : uncorrelatedRank) {
+                    if (correlation.get(symbol, selected) > params.getCorrelationThreshold()) {
+                        uncorrelated = false;
+                    }
+                }
+                if (uncorrelated)
+                    uncorrelatedRank.add(symbol);
+
+                if (uncorrelatedRank.size() == params.getCastOff()) {
+                    rank = uncorrelatedRank;
+                    break;
+                }
+            }
+        }
+
         return rank.subList(0, params.getCastOff());
     }
 

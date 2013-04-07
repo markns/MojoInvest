@@ -116,6 +116,13 @@
                     <input id="safeAsset" name="safeAsset" type=text class="inputField"
                            value="{{safeAsset}}">
                 </li>
+                <li>
+                    <label>Correlation Filter</label>
+                    <input type="checkbox" id="useCorrelationFilter"
+                           onclick="$('#useCorrelationFilter').toggleDisabled()"/>
+                    <input id="correlationThreshold" name="correlationThreshold" type=text class="inputField"
+                           value="{{correlationThreshold}}">
+                </li>
             </ol>
         </fieldset>
     </div>

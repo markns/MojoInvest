@@ -24,9 +24,7 @@ import com.google.common.collect.Maps;
 import com.google.inject.Singleton;
 import com.google.inject.servlet.ServletModule;
 import com.googlecode.objectify.ObjectifyFactory;
-import com.mns.mojoinvest.server.engine.model.dao.CalculatedValueDao;
-import com.mns.mojoinvest.server.engine.model.dao.FundDao;
-import com.mns.mojoinvest.server.engine.model.dao.QuoteDao;
+import com.mns.mojoinvest.server.engine.model.dao.*;
 import com.mns.mojoinvest.server.engine.model.dao.blobstore.BlobstoreCalculatedValueDao;
 import com.mns.mojoinvest.server.engine.model.dao.blobstore.BlobstoreQuoteDao;
 import com.mns.mojoinvest.server.engine.model.dao.objectify.ObjectifyFundDao;
@@ -62,6 +60,7 @@ public class MojoServletModule extends ServletModule {
         bind(QuoteDao.class).to(BlobstoreQuoteDao.class);
         bind(FundDao.class).to(ObjectifyFundDao.class);
         bind(CalculatedValueDao.class).to(BlobstoreCalculatedValueDao.class);
+        bind(CorrelationDao.class).to(ObjectifyCorrelationDao.class);
 
         //Filters
         Map<String, String> appstatsInit = Maps.newHashMap();
