@@ -53,7 +53,7 @@ public class QuoteUtils {
     }
 
     private static Quote rollQuote(Quote quote, LocalDate date) {
-        return new Quote(quote.getSymbol(), date, quote.getNav(), quote.getIndex(),
+        return new Quote(quote.getSymbol(), date, quote.getIndex(), quote.getNav(),
                 quote.getTrNav(),
                 quote.getDividend(), true);
     }
