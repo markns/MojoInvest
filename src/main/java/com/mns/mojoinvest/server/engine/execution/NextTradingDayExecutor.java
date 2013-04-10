@@ -2,8 +2,8 @@ package com.mns.mojoinvest.server.engine.execution;
 
 import com.google.inject.Inject;
 import com.mns.mojoinvest.server.engine.model.Quote;
-import com.mns.mojoinvest.server.engine.model.dao.DataAccessException;
 import com.mns.mojoinvest.server.engine.model.dao.QuoteDao;
+import com.mns.mojoinvest.server.engine.model.dao.QuoteUnavailableException;
 import com.mns.mojoinvest.server.engine.portfolio.Portfolio;
 import com.mns.mojoinvest.server.engine.portfolio.PortfolioException;
 import com.mns.mojoinvest.server.engine.portfolio.Position;
@@ -35,7 +35,7 @@ public class NextTradingDayExecutor implements Executor {
         Quote executionQuote = null;
         try {
             executionQuote = quoteDao.get(fund, executionDate);
-        } catch (DataAccessException e) {
+        } catch (QuoteUnavailableException e) {
             throw new PortfolioException("Unable to execute", e);
         }
         //log.fine(executionDate + " Loaded buy execution quote " + executionQuote);
@@ -63,7 +63,7 @@ public class NextTradingDayExecutor implements Executor {
         Quote executionQuote = null;
         try {
             executionQuote = quoteDao.get(fund, executionDate);
-        } catch (DataAccessException e) {
+        } catch (QuoteUnavailableException e) {
             throw new PortfolioException("Unable to execute", e);
         }
 
