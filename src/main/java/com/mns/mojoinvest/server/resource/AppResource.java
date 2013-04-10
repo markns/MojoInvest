@@ -16,10 +16,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.MediaType;
 import java.io.IOException;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Path("/app")
 public class AppResource {
@@ -41,6 +38,13 @@ public class AppResource {
         Collection<Fund> funds = fundDao.list();
 
         Params params = getParams();
+
+        List<String> universe = new ArrayList<String>();
+        for (Fund fund : funds) {
+            if (fund.getCategory().contains("Equity"))
+                universe.add(fund.getSymbol());
+        }
+        params.setUniverse(universe);
 
         try {
             map.put("funds", mapper.writeValueAsString(funds));
@@ -84,7 +88,9 @@ public class AppResource {
         return new Params(fromDate, toDate, creationDate, initialInvestment, transactionCost,
                 portfolioSize, holdingPeriod, minHoldingPeriod, ma1, ma2, roc,
                 alpha, castOff, riskAdjust, stddev, equityCurveTrading,
-                equityCurveWindow, relativeStrengthStyle, useSafeAsset, safeAsset, getUniverse(),
+                equityCurveWindow, relativeStrengthStyle, useSafeAsset, safeAsset,
+                null,
+//                new ArrayList<String>(),
                 useCorrelationFilter, correlationThreshold);
     }
 
