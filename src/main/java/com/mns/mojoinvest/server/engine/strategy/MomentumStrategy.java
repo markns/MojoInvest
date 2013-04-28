@@ -116,7 +116,8 @@ public class MomentumStrategy {
             BigDecimal shadowMarketValue = null;
             try {
                 shadowMarketValue = shadowPortfolio.marketValue(date);
-                log.fine(date + " Shadow portfolio market value: " + shadowMarketValue);
+                log.fine(date + " Shadow portfolio market value: " + shadowMarketValue +
+                        " , Open positions: " + shadowPortfolio.getOpenPositions(date));
             } catch (PortfolioException e) {
                 throw new StrategyException("Unable to complete strategy run at " + date, e);
             }

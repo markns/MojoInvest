@@ -61,7 +61,7 @@ public class RunCalculationsJob extends Job1<String, String> {
         }
 
         //Standard deviations
-        for (int period : Arrays.asList(12, 26, 39, 52)) {
+        for (int period : Arrays.asList(4, 8, 12, 26, 39, 52)) {
             cvs.addAll(CalculationService.calculateStandardDeviation(quotes, period));
         }
 

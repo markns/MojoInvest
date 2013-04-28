@@ -69,7 +69,7 @@ public class AppResource {
         int alpha = 100;
         int castOff = 5;
         boolean riskAdjust = true;
-        int stddev = 26;
+        int stddev = 8;
         boolean equityCurveTrading = true;
         int equityCurveWindow = 52;
         boolean useSafeAsset = true;
