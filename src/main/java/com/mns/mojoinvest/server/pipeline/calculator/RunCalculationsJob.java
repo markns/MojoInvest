@@ -65,7 +65,7 @@ public class RunCalculationsJob extends Job1<String, String> {
             cvs.addAll(CalculationService.calculateStandardDeviation(quotes, period));
         }
 
-        cvDao.put(cvs);
+//        cvDao.put(cvs);
 
         return immediate("Finished calculated values for " + fund);
 

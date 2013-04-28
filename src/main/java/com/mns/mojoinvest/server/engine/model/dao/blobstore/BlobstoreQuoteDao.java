@@ -16,10 +16,13 @@ import org.joda.time.LocalDate;
 import java.io.BufferedReader;
 import java.nio.channels.Channels;
 import java.util.*;
+import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class BlobstoreQuoteDao extends BlobstoreDao implements QuoteDao {
+
+    private static final Logger log = Logger.getLogger(BlobstoreQuoteDao.class.getName());
 
     @Inject
     public BlobstoreQuoteDao(ObjectifyEntryRecordDao recordDao) {
@@ -27,7 +30,7 @@ public class BlobstoreQuoteDao extends BlobstoreDao implements QuoteDao {
     }
 
     @Override
-    public void put(Iterable<Quote> quotes) throws DataAccessException {
+    public synchronized void put(Iterable<Quote> quotes) throws DataAccessException {
 
         //Construct map of symbol|year -> List<Quote>
         Map<String, List<Quote>> recordKeyToQuotes = new HashMap<String, List<Quote>>();
@@ -83,6 +86,7 @@ public class BlobstoreQuoteDao extends BlobstoreDao implements QuoteDao {
     public Quote get(String symbol, LocalDate date) throws QuoteUnavailableException, DataAccessException {
 
         if (!quoteCache.containsKey(symbol) || !quoteCache.get(symbol).containsKey(date.toString())) {
+//        log.info(Thread.currentThread().getName() + " enter get " + symbol + " " + date);
             BlobstoreEntryRecord record = recordDao.get(symbol + "|" + date.getYear());
             if (record == null)
                 throw new QuoteUnavailableException("Unable to find quote for " + symbol + " on " + date);
@@ -99,6 +103,7 @@ public class BlobstoreQuoteDao extends BlobstoreDao implements QuoteDao {
                 quoteCache.put(symbol, new HashMap<String, String>());
             }
             quoteCache.get(symbol).putAll(dateStrQuoteStrMap);
+//            log.info(Thread.currentThread().getName() + " exit get");
         }
 
         String quoteStr = quoteCache.get(symbol).get(date.toString());
@@ -117,7 +122,6 @@ public class BlobstoreQuoteDao extends BlobstoreDao implements QuoteDao {
     @Override
     public List<Quote> get(Fund fund, Collection<LocalDate> dates)
             throws QuoteUnavailableException, DataAccessException {
-
         List<Quote> quotes = new ArrayList<Quote>();
         for (LocalDate date : dates) {
             quotes.add(get(fund.getSymbol(), date));
@@ -128,6 +132,7 @@ public class BlobstoreQuoteDao extends BlobstoreDao implements QuoteDao {
     private final Pattern pattern = Pattern.compile("^\"(\\w+)\",\"(\\d{4}-\\d{2}-\\d{2})\"");
 
     private HashMap<String, String> readValuesFromFile(AppEngineFile file) throws Exception {
+//        log.info(Thread.currentThread().getName() + " enter read");
         HashMap<String, String> dateStrQuoteStrMap = new HashMap<String, String>();
         FileReadChannel readChannel = fileService.openReadChannel(file, false);
         BufferedReader reader = new BufferedReader(Channels.newReader(readChannel, "UTF8"));
@@ -142,6 +147,7 @@ public class BlobstoreQuoteDao extends BlobstoreDao implements QuoteDao {
             dateStrQuoteStrMap.put(date, line);
         }
         readChannel.close();
+//        log.info(Thread.currentThread().getName() + " exit read");
         return dateStrQuoteStrMap;
     }
 

@@ -65,6 +65,7 @@ public class DailyPipeline extends Job4<Void, LocalDate, String, Boolean, Boolea
         FutureValue<String> calculationsUpdatedMessage = futureCall(new RunCalculationsGeneratorJob(),
                 waitFor(quotesUpdatedMessage));
 
+
         //TODO: Send email on failure also
         futureCall(new EmailStatusJob(), immediate(USER_EMAIL), futureList(messages), waitFor(calculationsUpdatedMessage));
 

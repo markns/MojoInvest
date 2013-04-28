@@ -30,7 +30,7 @@
         <gae.application.version>1</gae.application.version>
 
         <!-- Dependencies versions -->
-        <gae.version>1.7.4</gae.version>
+        <gae.version>1.7.7</gae.version>
         <guice.version>3.0</guice.version>
         <jsr107cache.version>1.1</jsr107cache.version>
         <junit.version>4.8.1</junit.version>

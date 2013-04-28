@@ -45,6 +45,11 @@ public class ISharesFundFetcherControlJob extends Job0<String> {
 
 //        int c = 0;
         for (Map.Entry<String, Map<String, String>> fund : funds.entrySet()) {
+
+//            if (!fund.getValue().get("category").equals("Alternatives")) {
+//                continue;
+//            }
+
             fundsUpdated.add(futureCall(new ISharesFundDetailFetcherJob(),
                     immediate(fund.getKey()), immediate(fund.getValue().get("absoluteTicker")),
                     immediate(fund.getValue().get("category"))));

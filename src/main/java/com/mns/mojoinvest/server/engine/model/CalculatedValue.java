@@ -73,7 +73,7 @@ public class CalculatedValue {
 
     public String getKey() {
         if (key == null)
-            key = symbol + "|" + type + "|" + period;
+            key = type + "|" + period;
         return key;
     }
 
