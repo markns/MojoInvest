@@ -17,16 +17,6 @@ import java.util.*;
 
 public class CorrelationCalculator {
 
-    private static double[][] data = {
-            {3, 9, 8},
-            {2, 7, 1},
-            {4, 12, 4},
-            {5, 15, 11},
-            {6, 17, 54},
-            {4, 12, 9}
-    };
-
-
     public static void main(String[] args) throws IOException {
 
 
@@ -46,7 +36,7 @@ public class CorrelationCalculator {
                 for (int i = 0; i < range; i++) {
                     Object o = arr[i];
                     Quote l = (Quote) o;
-                    data[i][j] = l.getNav().doubleValue();
+                    data[i][j] = l.getTrNav().doubleValue();
                 }
 
             }
