@@ -246,7 +246,8 @@ public class MomentumStrategy {
                 } catch (PortfolioException e) {
                     throw new StrategyException("Unable to sell losers " + selection +
                             " on " + rebalanceDate +
-                            ", current portfolio: " + portfolio.getActiveSymbols(rebalanceDate));
+                            ", current portfolio: " + portfolio.getActiveSymbols(rebalanceDate) +
+                            " - " + e.getCause().getMessage());
                 }
             }
         }
