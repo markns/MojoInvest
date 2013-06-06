@@ -57,7 +57,7 @@ public class CalculationService {
                     .divide(fromQuote.getTrNav(), MathContext.DECIMAL32)
                     .multiply(HUNDRED).setScale(3, RoundingMode.HALF_EVEN);
 
-            cvs.add(new CalculatedValue(toQuote.getDate(), toQuote.getSymbol(), "ROC", period,
+            cvs.add(new CalculatedValue(toQuote.getDate().toString(), toQuote.getSymbol(), "ROC", period,
                     roc));
         }
         return cvs;

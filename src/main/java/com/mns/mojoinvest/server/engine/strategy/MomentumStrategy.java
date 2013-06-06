@@ -51,7 +51,7 @@ public class MomentumStrategy {
 
         List<LocalDate> rebalanceDates = getRebalanceDates(params);
 
-        SortedMap<LocalDate, Map<String, BigDecimal>> relativeStrengthsMap =
+        SortedMap<String, Map<String, BigDecimal>> relativeStrengthsMap =
                 getRelativeStrengths(universe, params, rebalanceDates);
 
         if (params.isRiskAdjusted()) {
@@ -73,7 +73,7 @@ public class MomentumStrategy {
     }
 
     private void runStrategy(Portfolio portfolio, Params params, List<LocalDate> rebalanceDates,
-                             SortedMap<LocalDate, Map<String, BigDecimal>> relativeStrengthsMap) throws StrategyException {
+                             SortedMap<String, Map<String, BigDecimal>> relativeStrengthsMap) throws StrategyException {
         for (LocalDate date : rebalanceDates) {
             log.fine("** " + date + " **");
             Map<String, BigDecimal> strengths = relativeStrengthsMap.get(date);
@@ -87,7 +87,7 @@ public class MomentumStrategy {
     }
 
     private Map<String, Object> runStrategyWithEquityCurve(Portfolio portfolio, Params params, List<LocalDate> rebalanceDates,
-                                                           SortedMap<LocalDate, Map<String, BigDecimal>> relativeStrengthsMap,
+                                                           SortedMap<String, Map<String, BigDecimal>> relativeStrengthsMap,
                                                            Map<String, Object> additionalResults)
             throws StrategyException {
 
@@ -102,7 +102,7 @@ public class MomentumStrategy {
         for (LocalDate date : rebalanceDates) {
             log.fine("** " + date + " ** - Open positions: " + portfolio.getActiveSymbols(date));
 
-            Map<String, BigDecimal> strengths = relativeStrengthsMap.get(date);
+            Map<String, BigDecimal> strengths = relativeStrengthsMap.get(date.toString());
 
             if (strengths.size() < params.getCastOff()) {
                 log.info(date + " Not enough funds in universe to make selection");
@@ -171,9 +171,9 @@ public class MomentumStrategy {
         return TradingDayUtils.getEndOfWeekSeries(fromDate, toDate, params.getRebalanceFrequency());
     }
 
-    private SortedMap<LocalDate, Map<String, BigDecimal>> getRelativeStrengths(Collection<Fund> universe,
-                                                                               Params params,
-                                                                               List<LocalDate> rebalanceDates)
+    private SortedMap<String, Map<String, BigDecimal>> getRelativeStrengths(Collection<Fund> universe,
+                                                                            Params params,
+                                                                            List<LocalDate> rebalanceDates)
             throws StrategyException {
         if ("MA".equals(params.getRelativeStrengthStyle())) {
             return relativeStrengthCalculator

@@ -10,7 +10,6 @@ import com.mns.mojoinvest.server.engine.model.dao.CalculatedValueDao;
 import com.mns.mojoinvest.server.engine.model.dao.CalculatedValueUnavailableException;
 import com.mns.mojoinvest.server.engine.model.dao.DataAccessException;
 import com.mns.mojoinvest.server.engine.model.dao.objectify.ObjectifyEntryRecordDao;
-import org.joda.time.LocalDate;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -29,19 +28,19 @@ public class BlobstoreCalculatedValueDao extends BlobstoreDao implements Calcula
     }
 
     @Override
-    public Map<String, Map<LocalDate, CalculatedValue>> get(Collection<Fund> funds, String type, int period) {
-        Map<String, Map<LocalDate, CalculatedValue>> cvs = new HashMap<String, Map<LocalDate, CalculatedValue>>(funds.size());
+    public Map<String, Map<String, CalculatedValue>> get(Collection<Fund> funds, String type, int period) {
+        Map<String, Map<String, CalculatedValue>> cvs = new HashMap<String, Map<String, CalculatedValue>>(funds.size());
 
         Map<String, List<String>> symbolCV = get(type, period);
 
         for (Fund fund : funds) {
             List<String> cvStrings = symbolCV.get(fund.getSymbol());
-            Map<LocalDate, CalculatedValue> cvMap = new HashMap<LocalDate, CalculatedValue>();
+            Map<String, CalculatedValue> cvMap = new HashMap<String, CalculatedValue>();
             String[] arr;
             for (String cvString : cvStrings) {
                 arr = cvString.split("\\|");
-                LocalDate date = new LocalDate(arr[0]);
-                cvMap.put(date, new CalculatedValue(date, fund.getSymbol(), type, period, new BigDecimal(arr[1])));
+//                LocalDate date = new LocalDate();
+                cvMap.put(arr[0], new CalculatedValue(arr[0], fund.getSymbol(), type, period, new BigDecimal(arr[1])));
             }
             cvs.put(fund.getSymbol(), cvMap);
         }

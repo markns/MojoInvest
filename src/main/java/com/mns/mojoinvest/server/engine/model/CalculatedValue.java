@@ -13,15 +13,16 @@ public class CalculatedValue {
 
     private BigDecimal value;
 
+    private String dateStr;
     private LocalDate date;
     private String symbol;
     private String type;
     private int period;
 
 
-    public CalculatedValue(LocalDate date, String symbol, String type, int period, BigDecimal value) {
+    public CalculatedValue(String date, String symbol, String type, int period, BigDecimal value) {
 
-        this.date = date;
+        this.dateStr = date;
         this.symbol = symbol;
         this.type = type;
         this.period = period;
@@ -42,6 +43,8 @@ public class CalculatedValue {
 
 
     public LocalDate getDate() {
+        if (date == null)
+            date = new LocalDate(dateStr);
         return date;
     }
 

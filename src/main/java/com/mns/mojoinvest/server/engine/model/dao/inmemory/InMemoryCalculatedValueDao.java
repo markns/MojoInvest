@@ -5,7 +5,6 @@ import com.google.inject.Singleton;
 import com.mns.mojoinvest.server.engine.model.CalculatedValue;
 import com.mns.mojoinvest.server.engine.model.Fund;
 import com.mns.mojoinvest.server.engine.model.dao.CalculatedValueDao;
-import org.joda.time.LocalDate;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -45,8 +44,8 @@ public class InMemoryCalculatedValueDao implements CalculatedValueDao {
     }
 
     @Override
-    public Map<String, Map<LocalDate, CalculatedValue>> get(Collection<Fund> funds, String type, int period) {
-        Map<String, Map<LocalDate, CalculatedValue>> cvs = new HashMap<String, Map<LocalDate, CalculatedValue>>(funds.size());
+    public Map<String, Map<String, CalculatedValue>> get(Collection<Fund> funds, String type, int period) {
+        Map<String, Map<String, CalculatedValue>> cvs = new HashMap<String, Map<String, CalculatedValue>>(funds.size());
 //        for (LocalDate date : dates) {
 //            for (Fund fund : funds) {
 //                CalculatedValue cv = calculatedValues.get(

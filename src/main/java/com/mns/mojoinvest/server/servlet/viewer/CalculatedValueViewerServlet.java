@@ -43,7 +43,7 @@ public class CalculatedValueViewerServlet extends HttpServlet {
 
         long start = System.currentTimeMillis();
         log.fine("Attempting to retrieve " + dates.size() * funds.size() + " cvs");
-        Map<String, Map<LocalDate, CalculatedValue>> cvs = cvDao.get(funds, "SMA", 12);
+        Map<String, Map<String, CalculatedValue>> cvs = cvDao.get(funds, "SMA", 12);
         log.fine("Loading " + cvs.size() + " cvs took " + (System.currentTimeMillis() - start) + " ms");
 
 //        resp.setContentType("text/html");

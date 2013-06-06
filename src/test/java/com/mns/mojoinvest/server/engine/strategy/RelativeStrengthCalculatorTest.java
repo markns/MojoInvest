@@ -28,7 +28,7 @@ public class RelativeStrengthCalculatorTest {
         List<CalculatedValue> cvs = new ArrayList<CalculatedValue>();
         for (LocalDate date : dates) {
             for (String symbol : symbols) {
-                cvs.add(new CalculatedValue(date, symbol, "MA", 1, BigDecimal.ZERO));
+                cvs.add(new CalculatedValue(date.toString(), symbol, "MA", 1, BigDecimal.ZERO));
             }
         }
         System.out.println(cvs.size());

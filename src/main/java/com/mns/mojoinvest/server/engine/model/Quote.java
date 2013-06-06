@@ -56,6 +56,7 @@ public class Quote implements Serializable {
 
     public BigDecimal getTrNav() {
         return trNav;
+//        return nav;
     }
 
     public BigDecimal getDividend() {

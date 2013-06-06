@@ -7,6 +7,7 @@ import com.mns.mojoinvest.server.engine.model.Fund;
 import com.mns.mojoinvest.server.engine.model.dao.FundDao;
 import com.mns.mojoinvest.server.pipeline.GenericPipelines;
 import com.mns.mojoinvest.server.pipeline.PipelineHelper;
+import org.joda.time.LocalDate;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,8 +25,9 @@ public class ISharesQuoteFetcherControlJob extends Job1<String, String> {
 
         FundDao dao = PipelineHelper.getFundDao();
         for (Fund fund : dao.list()) {
-            quotesUpdated.add(futureCall(new ISharesQuoteFetcherJob(), immediate(fund.getFundId()),
-                    immediate(sessionId)));
+            if (fund.getInceptionDate().isBefore(new LocalDate().minusMonths(1)))
+                quotesUpdated.add(futureCall(new ISharesQuoteFetcherJob(), immediate(fund.getFundId()),
+                        immediate(sessionId)));
         }
 
         return futureCall(new GenericPipelines.MergeListJob(), futureList(quotesUpdated));
