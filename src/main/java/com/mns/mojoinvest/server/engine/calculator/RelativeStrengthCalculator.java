@@ -70,7 +70,18 @@ public class RelativeStrengthCalculator {
 
     public SortedMap<String, Map<String, BigDecimal>> getRelativeStrengthsROC(Collection<Fund> funds, Params params, List<LocalDate> dates) {
         Map<String, Map<String, CalculatedValue>> rocs = calculatedValueDao.get(funds, "ROC", params.getRoc());
+//        Map<String, Map<String, CalculatedValue>> rocs2 = calculatedValueDao.get(funds, "ROC", 4);
         SortedMap<String, Map<String, BigDecimal>> strengths = buildDateCalcValueMap(rocs);
+//        SortedMap<String, Map<String, BigDecimal>> strengths2 = buildDateCalcValueMap(rocs2);
+//        for (Map.Entry<String, Map<String, BigDecimal>> e : strengths.entrySet()) {
+//            Map<String, BigDecimal> symbolMap = strengths2.get(e.getKey());
+//            for (String s : e.getValue().keySet()) {
+//                BigDecimal s1 = e.getValue().get(s);
+//                BigDecimal s2 = symbolMap.get(s);
+//                e.getValue().put(s, s1.add(s2));
+//            }
+//        }
+
         for (LocalDate localDate : dates) {
             String date = localDate.toString();
             if (strengths.get(date) == null) {

@@ -34,6 +34,7 @@ public class Params {
     private List<String> universe;
     private boolean useCorrelationFilter;
     private double correlationThreshold;
+    private int maFilter;
 
     public Params(LocalDate fromDate, LocalDate toDate, LocalDate creationDate, Double initialInvestment,
                   Double transactionCost, int portfolioSize, int rebalanceFrequency, int minHoldingPeriod, int ma1, int ma2,
@@ -286,5 +287,14 @@ public class Params {
                 ", correlationThreshold='" + correlationThreshold + '\'' +
                 ", universe=" + universe +
                 '}';
+    }
+
+    public boolean useMAFilter() {
+        return false;
+    }
+
+    public int getMaFilter() {
+//        return maFilter;
+        return 39;
     }
 }

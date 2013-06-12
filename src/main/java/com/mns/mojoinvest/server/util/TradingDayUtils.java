@@ -52,16 +52,16 @@ public class TradingDayUtils {
     public static List<LocalDate> getEndOfWeekSeries(LocalDate fromDate, LocalDate toDate, int frequency) {
 
         List<LocalDate> dates = new ArrayList<LocalDate>();
-        LocalDate friday = fromDate.withDayOfWeek(DateTimeConstants.FRIDAY);
+        LocalDate date = fromDate.withDayOfWeek(DateTimeConstants.TUESDAY);
 
         //Check that rolling holidays for the first date didn't roll before the start date.
-        if (rollHoliday(friday).isBefore(fromDate)) {
-            friday = friday.plusWeeks(frequency);
+        if (rollHoliday(date).isBefore(fromDate)) {
+            date = date.plusWeeks(frequency);
         }
 
-        while (!rollHoliday(friday).isAfter(toDate)) {
-            dates.add(rollHoliday(friday));
-            friday = friday.plusWeeks(frequency);
+        while (!rollHoliday(date).isAfter(toDate)) {
+            dates.add(rollHoliday(date));
+            date = date.plusWeeks(frequency);
 
         }
 

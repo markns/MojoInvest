@@ -6,9 +6,12 @@ import com.google.common.collect.Ordering;
 import com.google.inject.Inject;
 import com.mns.mojoinvest.server.engine.calculator.RelativeStrengthCalculator;
 import com.mns.mojoinvest.server.engine.execution.Executor;
+import com.mns.mojoinvest.server.engine.model.CalculatedValue;
 import com.mns.mojoinvest.server.engine.model.Correlation;
 import com.mns.mojoinvest.server.engine.model.Fund;
+import com.mns.mojoinvest.server.engine.model.dao.CalculatedValueDao;
 import com.mns.mojoinvest.server.engine.model.dao.CorrelationDao;
+import com.mns.mojoinvest.server.engine.model.dao.QuoteDao;
 import com.mns.mojoinvest.server.engine.params.Params;
 import com.mns.mojoinvest.server.engine.portfolio.Portfolio;
 import com.mns.mojoinvest.server.engine.portfolio.PortfolioException;
@@ -28,6 +31,8 @@ public class MomentumStrategy {
 
     private final RelativeStrengthCalculator relativeStrengthCalculator;
     private final CorrelationDao correlationDao;
+    private final CalculatedValueDao calculatedValueDao;
+    private final QuoteDao quoteDao;
     private final Executor executor;
     private final PortfolioFactory portfolioFactory;
 
@@ -37,12 +42,15 @@ public class MomentumStrategy {
 
     @Inject
     public MomentumStrategy(RelativeStrengthCalculator relativeStrengthCalculator,
-                            CorrelationDao correlationDao,
+                            CorrelationDao correlationDao, CalculatedValueDao calculatedValueDao,
+                            QuoteDao quoteDao,
                             PortfolioFactory portfolioFactory, Executor executor) {
         this.relativeStrengthCalculator = relativeStrengthCalculator;
         this.correlationDao = correlationDao;
+        this.quoteDao = quoteDao;
         this.portfolioFactory = portfolioFactory;
         this.executor = executor;
+        this.calculatedValueDao = calculatedValueDao;
     }
 
     public Map<String, Object> execute(Portfolio portfolio, Params params,
@@ -59,21 +67,24 @@ public class MomentumStrategy {
                     params, rebalanceDates);
         }
 
+        Map<String, Map<String, CalculatedValue>> maFilters = calculatedValueDao.get(universe, "SMA", params.getMaFilter());
+
         Map<String, Object> additionalResults = new HashMap<String, Object>();
 
         log.fine("Running strategy");
         long start = System.currentTimeMillis();
         if (params.isTradeEquityCurve()) {
-            runStrategyWithEquityCurve(portfolio, params, rebalanceDates, relativeStrengthsMap, additionalResults);
+            runStrategyWithEquityCurve(portfolio, params, rebalanceDates, relativeStrengthsMap, maFilters, additionalResults);
         } else {
-            runStrategy(portfolio, params, rebalanceDates, relativeStrengthsMap);
+            runStrategy(portfolio, params, rebalanceDates, relativeStrengthsMap, maFilters);
         }
         log.fine("Rebalancing took " + (System.currentTimeMillis() - start) + " ms");
         return additionalResults;
     }
 
     private void runStrategy(Portfolio portfolio, Params params, List<LocalDate> rebalanceDates,
-                             SortedMap<String, Map<String, BigDecimal>> relativeStrengthsMap) throws StrategyException {
+                             SortedMap<String, Map<String, BigDecimal>> relativeStrengthsMap,
+                             Map<String, Map<String, CalculatedValue>> maFilters) throws StrategyException {
         for (LocalDate date : rebalanceDates) {
             log.fine("** " + date + " **");
             Map<String, BigDecimal> strengths = relativeStrengthsMap.get(date);
@@ -81,14 +92,14 @@ public class MomentumStrategy {
                 log.info(date + " Not enough funds in universe to make selection");
                 continue;
             }
-            List<String> selection = getSelection(date, params, strengths);
+            List<String> selection = getSelection(date, params, strengths, maFilters);
             rebalance(portfolio, date, selection, params);
         }
     }
 
     private Map<String, Object> runStrategyWithEquityCurve(Portfolio portfolio, Params params, List<LocalDate> rebalanceDates,
                                                            SortedMap<String, Map<String, BigDecimal>> relativeStrengthsMap,
-                                                           Map<String, Object> additionalResults)
+                                                           Map<String, Map<String, CalculatedValue>> maFilters, Map<String, Object> additionalResults)
             throws StrategyException {
 
         Portfolio shadowPortfolio = portfolioFactory.create(params, true);
@@ -109,7 +120,7 @@ public class MomentumStrategy {
                 continue;
             }
 
-            List<String> selection = getSelection(date, params, strengths);
+            List<String> selection = getSelection(date, params, strengths, maFilters);
             additionalResults.put(CURRENT_SELECTION, selection);
 
             //Shadow portfolio and equity curve calculation stuff
@@ -189,7 +200,8 @@ public class MomentumStrategy {
         }
     }
 
-    private List<String> getSelection(LocalDate date, Params params, Map<String, BigDecimal> rs) {
+    private List<String> getSelection(LocalDate date, Params params, Map<String, BigDecimal> rs,
+                                      Map<String, Map<String, CalculatedValue>> maFilters) {
         //Rank order
         Ordering<String> valueComparator = Ordering.natural()
                 .reverse()
@@ -220,6 +232,26 @@ public class MomentumStrategy {
                     rank = uncorrelatedRank;
                     break;
                 }
+            }
+        }
+        if (params.useMAFilter()) {
+            List<String> filteredRank = new ArrayList<String>();
+            for (String symbol : rank) {
+                BigDecimal currentLevel = quoteDao.get(symbol, date).getTrNav();
+                CalculatedValue ma = maFilters.get(symbol).get(date.toString());
+                if (ma == null)
+                    continue;
+                if (currentLevel.compareTo(ma.getValue()) > 0) {
+                    log.fine("q: " + currentLevel + ", ma: " + ma.getValue());
+                    filteredRank.add(symbol);
+                } else {
+                    log.fine("q: " + currentLevel + ", ma: " + ma.getValue() + " removing " + symbol);
+                }
+                if (filteredRank.size() == params.getCastOff()) {
+                    rank = filteredRank;
+                    break;
+                }
+
             }
         }
 
@@ -265,7 +297,8 @@ public class MomentumStrategy {
         //Check how many cash we'll have on the day after rebalance date.
         BigDecimal availableCash = portfolio.getCash(getExecutionDate(rebalanceDate))
                 .subtract(portfolio.getTransactionCost()
-                        .multiply(new BigDecimal(numEmpty)));
+                        .multiply(new BigDecimal(numEmpty)))
+                .subtract(BigDecimal.ONE); //Sometimes there's some weird rounding.
 
         int added = 0;
         for (String symbol : selection) {
