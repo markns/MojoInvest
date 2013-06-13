@@ -71,7 +71,7 @@ public class AppResource {
         boolean riskAdjust = true;
         int stddev = 8;
         boolean equityCurveTrading = true;
-        int equityCurveWindow = 52;
+        int equityCurveWindow = 26;
         boolean useSafeAsset = true;
         //String safeAsset = "FSUTX"; //fidelity
         String safeAsset = "INXG"; //ishares
