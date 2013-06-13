@@ -25,6 +25,11 @@ public class ISharesQuoteFetcherControlJob extends Job1<String, String> {
 
         FundDao dao = PipelineHelper.getFundDao();
         for (Fund fund : dao.list()) {
+            if (fund.getSymbol().equals("EUCF")) {
+                log.warning("Skipping EUCF as it causes problems");
+                continue;
+            }
+
             if (fund.getInceptionDate().isBefore(new LocalDate().minusMonths(1)))
                 quotesUpdated.add(futureCall(new ISharesQuoteFetcherJob(), immediate(fund.getFundId()),
                         immediate(sessionId)));
