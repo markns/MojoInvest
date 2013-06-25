@@ -52,7 +52,7 @@ public class TradingDayUtils {
     public static List<LocalDate> getEndOfWeekSeries(LocalDate fromDate, LocalDate toDate, int frequency) {
 
         List<LocalDate> dates = new ArrayList<LocalDate>();
-        LocalDate date = fromDate.withDayOfWeek(DateTimeConstants.TUESDAY);
+        LocalDate date = fromDate.withDayOfWeek(DateTimeConstants.THURSDAY);
 
         //Check that rolling holidays for the first date didn't roll before the start date.
         if (rollHoliday(date).isBefore(fromDate)) {

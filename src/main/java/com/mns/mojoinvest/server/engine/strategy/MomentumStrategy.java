@@ -163,8 +163,9 @@ public class MomentumStrategy {
                     log.fine(date + " Remaining above equity curve");
                 }
                 log.fine(date + " Rebalancing real portfolio");
-                sellSafeAsset(portfolio, params, date);
-                rebalance(portfolio, date, selection, params);
+                if (sellSafeAsset(portfolio, params, date)) {
+                    rebalance(portfolio, date, selection, params);
+                }
             }
 
         }
@@ -352,7 +353,8 @@ public class MomentumStrategy {
         }
     }
 
-    private void sellSafeAsset(Portfolio portfolio, Params params, LocalDate date) throws StrategyException {
+    private boolean sellSafeAsset(Portfolio portfolio, Params params, LocalDate date) throws StrategyException {
+        boolean sold = true; // return true by defauly, in case we're not even using a safe asset
         if (params.isUseSafeAsset() &&
                 portfolio.contains(params.getSafeAsset(), date)) {
             try {
@@ -360,11 +362,13 @@ public class MomentumStrategy {
                     executor.sellAll(portfolio, params.getSafeAsset(), date);
                 } else {
                     log.fine(date + " Unable to sell safe asset " + params.getSafeAsset() + " due to minimum holding period");
+                    sold = false;
                 }
             } catch (PortfolioException e) {
                 throw new StrategyException(date + " Unable to move out of safe asset", e);
             }
         }
+        return sold;
     }
 
     private LocalDate getExecutionDate(LocalDate date) {

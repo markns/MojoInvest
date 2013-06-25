@@ -67,14 +67,14 @@ public class AppResource {
         int ma2 = 26;
         int roc = 26;
         int alpha = 100;
-        int castOff = 5;
+        int castOff = 4;
         boolean riskAdjust = true;
         int stddev = 8;
         boolean equityCurveTrading = true;
         int equityCurveWindow = 26;
         boolean useSafeAsset = true;
         //String safeAsset = "FSUTX"; //fidelity
-        String safeAsset = "INXG"; //ishares
+        String safeAsset = "IBCX"; //ishares
         //String safeAsset = "GSPC";
         String relativeStrengthStyle = "ROC";
 
@@ -83,7 +83,7 @@ public class AppResource {
         LocalDate creationDate = new LocalDate("1990-01-01");
 
         boolean useCorrelationFilter = true;
-        double correlationThreshold = 0.98;
+        double correlationThreshold = 0.95;
 
         return new Params(fromDate, toDate, creationDate, initialInvestment, transactionCost,
                 portfolioSize, holdingPeriod, minHoldingPeriod, ma1, ma2, roc,

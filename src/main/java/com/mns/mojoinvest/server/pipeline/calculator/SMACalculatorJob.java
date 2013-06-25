@@ -35,6 +35,12 @@ public class SMACalculatorJob extends Job1<String, Integer> {
 
         for (Fund fund : fundDao.list()) {
 
+            if (fund.getSymbol().equals("EUCF")) {
+                log.warning("Skipping EUCF as it causes problems");
+                continue;
+            }
+
+
             LocalDate from;
             if (fund.getLatestCalculationDate() != null) {
                 from = fund.getLatestCalculationDate();
